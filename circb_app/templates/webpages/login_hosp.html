@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root{--muted:#475569}
+        body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Arial;min-height:100vh;background:#ffffff;padding:24px;color:#0f172a}
+        
+        /* Design avec bordures sombres épaisses et ombres pleines */
+        .glass{background:#ffffff;border:2px solid #0f172a;box-shadow:4px 4px 0px 0px #0f172a}
+        .card{border-radius:16px}
+        
+        /* Bouton d'aide flottant stylisé */
+        .help-fab{position:fixed;right:20px;bottom:20px;background:#0f172a;color:white;border:2px solid #ffffff;border-radius:999px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(15,23,42,0.2);cursor:pointer;transition:transform 0.2s}
+        .help-fab:hover{transform:scale(1.05)}
+        
+        .modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:50}
+        .modal{max-width:520px;width:100%}
+        
+        label{font-weight:700;color:#0f172a;text-transform:uppercase;font-size:0.75rem;letter-spacing:0.05em}
+        .input{background:#ffffff;border:2px solid #0f172a;padding:12px;border-radius:10px;color:#0f172a;font-weight:500}
+        .input:focus{outline:none;ring:2px;border-color:#1e1b4b}
+        .muted{color:var(--muted)}
+    </style>
+    <title>Connexion · MEDISYS</title>
+</head>
+<body>
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 px-6">
+            
+            <!-- Section Gauche : Mode d'emploi & Procédure de récupération -->
+            <aside class="hidden md:flex flex-col justify-center items-start gap-6">
+                
+                <!-- Card 1 : Comment se connecter -->
+                <div class="glass p-8 card w-full text-slate-900">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center text-white border-2 border-slate-900 shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-black uppercase tracking-tight">Comment se connecter ?</h2>
+                            <p class="muted text-xs font-semibold">Suivez ces étapes pour accéder à votre espace</p>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-3.5 text-sm font-medium text-slate-800">
+                        <li class="flex gap-3 items-start">
+                            <span class="w-5 h-5 rounded-full border border-slate-900 bg-slate-50 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
+                            <span>Utilisez votre **identifiant institutionnel** fourni par la direction ou votre chef de service (généralement `prenom.nom@hopital.tld`).</span>
+                        </li>
+                        <li class="flex gap-3 items-start">
+                            <span class="w-5 h-5 rounded-full border border-slate-900 bg-slate-50 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
+                            <span>Saisissez votre mot de passe temporaire s'il s'agit de votre première connexion, puis configurez votre clé d'accès définitive.</span>
+                        </li>
+                        <li class="flex gap-3 items-start">
+                            <span class="w-5 h-5 rounded-full border border-slate-900 bg-slate-50 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
+                            <span>Cochez la case **"Se souvenir de moi"** uniquement si vous êtes sur votre poste de travail dédié et sécurisé.</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Card 2 : En cas d'oubli -->
+                <div class="glass p-6 card w-full text-slate-900">
+                    <div class="flex items-start gap-4 mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-white border-2 border-slate-900 shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm uppercase tracking-wide">Identifiants perdus ou oubliés ?</h4>
+                            <p class="text-xs text-slate-600 font-medium">Pas de panique, voici la marche à suivre :</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-xs font-medium space-y-2 text-slate-700 pl-2 border-l-2 border-amber-500">
+                        <p>1. Cliquez sur le lien **« Identifiants perdus ? »** sur l'écran de droite.</p>
+                        <p>2. Renseignez votre adresse e-mail professionnelle pour recevoir un **lien de réinitialisation sécurisé** valable 15 minutes.</p>
+                        <p>3. Si vous ne recevez rien ou si votre compte est bloqué suite à 3 essais infructueux, contactez immédiatement la DSI de l'Hôpital via le bouton d'assistance.</p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Section Droite : Formulaire Direct -->
+            <main class="glass p-10 card text-slate-900 flex flex-col justify-center">
+                <div class="mb-8">
+                    <h1 class="text-2xl font-black uppercase tracking-tight">Connexion</h1>
+                    <p class="muted text-sm font-semibold mt-0.5">Saisissez vos identifiants pour accéder à l'application</p>
+                </div>
+
+                <!-- Formulaire -->
+                <form id="login-form" class="space-y-5" aria-label="Formulaire connexion">
+                    <div>
+                        <label class="block mb-1.5">Identifiant unique</label>
+                        <input id="username" type="text" placeholder="nom.prenom@hopital.tld" class="input w-full" aria-label="Identifiant" required>
+                    </div>
+
+                    <div>
+                        <label class="block mb-1.5">Mot de passe</label>
+                        <input id="password" type="password" placeholder="••••••••" class="input w-full" aria-label="Mot de passe" required>
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs font-bold pt-1">
+                        <label class="flex items-center gap-2 text-slate-900 cursor-pointer">
+                            <input id="remember" type="checkbox" class="w-4 h-4 accent-slate-900 border-2 border-slate-900 rounded"> Se souvenir de moi
+                        </label>
+                        <a href="#" onclick="handleForgotPassword(event)" class="text-slate-900 hover:underline">Identifiants perdus ?</a>
+                    </div>
+
+                    <div class="pt-4">
+                        <button id="btn-login" type="submit" class="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-slate-950 border-2 border-slate-900 text-white font-bold uppercase text-xs tracking-wider shadow-[2px_2px_0px_0px_rgba(30,27,75,1)] transition-transform active:translate-y-0.5">Accéder au tableau de bord</button>
+                        <div class="text-[10px] text-center font-medium muted mt-3">Usage restreint au personnel habilité. Les connexions font l'objet d'un audit de sécurité.</div>
+                    </div>
+                </form>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Bouton d'aide flottant -->
+    <div id="helpFab" class="help-fab" aria-label="Aide">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM9.09 9a3 3 0 115.82 0c0 2-3 1.75-3 4"/><path d="M12 17h.01"/></svg>
+    </div>
+
+    <!-- Modal d'assistance -->
+    <div id="modal" class="modal-backdrop">
+        <div class="modal glass p-6 card text-slate-900 mx-4">
+            <div class="flex items-center justify-between border-b-2 border-slate-900 pb-3">
+                <h3 class="text-md font-black uppercase tracking-tight">Support technique</h3>
+                <button id="closeModal" class="px-2.5 py-1 border border-slate-900 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200">Fermer</button>
+            </div>
+            <p class="text-xs font-medium text-slate-700 mt-3">Pour toute anomalie d'accès ou demande d'ouverture de droits, veuillez contacter l'administrateur système.</p>
+            <div class="mt-4 grid grid-cols-1 gap-2.5 font-bold text-xs">
+                <a href="mailto:contact@medisys.example" class="inline-flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 border border-slate-900 text-slate-900">
+                    <span>Assistance par courriel</span>
+                    <span class="text-[11px] font-medium muted">contact@medisys.example</span>
+                </a>
+                <a href="#" id="dl-guide" class="inline-flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 border border-slate-900 text-slate-900">
+                    <span>Manuel opérateur ERP</span>
+                    <span class="text-[11px] text-indigo-950 font-bold">Télécharger (PDF)</span>
+                </a>
+                <a href="#" id="open-support" class="text-center px-4 py-3 rounded-xl bg-slate-900 border-2 border-slate-900 text-white uppercase tracking-wider text-[11px]">Déclarer un incident de connexion</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fenêtre modale d'aide
+        const helpFab = document.getElementById('helpFab');
+        const modal = document.getElementById('modal');
+        const closeModal = document.getElementById('closeModal');
+        helpFab.addEventListener('click', () => { modal.style.display = 'flex'; });
+        closeModal.addEventListener('click', () => { modal.style.display = 'none'; });
+        
+        // Fermeture si clic extérieur sur l'arrière-plan de la modale
+        modal.addEventListener('click', (e) => { if(e.target === modal) modal.style.display = 'none'; });
+
+        // Gestion de l'oubli d'identifiants
+        function handleForgotPassword(e) {
+            e.preventDefault();
+            alert("Un formulaire de réinitialisation va vous être envoyé.\n\nVeuillez vous référer au panneau d'explications sur votre gauche pour connaître la procédure complète d'unité.");
+        }
+
+        // Traitement du formulaire
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            if(!username || !password) return;
+            
+            const url = '/dashboard/';
+            window.location.href = url;
+        });
+    </script>
+</body>
+</html>

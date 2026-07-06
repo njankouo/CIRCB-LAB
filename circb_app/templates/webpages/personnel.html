@@ -1,0 +1,174 @@
+{% extends './dashbord_hosp.html' %}
+
+{% block main %}
+<!-- Conteneur principal optimisé : ajoute de l'espace avec l'aside à gauche et limite la largeur maximale -->
+<div class="pl-4 sm:pl-6 lg:pl-10 pr-4 sm:pr-6 py-6 max-w-5xl mx-auto w-full space-y-8">
+    
+    <!-- En-tête de la page -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b-2 border-slate-900 pb-6">
+        <div>
+            <h1 class="text-2xl font-black uppercase tracking-tight text-slate-900">Annuaire du personnel</h1>
+            <p class="text-sm font-semibold text-slate-500 mt-0.5">Gestion et liste des équipes médicales, administratives et techniques</p>
+        </div>
+        <div>
+            <button class="w-full sm:w-auto px-4 py-2.5 bg-slate-900 hover:bg-slate-950 text-white font-bold rounded-xl border-2 border-slate-900 text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-y-0.5">
+                + Ajouter un agent
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtres & Outils de recherche -->
+    <div class="p-4 bg-white border-2 border-slate-900 rounded-xl shadow-[4px_4px_0px_0px_#0f172a] grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="relative">
+            <input type="text" placeholder="Rechercher un nom, un matricule..." class="w-full pl-10 pr-4 py-2.5 bg-white border-2 border-slate-900 rounded-lg text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-800">
+            <div class="absolute left-3 top-3.5 text-slate-400">
+                <i data-lucide="search" class="w-4 h-4"></i>
+            </div>
+        </div>
+        
+        <div>
+            <select class="w-full px-3 py-2.5 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
+                <option value="">Tous les départements</option>
+                <option value="clinique">Corps Médical / Clinique</option>
+                <option value="labo">Laboratoire d'analyses</option>
+                <option value="rh">Ressources Humaines</option>
+                <option value="admin">Administration / DSI</option>
+            </select>
+        </div>
+
+        <div>
+            <select class="w-full px-3 py-2.5 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
+                <option value="">Tous les statuts</option>
+                <option value="dispo">Disponible</option>
+                <option value="garde">En Garde</option>
+                <option value="absent">En Congé / Absent</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Grille du Personnel : Ajustement des colonnes selon la largeur -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        
+        <!-- Carte Agent 1 -->
+        <div class="bg-white border-2 border-slate-900 rounded-xl p-6 shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between">
+            <div>
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-100 border-2 border-slate-900 flex items-center justify-center font-black text-slate-900 text-lg">
+                        Dr
+                    </div>
+                    <span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wide bg-emerald-50 text-emerald-700 border border-emerald-600 rounded-md">
+                        Disponible
+                    </span>
+                </div>
+                
+                <h3 class="font-black text-lg text-slate-900 uppercase tracking-tight">Jean-Marc LENOIR</h3>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">Médecin Chef · Urgences</p>
+                <div class="text-xs font-semibold text-slate-400 mt-1">Matricule : #MED-2026-883</div>
+
+                <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-sm font-medium text-slate-700">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
+                        <span class="truncate">jm.lenoir@circb-hopital.org</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
+                        <span>+237 6xx xx xx xx</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t-2 border-slate-900 flex gap-2">
+                <a href="#" class="flex-1 text-center py-2 bg-slate-50 hover:bg-slate-100 border border-slate-900 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors text-slate-900">
+                    Fiche Agent
+                </a>
+                <a href="#" class="p-2 bg-white hover:bg-slate-50 border border-slate-900 rounded-lg text-slate-900">
+                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Carte Agent 2 -->
+        <div class="bg-white border-2 border-slate-900 rounded-xl p-6 shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between">
+            <div>
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-100 border-2 border-slate-900 flex items-center justify-center font-black text-slate-900 text-lg">
+                        Ph
+                    </div>
+                    <span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wide bg-amber-50 text-amber-700 border border-amber-600 rounded-md">
+                        En Garde
+                    </span>
+                </div>
+                
+                <h3 class="font-black text-lg text-slate-900 uppercase tracking-tight">Marie EBOUE</h3>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">Analyste Senior · Hématologie</p>
+                <div class="text-xs font-semibold text-slate-400 mt-1">Matricule : #LAB-2026-441</div>
+
+                <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-sm font-medium text-slate-700">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
+                        <span class="truncate">m.eboue@circb-hopital.org</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
+                        <span>+237 6xx xx xx xx</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t-2 border-slate-900 flex gap-2">
+                <a href="#" class="flex-1 text-center py-2 bg-slate-50 hover:bg-slate-100 border border-slate-900 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors text-slate-900">
+                    Fiche Agent
+                </a>
+                <a href="#" class="p-2 bg-white hover:bg-slate-50 border border-slate-900 rounded-lg text-slate-900">
+                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Carte Agent 3 -->
+        <div class="bg-white border-2 border-slate-900 rounded-xl p-6 shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between">
+            <div>
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-100 border-2 border-slate-900 flex items-center justify-center font-black text-slate-900 text-lg">
+                        Ad
+                    </div>
+                    <span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wide bg-slate-100 text-slate-600 border border-slate-400 rounded-md">
+                        Absent
+                    </span>
+                </div>
+                
+                <h3 class="font-black text-lg text-slate-900 uppercase tracking-tight">Alain TCHAMENI</h3>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">Admin Système · DSI</p>
+                <div class="text-xs font-semibold text-slate-400 mt-1">Matricule : #ADM-2026-012</div>
+
+                <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-sm font-medium text-slate-700">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
+                        <span class="truncate">a.tchameni@circb-hopital.org</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
+                        <span>+237 6xx xx xx xx</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t-2 border-slate-900 flex gap-2">
+                <a href="#" class="flex-1 text-center py-2 bg-slate-50 hover:bg-slate-100 border border-slate-900 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors text-slate-900">
+                    Fiche Agent
+                </a>
+                <a href="#" class="p-2 bg-white hover:bg-slate-50 border border-slate-900 rounded-lg text-slate-900">
+                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    console.log("Annuaire aéré et optimisé pour grands écrans.");
+</script>
+{% endblock %}
