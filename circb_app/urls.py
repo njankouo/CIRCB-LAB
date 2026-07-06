@@ -22,4 +22,8 @@ urlpatterns = [
     path('', views.connexion_view, name='connexion'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('personnel/', views.personnel, name='personnel'),
+    path('authentification/', views.authentification, name='authentification'),
+    path('logout/', views.logout_view, name='logout'),
+    path('dossiers/patients/', views.dossiers_patients, name='dossiers_patients'),
+    
 ]
