@@ -25,5 +25,21 @@ urlpatterns = [
     path('authentification/', views.authentification, name='authentification'),
     path('logout/', views.logout_view, name='logout'),
     path('dossiers/patients/', views.dossiers_patients, name='dossiers_patients'),
+    path('configurations/', views.configurations, name='configurations'),
+    path('fiches-echantillons/', views.fiches_echantillons, name='fiches_echantillons'),
+    path('echantillons/', views.echantillons, name='echantillons'),
     
+    path('structures/', views.structures, name='structures'),
+    
+    path('add_level/', views.add_level, name='add_level'),
+    path('add_sub_structure/', views.add_sub_structure, name='add_sub_structure'),
+    path('admin/', admin.site.urls),
+    path('search_district/<int:region_id>/', views.search_district, name='search_district'),
+    path('search_fosa/<int:district_id>/', views.search_fosa, name='search_fosa'),
+    path('search_contact/<int:contact_id>/', views.search_contact, name='search_contact'),
+    path('enregistrer_fiche_echantillon/', views.enregistrer_fiche_echantillon, name='enregistrer_fiche_echantillon'),
+    path('details-fiche/<str:slug>/', views.details_fiche, name='details-fiche')
+   
 ]
+    
+

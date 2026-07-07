@@ -1,0 +1,73 @@
+<!-- structure_node.html -->
+
+<tr class="transition border-b border-gray-100 group
+    {% if node.hierachy.rang == 1 %} bg-white 
+    {% elif node.hierachy.rang == 2 %} bg-slate-50/80 
+    {% elif node.hierachy.rang == 3 %} bg-gray-50/40 
+    {% else %} bg-transparent {% endif %}">
+    
+    <td class="px-6 py-3 
+        {% if node.hierachy.rang == 1 %} border-l-4 border-blue-600 
+        {% elif node.hierachy.rang == 2 %} border-l-4 border-emerald-500 
+        {% elif node.hierachy.rang == 3 %} border-l-4 border-amber-400 
+        {% else %} border-l border-gray-200 {% endif %}" 
+        style="padding-left: {{ padding }}px;">
+        
+        <div class="flex items-center gap-3">
+            {% if padding > 24 %}
+                <i class="fa fa-level-up-alt rotate-90 text-gray-300 group-hover:text-blue-400 transition-colors"></i>
+            {% endif %}
+            
+            <i class="fa {% if node.children.all %}fa-folder-open{% else %}fa-stop-circle{% endif %} 
+                {% if node.hierachy.rang == 1 %} text-blue-800 
+                {% elif node.hierachy.rang == 2 %} text-emerald-600 
+                {% elif node.hierachy.rang == 3 %} text-amber-500 
+                {% else %} text-gray-400 {% endif %} opacity-70"></i>
+            
+            <a class="
+                {% if node.hierachy.rang == 1 %} font-bold text-gray-900 text-sm 
+                {% elif node.hierachy.rang == 2 %} font-semibold text-gray-700 text-sm 
+                {% elif node.hierachy.rang == 3 %} font-medium text-gray-600 text-[13px] 
+                {% else %} text-gray-500 text-[12px] {% endif %}" href="/upload-sub-structure/{{node.id}}/">
+                {{ node.nom }}
+
+            </a>
+        </div>
+    </td>
+
+    <td class="px-6 py-4">
+        <span class="text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter
+            {% if node.hierachy.rang == 1 %} bg-blue-600 text-white
+            {% elif node.hierachy.rang == 2 %} bg-emerald-100 text-emerald-700
+            {% else %} bg-gray-100 text-gray-500 {% endif %}">
+            {{ node.hierachy.nom }}
+        </span>
+    </td>
+
+    <td class="px-6 py-4 text-[11px] font-mono text-gray-400">
+        {{ node.designation|default:"---" }}
+    </td>
+
+    <td class="px-6 py-4 text-right">
+        <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+             <button onclick="openAddModal('{{ node.id }}', '{{ node.nom }}', {{ node.hierachy.rang|add:1 }})" 
+                class="bg-white text-[10px] font-bold text-emerald-600 border border-emerald-200 px-2 py-1 rounded shadow-sm hover:bg-emerald-600 hover:text-white transition">
+                <i class="fa fa-plus"></i>
+            </button>
+            <a href="/modifier-structure/{{node.id}}/" class="bg-white text-[10px] font-bold text-blue-600 border border-blue-200 px-2 py-1 rounded shadow-sm hover:bg-blue-600 hover:text-white transition">
+                <i class="fa fa-edit"></i>
+            </a>
+          <button type="button" 
+        onclick="openDeleteModal('/line_delete_structure/{{node.id}}/')"  
+        class="bg-white text-[10px] font-bold text-red-600 border border-red-200 px-2 py-1 rounded shadow-sm hover:bg-red-600 hover:text-white transition">            
+    <i class="fa fa-trash"></i>            
+</button>
+        </div>
+    </td>
+</tr>
+
+{% for child in node.children.all %}
+    {% with node=child padding=padding|add:25 %}
+        {% include "webpages/config/structure_node.html" %}
+    {% endwith %}
+{% endfor %}

@@ -23,21 +23,23 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <style>
-        body { font-variant-numeric: tabular-nums; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
-        
-    </style>
+   <style>
+    body { 
+        font-variant-numeric: tabular-nums; 
+        overflow: hidden; /* Sécurité CSS absolue */
+        height: 100vh;
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+</style>
 </head>
 <!-- Fond blanc pur global -->
-<body id="app-body" class="min-h-screen bg-white text-slate-900 antialiased font-sans custom-scrollbar">
-
+<body id="app-body" class="h-screen overflow-hidden bg-white text-slate-900 antialiased font-sans">
     <div id="navProgressBar" class="fixed top-0 left-0 w-0 h-1 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-800 z-[100] transition-all duration-300 ease-out"></div>
 
-    <div class="flex flex-col min-h-screen">
-        
+  
+        <div class="flex flex-col h-full w-full overflow-hidden">
         <!-- Header avec bordure sombre affirmée -->
         <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-2 border-slate-900 px-6 py-3 flex items-center justify-between">
             <div class="flex items-center gap-4">
@@ -45,8 +47,8 @@
                     M
                 </div>
                 <div>
-                    <div class="text-sm font-bold tracking-tight text-slate-900">MEDISYS ERP</div>
-                    <div class="text-xs text-slate-500 font-medium">Hôpital Central</div>
+                    <div class="text-sm font-bold tracking-tight text-slate-900">MEDISYS LAB</div>
+                    <div class="text-xs text-slate-500 font-medium">CIRCB-Centre Internationnal de Référence Chantal Biya</div>
                 </div>
             </div>
 
@@ -92,17 +94,24 @@
         <div class="flex flex-1 h-[calc(100vh-65px)] overflow-hidden">
             
             <!-- Sidebar avec fond blanc et bordure latérale sombre -->
-          <aside class="w-64 bg-white border-r-2 border-slate-900 hidden lg:flex flex-col justify-between p-4 overflow-y-auto custom-scrollbar flex-shrink-0">
-    <nav class="space-y-6">
+        
+        <aside class="w-64 h-screen sticky top-0 bg-white border-r-2 border-slate-900 hidden lg:flex flex-col justify-between p-4 overflow-y-auto custom-scrollbar flex-shrink-0">
+            <nav class="space-y-6">
         <!-- Section : Général -->
         <div>
             <div class="px-3 mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Général</div>
             <ul class="space-y-1">
                 <li>
-                    <a href="/dashboard/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-slate-900 bg-slate-900 text-white font-semibold text-sm transition-all shadow-sm">
-                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-                        <span>Tableau de bord</span>
-                    </a>
+                  <a href="/dashboard/" 
+   class="flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all text-sm font-semibold
+          {% if request.path == '/dashboard/' %}
+              bg-slate-900 text-white border-slate-900 shadow-sm
+          {% else %}
+              bg-white text-slate-800 border-transparent hover:border-slate-900 hover:bg-slate-50
+          {% endif %}">
+    <i data-lucide="layout-dashboard" class="w-4 h-4 {% if request.path == '/dashboard/' %}text-white{% else %}text-slate-600{% endif %}"></i>
+    <span>Tableau de bord</span>
+</a>
                 </li>
             </ul>
         </div>
@@ -110,22 +119,41 @@
         <!-- Section : Médical -->
         <div>
             <div class="px-3 mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Médical</div>
-            <ul class="space-y-1">
-                <li>
-                    <button onclick="toggleCollapse('patients-sub')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:bg-slate-50 border border-transparent hover:border-slate-900 text-sm font-medium transition-all group">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="users" class="w-4 h-4 text-slate-600"></i>
-                            <span>Patients & DMP</span>
-                        </div>
-                        <i data-lucide="chevron-up" class="w-4 h-4 text-slate-500"></i>
-                    </button>
-                    <!-- Changement de hidden à block pour l'ouverture par défaut -->
-                    <ul id="patients-sub" class="block mt-1 ml-4 border-l-2 border-slate-900 pl-3 space-y-1 text-sm text-slate-600">
-                        <li><a href="/dossiers/patients/" class="block py-1.5 hover:text-indigo-950 font-medium">Dossiers patients</a></li>
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Rendez-vous</a></li>
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Consultations</a></li>
-                    </ul>
-                </li>
+                <ul class="space-y-1">
+                 <li>
+        <button onclick="toggleCollapse('echantillons-sub')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:bg-slate-50 border border-transparent hover:border-slate-900 text-sm font-medium transition-all group">
+            <div class="flex items-center gap-3">
+                <i data-lucide="test-tube-2" class="w-4 h-4 text-slate-600"></i>
+                <span>Échantillonnage</span>
+            </div>
+            <i data-lucide="chevron-up" class="w-4 h-4 text-slate-500"></i>
+        </button>
+        <ul id="echantillons-sub" class="block mt-1 ml-4 border-l-2 border-slate-900 pl-3 space-y-1 text-sm text-slate-600">
+            <li>
+                <a href="/fiches-echantillons/" 
+                   class="block py-1.5 pl-2 rounded-md transition-all font-medium text-sm flex items-center justify-between
+                        {% if request.path == '/fiches-echantillons/' %}
+                            bg-slate-900 text-white border-slate-900 shadow-sm
+                        {% else %}
+                            text-slate-600 hover:text-slate-900 hover:pl-3
+                        {% endif %}">
+                    <span>Fiches échantillons</span>
+                </a>
+            </li>
+            <li>
+                <a href="/echantillons/" 
+                   class="block py-1.5 pl-2 rounded-md transition-all font-medium text-sm flex items-center justify-between
+                        {% if request.path == '/echantillons/' %}
+                            bg-slate-900 text-white border-slate-900 shadow-sm
+                        {% else %}
+                            text-slate-600 hover:text-slate-900 hover:pl-3
+                        {% endif %}">
+                    <span>Échantillons</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+                    
                 <li>
                     <button onclick="toggleCollapse('lab-sub')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:bg-slate-50 border border-transparent hover:border-slate-900 text-sm font-medium transition-all group">
                         <div class="flex items-center gap-3">
@@ -138,6 +166,36 @@
                     <ul id="lab-sub" class="block mt-1 ml-4 border-l-2 border-slate-900 pl-3 space-y-1 text-sm text-slate-600">
                         <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Analyses en cours</a></li>
                         <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Résultats validés</a></li>
+                    </ul>
+                </li>
+
+
+                <li>
+                        <button onclick="toggleCollapse('patients-sub')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:bg-slate-50 border border-transparent hover:border-slate-900 text-sm font-medium transition-all group">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="users" class="w-4 h-4 text-slate-600"></i>
+                                <span>Patients & DMP</span>
+                            </div>
+                            <i data-lucide="chevron-up" class="w-4 h-4 text-slate-500"></i>
+                        </button>
+                        <!-- Changement de hidden à block pour l'ouverture par défaut -->
+                        <ul id="patients-sub" class="block mt-1 ml-4 border-l-2 border-slate-900 pl-3 space-y-1 text-sm text-slate-600">
+                        <li>
+        <a href="/dossiers/patients/" 
+        class="block py-1.5 pl-2 rounded-md transition-all font-medium text-sm flex items-center justify-between
+                {% if request.path == '/dossiers/patients/' %}
+                    bg-slate-900 text-white border-slate-900 shadow-sm
+                {% else %}
+                    text-slate-600 hover:text-slate-900 hover:pl-3
+                {% endif %}">
+            
+            <span>Dossiers patients</span>
+
+            
+        </a>
+    </li>
+                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Rendez-vous</a></li>
+                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Consultations</a></li>
                     </ul>
                 </li>
             </ul>
@@ -157,7 +215,17 @@
                     </button>
                     <!-- Changement de hidden à block pour l'ouverture par défaut -->
                     <ul id="rh-sub" class="block mt-1 ml-4 border-l-2 border-slate-900 pl-3 space-y-1 text-sm text-slate-600">
-                        <li><a href="{%url 'personnel'%}" class="block py-1.5 hover:text-indigo-950 font-medium">Annuaire du personnel</a></li>
+                       <li>
+                        <a href="{% url 'personnel' %}" 
+                        class="block py-2 px-3 rounded-lg text-sm font-semibold transition-colors
+                                {% if request.path == '/personnel/' %}
+                                    bg-slate-950 text-white border border-slate-900
+                                {% else %}
+                                    text-slate-600 hover:bg-slate-100 hover:text-slate-900
+                                {% endif %}">
+                            Annuaire du personnel
+                        </a>
+                    </li>
                         <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Plannings des services</a></li>
                         <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Gestion des gardes</a></li>
                         <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Absences & Congés</a></li>
@@ -180,9 +248,28 @@
                     </button>
                     <!-- Changement de hidden à block pour l'ouverture par défaut -->
                     <ul id="config-sub" class="block mt-1 ml-4 border-l-2 border-slate-900 pl-3 space-y-1 text-sm text-slate-600">
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Paramètres ERP</a></li>
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Gestion des rôles & ACL</a></li>
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Unités & Départements</a></li>
+                        <li>
+                            
+                             <a href="{% url 'configurations' %}" 
+                        class="block py-2 px-3 rounded-lg text-sm font-semibold transition-colors
+                                {% if request.path == '/configurations/' %}
+                                    bg-slate-950 text-white border border-slate-900
+                                {% else %}
+                                    text-slate-600 hover:bg-slate-100 hover:text-slate-900
+                                {% endif %}">
+                           
+                      
+                            Paramètres ERP</a></li>
+                        
+                        <li><a href="{% url 'structures' %}"
+                             class="block py-2 px-3 rounded-lg text-sm font-semibold transition-colors
+                                {% if request.path == '/structures/' %}
+                                    bg-slate-950 text-white border border-slate-900
+                                {% else %}
+                                    text-slate-600 hover:bg-slate-100 hover:text-slate-900
+                                {% endif %}"
+                            
+                            >Unités & Départements</a></li>
                         <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Logs & Audit sécurité</a></li>
                     </ul>
                 </li>
@@ -224,177 +311,177 @@
         </a>
     </div>
 </aside>
-{%block main%}
-            <!-- Zone de contenu sur fond blanc -->
-            <main class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-white">
+  {%block main%}
                 
-                <!-- Titre Principal encadré de sombre -->
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-2 border-slate-900 rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
-                    <div>
-                        <h1 class="text-xl font-black text-slate-900 tracking-tight uppercase">Tableau de Bord Institutionnel</h1>
-                        <p class="text-xs font-bold text-indigo-950 mt-0.5">Données consolidées en temps réel · Hôpital Central</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-indigo-950 text-white text-xs font-bold shadow-sm transition-colors inline-flex items-center gap-1.5">
-                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Nouvelle admission
-                        </button>
-                        <button class="px-4 py-2 rounded-xl border border-slate-900 bg-white text-slate-900 text-xs font-bold hover:bg-slate-50 transition-colors inline-flex items-center gap-1.5">
-                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Exporter (.xlsx)
-                        </button>
-                    </div>
+<!-- AJOUT DE overflow-y-auto -->
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white">
+    <!-- Titre Principal encadré de sombre -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-2 border-slate-900 rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
+        <div>
+            <h1 class="text-xl font-black text-slate-900 tracking-tight uppercase">Tableau de Bord Institutionnel</h1>
+            <p class="text-xs font-bold text-indigo-950 mt-0.5">Données consolidées en temps réel · CIRCB</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <button class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-indigo-950 text-white text-xs font-bold shadow-sm transition-colors inline-flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Nouvelle admission
+            </button>
+            <button class="px-4 py-2 rounded-xl border border-slate-900 bg-white text-slate-900 text-xs font-bold hover:bg-slate-50 transition-colors inline-flex items-center gap-1.5">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i> Exporter (.xlsx)
+            </button>
+        </div>
+    </div>
+
+    <!-- Grille KPI avec Bordures sombres d'accentuation et ombres marquées -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- KPI 1 : Accent Indigo Sombre -->
+        <div class="bg-white border-2 border-indigo-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(30,27,75,1)] flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Patients reçus (Jour)</span>
+                    <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900 count-up" data-target="124">0</span>
                 </div>
-
-                <!-- Grille KPI avec Bordures sombres d'accentuation et ombres marquées -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    
-                    <!-- KPI 1 : Accent Indigo Sombre -->
-                    <div class="bg-white border-2 border-indigo-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(30,27,75,1)] flex flex-col justify-between">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Patients reçus (Jour)</span>
-                                <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900 count-up" data-target="124">0</span>
-                            </div>
-                            <div class="p-2 bg-slate-100 border border-slate-900 text-slate-900 rounded-xl">
-                                <i data-lucide="activity" class="w-5 h-5"></i>
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
-                            <span class="px-2 py-0.5 bg-emerald-100 border border-emerald-800 text-emerald-900 font-bold rounded-md inline-flex items-center gap-0.5"><i data-lucide="trending-up" class="w-3 h-3"></i> +2.4%</span>
-                            <span class="text-slate-500 font-medium">vs hier</span>
-                        </div>
-                    </div>
-
-                    <!-- KPI 2 : Accent Ambre Sombre -->
-                    <div class="bg-white border-2 border-amber-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(69,26,3,1)] flex flex-col justify-between">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Analyses labo</span>
-                                <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900">18</span>
-                            </div>
-                            <div class="p-2 bg-amber-50 border border-amber-900 text-amber-950 rounded-xl">
-                                <i data-lucide="hourglass" class="w-5 h-5"></i>
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
-                            <span class="px-2 py-0.5 bg-amber-100 border border-amber-700 text-amber-900 font-bold rounded-md">En attente de validation</span>
-                        </div>
-                    </div>
-
-                    <!-- KPI 3 : Accent Rouge Sombre -->
-                    <div class="bg-white border-2 border-rose-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(76,5,25,1)] flex flex-col justify-between">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Taux d'occupation</span>
-                                <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900">85%</span>
-                            </div>
-                            <div class="p-2 bg-rose-50 border border-rose-900 text-rose-950 rounded-xl">
-                                <i data-lucide="bed" class="w-5 h-5"></i>
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
-                            <span class="px-2 py-0.5 bg-rose-100 border border-rose-700 text-rose-900 font-bold rounded-md">Seuil Critique</span>
-                            <span class="text-slate-500 font-bold">Lits dispo : 12</span>
-                        </div>
-                    </div>
-
-                    <!-- KPI 4 : Accent Vert Sombre -->
-                    <div class="bg-white border-2 border-emerald-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(6,39,23,1)] flex flex-col justify-between">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Recettes</span>
-                                <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900">2.4M <span class="text-sm font-bold">FCFA</span></span>
-                            </div>
-                            <div class="p-2 bg-emerald-50 border border-emerald-900 text-emerald-950 rounded-xl">
-                                <i data-lucide="credit-card" class="w-5 h-5"></i>
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
-                            <span class="px-2 py-0.5 bg-emerald-100 border border-emerald-700 text-emerald-900 font-bold rounded-md inline-flex items-center gap-0.5"><i data-lucide="trending-up" class="w-3 h-3"></i> +12%</span>
-                            <span class="text-slate-500 font-medium">Mois en cours</span>
-                        </div>
-                    </div>
-
+                <div class="p-2 bg-slate-100 border border-slate-900 text-slate-900 rounded-xl">
+                    <i data-lucide="activity" class="w-5 h-5"></i>
                 </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
+                <span class="px-2 py-0.5 bg-emerald-100 border border-emerald-800 text-emerald-900 font-bold rounded-md inline-flex items-center gap-0.5"><i data-lucide="trending-up" class="w-3 h-3"></i> +2.4%</span>
+                <span class="text-slate-500 font-medium">vs hier</span>
+            </div>
+        </div>
 
-                <!-- Blocs Graphiques avec bordures noires/ardoise épaisses -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm">
-                        <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-4">Volume d'admissions par département</h3>
-                        <div id="chart-patients-dept" class="w-full"></div>
-                    </div>
-
-                    <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm">
-                        <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-4">Sollicitations Examens Biologiques</h3>
-                        <div id="chart-lab-donut" class="w-full"></div>
-                    </div>
-
-                    <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-1">Tendances hebdomadaires</h3>
-                            <p class="text-xs font-medium text-slate-500 mb-4">Moyenne lissée sur 7 jours d'activité</p>
-                        </div>
-                        <div id="sparkline" class="w-full"></div>
-                    </div>
+        <!-- KPI 2 : Accent Ambre Sombre -->
+        <div class="bg-white border-2 border-amber-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(69,26,3,1)] flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Analyses labo</span>
+                    <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900">18</span>
                 </div>
-
-                <!-- Bas du tableau de bord -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm">
-                        <div class="flex items-center justify-between mb-6">
-                            <div>
-                                <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase">Flux des admissions</h3>
-                                <p class="text-xs text-slate-500 font-medium mt-0.5">Analyse dynamique des entrées/sorties</p>
-                            </div>
-                            <span class="text-xs font-bold px-2.5 py-1 border border-slate-900 bg-slate-50 text-slate-900 rounded-lg">7 derniers jours</span>
-                        </div>
-                        <div id="chart" class="w-full"></div>
-                    </div>
-
-                    <!-- Actions secondaires & Journal de bord -->
-                    <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-4">Raccourcis Opérationnels</h3>
-                            <div class="grid grid-cols-2 gap-2">
-                                <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
-                                    <i data-lucide="file-text" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
-                                    <span class="block">Fiche de Soins</span>
-                                </button>
-                                <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
-                                    <i data-lucide="calendar" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
-                                    <span class="block">Planifier RDV</span>
-                                </button>
-                                <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
-                                    <i data-lucide="microscope" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
-                                    <span class="block">Lancer Examen</span>
-                                </button>
-                                <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
-                                    <i data-lucide="dollar-sign" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
-                                    <span class="block">Facturation</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 pt-4 border-t-2 border-slate-900">
-                            <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 mb-3">Journal de bord d'unité</h4>
-                            <ul class="text-xs space-y-3 font-medium">
-                                <li class="flex gap-2.5">
-                                    <span class="text-slate-500 font-bold shrink-0">12:10</span>
-                                    <span class="text-slate-800"><strong class="text-slate-950 font-bold">Admission :</strong> Mme Ngassa (Cardio)</span>
-                                </li>
-                                <li class="flex gap-2.5">
-                                    <span class="text-slate-500 font-bold shrink-0">11:45</span>
-                                    <span class="text-slate-800"><strong class="text-slate-950 font-bold">Laboratoire :</strong> Résultats dispo (M. Tchatchu)</span>
-                                </li>
-                                <li class="flex gap-2.5">
-                                    <span class="text-slate-500 font-bold shrink-0">10:30</span>
-                                    <span class="text-slate-800"><strong class="text-slate-950 font-bold">Caisse :</strong> Encaissement 24k FCFA</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                <div class="p-2 bg-amber-50 border border-amber-900 text-amber-950 rounded-xl">
+                    <i data-lucide="hourglass" class="w-5 h-5"></i>
                 </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
+                <span class="px-2 py-0.5 bg-amber-100 border border-amber-700 text-amber-900 font-bold rounded-md">En attente de validation</span>
+            </div>
+        </div>
 
-            </main>
+        <!-- KPI 3 : Accent Rouge Sombre -->
+        <div class="bg-white border-2 border-rose-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(76,5,25,1)] flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Taux d'occupation</span>
+                    <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900">85%</span>
+                </div>
+                <div class="p-2 bg-rose-50 border border-rose-900 text-rose-950 rounded-xl">
+                    <i data-lucide="bed" class="w-5 h-5"></i>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
+                <span class="px-2 py-0.5 bg-rose-100 border border-rose-700 text-rose-900 font-bold rounded-md">Seuil Critique</span>
+                <span class="text-slate-500 font-bold">Lits dispo : 12</span>
+            </div>
+        </div>
+
+        <!-- KPI 4 : Accent Vert Sombre -->
+        <div class="bg-white border-2 border-emerald-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(6,39,23,1)] flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Recettes</span>
+                    <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900">2.4M <span class="text-sm font-bold">FCFA</span></span>
+                </div>
+                <div class="p-2 bg-emerald-50 border border-emerald-900 text-emerald-950 rounded-xl">
+                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
+                <span class="px-2 py-0.5 bg-emerald-100 border border-emerald-700 text-emerald-900 font-bold rounded-md inline-flex items-center gap-0.5"><i data-lucide="trending-up" class="w-3 h-3"></i> +12%</span>
+                <span class="text-slate-500 font-medium">Mois en cours</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Blocs Graphiques avec bordures noires/ardoise épaisses -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm">
+            <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-4">Volume d'admissions par département</h3>
+            <div id="chart-patients-dept" class="w-full"></div>
+        </div>
+
+        <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm">
+            <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-4">Sollicitations Examens Biologiques</h3>
+            <div id="chart-lab-donut" class="w-full"></div>
+        </div>
+
+        <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+            <div>
+                <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-1">Tendances hebdomadaires</h3>
+                <p class="text-xs font-medium text-slate-500 mb-4">Moyenne lissée sur 7 jours d'activité</p>
+            </div>
+            <div id="sparkline" class="w-full"></div>
+        </div>
+    </div>
+
+    <!-- Bas du tableau de bord -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase">Flux des admissions</h3>
+                    <p class="text-xs text-slate-500 font-medium mt-0.5">Analyse dynamique des entrées/sorties</p>
+                </div>
+                <span class="text-xs font-bold px-2.5 py-1 border border-slate-900 bg-slate-50 text-slate-900 rounded-lg">7 derniers jours</span>
+            </div>
+            <div id="chart" class="w-full"></div>
+        </div>
+
+        <!-- Actions secondaires & Journal de bord -->
+        <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+            <div>
+                <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-4">Raccourcis Opérationnels</h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
+                        <i data-lucide="file-text" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
+                        <span class="block">Fiche de Soins</span>
+                    </button>
+                    <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
+                        <i data-lucide="calendar" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
+                        <span class="block">Planifier RDV</span>
+                    </button>
+                    <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
+                        <i data-lucide="microscope" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
+                        <span class="block">Lancer Examen</span>
+                    </button>
+                    <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
+                        <i data-lucide="dollar-sign" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
+                        <span class="block">Facturation</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t-2 border-slate-900">
+                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 mb-3">Journal de bord d'unité</h4>
+                <ul class="text-xs space-y-3 font-medium">
+                    <li class="flex gap-2.5">
+                        <span class="text-slate-500 font-bold shrink-0">12:10</span>
+                        <span class="text-slate-800"><strong class="text-slate-950 font-bold">Admission :</strong> Mme Ngassa (Cardio)</span>
+                    </li>
+                    <li class="flex gap-2.5">
+                        <span class="text-slate-500 font-bold shrink-0">11:45</span>
+                        <span class="text-slate-800"><strong class="text-slate-950 font-bold">Laboratoire :</strong> Résultats dispo (M. Tchatchu)</span>
+                    </li>
+                    <li class="flex gap-2.5">
+                        <span class="text-slate-500 font-bold shrink-0">10:30</span>
+                        <span class="text-slate-800"><strong class="text-slate-950 font-bold">Caisse :</strong> Encaissement 24k FCFA</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</main>
             {%endblock%}
         </div>
     </div>

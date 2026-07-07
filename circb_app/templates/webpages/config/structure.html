@@ -1,0 +1,361 @@
+{% extends '../dashbord_hosp.html' %}
+
+{% block main %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="flex flex-col lg:flex-row flex-1 overflow-hidden max-w-full gap-6 p-6 bg-[#f8fafc] min-h-screen text-slate-800 antialiased font-sans">
+    
+    <aside class="w-full lg:w-80 flex flex-col shrink-0 bg-white border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] overflow-hidden">
+        <div class="p-4 border-b-2 border-slate-900 bg-slate-50">
+            <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group text-slate-700"></i> Niveaux de hiérarchie
+            </h3>
+            <form action="/add_level/" method="POST" class="space-y-3">
+                {% csrf_token %}
+                <input type="text" name="nom" placeholder="Ex: Région, District..." required
+                       class="w-full text-xs border-2 border-slate-900 p-2.5 outline-none focus:bg-slate-50 font-medium rounded-xl text-slate-800 transition-all">
+                <div class="flex gap-2">
+                    <input type="number" name="rang" placeholder="Rang" required
+                           class="w-20 text-xs border-2 border-slate-900 p-2.5 outline-none font-mono font-bold rounded-xl text-slate-800 transition-all">
+                    <button type="submit" class="flex-1 bg-slate-900 text-white text-[11px] font-black tracking-wide py-2.5 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(99,102,241,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all uppercase">
+                        AJOUTER NIVEAU
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-3 max-h-[60vh] lg:max-h-none [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar-track]:bg-slate-50 [&::-webkit-scrollbar-thumb]:bg-slate-900 [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-white [&::-webkit-scrollbar-thumb]:rounded-full">
+            {% for h in hierachie %}
+            <div class="bg-white p-3 border-2 border-slate-900 rounded-xl shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] flex justify-between items-center group transition-all hover:bg-slate-50">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[9px] font-black px-2 py-0.5 rounded border border-slate-900 uppercase font-mono
+                            {% if h.rang == 1 %} bg-blue-500 text-white
+                            {% elif h.rang == 2 %} bg-emerald-400 text-slate-900
+                            {% elif h.rang == 3 %} bg-amber-400 text-slate-900
+                            {% else %} bg-slate-200 text-slate-700 {% endif %}">
+                            Rang {{ h.rang }}
+                        </span>
+                    </div>
+                    <div class="text-xs font-black text-slate-900 mt-1.5 tracking-tight">{{ h.nom }}</div>
+                </div>
+
+                <div class="flex justify-end gap-1.5 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                    <button onclick="openAddModal('{{ h.id }}', '{{ h.nom }}', {{ h.rang|add:1 }})" 
+                        class="bg-white text-emerald-600 border-2 border-slate-900 p-1.5 rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] hover:bg-emerald-50 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all">
+                        <i class="fa-solid fa-plus text-[10px]"></i>
+                    </button>
+                    
+                    <a href="/modify-hierachy/{{h.id}}/"
+                        class="bg-white text-blue-600 border-2 border-slate-900 p-1.5 rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] hover:bg-blue-50 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all flex items-center justify-center">
+                        <i class="fa-solid fa-pen-to-square text-[10px]"></i>
+                    </a>
+
+                    <button onclick="confirmDelete('{{ h.id }}', '{{ h.nom }}', 0)" 
+                        class="bg-white text-red-500 border-2 border-slate-900 p-1.5 rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] hover:bg-red-50 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all">
+                        <i class="fa-solid fa-trash text-[10px]"></i> 
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-10 border-2 border-dashed border-slate-300 rounded-xl">
+                <i class="fa-solid fa-layer-group text-slate-300 text-2xl mb-2"></i>
+                <p class="text-[11px] text-slate-400 font-medium italic">Aucun niveau configuré</p>
+            </div>
+            {% endfor %}
+        </div>
+    </aside>
+
+    <main class="flex-1 bg-white border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] flex flex-col overflow-hidden">
+        <div class="h-14 border-b-2 border-slate-900 flex items-center justify-between px-6 bg-slate-50/80">
+            <h2 class="text-xs font-black uppercase tracking-wider text-slate-900">Unités Organisationnelles</h2>
+            <button onclick="openAddModal(null, 'Racine', 1)" 
+                    class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 border-2 border-slate-900 px-4 py-1.5 text-xs font-black rounded-xl flex items-center gap-2 transition shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
+                <i class="fa-solid fa-circle-plus text-xs"></i> AJOUTER UNE UNITE RACINE
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar-track]:bg-slate-50 [&::-webkit-scrollbar-thumb]:bg-slate-900 [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-white [&::-webkit-scrollbar-thumb]:rounded-full">
+            <div class="border-2 border-slate-900 rounded-xl overflow-hidden shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] bg-white">
+                <table class="w-full border-collapse text-xs text-left text-slate-700">
+                    <thead class="bg-slate-900 text-[10px] font-black text-white uppercase border-b-2 border-slate-900 tracking-wider">
+                        <tr>
+                            <th class="px-6 py-3.5 border-r border-slate-800">Unité d'organisation</th>
+                            <th class="px-6 py-3.5 border-r border-slate-800">Niveau / Rang</th>
+                            <th class="px-6 py-3.5 border-r border-slate-800">Code</th>
+                            <th class="px-6 py-3.5 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y-2 divide-slate-900">
+                        {% for line in lines %}
+                            {% with node=line padding=24 %}
+                                {% include "webpages/config/structure_node.html" %}
+                            {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="modalAdd" class="fixed inset-0 z-[100] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 transition-all duration-200">
+    <div id="modalAddContent" class="bg-white w-full max-w-lg border-2 border-slate-900 rounded-2xl shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] overflow-hidden transform scale-95 opacity-0 transition-all duration-200">
+        <div class="bg-slate-900 text-white p-4 flex justify-between items-center border-b-2 border-slate-900">
+            <h3 id="modalTitle" class="text-xs font-black uppercase tracking-wide">Configuration de l'unité organisationnelle</h3>
+            <button type="button" onclick="closeModals()" class="text-xl hover:text-red-400 font-black transition-colors">&times;</button>
+        </div>
+        <form id="modalAddForm" action="/add_sub_structure/" method="POST" class="p-6 space-y-4 text-xs">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-black text-slate-900 uppercase tracking-wide mb-1">Unité de rattachement (Parent)</label>
+                    <select name="parent_id" id="parentIdField" 
+                            class="w-full border-2 border-slate-900 p-2.5 font-medium outline-none rounded-xl bg-white focus:bg-slate-50 transition-all text-slate-800">
+                        <option value="">-- Aucune (Unité Racine) --</option>
+                        {% for level in hierachie %}
+                            <optgroup label="Niveau {{ level.rang }} : {{ level.nom }}" class="bg-slate-100 font-black text-slate-900 border-y border-slate-300">
+                                {% for struct in all_structures %}
+                                    {% if struct.hierachy.id == level.id %}
+                                        <option value="{{ struct.id }}" class="bg-white text-slate-700 font-medium">
+                                            {{ struct.nom }} {% if struct.designation %}({{ struct.designation }}){% endif %}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </optgroup>
+                        {% endfor %}
+                    </select>
+                    <p class="text-[10px] font-mono text-slate-400 mt-1">Laissez vide pour créer au sommet de la hiérarchie.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block font-black text-slate-900 uppercase tracking-wide mb-1">Niveau de cette unité *</label>
+                        <select name="level_id" id="levelSelect" required 
+                                class="w-full border-2 border-slate-900 p-2.5 font-medium outline-none rounded-xl bg-white focus:bg-slate-50 transition-all text-slate-800">
+                            <option value="" disabled selected>Choisir le niveau...</option>
+                            {% for h in hierachie %}
+                                <option value="{{ h.id }}">Niveau {{ h.rang }} : {{ h.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block font-black text-slate-900 uppercase tracking-wide mb-1">Nom de l'unité *</label>
+                        <input type="text" name="nom" id="inputNom" required 
+                               class="w-full border-2 border-slate-900 p-2.5 font-medium outline-none rounded-xl focus:bg-slate-50 transition-all">
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block font-black text-slate-900 uppercase tracking-wide mb-1">Code / Désignation</label>
+                        <input type="text" name="designation" id="inputDesignation" 
+                               class="w-full border-2 border-slate-900 p-2.5 font-mono font-bold outline-none rounded-xl focus:bg-slate-50 transition-all"
+                               placeholder="Ex: DS-MFO-01">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4 border-t-2 border-slate-900 mt-6">
+                <button type="button" onclick="closeModals()" class="px-4 py-2 border-2 border-slate-900 font-black bg-white text-slate-900 rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all uppercase">ANNULER</button>
+                <button type="submit" class="bg-slate-900 text-white border-2 border-slate-900 px-5 py-2 font-black rounded-xl shadow-[2px_2px_0px_0px_rgba(16,185,129,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all uppercase flex items-center gap-2">
+                    <i class="fa-solid fa-floppy-disk text-xs"></i> ENREGISTRER L'UNITE
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="modaldelete" class="fixed inset-0 z-[100] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+    <div id="modalDeleteContent" class="bg-white w-full max-w-md border-2 border-slate-900 rounded-2xl shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] overflow-hidden transform transition-all scale-95 opacity-0 duration-200">
+        <div class="bg-red-500 text-slate-900 p-4 flex justify-between items-center border-b-2 border-slate-900">
+            <div class="flex items-center gap-2 font-black uppercase tracking-wide">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <h3 class="text-xs">Confirmation de suppression</h3>
+            </div>
+            <button type="button" onclick="closeDeleteModal()" class="text-slate-900 hover:text-white font-black text-xl transition-colors">
+                &times;
+            </button>
+        </div>
+        <div class="p-6 space-y-3 text-xs">
+            <p class="text-slate-900 font-bold text-sm">Êtes-vous sûr de vouloir supprimer cette unité organisationnelle ?</p>
+            <p class="text-red-700 bg-red-50 p-3 rounded-xl border-2 border-red-200 flex items-start gap-2 font-medium">
+                <i class="fa-solid fa-circle-info mt-0.5 shrink-0"></i> 
+                <span><strong>Attention :</strong> Cette unité ne pourra pas être supprimée si elle contient encore des opérations ou des valeurs d'indicateurs liées.</span>
+            </p>
+        </div>
+        <div class="bg-slate-50 px-6 py-4 flex justify-end gap-3 border-t-2 border-slate-900">
+            <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 border-2 border-slate-900 font-black bg-white text-slate-900 rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all uppercase">Annuler</button>
+            <form id="deleteForm" method="POST" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-500 hover:bg-red-600 text-slate-900 border-2 border-slate-900 px-5 py-2 font-black rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex items-center gap-2 transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none uppercase">
+                    <i class="fa-solid fa-trash-can"></i> SUPPRIMER DEFINITIVEMENT
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openAddModal(parentId, parentName, nextRank) {
+        const modal = document.getElementById('modalAdd');
+        const content = document.getElementById('modalAddContent');
+        
+        // Reset du titre et de la cible du formulaire pour le mode création
+        document.getElementById('modalTitle').innerText = "Configuration de l'unité organisationnelle";
+        document.getElementById('modalAddForm').setAttribute('action', '/add_sub_structure/');
+        
+        document.getElementById('inputNom').value = "";
+        document.getElementById('inputDesignation').value = "";
+
+        if (parentId) {
+            document.getElementById('parentIdField').value = parentId;
+        } else {
+            document.getElementById('parentIdField').value = "";
+        }
+        
+        if (nextRank) {
+            const select = document.getElementById('levelSelect');
+            for (let option of select.options) {
+                if (option.text.includes("Niveau " + nextRank)) {
+                    option.selected = true;
+                    break;
+                }
+            }
+        }
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 20);
+    }
+
+    function closeModals() {
+        const modal = document.getElementById('modalAdd');
+        const content = document.getElementById('modalAddContent');
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 200);
+    }
+
+    function openEditModal(id, nom, designation, levelId, parentId) {
+        const modal = document.getElementById('modalAdd');
+        const content = document.getElementById('modalAddContent');
+        
+        document.getElementById('modalTitle').innerText = "Modifier l'unite : " + nom;
+        document.getElementById('modalAddForm').setAttribute('action', '/update_structure/' + id + '/');
+        
+        document.getElementById('inputNom').value = nom;
+        document.getElementById('inputDesignation').value = designation;
+        document.getElementById('levelSelect').value = levelId;
+        document.getElementById('parentIdField').value = parentId ? parentId : "";
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 20);
+    }
+
+    function openDeleteModal(urlAction) {
+        const modal = document.getElementById('modaldelete');
+        const content = document.getElementById('modalDeleteContent');
+        
+        if (urlAction) { 
+            document.getElementById('deleteForm').setAttribute('action', urlAction); 
+        }
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            modal.classList.add('opacity-100');
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 20);
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('modaldelete');
+        const content = document.getElementById('modalDeleteContent');
+        
+        modal.classList.remove('opacity-100');
+        modal.classList.add('opacity-0');
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => { 
+            modal.classList.add('hidden'); 
+            modal.classList.remove('flex');
+        }, 200);
+    }
+</script>
+
+{% for message in messages %}
+<script>
+    Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% else %}info{% endif %}",
+        title: "{{ message|escapejs }}",
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true,
+        background: "#ffffff",
+        color: "#0f172a",
+        customClass: {
+            popup: 'border-2 border-slate-900 rounded-xl shadow-[3px_3px_0px_0px_rgba(15,23,42,1)]'
+        }
+    });
+</script>
+{% endfor %}
+
+<script>
+    function confirmDelete(id, nom, childCount) {
+        let messageHtml = `Voulez-vous vraiment supprimer la hiérarchie <strong class="text-slate-900">"${nom}"</strong> ?`;
+        
+        if (childCount > 0) {
+            messageHtml += `
+                <div class="mt-4 p-3 bg-red-50 border-2 border-red-200 rounded-xl text-left">
+                    <p class="text-xs text-red-700 font-medium flex items-start gap-2">
+                        <i class="fa-solid fa-triangle-exclamation text-red-500 mt-0.5"></i>
+                        <span><strong>ATTENTION :</strong> Cette unité possède <strong>${childCount}</strong> sous-unité(s) qui seront également impactées.</span>
+                    </p>
+                </div>
+            `;
+        }
+
+        Swal.fire({
+            title: 'Confirmation de suppression',
+            html: messageHtml,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Oui, supprimer',
+            cancelButtonText: 'Annuler',
+            background: '#ffffff',
+            customClass: {
+                popup: 'border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]',
+                confirmButton: 'border-2 border-slate-900 font-bold px-4 py-2',
+                cancelButton: 'border-2 border-slate-900 font-bold px-4 py-2'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Suppression en cours...',
+                    allowOutsideClick: false,
+                    didOpen: () => { Swal.showLoading(); }
+                });
+                window.location.href = `/delete_hierachie/${id}/`;
+            }
+        });
+    }
+</script>
+{% endblock %}

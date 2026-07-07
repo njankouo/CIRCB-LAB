@@ -1,0 +1,199 @@
+{% extends "../dashbord_hosp.html" %}
+
+{% block main %}
+<div x-data="{ currentSection: 'structures', activeRole: 'biologiste' }" class="p-6 bg-[#f8fafc] min-h-screen text-slate-800 font-sans antialiased">
+    
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between pb-5 mb-6 border-b border-slate-200 gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-widest">
+                <span>LIMS Administration</span>
+                <span>/</span>
+                <span class="text-slate-600">Global Settings</span>
+            </div>
+            <h1 class="text-xl font-bold tracking-tight text-slate-900 mt-1">Configuration Avancée du Système</h1>
+        </div>
+        <div class="flex items-center gap-2 self-end lg:self-center">
+            <button type="button" class="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-600 px-3 py-2 rounded-lg text-xs font-medium hover:bg-slate-50 transition-all shadow-sm">
+                <i class="fas fa-history text-slate-400"></i> Logs d'audit
+            </button>
+            <button form="advancedConfigForm" type="submit" class="inline-flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-slate-800 transition-all shadow-sm uppercase tracking-wide">
+                <i class="fas fa-save text-[11px]"></i> Appliquer les paramètres
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <nav class="lg:col-span-3 space-y-1 bg-white p-2 border border-slate-200 rounded-xl shadow-sm h-fit">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 pt-2 pb-1">Réseau & Logistique</div>
+            
+            <button @click="currentSection = 'structures'" :class="currentSection === 'structures' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
+                <i class="fas fa-sitemap w-4 text-center"></i>
+                <span>Structures & Territoires</span>
+            </button>
+
+            <button @click="currentSection = 'logistique'" :class="currentSection === 'logistique' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
+                <i class="fas fa-truck w-4 text-center"></i>
+                <span>Transporteurs & Flux</span>
+            </button>
+
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 pt-4 pb-1">Protocoles Cliniques & PTME</div>
+
+            <button @click="currentSection = 'maternite'" :class="currentSection === 'maternite' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
+                <i class="fas fa-baby-carriage w-4 text-center"></i>
+                <span>Accouchement & Allaitement</span>
+            </button>
+
+            <button @click="currentSection = 'ptme'" :class="currentSection === 'ptme' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
+                <i class="fas fa-hands-holding-child w-4 text-center"></i>
+                <span>Protocoles PTME & ARV</span>
+            </button>
+
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 pt-4 pb-1">Analyses & Diagnostics</div>
+
+            <button @click="currentSection = 'laboratoire'" :class="currentSection === 'laboratoire' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
+                <i class="fas fa-vials w-4 text-center"></i>
+                <span>Tests & Raisons Prélèvement</span>
+            </button>
+
+            <button @click="currentSection = 'roles'" :class="currentSection === 'roles' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
+                <i class="fas fa-user-shield w-4 text-center"></i>
+                <span>Droits & Habilitations</span>
+            </button>
+        </nav>
+
+        <div class="lg:col-span-9">
+            <form id="advancedConfigForm" method="POST" action="">
+                {% csrf_token %}
+
+                <div x-show="currentSection === 'structures'" x-transition.opacity class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Structures Organisationnelles</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Configurez le maillage sanitaire des FOSA (Régions, Districts, Formations Sanitaires).</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="space-y-1">
+                            <label class="font-semibold text-slate-600">Régions de couverture actives</label>
+                            <input type="text" value="Littoral, Centre, Ouest, Adamaoua" placeholder="Séparées par des virgules" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="font-semibold text-slate-600">Districts Sanitaires Rattachés</label>
+                            <input type="text" value="Bonassama, Deido, Japoma, Cite des palmiers" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                        </div>
+                    </div>
+                    <div class="space-y-1 text-xs">
+                        <label class="font-semibold text-slate-600">Types de FOSA Autorisés dans le réseau LIMS</label>
+                        <input type="text" value="Hôpital Général, Hôpital de District, CMA, Centre de Santé Intégré (CSI)" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                    </div>
+                </div>
+
+                <div x-show="currentSection === 'logistique'" x-transition.opacity class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Transporteurs & Modes de Transit</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Définissez les prestataires logistiques agréés et les vecteurs de la chaîne de froid.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="space-y-1">
+                            <label class="font-semibold text-slate-600">Agences de transport / Prestataires</label>
+                            <input type="text" value="DHL Express, Chronopost, Logistique Intégrée MS, DHL Global Forwarding" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="font-semibold text-slate-600">Modes de transport acceptés</label>
+                            <input type="text" value="Moto (Boîte isotherme), Véhicule climatisé, Courrier aérien, Liaison froide dédiée" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="currentSection === 'maternite'" x-transition.opacity class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Obstétrique & Modes d'Allaitement</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Variables pour l'analyse des transmissions mère-enfant.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="space-y-1">
+                            <label class="font-semibold text-slate-600">Options : Modes d'accouchement</label>
+                            <input type="text" value="Voie Basse Eutocique, Césarienne programmée, Césarienne d'urgence, Voie Basse Instrumentale" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="font-semibold text-slate-600">Options : Modes d'allaitement</label>
+                            <input type="text" value="Allaitement Maternel Exclusif (AME), Allaitement Artificiel (Substituts), Allaitement Mixte" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="currentSection === 'ptme'" x-transition.opacity class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Protocoles PTME & Suivi ARV</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Configuration des schémas prophylactiques et d'entrée dans le parcours de soin.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="space-y-1">
+                            <label class="font-semibold text-slate-600">Protocoles PTME enregistrés</label>
+                            <input type="text" value="Option B+, Protocole National Standard 2026, Prophylaxie Mère Unique" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="font-semibold text-slate-600">Portes d'entrée du patient (PORTE_ENTREE)</label>
+                            <input type="text" value="Consultation Prénatale (CPN), Maternité / Salle d'accouchement, Pédiatrie, Bloc d'urgence, Dépistage volontaire" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                        </div>
+                    </div>
+                    <div class="space-y-1 text-xs">
+                        <label class="font-semibold text-slate-600">Schémas thérapeutiques : Prophylaxie ARV</label>
+                        <input type="text" value="TDF + 3TC + DTG (TLD), AZT + 3TC + NVP, NVP seule chez le nouveau-né (6 semaines), AZT si haut risque" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                    </div>
+                </div>
+
+                <div x-show="currentSection === 'laboratoire'" x-transition.opacity class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Tests & Justifications d'Analyse</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Définissez la nomenclature des tests LIMS et les motifs de demande de prélèvement.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="space-y-1">
+                            <label class="font-semibold text-slate-600">Types de Tests / Panels configurés</label>
+                            <input type="text" value="PCR Charge Virale (VIH), PCR Diagnostic Précoce (PCR-1 / PCR-2), Test Rapide d'Orientation (TRO), CD4" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="font-semibold text-slate-600">Raisons du prélèvement autorisées</label>
+                            <input type="text" value="Bilan Initial, Suivi Routine Annuel, Suspicion Échec Thérapeutique, Suivi Enfant Exposé, Contrôle Qualité" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="currentSection === 'roles'" x-transition.opacity class="space-y-6">
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                            <div>
+                                <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Matrice des Droits d'Accès</h2>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                            <div class="p-2 space-y-1 bg-slate-50/30">
+                                <button type="button" @click="activeRole = 'biologiste'" :class="activeRole === 'biologiste' ? 'bg-white shadow-sm text-slate-900 ring-1 ring-black/5' : 'text-slate-500 hover:bg-slate-50'" class="w-full text-left p-2 rounded-lg text-xs font-semibold flex items-center justify-between">
+                                    <span>Biologiste Signataire</span>
+                                </button>
+                                <button type="button" @click="activeRole = 'technicien'" :class="activeRole === 'technicien' ? 'bg-white shadow-sm text-slate-900 ring-1 ring-black/5' : 'text-slate-500 hover:bg-slate-50'" class="w-full text-left p-2 rounded-lg text-xs font-semibold flex items-center justify-between">
+                                    <span>Technicien</span>
+                                </button>
+                            </div>
+
+                            <div class="md:col-span-3 p-4 space-y-4 text-xs">
+                                <h3 class="font-bold text-slate-700">Permissions pour : <span class="text-slate-900 uppercase" x-text="activeRole"></span></h3>
+                                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200/60">
+                                    <div>
+                                        <h4 class="font-semibold text-slate-800">Validation des Résultats Biologiques</h4>
+                                    </div>
+                                    <input type="checkbox" checked class="w-4 h-4 rounded text-slate-900 border-slate-300 focus:ring-slate-500">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+{% endblock %}

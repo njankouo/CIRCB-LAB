@@ -1,7 +1,8 @@
 {% extends "../dashbord_hosp.html" %}
 
 {% block main %}
-<div class="pl-4 sm:pl-6 lg:pl-10 pr-4 sm:pr-6 py-6 max-w-7xl mx-auto w-full space-y-8">
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white max-w-7xl">
+<div class="pl-4 sm:pl-6 lg:pl-10 pr-4 sm:pr-6 py-6  mx-auto w-full space-y-8">
     
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b-2 border-slate-900 pb-6">
         <div>
@@ -9,9 +10,9 @@
             <p class="text-sm font-semibold text-slate-500 mt-0.5">Consultation, recherche et suivi des dossiers médicaux partagés</p>
         </div>
         <div>
-            <button class="w-full sm:w-auto px-4 py-2.5 bg-slate-900 hover:bg-slate-950 text-white font-bold rounded-xl border-2 border-slate-900 text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-y-0.5">
-                + Nouveau Dossier Patient
-            </button>
+            <button onclick="document.getElementById('patient-modal').showModal()" class="w-full sm:w-auto px-4 py-2.5 bg-slate-900 hover:bg-slate-950 text-white font-bold rounded-xl border-2 border-slate-900 text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-y-0.5">
+    + Nouveau Dossier Patient
+</button>
         </div>
     </div>
 
@@ -148,10 +149,138 @@
         </div>
     </div>
 </div>
+<dialog id="patient-modal" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm bg-white border-2 border-slate-900 rounded-2xl p-6 max-w-2xl w-full shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] open:animate-in open:fade-in open:zoom-in-95 duration-200">
+    
+    <div class="flex items-center justify-between border-b-2 border-slate-900 pb-4 mb-4">
+        <div>
+            <h3 class="text-lg font-black uppercase tracking-tight text-slate-900">Création Dossier Patient (DMP)</h3>
+            <p class="text-xs font-semibold text-slate-400 mt-0.5">Enregistrement initial et ouverture des droits de suivi</p>
+        </div>
+        <button onclick="document.getElementById('patient-modal').close()" class="p-1.5 border border-slate-900 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-900 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+
+  <form method="POST" action="#" class="space-y-4">
+    {% csrf_token %}
+    
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Nom du Patient *</label>
+            <input type="text" name="nom" required placeholder="Ex: AMOUGOU" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 uppercase focus:outline-none">
+        </div>
+        <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Prénom(s)</label>
+            <input type="text" name="prenom" placeholder="Ex: Samuel" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
+        </div>
+        <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Sexe *</label>
+            <select name="sexe" required class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
+                <option value="">Choisir...</option>
+                <option value="M">Masculin</option>
+                <option value="F">Féminin</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Date de Naissance</label>
+            <input type="date" name="date_naissance" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
+        </div>
+        <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Poids (en kg)</label>
+            <input type="number" step="0.01" name="poids" placeholder="Ex: 4.50" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
+        </div>
+        <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Code Patient (Optionnel)</label>
+            <input type="text" name="code" placeholder="Généré auto si vide" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 font-mono focus:outline-none">
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t-2 border-dashed border-slate-200 pt-4">
+        <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">FOSA (Structure Sanitaire)</label>
+            <select name="fosa" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
+                <option value="">Sélectionner une FOSA...</option>
+                {% for s in structures %}
+                    <option value="{{ s.id }}">{{ s.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Mère Associée</label>
+            <select name="mere" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
+                <option value="">Associer à une mère...</option>
+                {% for m in meres %}
+                    <option value="{{ m.id }}">{{ m.nom }} {{ m.prenom }} (Code: {{ m.code }})</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="sm:col-span-1">
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Porte d'Entrée</label>
+            <select name="porte_entree" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
+                <option value="">Sélectionner la filière...</option>
+                {% for pe in portes_entree %}
+                    <option value="{{ pe.id }}">{{ pe.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="sm:col-span-1">
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Prophylaxie ARV</label>
+            <select name="profilaxie" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
+                <option value="">Choisir le protocole...</option>
+                {% for pr in profilaxies %}
+                    <option value="{{ pr.id }}">{{ pr.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="sm:col-span-1">
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Personnel / Contact Réseau</label>
+            <select name="contact" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
+                <option value="">Sélectionner l'agent...</option>
+                {% for p in personnels %}
+                    <option value="{{ p.id }}">{{ p.nom }} {{ p.prenom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-3 pt-4 border-t-2 border-slate-900 mt-6">
+        <button type="button" onclick="document.getElementById('patient-modal').close()" class="px-4 py-2 border border-slate-900 rounded-xl bg-slate-50 hover:bg-slate-100 font-bold text-xs uppercase tracking-wider text-slate-900 transition-colors">
+            Annuler
+        </button>
+        <button type="submit" class="px-4 py-2 bg-slate-900 hover:bg-slate-950 border-2 border-slate-900 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-y-0.5 cursor-pointer">
+            Valider et Créer le Patient
+        </button>
+    </div>
+</form>
+</dialog>
 {% endblock %}
 
 {% block scripts %}
 <script>
      lucide.createIcons();
+     // Gestion de la fermeture en cliquant à côté du cadre blanc
+['personnel-modal', 'patient-modal'].forEach(id => {
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            const rect = modal.getBoundingClientRect();
+            if (
+                e.clientX < rect.left ||
+                e.clientX > rect.right ||
+                e.clientY < rect.top ||
+                e.clientY > rect.bottom
+            ) {
+                modal.close();
+            }
+        });
+    }
+});
 </script>
+</main>
 {% endblock %}

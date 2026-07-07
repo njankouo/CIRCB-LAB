@@ -1,0 +1,610 @@
+{% extends "../dashbord_hosp.html" %}
+{% block title %}Fiche d'échantillons{% endblock %}
+
+{% block main %}
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white">
+<div class="p-6 bg-[#f8fafc] min-h-screen font-sans antialiased relative">
+
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-5 border-b border-slate-200 gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-widest">
+                <span>Laboratory Modules</span>
+                <span>/</span>
+                <span class="text-slate-600">Specimen Tracking</span>
+            </div>
+            <h1 class="text-xl font-bold text-slate-900 tracking-tight mt-1">Fiches d'échantillons</h1>
+        </div>
+        <button onclick="document.getElementById('lims-modal').showModal()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium px-4 py-2 rounded-lg transition-all shadow-sm tracking-wide uppercase">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            Nouvelle Fiche
+        </button>
+    </div>
+
+    <div class="mt-6 bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="relative">
+                <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                <input type="text" placeholder="Rechercher une FOSA, expéditeur..." class="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-slate-400 focus:bg-white transition-all text-slate-800 placeholder-slate-400">
+            </div>
+            <select class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-slate-400 focus:bg-white transition-all">
+                <option value="">Toutes les Régions</option>
+                <option value="littoral">Littoral</option>
+                <option value="centre">Centre</option>
+            </select>
+            <select class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-slate-400 focus:bg-white transition-all">
+                <option value="">Tous les Districts</option>
+                <option value="bonassama">Bonassama</option>
+                <option value="deido">Deido</option>
+            </select>
+            <select class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-slate-400 focus:bg-white transition-all">
+                <option value="">Tous les Statuts</option>
+                <option value="conforme">Conforme</option>
+                <option value="alerte">Alerte / Non conforme</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="mt-4 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        
+        <div class="block lg:hidden divide-y divide-slate-100">
+            <div class="p-4 hover:bg-slate-50/50 transition-colors cursor-pointer" onclick="toggleRegistryRow('row-lims-1', this)">
+                <div class="flex justify-between items-start gap-4">
+                    <div class="space-y-1">
+                        <div class="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            Hôpital de District (Bonassama)
+                        </div>
+                        <div class="text-[11px] text-slate-400 font-medium tracking-wide">Dr. Ndoumbe • 07.07.2026</div>
+                    </div>
+                    <div class="text-right space-y-1 shrink-0">
+                        <div class="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">24 U</div>
+                        <div class="text-[10px] uppercase font-bold tracking-wider text-emerald-600">Complété</div>
+                    </div>
+                </div>
+
+                <div id="row-lims-1" class="hidden pt-4 mt-3 border-t border-slate-100 space-y-3 text-[11px] text-slate-600 animate-rowSlide">
+                    <div class="text-xs font-mono text-[10px] bg-slate-50 p-2 rounded">CONFORME: Reçu à bonne température.</div>
+                </div>
+                <div class="mt-2 text-[10px] text-slate-300 font-medium tracking-wide text-center uppercase border-t border-slate-50 pt-1 pointer-events-none row-indicator">
+                    Cliquez pour inspecter la fiche
+                </div>
+            </div>
+        </div>
+
+        <div class="hidden lg:block overflow-x-auto">
+           <table class="w-full text-left border-collapse text-xs">
+    <thead>
+        <tr class="border-b border-slate-200 bg-[#fafafa] text-slate-400 font-bold uppercase tracking-wider">
+            <th class="px-5 py-3 font-semibold">Code / Origine</th>
+            <th class="px-5 py-3 font-semibold">Détails Expédition</th>
+            <th class="px-5 py-3 font-semibold text-center">Unités</th>
+            <th class="px-5 py-3 font-semibold">Logistique / Transit</th>
+            <th class="px-5 py-3 font-semibold">Réception & Date</th>
+            <th class="px-5 py-3 font-semibold">Réceptionniste</th>
+            <th class="px-5 py-3 font-semibold">Observations LIMS</th>
+            <th class="px-5 py-3 font-semibold text-right">Actions</th>
+        </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100 text-slate-600 font-medium">
+        {% for fiche in fiches %}
+        <tr class="hover:bg-slate-50/50 transition-colors">
+            <td class="px-5 py-4">
+                <div class="text-slate-900 font-black font-mono text-[11px]">#{{ fiche.code }}</div>
+                <div class="text-slate-800 font-semibold mt-0.5">{{ fiche.fosa.nom }}</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">{{ fiche.region.nom }} • {{ fiche.district.nom }}</div>
+            </td>
+            
+            <td class="px-5 py-4">
+                <div class="text-slate-800 font-mono">{{ fiche.date_expedition|date:"d.m.Y" }}</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Départ FOSA</div>
+            </td>
+            
+            <td class="px-5 py-4 text-center">
+                <span class="font-mono bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-bold border border-slate-200">
+                    {{ fiche.nombre_echantillon|default:"0" }}
+                </span>
+            </td>
+            
+            <td class="px-5 py-4">
+                <div class="text-slate-800">{% if fiche.transporteur %}{{ fiche.transporteur.nom }}{% else %}<span class="text-slate-400 italic">Aucun</span>{% endif %}</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">
+                    {% if fiche.moyen_transport %}{{ fiche.moyen_transport.nom }}{% else %}--{% endif %}
+                    {% if fiche.transporteur.tel %} • {{ fiche.transporteur.tel }}{% endif %}
+                </div>
+            </td>
+            
+            <td class="px-5 py-4">
+                <div class="text-slate-800 font-mono">{{ fiche.date_reception|date:"d.m.Y" }}</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Arrivée Labo</div>
+            </td>
+            
+            <td class="px-5 py-4">
+                <div class="text-slate-800">{{ fiche.receptioniste.nom }} {{ fiche.receptioniste.prenom }}</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">{% if fiche.receptioniste.tel %}{{ fiche.receptioniste.tel }}{% else %}Pas de contact{% endif %}</div>
+            </td>
+            
+            <td class="px-5 py-4">
+                {% if fiche.observation %}
+                    <span class="text-[10px] text-slate-600 font-sans bg-slate-50 px-2 py-1 rounded border border-slate-200 truncate inline-block max-w-[150px]" title="{{ fiche.observation }}">
+                        {{ fiche.observation }}
+                    </span>
+                {% else %}
+                    <span class="text-[10px] text-slate-400 italic">Aucune note</span>
+                {% endif %}
+            </td>
+            
+            <td class="px-5 py-4 text-right">
+                <div class="flex items-center justify-end gap-1.5">
+                    <a href="#" class="p-1 text-slate-400 hover:text-slate-900" title="Voir les détails">
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                    </a>
+                    <a href="/details-fiche/{{fiche.code}}/" class="p-1 text-slate-400 hover:text-slate-900" title="Modifier">
+                        <i data-lucide="edit" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" class="px-5 py-8 text-center text-slate-400 italic bg-slate-50/50">
+                Aucune fiche d'échantillon enregistrée pour le moment.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+        </div>
+    </div>
+</div>
+
+<dialog id="lims-modal" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm bg-white border-2 border-slate-900 rounded-2xl p-6 max-w-5xl w-full shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] open:animate-in open:fade-in open:zoom-in-95 duration-200 overflow-y-auto max-h-[90vh] [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-r-2xl [&::-webkit-scrollbar-track]:border-l-2 [&::-webkit-scrollbar-track]:border-slate-900 [&::-webkit-scrollbar-thumb]:bg-slate-900 [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-slate-100 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-indigo-600">
+    
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between border-b-2 border-slate-900 pb-4 mb-4">
+        <h3 class="text-base font-black uppercase tracking-tight text-slate-900">Enregistrement Fiche Échantillon</h3>
+        <button onclick="document.getElementById('lims-modal').close()" class="p-1.5 border-2 border-slate-900 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-900 transition-colors shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Formulaire d'administration LIMS -->
+   <form method="POST" action="{%url 'enregistrer_fiche_echantillon'%}" class="space-y-6 text-xs text-slate-700 pr-2" id="lims-form">
+    {% csrf_token %}
+
+    <div class="space-y-3">
+        <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest bg-slate-100 p-1.5 border-2 border-slate-900 inline-block rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)]">
+            1. Logistique & Territoires
+        </h4>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-3 border-2 border-slate-900 rounded-xl shadow-[3px_3px_0px_0px_rgba(15,23,42,0.05)]">
+            <div class="space-y-1">
+                <label class="font-black text-slate-900 uppercase tracking-wide text-[10px]">Région *</label>
+                <select name="region" id="select-region" required class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-100 font-bold text-slate-800 bg-white cursor-pointer transition-all">
+                    <option value="">Sélectionner la Région</option>
+                    {% for r in regions %}
+                        <option value="{{ r.id }}">{{ r.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="space-y-1">
+                <label class="font-black text-slate-900 uppercase tracking-wide text-[10px]">District de Santé *</label>
+                <select name="district" id="select-district" required disabled class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-100 font-bold text-slate-800 bg-white cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                   
+                </select>
+            </div>
+
+            <div class="space-y-1">
+                <label class="font-black text-slate-900 uppercase tracking-wide text-[10px]">Formation Sanitaire (FOSA) *</label>
+                <select name="fosa" id="select-fosa" required disabled class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-100 font-bold text-slate-800 bg-white cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    <option value="">Choisir la FOSA...</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="space-y-1">
+            <label class="font-bold text-slate-900">Expediteur *</label>
+            <input type="text" name="expediteur" required placeholder="Ex: M. Kamga Amadou, Moto (Isotherme)" class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-medium text-slate-800 bg-white">
+        </div>
+    </div>
+
+  <div class="space-y-3">
+        <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest bg-slate-100 p-1.5 border-2 border-slate-900 inline-block rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)]">
+            2. Spécifications du Prélèvement
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="space-y-1">
+                <label class="font-bold text-slate-900">Date d'expédition *</label>
+                <input type="date" name="date_expedition" required 
+                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white">
+            </div>
+            <div class="space-y-1">
+                <label class="font-bold text-slate-900">Nombre d'échantillons *</label>
+                <input type="number" name="nombre_echantillon" min="1" required placeholder="Ex: 5" 
+                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white font-mono">
+            </div>
+        </div>
+    </div>
+
+   <div class="space-y-3">
+        <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest bg-slate-100 p-1.5 border-2 border-slate-900 inline-block rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)]">
+            3. Détails du Transporteur
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="space-y-1">
+                <label class="font-bold text-slate-900">Nom du Transporteur *</label>
+                <select id='transporteur' name="transporteur" required class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white">
+                    <option value="">Sélectionner le transporteur</option>
+                    {% for t in transporteurs %}
+                        <option value="{{ t.id }}">{{ t.nom }} {% if t.code %}({{ t.code }}){% endif %}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="space-y-1">
+                <label class="font-bold text-slate-900">Moyen de transport *</label>
+                <select name="moyen_transport" required class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white">
+                    <option value="">Sélectionner le moyen</option>
+                    {% for m in moyens_transport %}
+                        <option value="{{ m.id }}">{{ m.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="space-y-1">
+            <label class="font-bold text-slate-900">Contact Téléphonique du Transporteur</label>
+            <input readonly id='contact-transporter' type="text" name="contact_transporteur" placeholder="Ex: +237 6xx xxx xxx" 
+                   class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-medium text-slate-800 bg-white font-mono">
+        </div>
+    </div>
+
+   <div class="space-y-3">
+        <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest bg-slate-100 p-1.5 border-2 border-slate-900 inline-block rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)]">
+            4. Réception & Traçabilité
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="space-y-1">
+                <label class="font-bold text-slate-900">Nom du Réceptionniste *</label>
+                <select name="receptioniste" required class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white">
+                    <option value="">Sélectionner le réceptionniste</option>
+                    
+                        <option value="{{ request.user.id }}">{{ request.user.first_name }} {{ request.user.username }}</option>
+                  
+                </select>
+            </div>
+            <div class="space-y-1">
+                <label class="font-bold text-slate-900">Date de réception *</label>
+                <input type="date" name="date_reception" required 
+                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white">
+            </div>
+            <div class="space-y-1">
+                <label class="font-bold text-slate-900">Nom du Destinataire / Labo *</label>
+                <input type="text" name="destinataire" placeholder="Ex: Laboratoire de Référence CPC" 
+                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-medium text-slate-800 bg-white">
+            </div>
+            <div class="space-y-1">
+                <label class="font-bold text-slate-900">Contact du Réceptionniste</label>
+                <input type="text" name="contact_receptionniste" placeholder="Ex: +237 6xx xxx xxx" 
+                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-medium text-slate-800 bg-white font-mono">
+            </div>
+        </div>
+        <div class="space-y-1">
+            <label class="font-bold text-slate-900">Observations / Notes de conformité</label>
+            <textarea name="observation" rows="2" placeholder="Ex: Échantillons reçus sous chaîne de froid positive, conformes..." 
+                      class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-medium text-slate-800 bg-white resize-none"></textarea>
+        </div>
+    </div>
+
+   <!-- Boutons d'Action Style Néo-Brutaliste Épuré -->
+    <div class="pt-5 mt-4 border-t-2 border-slate-900 flex justify-end gap-3 bg-white sticky bottom-0 z-10">
+        <button type="button" 
+                onclick="document.getElementById('lims-modal').close()" 
+                class="px-5 py-2.5 border-2 border-slate-900 font-black bg-white text-slate-950 rounded-xl transition-all shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none uppercase tracking-wide cursor-pointer">
+            Annuler
+        </button>
+        <button type="submit" 
+                class="px-6 py-2.5 border-2 border-slate-900 font-black bg-indigo-500 text-slate-950 rounded-xl transition-all shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none uppercase tracking-wide cursor-pointer">
+            Enregistrer la Fiche
+        </button>
+    </div>
+</form>
+</dialog>
+<dialog id="recap-modal" class="p-6 border-4 border-slate-900 rounded-2xl bg-white shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] max-w-md w-full backdrop:bg-slate-900/40">
+    <div class="text-center space-y-4">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-emerald-700 font-black text-xl">
+            ✓
+        </div>
+        
+        <h3 class="text-lg font-black text-slate-900 uppercase tracking-tight">Fiche Enregistrée avec Succès !</h3>
+        <p class="text-xs text-slate-500 font-medium" id="recap-code-fiche">Code de suivi : #---------</p>
+        
+        <hr class="border-t-2 border-dashed border-slate-300 my-2">
+        
+        <div class="text-left space-y-2 bg-slate-50 p-3 border-2 border-slate-900 rounded-xl max-h-60 overflow-y-auto font-medium text-slate-700 text-[11px]">
+            <div class="flex justify-between border-b border-slate-200 pb-1">
+                <span class="text-slate-400 font-bold uppercase text-[9px]">Région</span>
+                <span class="font-bold text-slate-900" id="recap-region">-</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-200 pb-1">
+                <span class="text-slate-400 font-bold uppercase text-[9px]">District</span>
+                <span class="font-bold text-slate-900" id="recap-district">-</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-200 pb-1">
+                <span class="text-slate-400 font-bold uppercase text-[9px]">FOSA</span>
+                <span class="font-bold text-slate-900" id="recap-fosa">-</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-200 pb-1">
+                <span class="text-slate-400 font-bold uppercase text-[9px]">Expédition</span>
+                <span class="font-bold text-slate-900 font-mono" id="recap-date-exp">-</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-200 pb-1">
+                <span class="text-slate-400 font-bold uppercase text-[9px]">Échantillons</span>
+                <span class="font-black text-indigo-600 font-mono" id="recap-nb-ech">-</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-200 pb-1">
+                <span class="text-slate-400 font-bold uppercase text-[9px]">Transporteur</span>
+                <span class="font-bold text-slate-900" id="recap-transp">-</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-200 pb-1">
+                <span class="text-slate-400 font-bold uppercase text-[9px]">Réceptionniste</span>
+                <span class="font-bold text-slate-900" id="recap-recep">-</span>
+            </div>
+            <div class="flex flex-col pt-1">
+                <span class="text-slate-400 font-bold uppercase text-[9px] mb-0.5">Observations</span>
+                <p class="text-slate-600 bg-white p-1.5 border border-slate-300 rounded italic text-[10px]" id="recap-obs">Aucune observation.</p>
+            </div>
+        </div>
+
+        <div class="pt-2">
+            <button type="button" onclick="document.getElementById('recap-modal').close()" class="w-full py-2 border-2 border-slate-900 font-black bg-slate-900 text-white rounded-xl shadow-[3px_3px_0px_0px_rgba(99,102,241,1)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none uppercase tracking-wider text-[11px] cursor-pointer">
+                Terminer & Fermer
+            </button>
+        </div>
+    </div>
+</dialog>
+</main>
+<script>
+// Toggle de la ligne mobile (Accordéon)
+function toggleRegistryRow(id, element) {
+    const targetPanel = document.getElementById(id);
+    const indicator = element.querySelector('.row-indicator');
+    if (targetPanel.classList.contains('hidden')) {
+        targetPanel.classList.remove('hidden');
+        if (indicator) indicator.innerText = "Fermer l'inspection";
+        element.classList.add('bg-slate-50');
+    } else {
+        targetPanel.classList.add('hidden');
+        if (indicator) indicator.innerText = "Cliquez pour inspecter la fiche";
+        element.classList.remove('bg-slate-50');
+    }
+}
+
+
+// Fermeture du modal en cliquant à l'extérieur
+window.onclick = function(event) {
+    const modal = document.getElementById('lims-modal');
+    if (event.target === modal) {
+        closeLimsModal();
+    }
+}
+</script>
+<script>
+     lucide.createIcons();
+     const modal = document.getElementById('lims-modal');
+modal.addEventListener('click', (e) => {
+    const dialogDimensions = modal.getBoundingClientRect();
+    if (
+        e.clientX < dialogDimensions.left ||
+        e.clientX > dialogDimensions.right ||
+        e.clientY < dialogDimensions.top ||
+        e.clientY > dialogDimensions.bottom
+    ) {
+        modal.close();
+    }
+});
+</script>
+<style>
+/* Animations fluides ERP */
+@keyframes rowSlide {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes modalScale {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+}
+.animate-rowSlide { animation: rowSlide 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-modalScale { animation: modalScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+</style>
+<script>
+    // Gestion dynamique des sélections Région -> District -> FOSA
+    const selectRegion = document.getElementById('select-region');
+    const selectDistrict = document.getElementById('select-district');
+    const selectFosa = document.getElementById('select-fosa');
+
+    // 1. Événement lors du changement de Région
+    selectRegion.addEventListener('change', function() {
+        const regionId = this.value;
+        
+        // Réinitialisation complète des descendants
+        selectDistrict.innerHTML = '<option value="">Choisir un district...</option>';
+        selectDistrict.disabled = true;
+        selectFosa.innerHTML = '<option value="">Choisir la FOSA...</option>';
+        selectFosa.disabled = true;
+
+        if (regionId) {
+            fetch(`/search_district/${regionId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Erreur réseau lors de la récupération des districts');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && Array.isArray(data.districts) && data.districts.length > 0) {
+                        data.districts.forEach(district => {
+                            const option = document.createElement('option');
+                            option.value = district.id;
+                            option.textContent = district.nom;
+                            selectDistrict.appendChild(option);
+                        });
+                    } else {
+                        selectDistrict.innerHTML = '<option value="">Aucun district trouvé pour cette région</option>';
+                    }
+                    // Déblocage du champ quoi qu'il arrive
+                    selectDistrict.disabled = false;
+                })
+                .catch(error => {
+                    console.error(error);
+                    selectDistrict.innerHTML = '<option value="">Erreur de chargement des données</option>';
+                    selectDistrict.disabled = false;
+                });
+        }
+    });
+
+    // 2. Événement lors du changement de District
+    selectDistrict.addEventListener('change', function() {
+        const districtId = this.value;
+        
+        // Réinitialisation de la FOSA uniquement
+        selectFosa.innerHTML = '<option value="">Choisir la FOSA...</option>';
+        selectFosa.disabled = true;
+
+        if (districtId) {
+            fetch(`/search_fosa/${districtId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Erreur réseau lors de la récupération des FOSAs');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && Array.isArray(data.fosas) && data.fosas.length > 0) {
+                        data.fosas.forEach(fosa => {
+                            const option = document.createElement('option');
+                            option.value = fosa.id;
+                            option.textContent = fosa.nom;
+                            selectFosa.appendChild(option);
+                        });
+                    } else {
+                        selectFosa.innerHTML = '<option value="">Aucune FOSA trouvée pour ce district</option>';
+                    }
+                    // Déblocage du champ quoi qu'il arrive
+                    selectFosa.disabled = false;
+                })
+                .catch(error => {
+                    console.error(error);
+                    selectFosa.innerHTML = '<option value="">Erreur de chargement des données</option>';
+                    selectFosa.disabled = false;
+                });
+        }
+    });
+</script>
+<script>
+    const selectTransporter = document.querySelector('select[name="transporteur"]');
+    const inputContact = document.querySelector('input[name="contact_transporteur"]');
+
+    if (selectTransporter && inputContact) {
+        selectTransporter.addEventListener('change', function() {
+            const transporterId = this.value;
+
+            // Réinitialiser le champ si aucun transporteur n'est sélectionné
+            if (!transporterId) {
+                inputContact.value = '';
+                return;
+            }
+
+            // Appel AJAX vers la vue Django
+            fetch(`/search_contact/${transporterId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Erreur lors de la récupération du contact');
+                    return response.json();
+                })
+                .then(data => {
+                    // Si on a bien reçu le numéro de téléphone, on l'injecte dans l'input
+                    if (data && data.tel) {
+                        inputContact.value = data.tel;
+                    } else {
+                        inputContact.value = ''; // Vide si aucun numéro n'est enregistré
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur Fetch:', error);
+                    inputContact.value = 'Erreur de chargement';
+                });
+        });
+    }
+</script>
+<script>
+    document.getElementById('lims-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const form = this;
+        const formData = new FormData(form);
+        const submitButton = form.querySelector('button[type="submit"]');
+        
+        // Blocage du bouton d'envoi
+        const originalButtonText = submitButton.textContent;
+        submitButton.disabled = true;
+        submitButton.textContent = 'Enregistrement...';
+
+        // --- CAPTURE DES TEXTES DU FORMULAIRE POUR LE RÉCAPITULATIF ---
+        const txtRegion = form.querySelector('#select-region') ? form.querySelector('#select-region').options[form.querySelector('#select-region').selectedIndex].text : '-';
+        const txtDistrict = form.querySelector('#select-district') ? form.querySelector('#select-district').options[form.querySelector('#select-district').selectedIndex].text : '-';
+        const txtFosa = form.querySelector('#select-fosa') ? form.querySelector('#select-fosa').options[form.querySelector('#select-fosa').selectedIndex].text : '-';
+        const txtTransp = form.querySelector('select[name="transporteur"]') ? form.querySelector('select[name="transporteur"]').options[form.querySelector('select[name="transporteur"]').selectedIndex].text : '-';
+        const txtRecep = form.querySelector('select[name="receptioniste"]') ? form.querySelector('select[name="receptioniste"]').options[form.querySelector('select[name="receptioniste"]').selectedIndex].text : '-';
+        
+        const valDateExp = form.querySelector('input[name="date_expedition"]').value;
+        const valNbEch = form.querySelector('input[name="nombre_echantillon"]').value;
+        const valObs = form.querySelector('textarea[name="observation"]').value.strip ? form.querySelector('textarea[name="observation"]').value.strip() : form.querySelector('textarea[name="observation"]').value;
+
+        fetch(form.action || window.location.href, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Erreur lors de la soumission.');
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // 1. Fermer le modal de saisie d'origine
+                const inputModal = document.getElementById('lims-modal');
+                if (inputModal && typeof inputModal.close === 'function') inputModal.close();
+
+                // 2. Injecter les données capturées dans le modal de récapitulatif
+                document.getElementById('recap-code-fiche').textContent = data.message || 'Fiche enregistrée';
+                document.getElementById('recap-region').textContent = txtRegion;
+                document.getElementById('recap-district').textContent = txtDistrict;
+                document.getElementById('recap-fosa').textContent = txtFosa;
+                document.getElementById('recap-date-exp').textContent = valDateExp;
+                document.getElementById('recap-nb-ech').textContent = valNbEch;
+                document.getElementById('recap-transp').textContent = txtTransp;
+                document.getElementById('recap-recep').textContent = txtRecep;
+                if(valObs) document.getElementById('recap-obs').textContent = valObs;
+
+                // 3. Ouvrir le modal de récapitulatif
+                const recapModal = document.getElementById('recap-modal');
+                if (recapModal && typeof recapModal.showModal === 'function') {
+                    recapModal.showModal();
+                }
+
+                // 4. Réinitialiser le formulaire pour la prochaine ouverture
+                form.reset();
+            } else {
+                alert('Erreur : ' + (data.errors || 'Impossible d\'enregistrer la fiche.'));
+            }
+        })
+        .catch(error => {
+            console.error('Erreur AJAX:', error);
+            alert('Une erreur système est survenue lors de l\'enregistrement.');
+        })
+        .finally(() => {
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
+        });
+    });
+</script>
+{% endblock %}
