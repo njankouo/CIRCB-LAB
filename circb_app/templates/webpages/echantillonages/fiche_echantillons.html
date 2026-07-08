@@ -5,155 +5,189 @@
 <main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white">
 <div class="p-6 bg-[#f8fafc] min-h-screen font-sans antialiased relative">
 
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-5 border-b border-slate-200 gap-4">
-        <div>
-            <div class="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-widest">
-                <span>Laboratory Modules</span>
-                <span>/</span>
-                <span class="text-slate-600">Specimen Tracking</span>
-            </div>
-            <h1 class="text-xl font-bold text-slate-900 tracking-tight mt-1">Fiches d'échantillons</h1>
+<!-- EN-TÊTE CONTEXTUEL ERP (DARK MODE) -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-slate-700 gap-4 bg-slate-800 p-4 rounded-xl border shadow-md">
+    <div>
+        <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
+            <span>Core Modules</span>
+            <span class="text-slate-600">/</span>
+            <span>LIMS Portal</span>
+            <span class="text-slate-600">/</span>
+            <span class="text-sky-400">Specimen Registry</span>
         </div>
-        <button onclick="document.getElementById('lims-modal').showModal()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium px-4 py-2 rounded-lg transition-all shadow-sm tracking-wide uppercase">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-            Nouvelle Fiche
-        </button>
+        <h1 class="text-lg font-bold text-white tracking-tight mt-1 flex items-center gap-2">
+            Registre Général des Fiches d'Échantillons
+            <span class="text-xs font-mono font-normal bg-slate-900 text-slate-300 px-2 py-0.5 rounded-full border border-slate-600 shadow-inner">
+                {{ fiches|length }} fiches actives
+            </span>
+        </h1>
+    </div>
+    <button onclick="document.getElementById('lims-modal').showModal()" 
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-sm border border-sky-400 font-sans tracking-wide">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="4" y1="12" x2="19" y2="12"></line></svg>
+        Créer une fiche de suivi (F04)
+    </button>
+</div>
+
+<!-- BARRE DE FILTRES AVANCÉE (FORMAT LOGICIEL ERP - DARK MODE) -->
+<div class="mt-4 border border-slate-700 rounded-xl p-3 shadow-md bg-gradient-to-b from-slate-800 to-slate-900">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <!-- Recherche par mots clés -->
+        <div class="relative">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" placeholder="ID Fiche, Code FOSA, Expéditeur..." 
+                   class="w-full pl-8 pr-3 py-1.5 bg-slate-900/80 border border-slate-600 rounded-lg text-xs font-medium focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 text-slate-200 placeholder-slate-500 shadow-inner transition-all">
+        </div>
+        <!-- Filtre Régions -->
+        <select class="w-full px-3 py-1.5 bg-slate-900/80 border border-slate-600 rounded-lg text-xs font-medium text-slate-200 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 shadow-inner transition-all [&>option]:bg-slate-800">
+            <option value="">-- Sélection Région --</option>
+            <option value="littoral">Littoral</option>
+            <option value="centre">Centre</option>
+        </select>
+        <!-- Filtre Districts -->
+        <select class="w-full px-3 py-1.5 bg-slate-900/80 border border-slate-600 rounded-lg text-xs font-medium text-slate-200 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 shadow-inner transition-all [&>option]:bg-slate-800">
+            <option value="">-- Sélection District --</option>
+            <option value="bonassama">Bonassama</option>
+            <option value="deido">Deido</option>
+        </select>
+        <!-- Filtre Statuts Qualité -->
+        <select class="w-full px-3 py-1.5 bg-slate-900/80 border border-slate-600 rounded-lg text-xs font-medium text-slate-200 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 shadow-inner transition-all [&>option]:bg-slate-800">
+            <option value="">-- Statut Échantillon --</option>
+            <option value="conforme">Conforme (Validation)</option>
+            <option value="alerte">Non conforme (Alerte)</option>
+        </select>
+    </div>
+</div>
+
+<!-- CONTAINER DE GRILLE DE DONNÉES ERP -->
+<div class="mt-3 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+    
+    <!-- TABLEAU DE BORD RESPONSIVE MOBILE -->
+    <div class="block lg:hidden divide-y divide-slate-100">
+        <div class="p-3.5 hover:bg-slate-50 transition-colors cursor-pointer" onclick="toggleRegistryRow('row-lims-1', this)">
+            <div class="flex justify-between items-start gap-3">
+                <div class="space-y-1">
+                    <div class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        Hôpital de District (Bonassama)
+                    </div>
+                    <div class="text-[11px] text-slate-400 font-mono">ID: #0294-A • Dr. Ndoumbe</div>
+                </div>
+                <div class="text-right space-y-1 shrink-0">
+                    <div class="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">24 Ech.</div>
+                    <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">Reçu</div>
+                </div>
+            </div>
+            <div id="row-lims-1" class="hidden pt-3 mt-2 border-t border-slate-100 text-[11px] font-mono text-slate-600 bg-slate-50 p-2 rounded">
+                <span class="font-bold text-slate-800">Note:</span> Intégrité chaîne de froid préservée.
+            </div>
+        </div>
     </div>
 
-    <div class="mt-6 bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <div class="relative">
-                <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                <input type="text" placeholder="Rechercher une FOSA, expéditeur..." class="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-slate-400 focus:bg-white transition-all text-slate-800 placeholder-slate-400">
-            </div>
-            <select class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-slate-400 focus:bg-white transition-all">
-                <option value="">Toutes les Régions</option>
-                <option value="littoral">Littoral</option>
-                <option value="centre">Centre</option>
-            </select>
-            <select class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-slate-400 focus:bg-white transition-all">
-                <option value="">Tous les Districts</option>
-                <option value="bonassama">Bonassama</option>
-                <option value="deido">Deido</option>
-            </select>
-            <select class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-slate-400 focus:bg-white transition-all">
-                <option value="">Tous les Statuts</option>
-                <option value="conforme">Conforme</option>
-                <option value="alerte">Alerte / Non conforme</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="mt-4 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-        
-        <div class="block lg:hidden divide-y divide-slate-100">
-            <div class="p-4 hover:bg-slate-50/50 transition-colors cursor-pointer" onclick="toggleRegistryRow('row-lims-1', this)">
-                <div class="flex justify-between items-start gap-4">
-                    <div class="space-y-1">
-                        <div class="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            Hôpital de District (Bonassama)
+    <!-- TABLEAU HAUTE DENSITÉ INDUSTRIALISÉ (STYLE SAP/LIMS) -->
+    <div class="hidden lg:block overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs font-sans">
+            <thead>
+                <tr class="border-b border-slate-200 bg-slate-100/70 text-slate-500 font-bold uppercase text-[10px] font-mono tracking-wider">
+                    <th class="px-4 py-2.5 border-r border-slate-200">Code Système</th>
+                    <th class="px-4 py-2.5 border-r border-slate-200">Structure Sanitaire (Origine)</th>
+                    <th class="px-4 py-2.5 border-r border-slate-200">Date Exp.</th>
+                    <th class="px-4 py-2.5 text-center border-r border-slate-200">Volume (U)</th>
+                    <th class="px-4 py-2.5 border-r border-slate-200">Vecteur Logistique</th>
+                    <th class="px-4 py-2.5 border-r border-slate-200">Arrivée Labo</th>
+                    <th class="px-4 py-2.5 border-r border-slate-200">Réceptionniste</th>
+                    <th class="px-4 py-2.5 border-r border-slate-200">Logs & Audit LIMS</th>
+                    <th class="px-4 py-2.5 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-600 font-medium bg-white">
+                {% for fiche in fiches %}
+                <tr class="hover:bg-slate-50/80 transition-colors border-b border-slate-100">
+                    
+                    <!-- Code Unique -->
+                    <td class="px-4 py-2 font-mono text-slate-900 border-r border-slate-100 whitespace-nowrap">
+                        <span class="bg-slate-100 px-1.5 py-0.5 border border-slate-300 rounded text-slate-700 font-bold">
+                            #{{ fiche.code }}
+                        </span>
+                    </td>
+                    
+                    <!-- FOSA Origine -->
+                    <td class="px-4 py-2 border-r border-slate-100">
+                        <div class="text-slate-900 font-bold truncate max-w-[180px]" title="{{ fiche.fosa.nom }}">{{ fiche.fosa.nom }}</div>
+                        <div class="text-[10px] text-slate-400 font-mono">{{ fiche.region.nom }} &bull; {{ fiche.district.nom }}</div>
+                    </td>
+                    
+                    <!-- Date Expédition -->
+                    <td class="px-4 py-2 font-mono text-[11px] border-r border-slate-100 whitespace-nowrap">
+                        {{ fiche.date_expedition|date:"d.m.Y" }}
+                    </td>
+                    
+                    <!-- Compteur Unités -->
+                    <td class="px-4 py-2 text-center border-r border-slate-100 font-mono">
+                        <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200 font-bold text-[11px]">
+                            {{ fiche.nombre_echantillon|default:"0" }}
+                        </span>
+                    </td>
+                    
+                    <!-- Transporteur -->
+                    <td class="px-4 py-2 border-r border-slate-100">
+                        <div class="text-slate-800 flex items-center gap-1 truncate max-w-[150px]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400 shrink-0"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                            {% if fiche.transporteur %}{{ fiche.transporteur.nom }}{% else %}<span class="text-slate-400 italic">Non spécifié</span>{% endif %}
                         </div>
-                        <div class="text-[11px] text-slate-400 font-medium tracking-wide">Dr. Ndoumbe • 07.07.2026</div>
-                    </div>
-                    <div class="text-right space-y-1 shrink-0">
-                        <div class="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">24 U</div>
-                        <div class="text-[10px] uppercase font-bold tracking-wider text-emerald-600">Complété</div>
-                    </div>
-                </div>
-
-                <div id="row-lims-1" class="hidden pt-4 mt-3 border-t border-slate-100 space-y-3 text-[11px] text-slate-600 animate-rowSlide">
-                    <div class="text-xs font-mono text-[10px] bg-slate-50 p-2 rounded">CONFORME: Reçu à bonne température.</div>
-                </div>
-                <div class="mt-2 text-[10px] text-slate-300 font-medium tracking-wide text-center uppercase border-t border-slate-50 pt-1 pointer-events-none row-indicator">
-                    Cliquez pour inspecter la fiche
-                </div>
-            </div>
-        </div>
-
-        <div class="hidden lg:block overflow-x-auto">
-           <table class="w-full text-left border-collapse text-xs">
-    <thead>
-        <tr class="border-b border-slate-200 bg-[#fafafa] text-slate-400 font-bold uppercase tracking-wider">
-            <th class="px-5 py-3 font-semibold">Code / Origine</th>
-            <th class="px-5 py-3 font-semibold">Détails Expédition</th>
-            <th class="px-5 py-3 font-semibold text-center">Unités</th>
-            <th class="px-5 py-3 font-semibold">Logistique / Transit</th>
-            <th class="px-5 py-3 font-semibold">Réception & Date</th>
-            <th class="px-5 py-3 font-semibold">Réceptionniste</th>
-            <th class="px-5 py-3 font-semibold">Observations LIMS</th>
-            <th class="px-5 py-3 font-semibold text-right">Actions</th>
-        </tr>
-    </thead>
-    <tbody class="divide-y divide-slate-100 text-slate-600 font-medium">
-        {% for fiche in fiches %}
-        <tr class="hover:bg-slate-50/50 transition-colors">
-            <td class="px-5 py-4">
-                <div class="text-slate-900 font-black font-mono text-[11px]">#{{ fiche.code }}</div>
-                <div class="text-slate-800 font-semibold mt-0.5">{{ fiche.fosa.nom }}</div>
-                <div class="text-[10px] text-slate-400 mt-0.5">{{ fiche.region.nom }} • {{ fiche.district.nom }}</div>
-            </td>
-            
-            <td class="px-5 py-4">
-                <div class="text-slate-800 font-mono">{{ fiche.date_expedition|date:"d.m.Y" }}</div>
-                <div class="text-[10px] text-slate-400 mt-0.5">Départ FOSA</div>
-            </td>
-            
-            <td class="px-5 py-4 text-center">
-                <span class="font-mono bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-bold border border-slate-200">
-                    {{ fiche.nombre_echantillon|default:"0" }}
-                </span>
-            </td>
-            
-            <td class="px-5 py-4">
-                <div class="text-slate-800">{% if fiche.transporteur %}{{ fiche.transporteur.nom }}{% else %}<span class="text-slate-400 italic">Aucun</span>{% endif %}</div>
-                <div class="text-[10px] text-slate-400 mt-0.5">
-                    {% if fiche.moyen_transport %}{{ fiche.moyen_transport.nom }}{% else %}--{% endif %}
-                    {% if fiche.transporteur.tel %} • {{ fiche.transporteur.tel }}{% endif %}
-                </div>
-            </td>
-            
-            <td class="px-5 py-4">
-                <div class="text-slate-800 font-mono">{{ fiche.date_reception|date:"d.m.Y" }}</div>
-                <div class="text-[10px] text-slate-400 mt-0.5">Arrivée Labo</div>
-            </td>
-            
-            <td class="px-5 py-4">
-                <div class="text-slate-800">{{ fiche.receptioniste.nom }} {{ fiche.receptioniste.prenom }}</div>
-                <div class="text-[10px] text-slate-400 mt-0.5">{% if fiche.receptioniste.tel %}{{ fiche.receptioniste.tel }}{% else %}Pas de contact{% endif %}</div>
-            </td>
-            
-            <td class="px-5 py-4">
-                {% if fiche.observation %}
-                    <span class="text-[10px] text-slate-600 font-sans bg-slate-50 px-2 py-1 rounded border border-slate-200 truncate inline-block max-w-[150px]" title="{{ fiche.observation }}">
-                        {{ fiche.observation }}
-                    </span>
-                {% else %}
-                    <span class="text-[10px] text-slate-400 italic">Aucune note</span>
-                {% endif %}
-            </td>
-            
-            <td class="px-5 py-4 text-right">
-                <div class="flex items-center justify-end gap-1.5">
-                    <a href="#" class="p-1 text-slate-400 hover:text-slate-900" title="Voir les détails">
-                        <i data-lucide="eye" class="w-4 h-4"></i>
-                    </a>
-                    <a href="/details-fiche/{{fiche.code}}/" class="p-1 text-slate-400 hover:text-slate-900" title="Modifier">
-                        <i data-lucide="edit" class="w-4 h-4"></i>
-                    </a>
-                </div>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="8" class="px-5 py-8 text-center text-slate-400 italic bg-slate-50/50">
-                Aucune fiche d'échantillon enregistrée pour le moment.
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-        </div>
+                        <div class="text-[10px] text-slate-400 font-mono mt-0.5">
+                            {% if fiche.moyen_transport %}{{ fiche.moyen_transport.nom }}{% else %}--{% endif %}
+                        </div>
+                    </td>
+                    
+                    <!-- Date Réception -->
+                    <td class="px-4 py-2 font-mono text-[11px] text-slate-900 border-r border-slate-100 whitespace-nowrap">
+                        {{ fiche.date_reception|date:"d.m.Y" }}
+                    </td>
+                    
+                    <!-- Nom du réceptionniste -->
+                    <td class="px-4 py-2 border-r border-slate-100">
+                        <div class="text-slate-800 truncate max-w-[130px] flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400 shrink-0"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+                            {{ fiche.receptioniste.nom }}
+                        </div>
+                    </td>
+                    
+                    <!-- Notes / Observations de sécurité -->
+                    <td class="px-4 py-2 border-r border-slate-100">
+                        {% if fiche.observation %}
+                            <div class="text-[10px] text-slate-500 font-mono max-w-[160px] truncate bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded" title="{{ fiche.observation }}">
+                                {{ fiche.observation }}
+                            </div>
+                        {% else %}
+                            <span class="text-[10px] text-slate-400 italic font-mono">N/A</span>
+                        {% endif %}
+                    </td>
+                    
+                    <!-- Actions système compactes -->
+                    <td class="px-4 py-2 text-right whitespace-nowrap">
+                        <div class="flex items-center justify-end gap-1">
+                            <a href="#" class="p-1 text-slate-500 hover:text-sky-600 hover:bg-slate-100 rounded transition-colors" title="Consulter la fiche technique">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </a>
+                            <a href="/details-fiche/{{fiche.code}}/" class="p-1 text-slate-500 hover:text-amber-600 hover:bg-slate-100 rounded transition-colors" title="Ouvrir en modification">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="px-4 py-10 text-center text-slate-400 font-medium bg-slate-50/50">
+                        <div class="flex flex-col items-center justify-center gap-2 py-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-300"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><path d="M2 10h20"></path></svg>
+                            <span class="text-xs">Aucun enregistrement LIMS trouvé dans cette table.</span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 
