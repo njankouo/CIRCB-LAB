@@ -1,7 +1,23 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from django.utils.text import slugify
+class TimeStampedModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        abstract = True
+class Role(models.Model):
+    """Liste des rôles applicatifs disponibles dans l'ERP"""
+    code = models.SlugField( help_text="Ex: biologiste, receptioniste, data-manager")
+    nom = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.nom
 class Personnel(models.Model):
+    roles = models.ManyToManyField(Role, blank=True, related_name="utilisateurs")
     nom = models.CharField(max_length=128, blank=True, null=True)
     prenom = models.CharField(max_length=128, blank=True, null=True)
     mail = models.EmailField(max_length=128, blank=True, null=True)  # Changé en EmailField pour la validation automatique
@@ -45,6 +61,7 @@ class MoyenTransport(models.Model):
 class Structure_Hierachy(models.Model):
     nom = models.CharField(max_length=255, null=True)
     rang = models.PositiveIntegerField()
+    code = models.CharField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=True) 
 
     def __str__(self):
@@ -130,14 +147,14 @@ class Mere(models.Model):
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255, null=True, blank=True)
     date_naissance = models.DateField(null=True, blank=True)
-    sexe = models.CharField(max_length=10, choices=[('M', 'Masculin'), ('F', 'Féminin')], null=True, blank=True)
+    #sexe = models.CharField(max_length=10, choices=[('M', 'Masculin'), ('F', 'Féminin')], null=True, blank=True)
     contact = models.ForeignKey(Personnel, on_delete=models.SET_NULL, null=True, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-    mode_accouchement = models.ForeignKey(ModeAccouchement, on_delete=models.SET_NULL, null=True, blank=True)
-    date_prochain_rdv = models.DateField(null=True, blank=True)
-    date_diagnostic_lav = models.DateField(null=True, blank=True)
-    protocole_ptme = models.ForeignKey(ProtocolePTME, on_delete=models.SET_NULL, null=True, blank=True)
-    date_initiation_ptme = models.DateField(null=True, blank=True)
+   # mode_accouchement = models.ForeignKey(ModeAccouchement, on_delete=models.SET_NULL, null=True, blank=True)
+   # date_prochain_rdv = models.DateField(null=True, blank=True)
+   # date_diagnostic_lav = models.DateField(null=True, blank=True)
+   # protocole_ptme = models.ForeignKey(ProtocolePTME, on_delete=models.SET_NULL, null=True, blank=True)
+   # date_initiation_ptme = models.DateField(null=True, blank=True)
   
 
     def __str__(self):
@@ -147,10 +164,10 @@ class Patient(models.Model):
     prenom = models.CharField(max_length=255, null=True, blank=True)
     date_naissance = models.DateField(null=True, blank=True)
     sexe = models.CharField(max_length=10, choices=[('M', 'Masculin'), ('F', 'Féminin')], null=True, blank=True)
-    contact = models.ForeignKey(Personnel, on_delete=models.SET_NULL, null=True, blank=True)
+    #contact = models.ForeignKey(Personnel, on_delete=models.SET_NULL, null=True, blank=True)
     fosa = models.ForeignKey(Structure, on_delete=models.SET_NULL, null=True, blank=True, related_name='patients_fosa')
     poids = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # Poids en kg
-    profilaxie = models.ForeignKey(ProfilaxieArv, on_delete=models.SET_NULL, null=True, blank=True)
+   # profilaxie = models.ForeignKey(ProfilaxieArv, on_delete=models.SET_NULL, null=True, blank=True)
     mere = models.ForeignKey(Mere, on_delete=models.SET_NULL, null=True, blank=True, related_name='enfants')
     code = models.SlugField(unique=True, null=True, blank=True)  # Code unique pour chaque patient
     porte_entree = models.ForeignKey(PorteEntree, on_delete=models.SET_NULL, null=True, blank=True)
@@ -173,39 +190,79 @@ class ResultatPcr(models.Model):
     def __str__(self):
         return self.nom if self.nom else "Résultat PCR Inconnu"
 class Echantillon(models.Model):
-    code = models.CharField(max_length=255, unique=True)
+    
+    #enfant Informations
+    slug = models.SlugField()
     fiche = models.ForeignKey(FicheEchantillon, on_delete=models.CASCADE, related_name='echantillons')
-    test = models.ForeignKey(Test, on_delete=models.SET_NULL, null=True)
-    date_prelevement = models.DateField(null=True)
-    date_reception = models.DateField(null=True)
-    observation = models.TextField(null=True, blank=True)
-    fosa = models.ForeignKey(Structure, on_delete=models.SET_NULL, null=True, related_name='echantillons_fosa')
     enfant =models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True, related_name='echantillons_enfant')
-    is_symptome_present = models.BooleanField(default=False)
-    is_allaitement_present = models.BooleanField(default=False)
-    if_yes_preciser = models.TextField(null=True, blank=True)
-    date_sevrage = models.DateField(null=True, blank=True)
-    if_not_sevrage_preciser = models.TextField(null=True, blank=True)
-    is_use_cotrimoxazole = models.BooleanField(default=False)
-    if_use_cotrimoxazole_preciser_date = models.DateField(null=True, blank=True)
-    is_use_tarv = models.BooleanField(default=False)
-    if_use_tarv_preciser_date = models.DateField(null=True, blank=True)
-    raison_prelevement = models.ForeignKey(RaisonPrelevement, on_delete=models.SET_NULL, null=True, blank=True)
-    date_pcr1 = models.DateField(null=True, blank=True)
-    date_pcr2 = models.DateField(null=True, blank=True)
-    date_prelevement = models.DateField(null=True, blank=True)
+    poids = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # Poids en kg
+    profilaxie_arv = models.ForeignKey(ProfilaxieArv, on_delete=models.SET_NULL, null=True, blank=True)
+    rang_naissance = models.IntegerField(null=True)
     
-    resultat_pcr1 = models.ForeignKey(ResultatPcr, on_delete=models.SET_NULL, null=True, blank=True, related_name='resultats_pcr1')
-    resultat_pcr2 = models.ForeignKey(ResultatPcr, on_delete=models.SET_NULL, null=True, blank=True, related_name='resultats_pcr2')
-    resultat_pcr3 = models.ForeignKey(ResultatPcr, on_delete=models.SET_NULL, null=True, blank=True, related_name='resultats_final')
-    date_prelevement = models.DateField(null=True, blank=True)
-    again_prelevement = models.BooleanField(default=False)
-    nom_preleveur = models.CharField(max_length=255, null=True, blank=True)
-    prenom_preleveur = models.CharField(max_length=255, null=True, blank=True)
-    contact_preleveur = models.ForeignKey(Personnel, on_delete=models.SET_NULL, null=True, blank=True, related_name='echantillons_preleveur')
+    
+    #parents Informations
+    mere = models.ForeignKey(Mere, on_delete=models.SET_NULL, null=True, blank=True, related_name='echantillons_mere')
+    protocole_ptme = models.ForeignKey(ProtocolePTME, on_delete=models.SET_NULL, null=True, blank=True)
+    date_rdv = models.DateField(null=True, blank=True)
+    date_diagnostic_lav = models.DateField(null=True, blank=True)
+    mode_accouchement = models.ForeignKey(ModeAccouchement, on_delete=models.SET_NULL, null=True, blank=True)
+    date_initiation_ptme = models.DateField(null=True, blank=True)
+    date_diagnostic_vih = models.DateField(null=True, blank=True)
+    numero_grossesse = models.IntegerField(null=True, blank=True)
+    nb_enfant_expose = models.IntegerField(null=True, blank=True)
+    nb_enfant_infecte = models.IntegerField(null=True, blank=True)
+    
+    
+    # Informations sur l'échantillon
+    present_symptome = models.BooleanField(default=False)
+    present_allaitement = models.BooleanField(default=False)
     mode_allaitement = models.ForeignKey(ModeAllaitement, on_delete=models.SET_NULL, null=True, blank=True)
+    present_sevrage = models.BooleanField(default=False)
+    date_sevrage = models.DateField(null=True, blank=True)
+    present_cotrimoxazole = models.BooleanField(default=False)
+    date_cotrimoxazole = models.DateField(null=True, blank=True)
+    present_tarv = models.BooleanField(default=False)
+    date_tarv = models.DateField(null=True, blank=True)
+    pcr_1=models.BooleanField(default=False)
+    pcr_2 = models.BooleanField(default=False)
+    autre_pcr = models.BooleanField(default=False)
+    resultat_pcr = models.ForeignKey(ResultatPcr, on_delete=models.SET_NULL, null=True, blank=True)
+    raison_prelevement = models.ForeignKey(RaisonPrelevement, on_delete=models.SET_NULL, null=True, blank=True)
+    porte_entree = models.ForeignKey(PorteEntree, on_delete=models.SET_NULL, null=True, blank=True)
     
     
+    #INformation sur lechantillon
+    
+    date_prelevement = models.DateField()
+    duplicate_prelevement =models.BooleanField(default=False)
+    nom_preleveur = models.CharField(max_length=255)
+    prenom_preleveur = models.CharField(max_length=255)
+    contact_preleveur = models.IntegerField()
+    observation = models.TextField()
+    
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            # Récupère la date et l'heure actuelle au format AAAAMMJJ-HHMM
+            timestamp = timezone.now().strftime("%Y%m%d-%H%M")
+            # Donne un slug du style : "ech-20260710-1032"
+            self.slug = slugify(f"ech-{timestamp}")
+        super().save(*args, **kwargs)
+        
+        
+
+class Resultat(models.Model):
+    echantillon = models.ForeignKey(Echantillon, on_delete=models.CASCADE, null=True)
+    date_prelevement = models.DateField()
+    commentaire = models.TextField()
+    responsable = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    
+  
+    
+    
+   
+ 
     
     
 

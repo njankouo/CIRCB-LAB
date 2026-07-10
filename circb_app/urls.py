@@ -27,7 +27,7 @@ urlpatterns = [
     path('dossiers/patients/', views.dossiers_patients, name='dossiers_patients'),
     path('configurations/', views.configurations, name='configurations'),
     path('fiches-echantillons/', views.fiches_echantillons, name='fiches_echantillons'),
-    path('echantillons/', views.echantillons, name='echantillons'),
+    path('saisir-echantillon/<int:code>/', views.echantillons, name='saisir-echantillon'),
     
     path('structures/', views.structures, name='structures'),
     
@@ -38,8 +38,25 @@ urlpatterns = [
     path('search_fosa/<int:district_id>/', views.search_fosa, name='search_fosa'),
     path('search_contact/<int:contact_id>/', views.search_contact, name='search_contact'),
     path('enregistrer_fiche_echantillon/', views.enregistrer_fiche_echantillon, name='enregistrer_fiche_echantillon'),
-    path('details-fiche/<str:slug>/', views.details_fiche, name='details-fiche')
+    path('details-fiche/<str:slug>/', views.details_fiche, name='details-fiche'),
+    path('search_porte_entree/<int:porte_entree_id>/', views.search_porte_entree, name='search_porte_entree'),
+    path('verifier_patient/', views.verifier_patient, name='verifier_patient'),
+    path('create_patient/', views.creer_patient, name='create_patient'),
+    path('details-patient/<str:slug>/', views.details_patient, name='details-patient'),
+    
+    path('echantillonages/', views.echantillonages, name='echantillonages'),
+    
+    path('create_or_edit_role/', views.create_or_edit_role, name='create_or_edit_role'),
+    path('delete_role/<int:role_id>/', views.delete_role, name='delete_role'),
+    path('edit_role/<int:role_id>/', views.edit_role, name='edit_role'),
+    
+    path('ajouter_echantillon/', views.ajouter_echantillon, name='ajouter_echantillon'),
+    
+    path('detail-fiche/<str:code>/', views.detail_fiche, name='detail-fiche'),
+    path('fiche-echantillon/<slug:slug>/', views.fiche_echantillon, name='fiche-echantillon')
    
 ]
     
 
+handler404 = 'circb_app.views.custom_page_not_found_view'
+handler500 = 'circb_app.views.custom_error_view'

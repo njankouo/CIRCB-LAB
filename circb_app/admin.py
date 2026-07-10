@@ -94,3 +94,4 @@ class ResultatPcrAdmin(admin.ModelAdmin):
     list_display = ('nom', 'code')
     search_fields = ('nom', 'code')
     list_per_page = 20
+

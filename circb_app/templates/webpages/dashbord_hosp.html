@@ -41,242 +41,291 @@
   
         <div class="flex flex-col h-full w-full overflow-hidden">
         <!-- Header avec bordure sombre affirmée -->
-        <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-2 border-slate-900 px-6 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-lg shadow-sm">
-                    M
-                </div>
-                <div>
-                    <div class="text-sm font-bold tracking-tight text-slate-900">MEDISYS LAB</div>
-                    <div class="text-xs text-slate-500 font-medium">CIRCB-Centre Internationnal de Référence Chantal Biya</div>
-                </div>
+    <header class="sticky top-0 z-40 bg-white/75 backdrop-blur-md border-b border-slate-100 px-6 py-2.5 flex items-center justify-between transition-all duration-300">
+    
+    <div class="flex items-center gap-3 shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-slate-900 to-indigo-950 flex items-center justify-center text-white font-black text-base shadow-sm ring-1 ring-slate-900/10">
+            M
+        </div>
+        <div class="leading-tight">
+            <div class="text-xs font-black uppercase tracking-wider text-slate-900">MEDISYS LAB</div>
+            <div class="text-[10px] text-slate-400 font-bold tracking-tight">CIRCB • TERMINAL DE PRODUCTION</div>
+        </div>
+    </div>
+
+    <div class="hidden md:block flex-1 max-w-md mx-8">
+        <div class="relative group">
+            <i data-lucide="search" class="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-400 group-focus-within:text-indigo-600 transition-colors"></i>
+            <input id="search" type="text" placeholder="Rechercher un dossier, une admission, un labo..." 
+                   class="w-full bg-slate-50/60 border border-slate-200 rounded-xl pl-9 pr-4 py-1.5 text-xs font-medium text-slate-900 placeholder-slate-400 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all duration-200" />
+            <kbd class="absolute right-3 top-2 hidden sm:inline-block text-[9px] font-black bg-slate-200/60 text-slate-500 px-1.5 py-0.5 rounded-md tracking-widest select-none pointer-events-none">⌘K</kbd>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-3 shrink-0">
+        
+        <button id="btnOpenMenuModal" onclick="document.getElementById('menu-modal').showModal()" 
+                class="p-2 text-slate-600 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50/50 border border-slate-200 hover:border-indigo-200 rounded-xl transition-all duration-200 active:scale-95 relative group">
+            <i data-lucide="menu" class="w-4 h-4"></i>
+            <span class="absolute top-1 right-1 w-1.5 h-1.5 bg-indigo-600 rounded-full animate-pulse"></span>
+        </button>
+        
+        <div class="w-px h-5 bg-slate-200"></div>
+
+        <div class="relative">
+            <button id="profile-menu-button" onclick="toggleProfileMenu(event)" 
+                    class="flex items-center gap-2 p-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl hover:border-slate-300 transition-all duration-200 focus:outline-none">
+                <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=0f172a&color=fff" 
+                     class="w-6 h-6 rounded-lg object-cover" alt="Avatar" />
+                <span class="text-xs font-bold text-slate-700 pr-1 hidden lg:block">
+                    {% if request.user.first_name %}
+                        {{ request.user.first_name }}
+                    {% else %}
+                        {{ request.user.username }}
+                    {% endif %}
+                </span>
+                <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 pr-1 hidden lg:block"></i>
+            </button>
+            
+            <div id="profile-menu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-slate-200/80 rounded-xl shadow-xl shadow-slate-100/50 p-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                <a href="#" class="flex items-center gap-2 px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg text-xs font-bold transition-colors">
+                    <i data-lucide="user" class="w-3.5 h-3.5"></i> Mon Profil
+                </a>
+                <div class="h-px bg-slate-100 my-1"></div>
+                <a href="/logout/" class="flex items-center gap-2 px-3 py-2 w-full text-left text-rose-600 hover:bg-rose-50/70 rounded-lg text-xs font-bold transition-colors">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Déconnexion
+                </a>
             </div>
-
-            <div class="flex items-center gap-4 flex-1 max-w-2xl justify-end lg:justify-start lg:ml-12">
-                <div class="relative w-full max-w-md hidden sm:block">
-                    <i data-lucide="search" class="absolute left-3.5 top-2.5 w-4 h-4 text-slate-500"></i>
-                    <input id="search" type="text" placeholder="Rechercher un dossier, dossier d'admission, labo..." 
-                           class="w-full bg-slate-50 border border-slate-900 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-950 outline-none transition-all" />
+        </div>
+    </div>
+</header>
+<dialog id="menu-modal" class="backdrop:bg-slate-950/50 backdrop:backdrop-blur-sm bg-white border-2 border-slate-900 rounded-xl p-0 max-w-6xl w-full shadow-[6px_6px_0px_0px_rgba(15,23,42,0.15)] open:animate-in open:fade-in open:zoom-in-95 duration-150 overflow-hidden max-h-[90vh] select-none outline-none">
+    
+    <!-- HEADER CLINIQUE / LABO — ANCRAGE ROBUSTE -->
+    <div class="flex items-center justify-between border-b-2 border-slate-900 bg-slate-100 px-6 py-4">
+        <div class="flex items-center gap-3.5">
+            <div class="relative flex h-2.5 w-2.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-teal-600 shadow-[0_0_6px_rgba(13,148,136,0.6)]"></span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 font-mono">CIRCB INTEGRATED LIMS</h3>
+                    <span class="text-[9px] bg-teal-600 border border-teal-950 text-white px-1.5 py-0.5 rounded font-mono font-bold tracking-tight">CORE_V3</span>
                 </div>
-                
-                <div class="flex items-center gap-1.5">
-                    <button id="btnNotifications" class="p-2 text-slate-700 hover:bg-slate-100 rounded-xl relative border border-transparent hover:border-slate-900 transition-all">
-                        <i data-lucide="bell" class="w-5 h-5"></i>
-                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-600 rounded-full"></span>
-                    </button>
-                    
-                    <div class="w-px h-6 bg-slate-300 mx-1"></div>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-tight mt-0.5">Centre International de Référence Chantal Biya — Console de Dispatching Biomédical</p>
+            </div>
+        </div>
+        
+        <!-- BOUTON FERMER STYLE BOUTON POUSSOIR ERP -->
+        <button onclick="document.getElementById('menu-modal').close()" class="p-2 border-2 border-slate-800 rounded-lg bg-white text-slate-700 hover:bg-slate-50 border-b-[3px] active:border-b-2 active:translate-y-[1px] transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
 
-                    <div class="relative">
-                       <button id="profile-menu-button" onclick="toggleProfileMenu(event)" class="flex items-center gap-2 focus:outline-none group p-1 border-2 border-slate-900 rounded-xl bg-slate-50 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 transition-all">
-        <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=0f172a&color=fff" class="w-7 h-7 rounded-lg border border-slate-900" alt="Avatar" />
-        <span class="text-sm font-black text-slate-900 pr-2 hidden md:block">
-            {% if request.user.first_name %}
-                {{ request.user.first_name }} {{ request.user.last_name }}
-            {% else %}
-                {{ request.user.username }}
-            {% endif %}
-        </span>
-    </button>
-                        <div id="profile-menu" class="hidden absolute right-0 mt-3 w-48 bg-white border-2 border-slate-900 rounded-xl shadow-xl p-1 z-50">
-                            <a href="#" class="flex items-center gap-2 px-3 py-2 text-slate-700 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
-                                <i data-lucide="user" class="w-4 h-4"></i> Mon Profil
-                            </a>
-                            <a href="/logout/" class="flex items-center gap-2 px-3 py-2 w-full text-left text-rose-600 hover:bg-rose-50 rounded-lg text-sm font-medium transition-colors">
-                                <i data-lucide="log-out" class="w-4 h-4"></i> Déconnexion
-                            </a>
+    <!-- CONTENEUR BI-PANEL ERP BRUT & ENCASTRÉ -->
+    <div class="grid grid-cols-1 md:grid-cols-4 min-h-[480px] max-h-[calc(90vh-70px)] overflow-hidden bg-slate-100 text-slate-700">
+        
+        <!-- SIDEBAR GAUCHE : SÉPARATEURS TECHNIQUES NETS -->
+        <div class="md:col-span-1 bg-slate-50 border-r-2 border-slate-900 p-4 space-y-1.5 overflow-y-auto">
+            <span class="block text-[9px] font-black text-slate-400 uppercase tracking-widest px-2.5 mb-2 font-mono">Unités Fonctionnelles</span>
+            
+            <button onclick="switchTab('core-segment')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-xs font-bold text-slate-600 hover:bg-slate-200/60 transition-all">
+                <span class="w-1.5 h-3 bg-blue-600 rounded-sm"></span>
+                <span>Dashboard</span>
+            </button>
+            
+            <!-- ACTIF PAR DÉFAUT (EFFET ENCASTRÉ / RELIEF INVERSÉ) -->
+            <button onclick="switchTab('bio-segment')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-xs font-black bg-white text-teal-900 border-2 border-slate-900 border-b-[3px] shadow-sm transition-all">
+                <span class="w-1.5 h-3 bg-teal-600 rounded-sm"></span>
+                <span>Echantillonages</span>
+            </button>
+            
+            <button onclick="switchTab('patient-segment')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-xs font-bold text-slate-600 hover:bg-slate-200/60 transition-all">
+                <span class="w-1.5 h-3 bg-emerald-600 rounded-sm"></span>
+                <span>Dossiers Patients</span>
+            </button>
+            <button onclick="switchTab('hr-segment')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-xs font-bold text-slate-600 hover:bg-slate-200/60 transition-all">
+                <span class="w-1.5 h-3 bg-purple-600 rounded-sm"></span>
+                <span>Ressources Humaines</span>
+            </button>
+            <button onclick="switchTab('config-segment')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-xs font-bold text-slate-600 hover:bg-slate-200/60 transition-all">
+                <span class="w-1.5 h-3 bg-slate-500 rounded-sm"></span>
+                <span>Configurations</span>
+            </button>
+        </div>
+
+        <!-- ZONE DE TRAVAIL DROITE (GRILLES DE MODULES STYLE TERMINAL) -->
+        <div class="md:col-span-3 p-6 overflow-y-auto bg-slate-50">
+            
+            <!-- COEUR SYSTÈME (MASQUÉ INITIALEMENT) -->
+            <div id="core-segment" class="tab-content hidden space-y-4 animate-in fade-in duration-100">
+                <div class="border-b-2 border-slate-200 pb-2.5 mb-2">
+                    <h4 class="text-xs font-black text-slate-800 uppercase font-mono tracking-wider">Pilotage Central</h4>
+                    <p class="text-[11px] font-medium text-slate-500 mt-0.5">Accès instantané à la console d'indicateurs et flux d'activité générale.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <a href="/dashboard/" class="group p-4 rounded-xl border-2 border-slate-800 bg-white hover:bg-blue-50/30 border-b-[4px] border-r-[2px] transition-all active:translate-y-[1px] active:border-b-[2px] flex items-start gap-3.5">
+                        <div class="p-2 rounded-lg bg-slate-100 text-blue-700 border border-slate-800 shrink-0">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
                         </div>
-                    </div>
+                        <div>
+                            <span class="block text-xs font-black text-slate-900 uppercase font-mono tracking-tight">Tableau de bord</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Supervision en direct de l'état d'avancement des analyses globales.</span>
+                        </div>
+                    </a>
                 </div>
             </div>
-        </header>
 
+            <!-- FLUX BIOLOGIQUES & AUTOMATES LIMS (AFFICHÉ PAR DÉFAUT) -->
+            <div id="bio-segment" class="tab-content space-y-4 animate-in fade-in duration-100">
+                <div class="border-b-2 border-slate-200 pb-2.5 mb-2">
+                    <h4 class="text-xs font-black text-teal-800 uppercase font-mono tracking-wider">Gestion LIMS & Paillasses</h4>
+                    <p class="text-[11px] font-medium text-slate-500 mt-0.5">Flux d'ordonnancement biologique, enregistrement des échantillons et validation technique.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Fiches Échantillons -->
+                    <a href="/fiches-echantillons/" class="group p-4 rounded-xl border-2 border-slate-800 bg-white hover:bg-teal-50/20 border-b-[4px] border-r-[2px] transition-all active:translate-y-[1px] active:border-b-[2px] flex items-start gap-3.5">
+                        <div class="p-2 rounded-lg bg-slate-100 text-teal-700 border border-slate-800 shrink-0">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-black text-slate-900 uppercase font-mono tracking-tight">Fiches Échantillons</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Saisie des fiches épidémiologiques et liaison mère-enfant.</span>
+                        </div>
+                    </a>
+                    
+                    <!-- Registre Technique -->
+                    <a href="/echantillonages/" class="group p-4 rounded-xl border-2 border-slate-800 bg-white hover:bg-teal-50/20 border-b-[4px] border-r-[2px] transition-all active:translate-y-[1px] active:border-b-[2px] flex items-start gap-3.5">
+                        <div class="p-2 rounded-lg bg-slate-100 text-teal-700 border border-slate-800 shrink-0">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4.5 16.5c-1.5 1.26-2.5 3.19-2.5 5.5h20c0-2.31-1-4.24-2.5-5.5"></path><path d="M12 2a5 5 0 00-5 5v3.5a5 5 0 0010 0V7a5 5 0 00-5-5z"></path></svg>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-black text-slate-900 uppercase font-mono tracking-tight">Registre Technique</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Logs de traçabilité des tubes de prélèvement arrivés au laboratoire.</span>
+                        </div>
+                    </a>
+
+                    <!-- Analyses en Cours -->
+                    <a href="#" class="group p-4 rounded-xl border-2 border-slate-800 bg-white hover:bg-amber-50/20 border-b-[4px] border-r-[2px] transition-all active:translate-y-[1px] active:border-b-[2px] flex items-start gap-3.5">
+                        <div class="p-2 rounded-lg bg-slate-100 text-amber-700 border border-slate-800 shrink-0">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10.3 21a1.94 1.94 0 003.4 0L20 8c1-1.83-.53-4-2.6-4H6.6C4.53 4 3 6.17 4 8z"></path></svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-black text-slate-900 uppercase font-mono tracking-tight">Analyses en Cours</span>
+                                <span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse border border-amber-950"></span>
+                            </div>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Suivi en temps réel des runs d’amplification PCR (Plateaux techniques).</span>
+                        </div>
+                    </a>
+
+                    <!-- Résultats Validés -->
+                    <a href="#" class="group p-4 rounded-xl border-2 border-slate-800 bg-white hover:bg-cyan-50/20 border-b-[4px] border-r-[2px] transition-all active:translate-y-[1px] active:border-b-[2px] flex items-start gap-3.5">
+                        <div class="p-2 rounded-lg bg-slate-100 text-cyan-700 border border-slate-800 shrink-0">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-black text-slate-900 uppercase font-mono tracking-tight">Résultats Validés</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Dossiers finalisés en attente de signature biologique et d’archivage.</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- PATIENTS (MASQUÉ INITIALEMENT) -->
+            <div id="patient-segment" class="tab-content hidden space-y-4 animate-in fade-in duration-100">
+                <div class="border-b-2 border-slate-200 pb-2.5 mb-2">
+                    <h4 class="text-xs font-black text-emerald-800 uppercase font-mono tracking-wider">Dossier Médical Patient</h4>
+                    <p class="text-[11px] font-medium text-slate-500 mt-0.5">Historique d'exposition virale, fiches cliniques et suivi d’identité.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <a href="/dossiers/patients/" class="group p-4 rounded-xl border-2 border-slate-800 bg-white hover:bg-emerald-50/20 border-b-[4px] border-r-[2px] transition-all active:translate-y-[1px] active:border-b-[2px] flex items-start gap-3.5">
+                        <div class="p-2 rounded-lg bg-slate-100 text-emerald-700 border border-slate-800 shrink-0">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-black text-slate-900 uppercase font-mono tracking-tight">Base Patients</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Registre global des patients indexés, enfants exposés et parents.</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- RH (MASQUÉ INITIALEMENT) -->
+            <div id="hr-segment" class="tab-content hidden space-y-4 animate-in fade-in duration-100">
+                <div class="border-b-2 border-slate-200 pb-2.5 mb-2">
+                    <h4 class="text-xs font-black text-purple-800 uppercase font-mono tracking-wider">Habilitations & Signatures</h4>
+                    <p class="text-[11px] font-medium text-slate-500 mt-0.5">Annuaire du corps médical, gestion des droits biologiques et techniciens.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <a href="{% url 'personnel' %}" class="group p-4 rounded-xl border-2 border-slate-800 bg-white hover:bg-purple-50/20 border-b-[4px] border-r-[2px] transition-all active:translate-y-[1px] active:border-b-[2px] flex items-start gap-3.5">
+                        <div class="p-2 rounded-lg bg-slate-100 text-purple-700 border border-slate-800 shrink-0">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-black text-slate-900 uppercase font-mono tracking-tight">Annuaire du Personnel</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Suivi des accréditations scientifiques et clés de validation des analyses.</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- CONFIG (MASQUÉ INITIALEMENT) -->
+            <div id="config-segment" class="tab-content hidden space-y-4 animate-in fade-in duration-100">
+                <div class="border-b-2 border-slate-200 pb-2.5 mb-2">
+                    <h4 class="text-xs font-black text-slate-800 uppercase font-mono tracking-wider">Configurations Système</h4>
+                    <p class="text-[11px] font-medium text-slate-500 mt-0.5">Tables de référence médicales et gestion de la cartographie sanitaire.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <a href="{% url 'configurations' %}" class="group p-4 rounded-xl border-2 border-slate-800 bg-white hover:bg-slate-100 border-b-[4px] border-r-[2px] transition-all active:translate-y-[1px] active:border-b-[2px] flex items-start gap-3.5">
+                        <div class="p-2 rounded-lg bg-slate-100 text-slate-700 border border-slate-800 shrink-0">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 items-1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-black text-slate-800 uppercase font-mono tracking-tight">Variables & Nomenclatures</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Protocoles PTME, types de PCR, motifs de rejet.</span>
+                        </div>
+                    </a>
+                    <a href="{% url 'structures' %}" class="group p-4 rounded-xl border-2 border-slate-800 bg-white hover:bg-slate-100 border-b-[4px] border-r-[2px] transition-all active:translate-y-[1px] active:border-b-[2px] flex items-start gap-3.5">
+                        <div class="p-2 rounded-lg bg-slate-100 text-slate-700 border border-slate-800 shrink-0">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-black text-slate-800 uppercase font-mono tracking-tight">Réseau d'Hôpitaux</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Gestion des districts de santé et des formations sanitaires.</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</dialog>
+
+<!-- SCRIPT ADAPTÉ AU STYLE DE BORDURES ACTIVES -->
+<script>
+function switchTab(segmentId) {
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+    document.getElementById(segmentId).classList.remove('hidden');
+    
+    const eventBtn = event.currentTarget;
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-white', 'text-teal-900', 'border-2', 'border-slate-900', 'border-b-[3px]', 'shadow-sm', 'font-black');
+        btn.classList.add('text-slate-600', 'font-bold');
+    });
+    
+    eventBtn.classList.add('bg-white', 'text-teal-900', 'border-2', 'border-slate-900', 'border-b-[3px]', 'shadow-sm', 'font-black');
+    eventBtn.classList.remove('text-slate-600', 'font-bold');
+}
+</script>
         <div class="flex flex-1 h-[calc(100vh-65px)] overflow-hidden">
             
-            <!-- Sidebar avec fond blanc et bordure latérale sombre -->
-        
-        <aside class="w-64 h-screen sticky top-0 bg-white border-r-2 border-slate-900 hidden lg:flex flex-col justify-between p-4 overflow-y-auto custom-scrollbar flex-shrink-0">
-            <nav class="space-y-6">
-        <!-- Section : Général -->
-        <div>
-            <div class="px-3 mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Général</div>
-            <ul class="space-y-1">
-                <li>
-                  <a href="/dashboard/" 
-   class="flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all text-sm font-semibold
-          {% if request.path == '/dashboard/' %}
-              bg-slate-900 text-white border-slate-900 shadow-sm
-          {% else %}
-              bg-white text-slate-800 border-transparent hover:border-slate-900 hover:bg-slate-50
-          {% endif %}">
-    <i data-lucide="layout-dashboard" class="w-4 h-4 {% if request.path == '/dashboard/' %}text-white{% else %}text-slate-600{% endif %}"></i>
-    <span>Tableau de bord</span>
-</a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Section : Médical -->
-        <div>
-            <div class="px-3 mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Médical</div>
-                <ul class="space-y-1">
-                 <li>
-        <button onclick="toggleCollapse('echantillons-sub')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:bg-slate-50 border border-transparent hover:border-slate-900 text-sm font-medium transition-all group">
-            <div class="flex items-center gap-3">
-                <i data-lucide="test-tube-2" class="w-4 h-4 text-slate-600"></i>
-                <span>Échantillonnage</span>
-            </div>
-            <i data-lucide="chevron-up" class="w-4 h-4 text-slate-500"></i>
-        </button>
-        <ul id="echantillons-sub" class="block mt-1 ml-4 border-l-2 border-slate-900 pl-3 space-y-1 text-sm text-slate-600">
-            <li>
-                <a href="/fiches-echantillons/" 
-                   class="block py-1.5 pl-2 rounded-md transition-all font-medium text-sm flex items-center justify-between
-                        {% if request.path == '/fiches-echantillons/' %}
-                            bg-slate-900 text-white border-slate-900 shadow-sm
-                        {% else %}
-                            text-slate-600 hover:text-slate-900 hover:pl-3
-                        {% endif %}">
-                    <span>Fiches échantillons</span>
-                </a>
-            </li>
-            <li>
-                <a href="/echantillons/" 
-                   class="block py-1.5 pl-2 rounded-md transition-all font-medium text-sm flex items-center justify-between
-                        {% if request.path == '/echantillons/' %}
-                            bg-slate-900 text-white border-slate-900 shadow-sm
-                        {% else %}
-                            text-slate-600 hover:text-slate-900 hover:pl-3
-                        {% endif %}">
-                    <span>Échantillons</span>
-                </a>
-            </li>
-        </ul>
-    </li>
-                    
-                <li>
-                    <button onclick="toggleCollapse('lab-sub')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:bg-slate-50 border border-transparent hover:border-slate-900 text-sm font-medium transition-all group">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="flask-conical" class="w-4 h-4 text-slate-600"></i>
-                            <span>Laboratoire</span>
-                        </div>
-                        <i data-lucide="chevron-up" class="w-4 h-4 text-slate-500"></i>
-                    </button>
-                    <!-- Changement de hidden à block pour l'ouverture par défaut -->
-                    <ul id="lab-sub" class="block mt-1 ml-4 border-l-2 border-slate-900 pl-3 space-y-1 text-sm text-slate-600">
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Analyses en cours</a></li>
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Résultats validés</a></li>
-                    </ul>
-                </li>
-
-
-                <li>
-                        <button onclick="toggleCollapse('patients-sub')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:bg-slate-50 border border-transparent hover:border-slate-900 text-sm font-medium transition-all group">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="users" class="w-4 h-4 text-slate-600"></i>
-                                <span>Patients & DMP</span>
-                            </div>
-                            <i data-lucide="chevron-up" class="w-4 h-4 text-slate-500"></i>
-                        </button>
-                        <!-- Changement de hidden à block pour l'ouverture par défaut -->
-                        <ul id="patients-sub" class="block mt-1 ml-4 border-l-2 border-slate-900 pl-3 space-y-1 text-sm text-slate-600">
-                        <li>
-        <a href="/dossiers/patients/" 
-        class="block py-1.5 pl-2 rounded-md transition-all font-medium text-sm flex items-center justify-between
-                {% if request.path == '/dossiers/patients/' %}
-                    bg-slate-900 text-white border-slate-900 shadow-sm
-                {% else %}
-                    text-slate-600 hover:text-slate-900 hover:pl-3
-                {% endif %}">
-            
-            <span>Dossiers patients</span>
-
-            
-        </a>
-    </li>
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Rendez-vous</a></li>
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Consultations</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Section : Ressources Humaines -->
-        <div>
-            <div class="px-3 mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Gestion RH</div>
-            <ul class="space-y-1">
-                <li>
-                    <button onclick="toggleCollapse('rh-sub')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:bg-slate-50 border border-transparent hover:border-slate-900 text-sm font-medium transition-all group">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="id-card" class="w-4 h-4 text-slate-600"></i>
-                            <span>Personnel & Planning</span>
-                        </div>
-                        <i data-lucide="chevron-up" class="w-4 h-4 text-slate-500"></i>
-                    </button>
-                    <!-- Changement de hidden à block pour l'ouverture par défaut -->
-                    <ul id="rh-sub" class="block mt-1 ml-4 border-l-2 border-slate-900 pl-3 space-y-1 text-sm text-slate-600">
-                       <li>
-                        <a href="{% url 'personnel' %}" 
-                        class="block py-2 px-3 rounded-lg text-sm font-semibold transition-colors
-                                {% if request.path == '/personnel/' %}
-                                    bg-slate-950 text-white border border-slate-900
-                                {% else %}
-                                    text-slate-600 hover:bg-slate-100 hover:text-slate-900
-                                {% endif %}">
-                            Annuaire du personnel
-                        </a>
-                    </li>
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Plannings des services</a></li>
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Gestion des gardes</a></li>
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Absences & Congés</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Section : Configuration Système -->
-        <div>
-            <div class="px-3 mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Administration</div>
-            <ul class="space-y-1">
-                <li>
-                    <button onclick="toggleCollapse('config-sub')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:bg-slate-50 border border-transparent hover:border-slate-900 text-sm font-medium transition-all group">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="settings-2" class="w-4 h-4 text-slate-600"></i>
-                            <span>Configuration</span>
-                        </div>
-                        <i data-lucide="chevron-up" class="w-4 h-4 text-slate-500"></i>
-                    </button>
-                    <!-- Changement de hidden à block pour l'ouverture par défaut -->
-                    <ul id="config-sub" class="block mt-1 ml-4 border-l-2 border-slate-900 pl-3 space-y-1 text-sm text-slate-600">
-                        <li>
-                            
-                             <a href="{% url 'configurations' %}" 
-                        class="block py-2 px-3 rounded-lg text-sm font-semibold transition-colors
-                                {% if request.path == '/configurations/' %}
-                                    bg-slate-950 text-white border border-slate-900
-                                {% else %}
-                                    text-slate-600 hover:bg-slate-100 hover:text-slate-900
-                                {% endif %}">
-                           
-                      
-                            Paramètres ERP</a></li>
-                        
-                        <li><a href="{% url 'structures' %}"
-                             class="block py-2 px-3 rounded-lg text-sm font-semibold transition-colors
-                                {% if request.path == '/structures/' %}
-                                    bg-slate-950 text-white border border-slate-900
-                                {% else %}
-                                    text-slate-600 hover:bg-slate-100 hover:text-slate-900
-                                {% endif %}"
-                            
-                            >Unités & Départements</a></li>
-                        <li><a href="#" class="block py-1.5 hover:text-indigo-950 font-medium">Logs & Audit sécurité</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div id="navProgressBar" class="fixed top-0 left-0 w-0 h-1.5 bg-gradient-to-r from-blue-600 via-emerald-500 to-amber-500 z-[10000] transition-all duration-300 ease-out"></div>
+       
+<div id="navProgressBar" class="fixed top-0 left-0 w-0 h-1.5 bg-gradient-to-r from-blue-600 via-emerald-500 to-amber-500 z-[10000] transition-all duration-300 ease-out"></div>
     <script>
     const navBar = document.getElementById('navProgressBar');
 
@@ -304,184 +353,333 @@
         navBar.style.width = '0%';
     });
 </script>
-    <!-- Pied de page de la navigation -->
-    <div class="pt-4 border-t border-slate-200">
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-xs text-slate-600 hover:text-slate-900 font-bold">
-            <i data-lucide="help-circle" class="w-4 h-4"></i> Documentation ERP
-        </a>
-    </div>
-</aside>
   {%block main%}
-                
-<!-- AJOUT DE overflow-y-auto -->
-<main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white">
-    <!-- Titre Principal encadré de sombre -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-2 border-slate-900 rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-6 flex flex-col gap-6 bg-slate-100 w-full max-w-[100vw] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full">
+    
+    <!-- HEADER INSTITUTIONNEL - STYLE MODULE ERP CRISTALLIN / SOLIDE -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-2 border-slate-800 border-b-[4px] rounded-xl p-6 shadow-sm">
         <div>
-            <h1 class="text-xl font-black text-slate-900 tracking-tight uppercase">Tableau de Bord Institutionnel</h1>
-            <p class="text-xs font-bold text-indigo-950 mt-0.5">Données consolidées en temps réel · CIRCB</p>
+            <h1 class="text-xl font-black text-slate-900 tracking-tight uppercase font-mono">Tableau de Bord Institutionnel</h1>
+            <p class="text-xs font-bold text-slate-500 mt-0.5 uppercase tracking-wider">Aide à la Décision Clinique & Pilotage PTME · CIRCB</p>
         </div>
         <div class="flex items-center gap-2">
-            <button class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-indigo-950 text-white text-xs font-bold shadow-sm transition-colors inline-flex items-center gap-1.5">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Nouvelle admission
-            </button>
-            <button class="px-4 py-2 rounded-xl border border-slate-900 bg-white text-slate-900 text-xs font-bold hover:bg-slate-50 transition-colors inline-flex items-center gap-1.5">
-                <i data-lucide="download" class="w-3.5 h-3.5"></i> Exporter (.xlsx)
+            <a href="" class="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all border-b-2 border-slate-950 active:border-b-0 active:translate-y-[2px] inline-flex items-center gap-2 shadow">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Nouvelle admission</span>
+            </a>
+            <button class="px-4 py-2 rounded-lg border-2 border-slate-800 bg-white text-slate-800 text-xs font-black hover:bg-slate-50 border-b-[3px] active:border-b-2 active:translate-y-[1px] inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Exporter (.xlsx)</span>
             </button>
         </div>
     </div>
 
-    <!-- Grille KPI avec Bordures sombres d'accentuation et ombres marquées -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- ZONE DES ALERTES CRITIQUES & VIGILANCE CLINIQUE (CONTRASTE TECHNIQUE FORCÉ) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Alerte Ruptures Thérapeutiques -->
+        <div class="bg-rose-50 border-2 border-rose-950 border-b-[4px] border-r-[3px] rounded-xl p-5 flex flex-col justify-between gap-4">
+            <div class="flex gap-3 items-start">
+                <div class="p-2 bg-rose-600 text-white rounded-lg shrink-0 border border-rose-950 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                </div>
+                <div>
+                    <h3 class="text-xs font-black uppercase text-rose-950 tracking-widest font-mono">Ruptures de Protocole</h3>
+                    <div class="w-full h-[2px] bg-rose-200 my-1.5"></div>
+                    <p class="text-xs text-rose-900 font-medium leading-relaxed">
+                        Il y a <strong class="font-bold text-rose-700">{{ enfants_positifs_sans_tarv|default:"3" }} enfants</strong> testés <b class="font-bold">PCR Positif</b> sans TARV actif. Action d'urgence requise.
+                    </p>
+                </div>
+            </div>
+            <a class="w-full text-center px-3 py-2 bg-rose-700 hover:bg-rose-800 border border-rose-950 text-white font-bold text-xs rounded-lg border-b-2 active:border-b-0 active:translate-y-[2px] cursor-pointer">
+                Générer la liste
+            </a>
+        </div>
+
+        <!-- Alerte Nouveau-nés Symptomatiques -->
+        <div class="bg-amber-50 border-2 border-amber-950 border-b-[4px] border-r-[3px] rounded-xl p-5 flex flex-col justify-between gap-4">
+            <div class="flex gap-3 items-start">
+                <div class="p-2 bg-amber-500 text-white rounded-lg shrink-0 border border-amber-950 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"></circle><path d="M4 14.5a2.5 2.5 0 0 1 2.5-2.5h11a2.5 2.5 0 0 1 2.5 2.5v1a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 15.5v-1z"></path><path d="M9 19v2"></path><path d="M15 19v2"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-xs font-black uppercase text-amber-950 tracking-widest font-mono">Nouveau-nés Symptomatiques</h3>
+                    <div class="w-full h-[2px] bg-amber-200 my-1.5"></div>
+                    <p class="text-xs text-amber-900 font-medium leading-relaxed">
+                        <strong class="font-bold text-amber-700">{{ nouveaux_nes_symptomatiques|default:"12" }} cas</strong> identifiés ce mois avec signes cliniques hautement suspects.
+                    </p>
+                </div>
+            </div>
+            <a class="w-full text-center px-3 py-2 bg-amber-600 hover:bg-amber-700 border border-amber-950 text-white font-bold text-xs rounded-lg border-b-2 active:border-b-0 active:translate-y-[2px] cursor-pointer">
+                Consulter les dossiers
+            </a>
+        </div>
+
+        <!-- Alerte Vigilance Relances -->
+        <div class="bg-indigo-50 border-2 border-indigo-950 border-b-[4px] border-r-[3px] rounded-xl p-5 flex flex-col justify-between gap-4">
+            <div class="flex gap-3 items-start">
+                <div class="p-2 bg-indigo-600 text-white rounded-lg shrink-0 border border-indigo-950 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8" cy="7" r="4"></circle><line x1="23" y1="11" x2="17" y2="17"></line><line x1="17" y1="11" x2="23" y2="17"></line></svg>
+                </div>
+                <div>
+                    <h3 class="text-xs font-black uppercase text-indigo-950 tracking-widest font-mono">Suspicion Perdus de Vue</h3>
+                    <div class="w-full h-[2px] bg-indigo-200 my-1.5"></div>
+                    <p class="text-xs text-indigo-900 font-medium leading-relaxed">
+                        <strong class="font-bold text-indigo-700">{{ enfants_perdus_de_vue|default:"8" }} enfants</strong> exposés ont dépassé leur date de RDV de suivi de plus de 14 jours.
+                    </p>
+                </div>
+            </div>
+            <a class="w-full text-center px-3 py-2 bg-indigo-600 hover:bg-indigo-700 border border-indigo-950 text-white font-bold text-xs rounded-lg border-b-2 active:border-b-0 active:translate-y-[2px] cursor-pointer">
+                Lancer le listing de relance
+            </a>
+        </div>
+    </div>
+
+    <!-- 6 COMPTEURS KPI STRATÉGIQUES - BLOCS CONSOLE INJECTÉS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         
-        <!-- KPI 1 : Accent Indigo Sombre -->
-        <div class="bg-white border-2 border-indigo-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(30,27,75,1)] flex flex-col justify-between">
-            <div class="flex justify-between items-start">
+        <!-- KPI 1 -->
+        <div class="bg-white border-2 border-slate-800 border-b-[4px] border-r-[2px] p-4 rounded-xl flex flex-col justify-between">
+            <div class="flex items-start justify-between gap-2">
                 <div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Patients reçus (Jour)</span>
-                    <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900 count-up" data-target="124">0</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Total Échantillons</span>
+                    <span class="text-2xl font-black mt-1 block tracking-tight text-slate-800 font-mono">{{ total_echantillons|default:"1,240" }}</span>
                 </div>
-                <div class="p-2 bg-slate-100 border border-slate-900 text-slate-900 rounded-xl">
-                    <i data-lucide="activity" class="w-5 h-5"></i>
+                <div class="p-1 bg-slate-100 text-slate-500 border border-slate-300 rounded shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                 </div>
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
-                <span class="px-2 py-0.5 bg-emerald-100 border border-emerald-800 text-emerald-900 font-bold rounded-md inline-flex items-center gap-0.5"><i data-lucide="trending-up" class="w-3 h-3"></i> +2.4%</span>
-                <span class="text-slate-500 font-medium">vs hier</span>
-            </div>
+            <div class="mt-3 pt-2 border-t-2 border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">File active CIRCB</div>
         </div>
 
-        <!-- KPI 2 : Accent Ambre Sombre -->
-        <div class="bg-white border-2 border-amber-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(69,26,3,1)] flex flex-col justify-between">
-            <div class="flex justify-between items-start">
+        <!-- KPI 2 -->
+        <div class="bg-white border-2 border-slate-800 border-b-[4px] border-r-[2px] p-4 rounded-xl flex flex-col justify-between">
+            <div class="flex items-start justify-between gap-2">
                 <div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Analyses labo</span>
-                    <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900">18</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">En attente Labo</span>
+                    <span class="text-2xl font-black mt-1 block tracking-tight text-amber-600 font-mono">{{ analyses_en_cours|default:"18" }}</span>
                 </div>
-                <div class="p-2 bg-amber-50 border border-amber-900 text-amber-950 rounded-xl">
-                    <i data-lucide="hourglass" class="w-5 h-5"></i>
+                <div class="p-1 bg-amber-50 text-amber-600 border border-amber-300 rounded shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4.5 16.5c-1.5 1.26-2.5 3.19-2.5 5.5h20c0-2.31-1-4.24-2.5-5.5"></path><path d="M12 2a5 5 0 00-5 5v3.5a5 5 0 00 10 0V7a5 5 0 00-5-5z"></path></svg>
                 </div>
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
-                <span class="px-2 py-0.5 bg-amber-100 border border-amber-700 text-amber-900 font-bold rounded-md">En attente de validation</span>
-            </div>
+            <div class="mt-3 pt-2 border-t-2 border-slate-100 text-[10px] font-bold uppercase tracking-wider text-amber-600 font-mono">Analyses bloquées</div>
         </div>
 
-        <!-- KPI 3 : Accent Rouge Sombre -->
-        <div class="bg-white border-2 border-rose-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(76,5,25,1)] flex flex-col justify-between">
-            <div class="flex justify-between items-start">
+        <!-- KPI 3 -->
+        <div class="bg-white border-2 border-slate-800 border-b-[4px] border-r-[2px] p-4 rounded-xl flex flex-col justify-between">
+            <div class="flex items-start justify-between gap-2">
                 <div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Taux d'occupation</span>
-                    <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900">85%</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Taux Reprél.</span>
+                    <span class="text-2xl font-black mt-1 block tracking-tight text-rose-600 font-mono">{{ taux_reprelevement|default:"3.2%" }}</span>
                 </div>
-                <div class="p-2 bg-rose-50 border border-rose-900 text-rose-950 rounded-xl">
-                    <i data-lucide="bed" class="w-5 h-5"></i>
+                <div class="p-1 bg-rose-50 text-rose-600 border border-rose-300 rounded shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
                 </div>
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
-                <span class="px-2 py-0.5 bg-rose-100 border border-rose-700 text-rose-900 font-bold rounded-md">Seuil Critique</span>
-                <span class="text-slate-500 font-bold">Lits dispo : 12</span>
-            </div>
+            <div class="mt-3 pt-2 border-t-2 border-slate-100 text-[10px] font-bold uppercase tracking-wider text-rose-500 font-mono">DBS non conformes</div>
         </div>
 
-        <!-- KPI 4 : Accent Vert Sombre -->
-        <div class="bg-white border-2 border-emerald-950 p-5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(6,39,23,1)] flex flex-col justify-between">
-            <div class="flex justify-between items-start">
+        <!-- KPI 4 -->
+        <div class="bg-white border-2 border-slate-800 border-b-[4px] border-r-[2px] p-4 rounded-xl flex flex-col justify-between">
+            <div class="flex items-start justify-between gap-2">
                 <div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Recettes</span>
-                    <span class="text-3xl font-black mt-1 block tracking-tight text-slate-900">2.4M <span class="text-sm font-bold">FCFA</span></span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Taux Positivité</span>
+                    <span class="text-2xl font-black mt-1 block tracking-tight text-rose-600 font-mono">{{ taux_positivite|default:"4.8%" }}</span>
                 </div>
-                <div class="p-2 bg-emerald-50 border border-emerald-900 text-emerald-950 rounded-xl">
-                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                <div class="p-1 bg-rose-50 text-rose-600 border border-rose-300 rounded shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path></svg>
                 </div>
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
-                <span class="px-2 py-0.5 bg-emerald-100 border border-emerald-700 text-emerald-900 font-bold rounded-md inline-flex items-center gap-0.5"><i data-lucide="trending-up" class="w-3 h-3"></i> +12%</span>
-                <span class="text-slate-500 font-medium">Mois en cours</span>
+            <div class="mt-3 pt-2 border-t-2 border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">Seuil Cible &lt; 2%</div>
+        </div>
+
+        <!-- KPI 5 -->
+        <div class="bg-white border-2 border-slate-800 border-b-[4px] border-r-[2px] p-4 rounded-xl flex flex-col justify-between">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Couv. TARV Mère</span>
+                    <span class="text-2xl font-black mt-1 block tracking-tight text-emerald-600 font-mono">{{ couverture_ptme_mere|default:"92.3%" }}</span>
+                </div>
+                <div class="p-1 bg-emerald-50 text-emerald-600 border border-emerald-300 rounded shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </div>
             </div>
+            <div class="mt-3 pt-2 border-t-2 border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Protocole actif</div>
         </div>
 
-    </div>
-
-    <!-- Blocs Graphiques avec bordures noires/ardoise épaisses -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm">
-            <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-4">Volume d'admissions par département</h3>
-            <div id="chart-patients-dept" class="w-full"></div>
-        </div>
-
-        <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm">
-            <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-4">Sollicitations Examens Biologiques</h3>
-            <div id="chart-lab-donut" class="w-full"></div>
-        </div>
-
-        <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
-            <div>
-                <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-1">Tendances hebdomadaires</h3>
-                <p class="text-xs font-medium text-slate-500 mb-4">Moyenne lissée sur 7 jours d'activité</p>
+        <!-- KPI 6 -->
+        <div class="bg-white border-2 border-slate-800 border-b-[4px] border-r-[2px] p-4 rounded-xl flex flex-col justify-between">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Taux Sevrage</span>
+                    <span class="text-2xl font-black mt-1 block tracking-tight text-indigo-900 font-mono">{{ taux_sevrage_realise|default:"74%" }}</span>
+                </div>
+                <div class="p-1 bg-indigo-50 text-indigo-600 border border-indigo-300 rounded shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                </div>
             </div>
-            <div id="sparkline" class="w-full"></div>
+            <div class="mt-3 pt-2 border-t-2 border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Âge cible atteint</div>
         </div>
     </div>
 
-    <!-- Bas du tableau de bord -->
+    <!-- BLOCS GRAPH_ANALYTIQUES SOLIDES (EFFET PANNEAU EMBARKED) -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase">Flux des admissions</h3>
-                    <p class="text-xs text-slate-500 font-medium mt-0.5">Analyse dynamique des entrées/sorties</p>
-                </div>
-                <span class="text-xs font-bold px-2.5 py-1 border border-slate-900 bg-slate-50 text-slate-900 rounded-lg">7 derniers jours</span>
+        <!-- Graphique 1 -->
+        <div class="bg-white border-2 border-slate-800 border-b-[5px] border-r-[3px] p-5 rounded-xl">
+            <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono mb-0.5">Cascade Thérapeutique Pédiatrique</h3>
+            <p class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-tight">Volume d'enfants sous directives nationales</p>
+            <div class="w-full bg-slate-50 border border-slate-200 p-2 rounded-lg">
+                <div id="chart-cascade-enfant" class="w-full"></div>
             </div>
-            <div id="chart" class="w-full"></div>
         </div>
 
-        <!-- Actions secondaires & Journal de bord -->
-        <div class="bg-white border-2 border-slate-950 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+        <!-- Graphique 2 -->
+        <div class="bg-white border-2 border-slate-800 border-b-[5px] border-r-[3px] p-5 rounded-xl">
+            <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono mb-0.5">Profils de Prophylaxie Bébé</h3>
+            <p class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-tight">Protocoles ARV d'urgence à la naissance</p>
+            <div class="w-full bg-slate-50 border border-slate-200 p-2 rounded-lg">
+                <div id="chart-prophylaxie-bar" class="w-full"></div>
+            </div>
+        </div>
+
+        <!-- Graphique 3 -->
+        <div class="bg-white border-2 border-slate-800 border-b-[5px] border-r-[3px] p-5 rounded-xl">
+            <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono mb-0.5">Équilibre Allaitement vs Sevrage</h3>
+            <p class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-tight">Comparaison directe file active nutritionnelle</p>
+            <div class="w-full bg-slate-50 border border-slate-200 p-2 rounded-lg">
+                <div id="chart-allaitement-sevrage" class="w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BAS DU TABLEAU DE BORD (CARTE CONSOLE DOUBLE ZONE) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Graphique Principal -->
+        <div class="lg:col-span-2 bg-white border-2 border-slate-800 border-b-[6px] border-r-[4px] p-5 rounded-xl">
+            <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono mb-0.5">Flux Analytique Hebdomadaire</h3>
+            <p class="text-[11px] font-bold text-slate-400 uppercase mb-6">Comparatif des charges de travail initial (PCR1) vs confirmation (PCR2)</p>
+            <div class="w-full bg-slate-50 border border-slate-200 p-2 rounded-lg">
+                <div id="chart" class="w-full"></div>
+            </div>
+        </div>
+
+        <!-- MONITORING QUALITÉ DES STRUCTURES (FOSA) -->
+        <div class="bg-white border-2 border-slate-800 border-b-[6px] border-r-[4px] p-5 rounded-xl flex flex-col justify-between">
             <div>
-                <h3 class="text-sm font-black tracking-tight text-slate-900 uppercase mb-4">Raccourcis Opérationnels</h3>
-                <div class="grid grid-cols-2 gap-2">
-                    <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
-                        <i data-lucide="file-text" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
-                        <span class="block">Fiche de Soins</span>
-                    </button>
-                    <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
-                        <i data-lucide="calendar" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
-                        <span class="block">Planifier RDV</span>
-                    </button>
-                    <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
-                        <i data-lucide="microscope" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
-                        <span class="block">Lancer Examen</span>
-                    </button>
-                    <button class="p-3 text-left bg-white border border-slate-900 rounded-xl hover:bg-slate-900 hover:text-white text-xs font-bold transition-all group">
-                        <i data-lucide="dollar-sign" class="w-4 h-4 text-slate-900 group-hover:text-white mb-2"></i>
-                        <span class="block">Facturation</span>
-                    </button>
+                <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono mb-4">Top Anomalies & Suivi FOSA</h3>
+                
+                <div class="space-y-3.5 text-xs">
+                    <!-- FOSA Card 1 (Relief ERP dur) -->
+                    <div class="p-3 bg-slate-50 border-2 border-slate-700/60 rounded-lg flex justify-between items-center shadow-inner">
+                        <div>
+                            <span class="font-black text-slate-800 block uppercase font-mono text-[11px]">Hôpital Régional Ébolowa</span>
+                            <span class="text-[11px] text-slate-500 font-medium mt-0.5 block">Doublons / tubes non conformes détectés</span>
+                        </div>
+                        <span class="px-2 py-1 font-mono text-[11px] font-black bg-amber-100 text-amber-800 border border-amber-900 rounded shadow-sm">8.4%</span>
+                    </div>
+
+                    <!-- FOSA Card 2 -->
+                    <div class="p-3 bg-indigo-50 border-2 border-indigo-900/60 rounded-lg flex justify-between items-center shadow-inner">
+                        <div>
+                            <span class="font-black text-indigo-950 block uppercase font-mono text-[11px]">CMA de Messamendongo</span>
+                            <span class="text-[11px] text-indigo-800/90 font-medium mt-0.5 block">En retard critique de suivi (RDV dépassé)</span>
+                        </div>
+                        <span class="px-2 py-1 font-mono text-[11px] font-black bg-indigo-700 text-white border border-indigo-950 rounded shadow-md">4 Cas</span>
+                    </div>
+
+                    <!-- FOSA Card 3 -->
+                    <div class="p-3 bg-slate-50 border-2 border-slate-700/60 rounded-lg flex justify-between items-center shadow-inner">
+                        <div>
+                            <span class="font-black text-slate-800 block uppercase font-mono text-[11px]">District de Santé Deido</span>
+                            <span class="text-[11px] text-slate-500 font-medium mt-0.5 block">Enfants symptomatiques sans suivi PCR_2</span>
+                        </div>
+                        <span class="px-2 py-1 font-mono text-[11px] font-black bg-rose-100 text-rose-800 border border-rose-900 rounded shadow-sm">5 Cas</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t-2 border-slate-900">
-                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 mb-3">Journal de bord d'unité</h4>
-                <ul class="text-xs space-y-3 font-medium">
-                    <li class="flex gap-2.5">
-                        <span class="text-slate-500 font-bold shrink-0">12:10</span>
-                        <span class="text-slate-800"><strong class="text-slate-950 font-bold">Admission :</strong> Mme Ngassa (Cardio)</span>
-                    </li>
-                    <li class="flex gap-2.5">
-                        <span class="text-slate-500 font-bold shrink-0">11:45</span>
-                        <span class="text-slate-800"><strong class="text-slate-950 font-bold">Laboratoire :</strong> Résultats dispo (M. Tchatchu)</span>
-                    </li>
-                    <li class="flex gap-2.5">
-                        <span class="text-slate-500 font-bold shrink-0">10:30</span>
-                        <span class="text-slate-800"><strong class="text-slate-950 font-bold">Caisse :</strong> Encaissement 24k FCFA</span>
-                    </li>
-                </ul>
+            <div class="mt-5 pt-4 border-t-2 border-slate-100 text-[11px] font-medium text-slate-400 leading-relaxed inline-flex items-start gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <span>Les FOSA affichées ici dépassent les seuils de tolérance ou les fenêtres de relance de l'algorithme d'assurance qualité du CIRCB.</span>
             </div>
         </div>
     </div>
 
 </main>
+
+<!-- CONFIGURATION APEXCHARTS -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    
+    const baseChartOptions = {
+        chart: { toolbar: { show: false }, fontFamily: 'inherit' },
+        stroke: { curve: 'smooth', width: 2.5 },
+        grid: { borderColor: '#f8fafc' }
+    };
+
+    // 1. Cascade Thérapeutique Enfant
+    new ApexCharts(document.querySelector("#chart-cascade-enfant"), {
+        ...baseChartOptions,
+        chart: { type: 'bar', height: 200, toolbar: { show: false } },
+        plotOptions: { bar: { horizontal: false, columnWidth: '45%', borderRadius: 4 } },
+        colors: ['#4f46e5', '#10b981', '#f59e0b'],
+        dataLabels: { enabled: false },
+        series: [{
+            name: 'Nombre d\'enfants',
+            data: [{{ total_enfants|default:450 }}, {{ enfants_sous_cotri|default:380 }}, {{ enfants_sous_tarv|default:310 }}]
+        }],
+        xaxis: { categories: ['Exposés', 'Sous Cotri.', 'Sous TARV'], axisBorder: { show: false }, axisTicks: { show: false } }
+    }).render();
+
+    // 2. Profils de Prophylaxie Bébé
+    new ApexCharts(document.querySelector("#chart-prophylaxie-bar"), {
+        ...baseChartOptions,
+        chart: { type: 'bar', height: 200, toolbar: { show: false } },
+        plotOptions: { bar: { horizontal: true, barHeight: '50%', borderRadius: 4 } },
+        colors: ['#6366f1'],
+        dataLabels: { enabled: false },
+        series: [{
+            name: 'Enfants',
+            data: [{{ NVP_seule|default:180 }}, {{ AZT_NVP|default:210 }}, {{ autre_arv|default:45 }}]
+        }],
+        xaxis: { categories: ['NVP seule', 'AZT + NVP', 'Autres'], axisBorder: { show: false } }
+    }).render();
+
+    // 3. Allaités vs Sevrés
+    new ApexCharts(document.querySelector("#chart-allaitement-sevrage"), {
+        chart: { type: 'donut', height: 200, fontFamily: 'inherit' },
+        colors: ['#3b82f6', '#10b981'],
+        labels: ['En cours d\'allaitement', 'Sevrés sécurisés'],
+        series: [{{ total_allaites|default:260 }}, {{ total_sevres|default:190 }}],
+        legend: { position: 'bottom', fontSize: '11px' },
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: '75%',
+                    labels: {
+                        show: true,
+                        total: { show: true, label: 'Actifs', fontSize: '11px', color: '#94a3b8', fontWeight: 'bold' }
+                    }
+                }
+            }
+        }
+    }).render();
+
+    // 4. Flux Hebdomadaire PCR1 vs PCR2
+    new ApexCharts(document.querySelector("#chart"), {
+        ...baseChartOptions,
+        chart: { type: 'line', height: 260, toolbar: { show: false } },
+        colors: ['#0f172a', '#6366f1'],
+        series: [
+            { name: 'Screening (PCR 1)', data: [31, 40, 28, 51, 42, 109, 100] },
+            { name: 'Confirmation (PCR 2)', data: [11, 32, 45, 32, 34, 52, 41] }
+        ],
+        xaxis: { categories: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'], axisBorder: { show: false } }
+    }).render();
+
+});
+</script>
             {%endblock%}
         </div>
     </div>
@@ -509,72 +707,8 @@
             }, 25);
         });
 
-        // Configuration Graphiques assortis au design épuré et sombre
-        function resolveThemePalette() {
-            return {
-                primary: '#0f172a', // Ardoise très sombre
-                accent: '#1e1b4b',  // Indigo nuit
-                muted: '#64748b',
-                grid: '#f1f5f9',
-                tooltipTheme: 'light'
-            };
-        }
-
-        function renderCharts() {
-            const colors = resolveThemePalette();
-
-            const mainOptions = {
-                chart: { type: 'area', height: 260, toolbar: { show: false }, zoom: { enabled: false } },
-                series: [{ name: 'Admissions', data: [30, 40, 35, 50, 49, 60, 70] }],
-                stroke: { curve: 'smooth', width: 3 },
-                colors: [colors.primary],
-                fill: { type: 'solid', opacity: 0.03 },
-                grid: { borderColor: colors.grid, strokeDashArray: 4 },
-                xaxis: { 
-                    categories: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
-                    labels: { style: { colors: colors.muted, fontWeight: 'bold' } }
-                },
-                yaxis: { labels: { style: { colors: colors.muted } } },
-                tooltip: { theme: colors.tooltipTheme }
-            };
-            new ApexCharts(document.querySelector('#chart'), mainOptions).render();
-
-            const barOptions = {
-                chart: { type: 'bar', height: 200, toolbar: { show: false } },
-                series: [{ name: 'Patients Admissions', data: [24, 18, 31, 12, 20] }],
-                colors: ['#1e293b'],
-                plotOptions: { bar: { borderRadius: 4, columnWidth: '45%' } },
-                grid: { show: false },
-                xaxis: { 
-                    categories: ['Cardio', 'Chir', 'Méd', 'Péd', 'Gyné'],
-                    labels: { style: { colors: colors.muted, fontSize: '11px', fontWeight: 'bold' } }
-                },
-                yaxis: { show: false }
-            };
-            new ApexCharts(document.querySelector('#chart-patients-dept'), barOptions).render();
-
-            const donutOptions = {
-                chart: { type: 'donut', height: 215 },
-                series: [45, 28, 15, 12],
-                labels: ['Hématologie', 'Biochimie', 'Microbio', 'Immuno'],
-                colors: ['#0f172a', '#1e1b4b', '#475569', '#94a3b8'],
-                legend: { position: 'bottom', fontSize: '11px', labels: { colors: colors.primary } },
-                plotOptions: { pie: { donut: { size: '65%' } } },
-                stroke: { width: 2, colors: ['#ffffff'] }
-            };
-            new ApexCharts(document.querySelector('#chart-lab-donut'), donutOptions).render();
-
-            const sparkOptions = {
-                chart: { type: 'area', height: 100, sparkline: { enabled: true } },
-                series: [{ data: [10, 15, 12, 18, 20, 22, 25] }],
-                stroke: { curve: 'smooth', width: 2.5 },
-                fill: { opacity: 0.05 },
-                colors: ['#020617']
-            };
-            new ApexCharts(document.querySelector('#sparkline'), sparkOptions).render();
-        }
-
-        window.onload = function() { renderCharts(); };
+      
+        
     </script>
     <!-- Inclusion de SweetAlert2 (si pas déjà inclus dans votre base) -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

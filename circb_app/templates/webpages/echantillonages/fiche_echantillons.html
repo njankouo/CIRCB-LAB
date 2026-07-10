@@ -23,7 +23,7 @@
         </h1>
     </div>
     <button onclick="document.getElementById('lims-modal').showModal()" 
-            class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-sm border border-sky-400 font-sans tracking-wide">
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-slate-800 hover:bg-sky-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-sm border border-sky-400 font-sans tracking-wide">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="4" y1="12" x2="19" y2="12"></line></svg>
         Créer une fiche de suivi (F04)
     </button>
@@ -84,110 +84,75 @@
         </div>
     </div>
 
-    <!-- TABLEAU HAUTE DENSITÉ INDUSTRIALISÉ (STYLE SAP/LIMS) -->
-    <div class="hidden lg:block overflow-x-auto">
-        <table class="w-full text-left border-collapse text-xs font-sans">
-            <thead>
-                <tr class="border-b border-slate-200 bg-slate-100/70 text-slate-500 font-bold uppercase text-[10px] font-mono tracking-wider">
-                    <th class="px-4 py-2.5 border-r border-slate-200">Code Système</th>
-                    <th class="px-4 py-2.5 border-r border-slate-200">Structure Sanitaire (Origine)</th>
-                    <th class="px-4 py-2.5 border-r border-slate-200">Date Exp.</th>
-                    <th class="px-4 py-2.5 text-center border-r border-slate-200">Volume (U)</th>
-                    <th class="px-4 py-2.5 border-r border-slate-200">Vecteur Logistique</th>
-                    <th class="px-4 py-2.5 border-r border-slate-200">Arrivée Labo</th>
-                    <th class="px-4 py-2.5 border-r border-slate-200">Réceptionniste</th>
-                    <th class="px-4 py-2.5 border-r border-slate-200">Logs & Audit LIMS</th>
-                    <th class="px-4 py-2.5 text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200 text-slate-600 font-medium bg-white">
-                {% for fiche in fiches %}
-                <tr class="hover:bg-slate-50/80 transition-colors border-b border-slate-100">
-                    
-                    <!-- Code Unique -->
-                    <td class="px-4 py-2 font-mono text-slate-900 border-r border-slate-100 whitespace-nowrap">
-                        <span class="bg-slate-100 px-1.5 py-0.5 border border-slate-300 rounded text-slate-700 font-bold">
-                            #{{ fiche.code }}
-                        </span>
-                    </td>
-                    
-                    <!-- FOSA Origine -->
-                    <td class="px-4 py-2 border-r border-slate-100">
-                        <div class="text-slate-900 font-bold truncate max-w-[180px]" title="{{ fiche.fosa.nom }}">{{ fiche.fosa.nom }}</div>
-                        <div class="text-[10px] text-slate-400 font-mono">{{ fiche.region.nom }} &bull; {{ fiche.district.nom }}</div>
-                    </td>
-                    
-                    <!-- Date Expédition -->
-                    <td class="px-4 py-2 font-mono text-[11px] border-r border-slate-100 whitespace-nowrap">
-                        {{ fiche.date_expedition|date:"d.m.Y" }}
-                    </td>
-                    
-                    <!-- Compteur Unités -->
-                    <td class="px-4 py-2 text-center border-r border-slate-100 font-mono">
-                        <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200 font-bold text-[11px]">
-                            {{ fiche.nombre_echantillon|default:"0" }}
-                        </span>
-                    </td>
-                    
-                    <!-- Transporteur -->
-                    <td class="px-4 py-2 border-r border-slate-100">
-                        <div class="text-slate-800 flex items-center gap-1 truncate max-w-[150px]">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400 shrink-0"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                            {% if fiche.transporteur %}{{ fiche.transporteur.nom }}{% else %}<span class="text-slate-400 italic">Non spécifié</span>{% endif %}
-                        </div>
-                        <div class="text-[10px] text-slate-400 font-mono mt-0.5">
-                            {% if fiche.moyen_transport %}{{ fiche.moyen_transport.nom }}{% else %}--{% endif %}
-                        </div>
-                    </td>
-                    
-                    <!-- Date Réception -->
-                    <td class="px-4 py-2 font-mono text-[11px] text-slate-900 border-r border-slate-100 whitespace-nowrap">
-                        {{ fiche.date_reception|date:"d.m.Y" }}
-                    </td>
-                    
-                    <!-- Nom du réceptionniste -->
-                    <td class="px-4 py-2 border-r border-slate-100">
-                        <div class="text-slate-800 truncate max-w-[130px] flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400 shrink-0"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
-                            {{ fiche.receptioniste.nom }}
-                        </div>
-                    </td>
-                    
-                    <!-- Notes / Observations de sécurité -->
-                    <td class="px-4 py-2 border-r border-slate-100">
-                        {% if fiche.observation %}
-                            <div class="text-[10px] text-slate-500 font-mono max-w-[160px] truncate bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded" title="{{ fiche.observation }}">
-                                {{ fiche.observation }}
-                            </div>
-                        {% else %}
-                            <span class="text-[10px] text-slate-400 italic font-mono">N/A</span>
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Actions système compactes -->
-                    <td class="px-4 py-2 text-right whitespace-nowrap">
-                        <div class="flex items-center justify-end gap-1">
-                            <a href="#" class="p-1 text-slate-500 hover:text-sky-600 hover:bg-slate-100 rounded transition-colors" title="Consulter la fiche technique">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                            </a>
-                            <a href="/details-fiche/{{fiche.code}}/" class="p-1 text-slate-500 hover:text-amber-600 hover:bg-slate-100 rounded transition-colors" title="Ouvrir en modification">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="9" class="px-4 py-10 text-center text-slate-400 font-medium bg-slate-50/50">
-                        <div class="flex flex-col items-center justify-center gap-2 py-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-300"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><path d="M2 10h20"></path></svg>
-                            <span class="text-xs">Aucun enregistrement LIMS trouvé dans cette table.</span>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- GRILLE DES CARTES DE SUIVI (DESKTOP) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
+        {% for fiche in fiches %}
+        <div class="group bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all duration-200">
+            
+            <!-- Haut de carte -->
+            <div class="bg-slate-50/70 px-4 py-3 border-b border-slate-100 flex justify-between items-center rounded-t-xl">
+                <div class="text-xs font-bold text-slate-800">
+                    <span>Fiche : </span>
+                    <span class="font-mono font-black text-slate-950 pb-0.5 border-b-2 border-red-600 tracking-tight">
+                        {{ fiche.code }}
+                    </span>
+                </div>
+                
+                <span class="inline-flex items-center gap-1 font-mono text-[11px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md font-bold border border-blue-100" title="Échantillons saisis / Échantillons attendus">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    {{ fiche.echantillons.count|default:"0" }}/{{ fiche.nombre_echantillon|default:"0" }}
+                </span>
+            </div>
+
+            <!-- Contenu de la fiche -->
+            <div class="p-4 text-xs space-y-2.5 text-slate-600 flex-1">
+                <div class="flex justify-between items-center pb-1.5 border-b border-slate-50">
+                    <span class="text-slate-400 font-medium">Expédié le</span>
+                    <span class="font-mono text-slate-600">{{ fiche.date_expedition|date:"d/m/Y"|default:"--" }}</span>
+                </div>
+                
+                <div class="flex justify-between items-center pb-1.5 border-b border-slate-50">
+                    <span class="text-slate-400 font-medium">Reçu le</span>
+                    <span class="font-mono text-slate-900 font-semibold">{{ fiche.date_reception|date:"d/m/Y"|default:"--" }}</span>
+                </div>
+
+                <div class="flex justify-between items-center pb-1.5 border-b border-slate-50">
+                    <span class="text-slate-400 font-medium">Logistique</span>
+                    <span class="text-slate-800 font-medium truncate max-w-[140px]" title="{{ fiche.transporteur.nom }}">
+                        {{ fiche.transporteur.nom|default:fiche.moyen_transport.nom|default:"N/A" }}
+                    </span>
+                </div>
+                
+                <div class="flex justify-between items-center pt-0.5">
+                    <span class="text-slate-400 font-medium">Réceptionniste</span>
+                    <span class="text-slate-800 font-medium truncate max-w-[140px]">
+                        {{ fiche.receptioniste.get_full_name|default:fiche.receptioniste.username }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Actions de pied de carte -->
+            <div class="bg-slate-50/50 px-3 py-3 border-t border-slate-100 flex gap-2 rounded-b-xl">
+                <a href="/saisir-echantillon/{{ fiche.code }}/" class="flex-1 inline-flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-semibold tracking-wide py-2 px-3 rounded-lg transition-colors shadow-sm shadow-blue-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Saisir échantillon
+                </a>
+                
+                <a href="/details-fiche/{{fiche.code}}/" class="inline-flex items-center justify-center bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200 p-2 rounded-lg transition-colors shadow-sm" title="Voir la fiche">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <!-- État vide (Empty State) -->
+        <div class="col-span-full bg-slate-50/50 rounded-xl border border-dashed border-slate-300 py-12 text-center">
+            <div class="inline-flex p-3 bg-white rounded-full shadow-sm border border-slate-100 mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+            </div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Aucune donnée correspondante</p>
+            <p class="text-slate-400 text-xs mt-1">Il n'y a actuellement aucune fiche disponible dans cette section.</p>
+        </div>
+        {% endfor %}
     </div>
 </div>
 
@@ -212,8 +177,13 @@
         <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest bg-slate-100 p-1.5 border-2 border-slate-900 inline-block rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)]">
             1. Logistique & Territoires
         </h4>
-        
+          <div class="space-y-1">
+                <label class="font-bold text-slate-900">Code *</label>
+                <input type="number" name="code" min="20" required placeholder="Ex: 15122515560" 
+                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white font-mono">
+            </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-3 border-2 border-slate-900 rounded-xl shadow-[3px_3px_0px_0px_rgba(15,23,42,0.05)]">
+           
             <div class="space-y-1">
                 <label class="font-black text-slate-900 uppercase tracking-wide text-[10px]">Région *</label>
                 <select name="region" id="select-region" required class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-100 font-bold text-slate-800 bg-white cursor-pointer transition-all">
@@ -260,6 +230,8 @@
                 <input type="number" name="nombre_echantillon" min="1" required placeholder="Ex: 5" 
                        class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white font-mono">
             </div>
+
+           
         </div>
     </div>
 

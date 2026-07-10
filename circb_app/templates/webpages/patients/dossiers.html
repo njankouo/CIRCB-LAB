@@ -21,7 +21,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="p-5 bg-white border-2 border-slate-900 rounded-xl shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between min-h-[100px]">
                 <span class="text-xs font-black uppercase tracking-wider text-slate-400">Total Patients</span>
-                <span class="text-3xl font-black text-slate-900 mt-2">1,284</span>
+                <span class="text-3xl font-black text-slate-900 mt-2">{{patients|length}}</span>
             </div>
             <div class="p-5 bg-white border-2 border-slate-900 rounded-xl shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between min-h-[100px]">
                 <span class="text-xs font-black uppercase tracking-wider text-slate-400">Admissions (24h)</span>
@@ -67,94 +67,103 @@
         </div>
 
         <!-- TABLEAU DES PATIENTS -->
-        <div class="bg-white border-2 border-slate-900 rounded-xl shadow-[6px_6px_0px_0px_#0f172a] overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-900 text-white text-xs font-black uppercase tracking-wider border-b-2 border-slate-900">
-                            <th class="p-4">IPP / Patient</th>
-                            <th class="p-4">Âge & Sexe</th>
-                            <th class="p-4">Dernière visite</th>
-                            <th class="p-4">Service affecté</th>
-                            <th class="p-4">Statut</th>
-                            <th class="p-4 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y-2 divide-slate-200 text-sm font-bold text-slate-800">
-                        
-                        <!-- Ligne Patient 1 -->
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="p-4">
-                                <div class="font-black text-slate-900 uppercase tracking-tight">Mvondo Amougou Samuel</div>
-                                <div class="text-xs text-slate-400 font-bold font-mono mt-0.5">#IPP-2026-9912</div>
-                            </td>
-                            <td class="p-4">
-                                <div class="text-slate-900">54 ans</div>
-                                <div class="text-xs font-bold text-slate-400 uppercase tracking-wide">Masculin</div>
-                            </td>
-                            <td class="p-4">
-                                <div class="text-slate-900">Aujourd'hui, 09:30</div>
-                                <div class="text-xs text-slate-400 font-semibold mt-0.5">Par : <span class="text-slate-600">Dr Kamga</span></div>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2.5 py-1 bg-slate-100 border-2 border-slate-900 rounded-md text-xs font-black uppercase text-slate-800">Cardiologie</span>
-                            </td>
-                            <td class="p-4">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-black uppercase bg-amber-100 text-amber-900 border-2 border-amber-900 shadow-[1px_1px_0px_0px_#78350f]">Hospitalisé</span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <div class="flex items-center justify-end gap-2">
-                                    <a href="#" class="px-3 py-2 bg-white hover:bg-slate-100 border-2 border-slate-900 rounded-lg text-xs font-black uppercase tracking-wider text-slate-900 transition-colors shadow-[2px_2px_0px_0px_#0f172a] active:translate-y-0.5 active:shadow-none">Consulter</a>
-                                    <button class="p-2 border-2 border-slate-900 rounded-lg bg-white hover:bg-slate-100 text-slate-900 transition-colors shadow-[2px_2px_0px_0px_#0f172a] active:translate-y-0.5 active:shadow-none">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+       <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-200">
+                    <th class="p-4 font-semibold">IPP / Patient</th>
+                    <th class="p-4 font-semibold">Date Naissance & Sexe</th>
+                    <th class="p-4 font-semibold">Porte d'entrée</th>
+                    <th class="p-4 font-semibold">Nom du Parent</th>
+                    <th class="p-4 font-semibold">Contact</th>
+                    <th class="p-4 text-right font-semibold">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y border-b border-slate-200 divide-slate-100 text-sm text-slate-700">
+                
+                {% for patient in patients %}
+                <tr class="hover:bg-slate-50/70 transition-colors">
+                    <!-- IPP / Patient -->
+                    <td class="p-4">
+                        <div class="font-semibold text-slate-900 tracking-tight">{{ patient.nom }} {{ patient.prenom }}</div>
+                        <div class="text-xs text-slate-400 font-mono mt-0.5">{{ patient.code }}</div>
+                    </td>
+                    
+                    <!-- Date Naissance & Sexe -->
+                    <td class="p-4">
+                        <div class="text-slate-800 font-medium">{{ patient.date_naissance|default:"Non renseignée" }}</div>
+                        <div class="text-xs text-slate-400 uppercase tracking-wide mt-0.5">{{ patient.sexe|default:"Non renseigné" }}</div>
+                    </td>
+                    
+                    <!-- Porte d'entrée -->
+                    <td class="p-4">
+                        <span class="inline-flex items-center px-2 py-0.5 bg-blue-50 text-blue-700 text-xs font-medium rounded border border-blue-100">
+                            {{ patient.porte_entree|default:"Non renseignée" }}
+                        </span>
+                    </td>
+                    
+                    <!-- Parent -->
+                    <td class="p-4">
+                        <div class="text-slate-700 font-medium">
+                            {{ patient.mere.nom|default:"Non renseigné" }} {{ patient.mere.prenom|default:"" }}
+                        </div>
+                    </td>
+                    
+                    <!-- Contact -->
+                    <td class="p-4">
+                        {% if patient.parent.contact %}
+                            <span class="inline-flex items-center gap-1 font-mono text-xs text-slate-600 bg-slate-100 px-2.5 py-1 rounded border border-slate-200">
+                                <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                </svg>
+                                {{ patient.parent.contact }}
+                            </span>
+                        {% else %}
+                            <span class="text-xs text-slate-400 italic">Aucun</span>
+                        {% endif %}
+                    </td>
+                    
+                    <!-- Actions -->
+                    <td class="p-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <a href="{% url 'details-patient' patient.code %}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-lg text-xs font-semibold text-blue-600 transition-colors shadow-sm">
+                                Consulter
+                            </a>
+                            <button class="p-1.5 border border-slate-200 hover:border-slate-300 rounded-lg bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-700 transition-colors shadow-sm" title="Modifier le dossier">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20h9"/>
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="p-8 text-center text-slate-400 italic">
+                        Aucun patient trouvé dans la base de données.
+                    </td>
+                </tr>
+                {% endfor %}
 
-                        <!-- Ligne Patient 2 -->
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="p-4">
-                                <div class="font-black text-slate-900 uppercase tracking-tight">Ngo Kondo Thérèse</div>
-                                <div class="text-xs text-slate-400 font-bold font-mono mt-0.5">#IPP-2026-4410</div>
-                            </td>
-                            <td class="p-4">
-                                <div class="text-slate-900">29 ans</div>
-                                <div class="text-xs font-bold text-slate-400 uppercase tracking-wide">Féminin</div>
-                            </td>
-                            <td class="p-4">
-                                <div class="text-slate-900">Hier, 14:15</div>
-                                <div class="text-xs text-slate-400 font-semibold mt-0.5">Par : <span class="text-slate-600">Dr Lenoir</span></div>
-                            </td>
-                            <td class="p-4">
-                                <span class="px-2.5 py-1 bg-slate-100 border-2 border-slate-900 rounded-md text-xs font-black uppercase text-slate-800">Pédiatrie</span>
-                            </td>
-                            <td class="p-4">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-black uppercase bg-emerald-100 text-emerald-900 border-2 border-emerald-900 shadow-[1px_1px_0px_0px_#064e3b]">Externe</span>
-                            </td>
-                            <td class="p-4 text-right">
-                                <div class="flex items-center justify-end gap-2">
-                                    <a href="#" class="px-3 py-2 bg-white hover:bg-slate-100 border-2 border-slate-900 rounded-lg text-xs font-black uppercase tracking-wider text-slate-900 transition-colors shadow-[2px_2px_0px_0px_#0f172a] active:translate-y-0.5 active:shadow-none">Consulter</a>
-                                    <button class="p-2 border-2 border-slate-900 rounded-lg bg-white hover:bg-slate-100 text-slate-900 transition-colors shadow-[2px_2px_0px_0px_#0f172a] active:translate-y-0.5 active:shadow-none">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- PAGINATION -->
-            <div class="p-4 border-t-2 border-slate-900 flex items-center justify-between bg-slate-50 font-bold text-xs">
-                <span class="text-slate-500">Affichage de <span class="text-slate-900">1-2</span> sur <span class="text-slate-900">1,284</span> patients</span>
-                <div class="flex gap-2">
-                    <button class="px-3 py-2 border-2 border-slate-900 rounded-lg bg-white hover:bg-slate-50 text-slate-900 disabled:opacity-40 disabled:hover:bg-white transition-colors" disabled>Précédent</button>
-                    <button class="px-3 py-2 border-2 border-slate-900 rounded-lg bg-white hover:bg-slate-50 text-slate-900 transition-colors shadow-[2px_2px_0px_0px_#0f172a] active:translate-y-0.5 active:shadow-none">Suivant</button>
-                </div>
-            </div>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- PAGINATION -->
+    <div class="p-4 border-t border-slate-200 flex items-center justify-between bg-slate-50 text-xs font-medium text-slate-600">
+        <span>Affichage de <span class="font-semibold text-slate-900">1-2</span> sur <span class="font-semibold text-slate-900">1 284</span> patients</span>
+        <div class="flex gap-1.5">
+            <button class="px-3 py-1.5 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:hover:bg-white transition-colors" disabled>
+                Précédent
+            </button>
+            <button class="px-3 py-1.5 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 text-slate-700 transition-colors shadow-sm">
+                Suivant
+            </button>
         </div>
+    </div>
+</div>
     </div>
 
     <!-- MODAL DE CRÉATION PATIENT -->

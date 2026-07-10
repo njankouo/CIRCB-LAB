@@ -1,199 +1,165 @@
 {% extends "../dashbord_hosp.html" %}
 
 {% block main %}
-<div x-data="{ currentSection: 'structures', activeRole: 'biologiste' }" class="p-6 bg-[#f8fafc] min-h-screen text-slate-800 font-sans antialiased">
+<div class="p-6 bg-gray-50 min-h-screen" x-data="roleManagement()">
     
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between pb-5 mb-6 border-b border-slate-200 gap-4">
+    <!-- En-tête de la page -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
-            <div class="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-widest">
-                <span>LIMS Administration</span>
-                <span>/</span>
-                <span class="text-slate-600">Global Settings</span>
-            </div>
-            <h1 class="text-xl font-bold tracking-tight text-slate-900 mt-1">Configuration Avancée du Système</h1>
+            <h1 class="text-2xl font-bold text-gray-800">Gestion des Rôles & Permissions</h1>
+            <p class="text-sm text-gray-500">Définissez les niveaux d'accès et les responsabilités des utilisateurs de l'hôpital.</p>
         </div>
-        <div class="flex items-center gap-2 self-end lg:self-center">
-            <button type="button" class="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-600 px-3 py-2 rounded-lg text-xs font-medium hover:bg-slate-50 transition-all shadow-sm">
-                <i class="fas fa-history text-slate-400"></i> Logs d'audit
-            </button>
-            <button form="advancedConfigForm" type="submit" class="inline-flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-slate-800 transition-all shadow-sm uppercase tracking-wide">
-                <i class="fas fa-save text-[11px]"></i> Appliquer les paramètres
-            </button>
+        <button 
+            @click="openModal('create')"
+            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Nouveau Rôle
+        </button>
+    </div>
+
+    <!-- Section Statistiques Rapides -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center">
+            <div class="p-3 rounded-lg bg-blue-50 text-blue-600 mr-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <div>
+                <span class="block text-sm text-gray-500 font-medium">Rôles configurés</span>
+                <span class="text-2xl font-bold text-gray-800">{{ roles|length }}</span>
+            </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Tableau des Rôles -->
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        <th class="p-4">Nom du Rôle</th>
+                        <th class="p-4">Description</th>
+                        <th class="p-4">Permissions assignées</th>
+                        <th class="p-4">Utilisateurs</th>
+                        <th class="p-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-gray-100 text-gray-700">
+                    <!-- Exemple Ligne 1: Administrateur -->
+                     {%for role in roles%}
+                    <tr class="hover:bg-gray-50/70 transition-colors">
+                        <td class="p-4 font-semibold text-gray-900">{{ role.nom }}</td>
+                        <td class="p-4 text-gray-500 max-w-xs truncate">{{ role.description }}</td>
+                        <td class="p-4">
+                            <div class="flex flex-wrap gap-1">
+                                <span class="px-2 py-0.5 text-xs font-medium rounded bg-red-50 text-red-700 border border-red-100">Tout contrôler</span>
+                            </div>
+                        </td>
+                          <td class="p-4 text-right">
+                            <button @click="openModal('edit', 'Administrateur')" class="text-blue-600 hover:text-blue-800 font-medium mr-3">Modifier</button>
+                            <button class="text-red-600 hover:text-red-800 font-medium">Supprimer</button>
+                        </td>
+                    </tr>
+                    
+                  {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MODAL (Création / Modification) -->
+    <div 
+        x-show="isModalOpen" 
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        style="display: none;">
         
-        <nav class="lg:col-span-3 space-y-1 bg-white p-2 border border-slate-200 rounded-xl shadow-sm h-fit">
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 pt-2 pb-1">Réseau & Logistique</div>
+        <div 
+            @click.away="closeModal()"
+            class="bg-white rounded-xl shadow-xl max-w-lg w-full overflow-hidden border border-gray-100"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100">
             
-            <button @click="currentSection = 'structures'" :class="currentSection === 'structures' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
-                <i class="fas fa-sitemap w-4 text-center"></i>
-                <span>Structures & Territoires</span>
-            </button>
-
-            <button @click="currentSection = 'logistique'" :class="currentSection === 'logistique' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
-                <i class="fas fa-truck w-4 text-center"></i>
-                <span>Transporteurs & Flux</span>
-            </button>
-
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 pt-4 pb-1">Protocoles Cliniques & PTME</div>
-
-            <button @click="currentSection = 'maternite'" :class="currentSection === 'maternite' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
-                <i class="fas fa-baby-carriage w-4 text-center"></i>
-                <span>Accouchement & Allaitement</span>
-            </button>
-
-            <button @click="currentSection = 'ptme'" :class="currentSection === 'ptme' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
-                <i class="fas fa-hands-holding-child w-4 text-center"></i>
-                <span>Protocoles PTME & ARV</span>
-            </button>
-
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 pt-4 pb-1">Analyses & Diagnostics</div>
-
-            <button @click="currentSection = 'laboratoire'" :class="currentSection === 'laboratoire' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
-                <i class="fas fa-vials w-4 text-center"></i>
-                <span>Tests & Raisons Prélèvement</span>
-            </button>
-
-            <button @click="currentSection = 'roles'" :class="currentSection === 'roles' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-50 border-transparent'" class="w-full flex items-center gap-3 p-2.5 rounded-lg text-xs transition-all text-left">
-                <i class="fas fa-user-shield w-4 text-center"></i>
-                <span>Droits & Habilitations</span>
-            </button>
-        </nav>
-
-        <div class="lg:col-span-9">
-            <form id="advancedConfigForm" method="POST" action="">
+            <!-- Tête de la Modal -->
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h3 class="text-lg font-bold text-gray-800" x-text="modalMode === 'create' ? 'Créer un nouveau rôle' : 'Modifier le rôle : ' + selectedRole"></h3>
+                <button @click="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- Formulaire de la Modal -->
+            <form method="POST"  class="p-6 space-y-4" action="{% url 'create_or_edit_role' %}">
                 {% csrf_token %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nom du rôle</label>
+                    <input name="role_name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="Ex: Infirmier Chef">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea name="description" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" rows="2" placeholder="Brève description des responsabilités..."></textarea>
+                </div>
 
-                <div x-show="currentSection === 'structures'" x-transition.opacity class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-                    <div class="border-b border-slate-100 pb-3">
-                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Structures Organisationnelles</h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Configurez le maillage sanitaire des FOSA (Régions, Districts, Formations Sanitaires).</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                        <div class="space-y-1">
-                            <label class="font-semibold text-slate-600">Régions de couverture actives</label>
-                            <input type="text" value="Littoral, Centre, Ouest, Adamaoua" placeholder="Séparées par des virgules" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="font-semibold text-slate-600">Districts Sanitaires Rattachés</label>
-                            <input type="text" value="Bonassama, Deido, Japoma, Cite des palmiers" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
-                        </div>
-                    </div>
-                    <div class="space-y-1 text-xs">
-                        <label class="font-semibold text-slate-600">Types de FOSA Autorisés dans le réseau LIMS</label>
-                        <input type="text" value="Hôpital Général, Hôpital de District, CMA, Centre de Santé Intégré (CSI)" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
+                <!-- Section des Permissions avec Checkboxes -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Permissions associées</label>
+                    <div class="space-y-2 max-h-48 overflow-y-auto p-3 border border-gray-100 bg-gray-50 rounded-lg">
+                        <label class="flex items-center text-sm font-normal text-gray-700 cursor-pointer">
+                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2.5">
+                            <span>Dossier Patient : Voir</span>
+                        </label>
+                        <label class="flex items-center text-sm font-normal text-gray-700 cursor-pointer">
+                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2.5">
+                            <span>Dossier Patient : Modifier / Créer</span>
+                        </label>
+                        <label class="flex items-center text-sm font-normal text-gray-700 cursor-pointer">
+                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2.5">
+                            <span>Facturation : Accès aux rapports</span>
+                        </label>
+                        <label class="flex items-center text-sm font-normal text-gray-700 cursor-pointer">
+                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2.5">
+                            <span>Configuration du système</span>
+                        </label>
                     </div>
                 </div>
 
-                <div x-show="currentSection === 'logistique'" x-transition.opacity class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-                    <div class="border-b border-slate-100 pb-3">
-                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Transporteurs & Modes de Transit</h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Définissez les prestataires logistiques agréés et les vecteurs de la chaîne de froid.</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                        <div class="space-y-1">
-                            <label class="font-semibold text-slate-600">Agences de transport / Prestataires</label>
-                            <input type="text" value="DHL Express, Chronopost, Logistique Intégrée MS, DHL Global Forwarding" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="font-semibold text-slate-600">Modes de transport acceptés</label>
-                            <input type="text" value="Moto (Boîte isotherme), Véhicule climatisé, Courrier aérien, Liaison froide dédiée" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
-                        </div>
-                    </div>
+                <!-- Actions de la Modal -->
+                <div class="pt-4 border-t border-gray-100 flex justify-end gap-2">
+                    <button type="button" @click="closeModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Annuler</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow transition-colors">Enregistrer</button>
                 </div>
-
-                <div x-show="currentSection === 'maternite'" x-transition.opacity class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-                    <div class="border-b border-slate-100 pb-3">
-                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Obstétrique & Modes d'Allaitement</h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Variables pour l'analyse des transmissions mère-enfant.</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                        <div class="space-y-1">
-                            <label class="font-semibold text-slate-600">Options : Modes d'accouchement</label>
-                            <input type="text" value="Voie Basse Eutocique, Césarienne programmée, Césarienne d'urgence, Voie Basse Instrumentale" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="font-semibold text-slate-600">Options : Modes d'allaitement</label>
-                            <input type="text" value="Allaitement Maternel Exclusif (AME), Allaitement Artificiel (Substituts), Allaitement Mixte" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
-                        </div>
-                    </div>
-                </div>
-
-                <div x-show="currentSection === 'ptme'" x-transition.opacity class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-                    <div class="border-b border-slate-100 pb-3">
-                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Protocoles PTME & Suivi ARV</h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Configuration des schémas prophylactiques et d'entrée dans le parcours de soin.</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                        <div class="space-y-1">
-                            <label class="font-semibold text-slate-600">Protocoles PTME enregistrés</label>
-                            <input type="text" value="Option B+, Protocole National Standard 2026, Prophylaxie Mère Unique" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="font-semibold text-slate-600">Portes d'entrée du patient (PORTE_ENTREE)</label>
-                            <input type="text" value="Consultation Prénatale (CPN), Maternité / Salle d'accouchement, Pédiatrie, Bloc d'urgence, Dépistage volontaire" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
-                        </div>
-                    </div>
-                    <div class="space-y-1 text-xs">
-                        <label class="font-semibold text-slate-600">Schémas thérapeutiques : Prophylaxie ARV</label>
-                        <input type="text" value="TDF + 3TC + DTG (TLD), AZT + 3TC + NVP, NVP seule chez le nouveau-né (6 semaines), AZT si haut risque" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
-                    </div>
-                </div>
-
-                <div x-show="currentSection === 'laboratoire'" x-transition.opacity class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-                    <div class="border-b border-slate-100 pb-3">
-                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Tests & Justifications d'Analyse</h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Définissez la nomenclature des tests LIMS et les motifs de demande de prélèvement.</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                        <div class="space-y-1">
-                            <label class="font-semibold text-slate-600">Types de Tests / Panels configurés</label>
-                            <input type="text" value="PCR Charge Virale (VIH), PCR Diagnostic Précoce (PCR-1 / PCR-2), Test Rapide d'Orientation (TRO), CD4" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="font-semibold text-slate-600">Raisons du prélèvement autorisées</label>
-                            <input type="text" value="Bilan Initial, Suivi Routine Annuel, Suspicion Échec Thérapeutique, Suivi Enfant Exposé, Contrôle Qualité" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white text-slate-800">
-                        </div>
-                    </div>
-                </div>
-
-                <div x-show="currentSection === 'roles'" x-transition.opacity class="space-y-6">
-                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                        <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-                            <div>
-                                <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Matrice des Droits d'Accès</h2>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-slate-100">
-                            <div class="p-2 space-y-1 bg-slate-50/30">
-                                <button type="button" @click="activeRole = 'biologiste'" :class="activeRole === 'biologiste' ? 'bg-white shadow-sm text-slate-900 ring-1 ring-black/5' : 'text-slate-500 hover:bg-slate-50'" class="w-full text-left p-2 rounded-lg text-xs font-semibold flex items-center justify-between">
-                                    <span>Biologiste Signataire</span>
-                                </button>
-                                <button type="button" @click="activeRole = 'technicien'" :class="activeRole === 'technicien' ? 'bg-white shadow-sm text-slate-900 ring-1 ring-black/5' : 'text-slate-500 hover:bg-slate-50'" class="w-full text-left p-2 rounded-lg text-xs font-semibold flex items-center justify-between">
-                                    <span>Technicien</span>
-                                </button>
-                            </div>
-
-                            <div class="md:col-span-3 p-4 space-y-4 text-xs">
-                                <h3 class="font-bold text-slate-700">Permissions pour : <span class="text-slate-900 uppercase" x-text="activeRole"></span></h3>
-                                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200/60">
-                                    <div>
-                                        <h4 class="font-semibold text-slate-800">Validation des Résultats Biologiques</h4>
-                                    </div>
-                                    <input type="checkbox" checked class="w-4 h-4 rounded text-slate-900 border-slate-300 focus:ring-slate-500">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </form>
         </div>
     </div>
+
 </div>
+
+<!-- Script Alpine.js pour la logique UI -->
+<script>
+    function roleManagement() {
+        return {
+            isModalOpen: false,
+            modalMode: 'create', // 'create' ou 'edit'
+            selectedRole: '',
+            
+            openModal(mode, roleName = '') {
+                this.modalMode = mode;
+                this.selectedRole = roleName;
+                this.isModalOpen = true;
+            },
+            closeModal() {
+                this.isModalOpen = false;
+                this.selectedRole = '';
+            }
+        }
+    }
+</script>
 
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 {% endblock %}

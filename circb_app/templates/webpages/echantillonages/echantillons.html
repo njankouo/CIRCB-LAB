@@ -1,90 +1,115 @@
 {% extends '../dashbord_hosp.html' %}
 {% block main %}
 <main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white">
-<div class="max-w-6xl mx-auto my-1 p-1">
-    <div class="mb-6 bg-slate-900 text-white p-6 border-4 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(99,102,241,1)]">
-        <h2 class="text-xl font-black uppercase tracking-tight flex items-center gap-2">
-            🧬 Nouvel Échantillon de Laboratoire
-        </h2>
-        <p class="text-xs text-indigo-200 font-medium mt-1">
-            Enregistrement des spécifications cliniques, du suivi PCR et des données patient de l'enfant.
-        </p>
-    </div>
+<div class="max-w-full mx-auto my-1 p-1">
+<div class="mb-6 bg-slate-900 text-white p-6 border-4 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(99,102,241,1)]">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        
+        <!-- Section Titre et Icône -->
+        <div class="flex items-center gap-3 flex-1">
+            <!-- Icône SVG Laboratoire / ADN -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 text-indigo-400 shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M3.104 9.75h17.792M3.104 14.25h17.792M6.417 6.417l11.166 11.166M6.417 17.583L17.583 6.417" />
+            </svg>
+            <div>
+                <h2 class="text-xl font-black uppercase tracking-tight">
+                    Nouvel Échantillon de Laboratoire
+                </h2>
+                <p class="text-xs text-indigo-200 font-medium mt-0.5">
+                    Enregistrement des spécifications cliniques, du suivi PCR et des données patient de l'enfant.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Section Métrique & Données Fiche -->
+        <div class="flex items-center gap-4 shrink-0 bg-slate-800 border-2 border-slate-700 p-3 rounded-xl">
+            
+           
 
-    <form method="POST" class="space-y-6" id="echantillon-form">
+            <!-- Textes de raccordement -->
+            <div class="font-mono">
+                <span class="block text-[9px] font-black uppercase tracking-widest text-slate-400">Fiche Référence</span>
+                <span class="text-sm font-black text-indigo-400 tracking-tight underline decoration-2 underline-offset-4 block">
+                    {{ fiches_echantillon.code }}
+                </span>
+                <span class="text-[10px] text-slate-300 block mt-0.5">
+                    Quota : <strong class="text-white">{{ fiches_echantillon.nombre_echantillon|default:"0" }} attendu(s)</strong>
+                </span>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+    <form method="POST" class="space-y-6" id="form_echantillon" action="{% url 'ajouter_echantillon' %}">
         {% csrf_token %}
+        <input type="hidden" name="fiche_echantillon" value="{{ fiches_echantillon.id }}" >
+        <input type="hidden" name="enfant_id" id="main_enfant_id">
+        <input type="hidden" name="enfant_mere_id" id="main_enfant_mere_id">
+
 
       <!-- SECTION 1 : INFORMATIONS DE LA FORMATION SANITAIRE -->
 <!-- SECTION 1 : FORMATION SANITAIRE (FOSA) -->
-<div class="p-6 bg-white border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-6">
+<div class="p-6 bg-white border-2 border-slate-100 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-6">
     
-    <!-- En-tête de section stylisé -->
     <div class="flex items-center gap-3">
-        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-600 text-white font-black border-2 border-slate-900 shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] text-xs">
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-600 text-white font-black border-2 border-slate-100 shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] text-xs">
             01
         </span>
         <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">
-            Formation Sanitaire (FOSA)
+            Formation Sanitaire (FOSA) & Orientation
         </h3>
         <div class="flex-1 h-0.5 border-t-2 border-dashed border-slate-200"></div>
     </div>
     
-    <!-- Grille alignée sur une seule ligne (Desktop) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 text-xs font-bold text-slate-900 items-end">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 text-xs font-bold text-slate-900 items-end">
         
-        <!-- Région -->
         <div class="space-y-2 lg:col-span-2">
             <label class="text-slate-700 tracking-wide">Région <span class="text-rose-500">*</span></label>
-            <select name="region" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+            <select id="select-region" name="region" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
                 <option value="">Sélectionner...</option>
                 {% for r in regions %}
-                    <option value="{{ r.id }}">{{ r.nom }}</option>
+                    <option value="{{ r.id }}" data-code="{{ r.designation }}">{{ r.nom }}</option>
                 {% endfor %}
             </select>
         </div>
 
-        <!-- District -->
-        <div class="space-y-2 lg:col-span-3">
+        <div class="space-y-2 lg:col-span-2">
             <label class="text-slate-700 tracking-wide">District de Santé <span class="text-rose-500">*</span></label>
-            <select name="district" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
-                <option value="">Sélectionner le district...</option>
-                {% for d in districts %}
-                    <option value="{{ d.id }}">{{ d.nom }}</option>
-                {% endfor %}
+            <select id="select-district" name="district" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                <option value="">Sélectionner...</option>
             </select>
         </div>
 
-        <!-- FOSA -->
-        <div class="space-y-2 lg:col-span-4">
-            <label class="text-slate-700 tracking-wide">Structure (FOSA) <span class="text-rose-500">*</span></label>
-            <select name="fosa" id="fosa-select" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
-                <option value="">Sélectionner la structure...</option>
-                {% for s in structures %}
-                    <option value="{{ s.id }}" data-code="{{ s.code }}">{{ s.nom }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Code FOSA (Format OTP à 3 caractères indépendants) -->
         <div class="space-y-2 lg:col-span-3">
+            <label class="text-slate-700 tracking-wide">Structure (FOSA) <span class="text-rose-500">*</span></label>
+            <select id="select-fosa" name="fosa" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                <option value="">Sélectionner la structure...</option>
+            </select>
+        </div>
+
+        <div class="space-y-2 lg:col-span-2">
             <label class="text-slate-500 tracking-wide">Code FOSA</label>
-            <div class="flex items-center gap-1.5 bg-slate-100 p-1.5 border-2 border-slate-300 rounded-xl w-full justify-center h-[50px]">
-                
-                <!-- Bloc OTP 1 -->
-                <input type="text" id="fosa_otp_1" maxlength="1" readonly placeholder="•"
-                       class="w-9 text-center py-1.5 border-2 border-slate-200 rounded-lg bg-white text-slate-700 font-mono font-black text-sm uppercase cursor-not-allowed focus:outline-none">
-                
-                <!-- Bloc OTP 2 -->
-                <input type="text" id="fosa_otp_2" maxlength="1" readonly placeholder="•"
-                       class="w-9 text-center py-1.5 border-2 border-slate-200 rounded-lg bg-white text-slate-700 font-mono font-black text-sm uppercase cursor-not-allowed focus:outline-none">
-                
-                <!-- Bloc OTP 3 -->
-                <input type="text" id="fosa_otp_3" maxlength="1" readonly placeholder="•"
-                       class="w-9 text-center py-1.5 border-2 border-slate-200 rounded-lg bg-white text-slate-700 font-mono font-black text-sm uppercase cursor-not-allowed focus:outline-none">
-                
-                <!-- Input caché standard pour envoyer la valeur brute au backend Django -->
+            <div class="flex items-center gap-1 bg-slate-100 p-1.5 border-2 border-slate-300 rounded-xl w-full justify-center h-[50px]">
+                <input type="text" id="fosa-otp-1" maxlength="1" readonly placeholder="•" class="w-8 text-center py-1.5 border-2 border-slate-200 rounded-lg bg-white text-slate-700 font-mono font-black text-xs uppercase cursor-not-allowed focus:outline-none">
+                <input type="text" id="fosa-otp-2" maxlength="1" readonly placeholder="•" class="w-8 text-center py-1.5 border-2 border-slate-200 rounded-lg bg-white text-slate-700 font-mono font-black text-xs uppercase cursor-not-allowed focus:outline-none">
+                <input type="text" id="fosa-otp-3" maxlength="1" readonly placeholder="•" class="w-8 text-center py-1.5 border-2 border-slate-200 rounded-lg bg-white text-slate-700 font-mono font-black text-xs uppercase cursor-not-allowed focus:outline-none">
                 <input type="hidden" name="fosa_code" id="fosa-code-hidden">
             </div>
+        </div>
+
+        <div class="space-y-2 lg:col-span-3">
+            <label class="text-slate-700 tracking-wide">Porte d'Entrée / Filière <span class="text-rose-500">*</span></label>
+            <select id="select-porte-entree" name="porte_entree" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                <option value="">Sélectionner la filière...</option>
+                {% for pe in portes_entree %}
+                    <option value="{{ pe.id }}">{{ pe.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+  
+
         </div>
 
     </div>
@@ -114,10 +139,10 @@
     });
 </script>
 <!-- SECTION 2 : IDENTIFICATION DE L'ENFANT / INFANT INFORMATION -->
-<div class="p-6 bg-white border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-6">
+<div class="p-6 bg-white border-2 border-slate-100 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-6">
     
     <div class="flex items-center gap-3">
-        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-600 text-white font-black border-2 border-slate-900 shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] text-xs">
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-600 text-white font-black border-2 border-slate-100 shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] text-xs">
             02
         </span>
         <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">
@@ -126,93 +151,157 @@
         <div class="flex-1 h-0.5 border-t-2 border-dashed border-slate-200"></div>
     </div>
     
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 text-xs font-bold text-slate-900">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 text-xs font-semibold text-slate-700 bg-slate-50/50 p-3 rounded-xl border border-slate-200">
+    
+    <!-- Segment d'identification ERP couvrant toute la ligne -->
+    <div class="space-y-1.5 lg:col-span-12">
+        <div class="flex items-center justify-between">
+            <label class="text-slate-600 font-mono text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+                Matrice d'identification Unique Patient (ID_PCR) <span class="text-rose-500">*</span>
+            </label>
+            <span class="text-[10px] text-slate-400 font-mono">Format standardisé OMS / LIMS</span>
+        </div>
         
-        <div class="space-y-2 lg:col-span-5">
-            <label class="text-slate-700 tracking-wide">Code d'identification enfant <span class="text-rose-500">*</span></label>
-            <div class="flex items-center gap-3 bg-slate-50 p-1.5 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] w-full justify-between">
+        <!-- Bloc de saisie consolidé de style logiciel ERP -->
+        <div class="flex flex-col sm:flex-row items-stretch gap-2 bg-white p-1.5 border border-slate-300 rounded-lg shadow-sm w-full">
+            
+            <!-- Segmentation des champs en enfilade -->
+            <div class="flex items-center gap-1 bg-slate-50/80 px-2 py-1 border border-slate-200 rounded-md w-full justify-start overflow-x-auto font-mono">
                 
-                <div class="flex items-center gap-1 font-mono font-black text-sm text-slate-800">
-                    <input type="text" id="otp_1" maxlength="3" placeholder="•••" autocomplete="off" required
-                           class="w-11 text-center py-2 border-2 border-slate-200 focus:border-slate-900 rounded-lg focus:outline-none bg-white uppercase tracking-wider transition-colors">
-                    <span class="text-slate-400 font-bold select-none">-</span>
-                    
-                    <input type="text" id="otp_2" maxlength="3" placeholder="•••" autocomplete="off" required
-                           class="w-11 text-center py-2 border-2 border-slate-200 focus:border-slate-900 rounded-lg focus:outline-none bg-white uppercase tracking-wider transition-colors">
-                    <span class="text-slate-400 font-bold select-none">-</span>
-                    
-                    <input type="text" id="otp_3" maxlength="3" placeholder="•••" autocomplete="off" required
-                           class="w-11 text-center py-2 border-2 border-slate-200 focus:border-slate-900 rounded-lg focus:outline-none bg-white uppercase tracking-wider transition-colors">
-                    <span class="text-slate-400 font-bold select-none">-</span>
-                    
-                    <input type="text" id="otp_4" maxlength="2" placeholder="••" autocomplete="off" required
-                           class="w-9 text-center py-2 border-2 border-slate-200 focus:border-slate-900 rounded-lg focus:outline-none bg-white uppercase tracking-wider transition-colors">
-                    <span class="text-slate-400 font-bold select-none">-</span>
-                    
-                    <input type="text" id="otp_5" maxlength="4" placeholder="••••" autocomplete="off" required
-                           class="w-14 text-center py-2 border-2 border-slate-200 focus:border-slate-900 rounded-lg focus:outline-none bg-white uppercase tracking-wider transition-colors">
+                <!-- Région -->
+                <div class="flex flex-col items-center gap-0.5 min-w-[48px]">
+                    <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">REG</span>
+                    <input type="text" id="code_region" maxlength="3" placeholder="---" autocomplete="off" required
+                           class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-white font-black text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
+                </div>
+                
+                <span class="text-slate-300 font-bold self-end mb-1 select-none font-sans">-</span>
+                
+                <!-- District -->
+                <div class="flex flex-col items-center gap-0.5 min-w-[48px]">
+                    <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">DIST</span>
+                    <input type="text" id="code_district" maxlength="3" placeholder="---" autocomplete="off" required
+                           class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-white font-black text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
+                </div>
+                
+                <span class="text-slate-300 font-bold self-end mb-1 select-none font-sans">-</span>
+                
+                <!-- FOSA -->
+                <div class="flex flex-col items-center gap-0.5 min-w-[48px]">
+                    <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">FOSA</span>
+                    <input type="text" id="code_fosa" maxlength="3" placeholder="---" autocomplete="off" required
+                           class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-white font-black text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
+                </div>
+                
+                <span class="text-slate-300 font-bold self-end mb-1 select-none font-sans">-</span>
+                
+                <!-- Point de Test (PT) -->
+                <div class="flex flex-col items-center gap-0.5 min-w-[38px]">
+                    <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">PT</span>
+                    <input type="text" id="code_pt" maxlength="2" placeholder="--" autocomplete="off" required
+                           class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-white font-black text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
+                </div>
+                
+                <span class="text-slate-300 font-bold self-end mb-1 select-none font-sans">-</span>
+                
+                <!-- Numéro de Série Chronologique -->
+                <div class="flex flex-col items-center gap-0.5 min-w-[58px]">
+                    <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">SÉRIE</span>
+                    <input type="text" id="numero_serie" maxlength="4" placeholder="----" autocomplete="off" required
+                           class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-white font-black text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
                 </div>
 
-                <input type="hidden" name="enfant_code" id="enfant_code_final" required>
-                
-                <button type="button" onclick="document.getElementById('patient-modal').showModal()" title="Renseigner les détails cliniques"
-                        class="w-9 h-9 bg-amber-400 hover:bg-amber-500 border-2 border-slate-900 rounded-lg flex items-center justify-center transition-all active:translate-y-0.5 shrink-0 shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] active:shadow-none">
-                    <i data-lucide="baby" class="w-4 h-4 text-slate-900"></i>
+                <span class="text-slate-400 font-bold self-end mb-1 select-none text-xs font-sans">/</span>
+
+                <!-- Suffixe Médical (Jumeaux/Triplés/Itérations) -->
+                <div class="flex flex-col items-center gap-0.5 min-w-[38px]">
+                    <span class="text-[9px] text-emerald-600 font-sans uppercase font-bold tracking-tight">SUFF</span>
+                    <input type="text" id="code_suffixe" maxlength="2" placeholder="01" autocomplete="off" title="Suffixe (ex: jumeaux ou itération)"
+                           class="w-full text-center py-1 border border-emerald-200 bg-emerald-50/40 rounded focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-black text-xs text-emerald-950 uppercase tracking-wide transition-all placeholder:text-emerald-300">
+                </div>
+            </div>
+
+            <!-- Bouton d'interrogation du registre LIMS -->
+            <div class="flex items-stretch shrink-0 w-full sm:w-auto">
+                <button type="button" id="btn-rechercher-code" title="Interroger le registre central"
+                        class="w-full sm:w-12 bg-slate-800 hover:bg-slate-700 text-white border border-slate-800 rounded-md flex items-center justify-center transition-colors shadow-sm focus:ring-2 focus:ring-offset-1 focus:ring-slate-900 cursor-pointer py-2 sm:py-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
             </div>
         </div>
-
-        <div class="space-y-2 lg:col-span-4">
-            <label class="text-slate-700 tracking-wide">Nom de l'enfant <span class="text-rose-500">*</span></label>
-            <input type="text" name="enfant_nom" required placeholder="Saisir le nom" 
-                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 transition-colors shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
-        </div>
-
-        <div class="space-y-2 lg:col-span-3">
-            <label class="text-slate-700 tracking-wide">Prénom de l'enfant</label>
-            <input type="text" name="enfant_prenom" placeholder="Saisir le prénom" 
-                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 transition-colors shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
-        </div>
     </div>
+</div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 text-xs font-bold text-slate-900">
-        <div class="space-y-2">
-            <label class="text-slate-700 tracking-wide">Contact familial *</label>
-            <input type="tel" name="contact_familial" required placeholder="Ex: +237 6XX XXX XXX" 
-                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+  <div class="space-y-6">
+    <!-- SECTION 1 : IDENTITÉ DE L'ENFANT -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-5 text-xs font-bold text-slate-900">
+        
+        <!-- Nom de l'enfant (Prend la moitié de la ligne sur desktop) -->
+        <div class="space-y-2 md:col-span-2">
+            <label class="text-slate-700 tracking-wide">Nom de l'enfant <span class="text-rose-500">*</span></label>
+            <input readonly type="text" name="enfant_nom" required placeholder="Saisir le nom" id="main_enfant_nom"
+                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 transition-colors shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
         </div>
-        <div class="space-y-2">
-            <label class="text-slate-700 tracking-wide">Date de naissance *</label>
-            <input type="date" name="date_naissance" id="enfant_dob" required 
-                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+
+        <!-- Prénom de l'enfant (Prend l'autre moitié de la même ligne sur desktop) -->
+        <div class="space-y-2 md:col-span-2">
+            <label class="text-slate-700 tracking-wide">Prénom de l'enfant</label>
+            <input readonly type="text" name="enfant_prenom" placeholder="Saisir le prénom" id="main_enfant_prenom"
+                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 transition-colors shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
         </div>
-        <div class="space-y-2">
-            <label class="text-slate-500 tracking-wide">Âge numérique calculé</label>
-            <div class="relative">
-                <input type="text" id="enfant_age_display" readonly placeholder="Calcul automatique..." 
-                       class="w-full px-3 py-3 border-2 border-slate-300 rounded-xl bg-slate-50 text-slate-500 font-mono focus:outline-none cursor-not-allowed">
-                <i data-lucide="calculator" class="w-4 h-4 text-slate-400 absolute right-3 top-3.5"></i>
-            </div>
-            <input type="hidden" name="enfant_age" id="enfant_age_raw">
-        </div>
-        <div class="space-y-2">
+
+        <!-- Sexe (Passe sur la ligne suivante) -->
+        <div class="space-y-2 md:col-span-2">
             <label class="text-slate-700 tracking-wide">Sexe *</label>
-            <select name="sexe" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+            <select name="sexe" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]" id="main_sexe">
                 <option value="">Sélectionner...</option>
                 <option value="M">Masculin (M)</option>
                 <option value="F">Féminin (F)</option>
             </select>
         </div>
+
+        <!-- Contact familial -->
+        <div class="space-y-2 md:col-span-2">
+            <label class="text-slate-700 tracking-wide">Contact familial *</label>
+            <input readonly type="tel" name="contact_familial" required placeholder="Ex: +237 6XX XXX XXX" id="main_contact_familial"
+                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+        </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs font-bold text-slate-900">
+    <!-- SECTION 2 : PARAMÈTRES BIOMÉTRIQUES & NAISSANCE -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 text-xs font-bold text-slate-900 pt-4 border-t-2 border-dashed border-slate-100">
+        
+        <!-- Date de naissance -->
+        <div class="space-y-2">
+            <label class="text-slate-700 tracking-wide">Date de naissance *</label>
+            <input readonly type="date" name="date_naissance" id="enfant_dob" required 
+                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+        </div>
+
+        <!-- Âge numérique calculé -->
+        <div class="space-y-2">
+            <label class="text-slate-500 tracking-wide">Âge numérique calculé</label>
+            <div class="relative">
+                <input type="text" id="enfant_age_display" readonly placeholder="Calcul automatique..." 
+                       class="w-full pl-3 pr-10 py-3 border-2 border-slate-300 rounded-xl bg-slate-50 text-slate-500 font-mono focus:outline-none cursor-not-allowed">
+                <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="15" y2="17"></line></svg>
+                </div>
+            </div>
+            <input type="hidden" name="enfant_age" id="enfant_age_raw">
+        </div>
+
+        <!-- Poids actuel -->
         <div class="space-y-2">
             <label class="text-slate-700 tracking-wide">Poids actuel (kg) *</label>
             <input type="number" step="0.01" name="poids" required placeholder="Ex: 4.5" 
-                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]" id="main_poids">
         </div>
+
+        <!-- Rang de naissance -->
         <div class="space-y-2">
-            <label class="text-slate-700 tracking-wide">Si Jumeaux ou Triplés (Rang)</label>
+            <label class="text-slate-700 tracking-wide">Si Jumeaux / Triplés (Rang)</label>
             <select name="rang_naissance" class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
                 <option value="1">1 (Unique ou 1er né)</option>
                 <option value="2">2 (Deuxième né)</option>
@@ -221,16 +310,21 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs font-bold text-slate-900 pt-4 border-t-2 border-dashed border-slate-100">
+    <!-- SECTION 3 : PRISE EN CHARGE MEDICALE (ARV) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs font-bold text-slate-900 pt-4 border-t-2 border-dashed border-slate-100">
+        
+        <!-- Prophylaxie ARV -->
         <div class="space-y-2">
             <label class="text-slate-700 tracking-wide">Prophylaxie ARV de l'enfant</label>
             <select name="profilaxie_arv" class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
                 <option value="">Choisir la prophylaxie...</option>
-                {% for p in profilaxies_arv %}
+                {% for p in profilaxie_arv %}
                     <option value="{{ p.id }}">{{ p.nom }}</option>
                 {% endfor %}
             </select>
         </div>
+
+        <!-- Date d'initiation -->
         <div class="space-y-2">
             <label class="text-slate-700 tracking-wide">Date d'initiation de la prophylaxie</label>
             <input type="date" name="date_initiation_arv" class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
@@ -308,11 +402,11 @@
     });
 </script>
 <!-- SECTION 3 : INFORMATIONS SUR LA MÈRE / MOTHER INFORMATION -->
-<div class="p-6 bg-white border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-6">
+<div class="p-6 bg-white border-2 border-slate-100 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-6">
     
     <!-- En-tête de section stylisé -->
     <div class="flex items-center gap-3">
-        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-rose-600 text-white font-black border-2 border-slate-900 shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] text-xs">
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-rose-600 text-white font-black border-2 border-slate-100 shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] text-xs">
             03
         </span>
         <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">
@@ -326,26 +420,26 @@
         <!-- Nom -->
         <div class="space-y-2 lg:col-span-4">
             <label class="text-slate-700 tracking-wide">Nom de la mère <span class="text-rose-500">*</span></label>
-            <input type="text" name="mere_nom" required placeholder="Nom de la mère" 
+            <input readonly type="text"id="main_mere_nom" name="mere_nom" required placeholder="Nom de la mère" 
                    class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 transition-colors shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
         </div>
         <!-- Prénom -->
         <div class="space-y-2 lg:col-span-3">
             <label class="text-slate-700 tracking-wide">Prénom de la mère</label>
-            <input type="text" name="mere_prenom" placeholder="Prénom de la mère" 
+            <input readonly type="text" id="main_mere_prenom" name="mere_prenom" placeholder="Prénom de la mère" 
                    class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 transition-colors shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
         </div>
         <!-- Date de naissance -->
         <div class="space-y-2 lg:col-span-3">
             <label class="text-slate-700 tracking-wide">Date de naissance</label>
-            <input type="date" name="mere_date_naissance" id="mere_dob"
+            <input readonly type="date" id="main_mere_date_naissance" name="mere_date_naissance" id="mere_dob"
                    class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
         </div>
         <!-- Âge (Saisie ou auto-calculé) -->
         <div class="space-y-2 lg:col-span-2">
             <label class="text-slate-700 tracking-wide">Âge (ans) <span class="text-rose-500">*</span></label>
             <div class="relative">
-                <input type="number" name="mere_age" required id="mere_age" placeholder="Ex: 28" min="10" max="65"
+                <input readonly type="number" id="main_mere_age" name="mere_age" required id="mere_age" placeholder="Ex: 28" min="10" max="65"
                        class="w-full pl-3 pr-8 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
                 <i data-lucide="calendar-days" class="w-4 h-4 text-slate-400 absolute right-3 top-3.5 pointer-events-none"></i>
             </div>
@@ -358,7 +452,7 @@
             <label class="text-slate-700 tracking-wide">Protocole PTME suivi <span class="text-rose-500">*</span></label>
             <select name="protocole_ptme" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
                 <option value="">Sélectionner le protocole...</option>
-                {% for p in protocoles_ptme %}
+                {% for p in protocole_ptme %}
                     <option value="{{ p.id }}">{{ p.nom }}</option>
                 {% endfor %}
             </select>
@@ -374,12 +468,12 @@
     </div>
 
     <!-- Ligne 3 : Accouchement & Rendez-vous -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs font-bold text-slate-900 pt-4 border-t-2 border-dashed border-slate-100">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs font-bold text-slate-900 pt-4 border-t-2 border-dashed border-slate-100">
         <div class="space-y-2">
             <label class="text-slate-700 tracking-wide">Mode d'accouchement <span class="text-rose-500">*</span></label>
             <select name="mode_accouchement" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
                 <option value="">Sélectionner le mode...</option>
-                {% for m in modes_accouchement %}
+                {% for m in mode_accouchement %}
                     <option value="{{ m.id }}">{{ m.nom }}</option>
                 {% endfor %}
             </select>
@@ -388,10 +482,22 @@
             <label class="text-slate-700 tracking-wide">Date du prochain rendez-vous <span class="text-rose-500">*</span></label>
             <input type="date" name="date_prochain_rdv" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
         </div>
+        
+         <div class="space-y-2">
+            <label class="text-slate-700 tracking-wide">Date du diagnostic LAV<span class="text-rose-500">*</span></label>
+            <input type="date" name="date_diagnostic_lav" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+        </div>
     </div>
 
     <!-- Ligne 4 : Données de la Fratrie Élargie -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs font-bold text-slate-900 pt-4 border-t-2 border-dashed border-slate-100">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs font-bold text-slate-900 pt-4 border-t-2 border-dashed border-slate-100">
+        <div class="space-y-2">
+            <label class="flex items-center gap-1.5 text-rose-950 tracking-wide">
+                Numero Grossesse
+            </label>
+            <input type="number" min="0" name="numero_grossesse" placeholder="0" 
+                   class="w-full px-3 py-3 border-2 border-rose-900 rounded-xl focus:outline-none bg-rose-50/30 text-rose-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,0.7)]">
+        </div>
         <div class="space-y-2">
             <label class="flex items-center gap-1.5 text-slate-700 tracking-wide">
                 Nombre d'enfants exposés dans la fratrie
@@ -435,11 +541,11 @@
 </script>
 
      <!-- SECTION : SUIVI VIROLOGIQUE, MÉDICAL & DIAGNOSTICS -->
-<div class="p-6 bg-white border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-6">
+<div class="p-6 bg-white border-2 border-slate-100 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-6">
     
     <!-- En-tête de section stylisé -->
     <div class="flex items-center gap-3">
-        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-600 text-white font-black border-2 border-slate-900 shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] text-xs">
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-600 text-white font-black border-2 border-slate-100 shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] text-xs">
             04
         </span>
         <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">
@@ -449,7 +555,7 @@
     </div>
 
     <!-- BLOC A : CONTEXTE CLINIQUE, PORTE D'ENTRÉE & ALIMENTATION -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 text-xs font-bold text-slate-900">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-xs font-bold text-slate-900">
         <!-- Porte d'entrée -->
         <div class="space-y-2">
             <label class="text-slate-700 tracking-wide">Porte d'entrée <span class="text-rose-500">*</span></label>
@@ -462,16 +568,7 @@
         </div>
 
         <!-- Raison du prélèvement -->
-        <div class="space-y-2">
-            <label class="text-slate-700 tracking-wide">Raison du prélèvement <span class="text-rose-500">*</span></label>
-            <select name="raison_prelevement" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
-                <option value="">Sélectionner la raison...</option>
-                {% for r in raisons_prelevement %}
-                    <option value="{{ r.id }}">{{ r.nom }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
+     
         <!-- Enfant symptomatique ? -->
         <div class="space-y-2">
             <label class="text-slate-700 tracking-wide">Enfant symptomatique ? <span class="text-rose-500">*</span></label>
@@ -494,7 +591,7 @@
     </div>
 
     <!-- ZONE CONDITIONNELLE : ALLAITEMENT (Masquée/Affichée dynamiquement) -->
-    <div id="zone_allaitement" class="hidden grid grid-cols-1 md:grid-cols-2 gap-5 text-xs font-bold text-slate-900 p-4 bg-slate-50 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+    <div id="zone_allaitement" class="hidden grid grid-cols-1 md:grid-cols-1 gap-5 text-xs font-bold text-slate-900 p-4 bg-slate-50 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
         <div class="space-y-2">
             <label class="text-slate-700 tracking-wide">Mode d'allaitement</label>
             <select name="mode_allaitement" class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg bg-white text-slate-800">
@@ -504,19 +601,45 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="space-y-2">
-            <label class="text-slate-700 tracking-wide">Statut du Sevrage</label>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
-                <select name="statut_sevrage" id="statut_sevrage" class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg bg-white text-slate-800">
-                    <option value="non">Pas encore sevré</option>
-                    <option value="oui">Oui, sevré</option>
-                </select>
-                <input type="date" name="date_sevrage" id="date_sevrage" placeholder="Date de sevrage" disabled
-                       class="w-full px-3 py-2.5 border-2 border-slate-300 rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed focus:outline-none">
+      
+    </div>
+      <div class="space-y-4 bg-slate-50 p-4 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+    
+    <label class="block text-xs font-black uppercase tracking-wider text-slate-700">
+        Statut du Sevrage *
+    </label>
+
+    <div class="grid grid-cols-2 gap-3">
+        
+        <label class="group relative flex items-center gap-3 p-3 bg-white border-2 border-slate-200 rounded-xl cursor-pointer hover:border-slate-900/40 hover:bg-slate-50/30 transition-all select-none has-[:checked]:border-slate-950 has-[:checked]:bg-slate-50/80 has-[:checked]:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+            <div class="flex items-center justify-center shrink-0 w-4 h-4 rounded-full border-2 border-slate-300 bg-white transition-all group-has-[:checked]:border-slate-950">
+                <input type="radio" name="statut_sevrage" value="non" id="sevrage_non" checked
+                       class="sr-only peer">
+                <div class="w-2 h-2 rounded-full bg-slate-950 scale-0 transition-transform duration-150 peer-checked:scale-100"></div>
             </div>
-        </div>
+            <span class="text-xs font-black text-slate-700 group-has-[:checked]:text-slate-950">Pas encore sevré</span>
+        </label>
+
+        <label class="group relative flex items-center gap-3 p-3 bg-white border-2 border-slate-200 rounded-xl cursor-pointer hover:border-slate-900/40 hover:bg-slate-50/30 transition-all select-none has-[:checked]:border-slate-950 has-[:checked]:bg-slate-50/80 has-[:checked]:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+            <div class="flex items-center justify-center shrink-0 w-4 h-4 rounded-full border-2 border-slate-300 bg-white transition-all group-has-[:checked]:border-slate-950">
+                <input type="radio" name="statut_sevrage" value="oui" id="sevrage_oui"
+                       class="sr-only peer">
+                <div class="w-2 h-2 rounded-full bg-slate-950 scale-0 transition-transform duration-150 peer-checked:scale-100"></div>
+            </div>
+            <span class="text-xs font-black text-slate-700 group-has-[:checked]:text-slate-950">Oui, sevré</span>
+        </label>
+
     </div>
 
+    <div id="wrapper_date_sevrage" class="hidden space-y-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+        <label for="date_sevrage" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">
+            Date effective du sevrage *
+        </label>
+        <input type="date" name="date_sevrage" id="date_sevrage"
+               class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none bg-white font-mono text-sm font-bold text-slate-900 focus:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all">
+    </div>
+
+</div>
     <!-- BLOC B : PRISE EN CHARGE MÉDICAMENTEUSE (Cotrim & TARV) -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs font-bold text-slate-900 pt-2">
         <!-- Sous Cotrimoxazole -->
@@ -562,7 +685,7 @@
     <div class="pt-4 border-t-2 border-dashed border-slate-100 space-y-4">
         <span class="text-[10px] bg-indigo-900 text-white px-2 py-0.5 rounded font-mono uppercase tracking-wide">Examens Laboratoire</span>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-bold text-slate-900">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-bold text-slate-900">
             <!-- PCR-1 (Initial) -->
             <div class="p-3.5 border-2 border-slate-900 bg-white rounded-xl space-y-3 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
                 <span class="text-[10px] bg-slate-800 text-white px-2 py-0.5 rounded font-mono uppercase">PCR-1 (Initial)</span>
@@ -601,108 +724,143 @@
 
             <!-- Test Sérologique -->
             <div class="p-3.5 border-2 border-slate-900 bg-white rounded-xl space-y-3 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
-                <span class="text-[10px] bg-slate-800 text-white px-2 py-0.5 rounded font-mono uppercase">Test Sérologique</span>
+                <span class="text-[10px] bg-slate-800 text-white px-2 py-0.5 rounded font-mono uppercase">Autre PCR</span>
                 <div class="space-y-1">
-                    <label class="text-slate-600">Date Test</label>
-                    <input type="date" name="date_serologie" class="w-full px-2 py-2 border-2 border-slate-900 rounded-lg bg-white">
+                    <label class="text-slate-600">Date PCR</label>
+                    <input type="date" name="autre_pcr" class="w-full px-2 py-2 border-2 border-slate-900 rounded-lg bg-white">
                 </div>
                 <div class="space-y-1">
-                    <label class="text-slate-600">Résultat Sérologie</label>
+                    <label class="text-slate-600">Résultat PCR</label>
                     <select name="resultat_serologie" class="w-full px-2 py-2 border-2 border-slate-900 rounded-lg bg-white text-xs">
                         <option value="">Sélectionner...</option>
-                        {% for res in resultats_serologie %}
+                         {% for res in resultats_pcr %}
                             <option value="{{ res.id }}">{{ res.nom }}</option>
                         {% endfor %}
                     </select>
                 </div>
+               
+            </div>
+            
+
+           
+        </div>
+        <div class="space-y-3">
+
+   <div class="space-y-3">
+    <div class="flex items-center justify-between">
+        <label class="block text-xs font-black uppercase tracking-wider text-slate-700">
+            Raison du prélèvement
+        </label>
+        <span class="text-[10px] font-bold uppercase px-2 py-0.5 bg-slate-100 text-slate-500 rounded-md border border-slate-200">
+            Choix unique *
+        </span>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        {% for raison in raisons_prelevement %}
+        <label class="group relative flex items-center gap-3 p-3.5 bg-white border-2 border-slate-200 rounded-xl cursor-pointer hover:border-slate-900/40 hover:bg-slate-50/30 transition-all duration-150 select-none has-[:checked]:border-slate-950 has-[:checked]:bg-slate-50/80 has-[:checked]:shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] min-h-[56px]">
+            
+            <div class="flex items-center justify-center shrink-0 w-5 h-5 rounded-full border-2 border-slate-300 bg-white transition-all group-hover:border-slate-400 group-has-[:checked]:border-slate-950">
+                <input type="radio" name="raisons_prelevement" value="{{ raison.id }}" required
+                       class="sr-only peer">
+                
+                <div class="w-2.5 h-2.5 rounded-full bg-slate-950 scale-0 transition-transform duration-150 peer-checked:scale-100"></div>
             </div>
 
-            <!-- Validation Finale / PCR-3 & Actions -->
-            <div class="p-3.5 border-2 border-indigo-900 bg-indigo-50/30 rounded-xl space-y-3 shadow-[2px_2px_0px_0px_rgba(79,70,229,1)] flex flex-col justify-between">
-                <div>
-                    <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-mono uppercase">Statut PCR-3 / Validation</span>
-                    <div class="space-y-1 mt-3">
-                        <label class="text-indigo-950">Résultat Final</label>
-                        <select name="resultat_pcr3" class="w-full px-2 py-2 border-2 border-indigo-900 rounded-lg bg-white text-xs font-black text-indigo-900">
-                            <option value="">Sélectionner...</option>
-                            {% for res in resultats_pcr %}
-                                <option value="{{ res.id }}">{{ res.nom }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="pt-2 flex items-center gap-2 border-t border-indigo-200">
-                    <input type="checkbox" name="again_prelevement" id="again_prelevement" class="w-4 h-4 accent-indigo-600 border-2 border-indigo-900 rounded cursor-pointer">
-                    <label for="again_prelevement" class="text-[11px] text-rose-800 font-black cursor-pointer select-none">À re-prélever ?</label>
-                </div>
+            <div class="text-xs font-black text-slate-700 group-has-[:checked]:text-slate-950 leading-tight select-none line-clamp-2" title="{{ raison.nom }}">
+                {{ raison.nom }}
             </div>
+            
+        </label>
+        {% empty %}
+        <div class="col-span-full py-6 text-center border-2 border-dashed border-slate-200 rounded-xl text-xs font-bold text-slate-400 bg-slate-50/50">
+            Aucune raison de prélèvement disponible
         </div>
+        {% endfor %}
     </div>
 </div>
-
-<!-- SCRIPTS DE COMPORTEMENT DYNAMIQUE -->
+</div>
+    </div>
+</div>
 <script>
-    // --- Gestion de la zone Allaitement / Sevrage ---
-    const selectAllaite = document.getElementById('enfant_allaite');
-    const zoneAllaitement = document.getElementById('zone_allaitement');
-    const selectSevrage = document.getElementById('statut_sevrage');
-    const inputDateSevrage = document.getElementById('date_sevrage');
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // =========================================================================
+        // 1. Zone Allaitement (Gestion du Select Global)
+        // =========================================================================
+        const selectAllaite = document.getElementById('enfant_allaite');
+        const zoneAllaitement = document.getElementById('zone_allaitement');
 
-    selectAllaite.addEventListener('change', function() {
-        if (this.value === 'oui') {
-            zoneAllaitement.classList.remove('hidden');
-        } else {
-            zoneAllaitement.classList.add('hidden');
+        if (selectAllaite && zoneAllaitement) {
+            selectAllaite.addEventListener('change', function() {
+                if (this.value === 'oui') {
+                    zoneAllaitement.classList.remove('hidden');
+                } else {
+                    zoneAllaitement.classList.add('hidden');
+                }
+            });
         }
-    });
 
-    selectSevrage.addEventListener('change', function() {
-        if (this.value === 'oui') {
-            inputDateSevrage.removeAttribute('disabled');
-            inputDateSevrage.classList.remove('bg-slate-100', 'text-slate-400', 'border-slate-300', 'cursor-not-allowed');
-            inputDateSevrage.classList.add('bg-white', 'text-slate-800', 'border-slate-900');
-            inputDateSevrage.setAttribute('required', 'true');
-        } else {
-            inputDateSevrage.setAttribute('disabled', 'true');
-            inputDateSevrage.value = '';
-            inputDateSevrage.classList.add('bg-slate-100', 'text-slate-400', 'border-slate-300', 'cursor-not-allowed');
-            inputDateSevrage.classList.remove('bg-white', 'text-slate-800', 'border-slate-900');
-            inputDateSevrage.removeAttribute('required');
-        }
-    });
+        // =========================================================================
+        // 2. Zone Sevrage (Nouvelle gestion via Boutons Radio)
+        // =========================================================================
+        const radioSevrageOui = document.getElementById('sevrage_oui');
+        const radioSevrageNon = document.getElementById('sevrage_non');
+        const dateSevrageWrapper = document.getElementById('wrapper_date_sevrage');
+        const dateSevrageInput = document.getElementById('date_sevrage');
 
-    // --- Fonction générique pour activer/désactiver les dates de traitement (Cotrim & TARV) ---
-    function toggleDynamicDate(selectId, dateId) {
-        const selectEl = document.getElementById(selectId);
-        const dateEl = document.getElementById(dateId);
-
-        selectEl.addEventListener('change', function() {
-            if (this.value === 'oui') {
-                dateEl.removeAttribute('disabled');
-                dateEl.classList.remove('bg-slate-100', 'text-slate-400', 'border-slate-300', 'cursor-not-allowed');
-                dateEl.classList.add('bg-white', 'text-slate-800', 'border-slate-900');
-                dateEl.setAttribute('required', 'true');
-            } else {
-                dateEl.setAttribute('disabled', 'true');
-                dateEl.value = '';
-                dateEl.classList.add('bg-slate-100', 'text-slate-400', 'border-slate-300', 'cursor-not-allowed');
-                dateEl.classList.remove('bg-white', 'text-slate-800', 'border-slate-900');
-                dateEl.removeAttribute('required');
+        if (radioSevrageOui && radioSevrageNon && dateSevrageWrapper && dateSevrageInput) {
+            function toggleDateSevrage() {
+                if (radioSevrageOui.checked) {
+                    dateSevrageWrapper.classList.remove('hidden');
+                    dateSevrageInput.required = true;
+                } else {
+                    dateSevrageWrapper.classList.add('hidden');
+                    dateSevrageInput.required = false;
+                    dateSevrageInput.value = ''; // Reset si l'utilisateur repasse à non
+                }
             }
-        });
-    }
 
-    // Liaison des événements pour les médicaments
-    toggleDynamicDate('sous_cotrim', 'date_cotrim');
-    toggleDynamicDate('sous_tarv', 'date_tarv');
+            radioSevrageOui.addEventListener('change', toggleDateSevrage);
+            radioSevrageNon.addEventListener('change', toggleDateSevrage);
+        }
+
+        // =========================================================================
+        // 3. Traitements Médicaux (Cotrim & TARV - Fonction Générique)
+        // =========================================================================
+        def_toggleDynamicDate('sous_cotrim', 'date_cotrim');
+        def_toggleDynamicDate('sous_tarv', 'date_tarv');
+
+        function def_toggleDynamicDate(selectId, dateId) {
+            const selectEl = document.getElementById(selectId);
+            const dateEl = document.getElementById(dateId);
+
+            if (!selectEl || !dateEl) return;
+
+            selectEl.addEventListener('change', function() {
+                if (this.value === 'oui') {
+                    dateEl.removeAttribute('disabled');
+                    dateEl.classList.remove('bg-slate-100', 'text-slate-400', 'border-slate-300', 'cursor-not-allowed');
+                    dateEl.classList.add('bg-white', 'text-slate-800', 'border-slate-900');
+                    dateEl.setAttribute('required', 'true');
+                } else {
+                    dateEl.setAttribute('disabled', 'true');
+                    dateEl.value = '';
+                    dateEl.classList.add('bg-slate-100', 'text-slate-400', 'border-slate-300', 'cursor-not-allowed');
+                    dateEl.classList.remove('bg-white', 'text-slate-800', 'border-slate-900');
+                    dateEl.removeAttribute('required');
+                }
+            });
+        }
+
+    });
 </script>
 <!-- SECTION 4 : PERSONNEL PRÉLEVEUR & LABO -->
 <div class="p-6 bg-white border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-6">
     
     <!-- En-tête de section stylisé -->
     <div class="flex items-center gap-3">
-        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 text-white font-black border-2 border-slate-900 shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] text-xs">
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 text-white font-black border-2 border-slate-900 shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] text-xs">
             05
         </span>
         <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">
@@ -722,9 +880,14 @@
 
         <!-- Date de re-prélèvement -->
         <div class="space-y-2">
-            <label class="text-slate-700 tracking-wide">Date de Re-prélèvement <span class="text-slate-400 font-normal">(Si applicable)</span></label>
-            <input type="date" name="date_reprelevement" id="date_reprelevement"
-                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+         <label for="is_reprelevement" class="block text-xs font-black uppercase tracking-wider text-slate-700">
+            Re-prélèvement ? <span class="text-slate-400 font-normal lowercase">(si applicable)</span>
+        </label>
+        <select name="duplicate_prelevement" id="is_reprelevement"
+                class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-sm font-black text-slate-900 cursor-pointer transition-all focus:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+            <option value="non">Non</option>
+            <option value="oui">Oui</option>
+        </select>  
         </div>
     </div>
 
@@ -745,12 +908,9 @@
         <!-- Contact Réseau -->
         <div class="space-y-2 lg:col-span-4">
             <label class="text-slate-700 tracking-wide">Contact Réseau (Personnel) <span class="text-rose-500">*</span></label>
-            <select name="contact_preleveur" required class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none bg-white text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
-                <option value="">Sélectionner l'agent...</option>
-                {% for p in personnels %}
-                    <option value="{{ p.id }}">{{ p.nom }} {{ p.prenom }}</option>
-                {% endfor %}
-            </select>
+                <input type="number" name="contact_preleveur" placeholder="Ex: 07 12 34 56 78" 
+                   class="w-full px-3 py-3 border-2 border-slate-900 rounded-xl focus:outline-none focus:bg-slate-50 bg-white text-slate-800 transition-colors shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+     
         </div>
     </div>
 
@@ -793,115 +953,213 @@
     </form>
 </div>
 </main>
-<dialog id="patient-modal" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm bg-white border-2 border-slate-900 rounded-2xl p-6 max-w-2xl w-full shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] open:animate-in open:fade-in open:zoom-in-95 duration-200">
+  <dialog id="patient-modal" class="backdrop:bg-slate-900/50 backdrop:backdrop-blur-sm bg-white border-4 border-slate-900 rounded-2xl p-0 max-w-2xl w-full shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] open:animate-in open:fade-in open:zoom-in-95 duration-150 overflow-hidden">
     
-    <div class="flex items-center justify-between border-b-2 border-slate-900 pb-4 mb-4">
+    <!-- EN-TÊTE FIXE DU MODAL -->
+    <div class="flex items-center justify-between border-b-4 border-slate-900 p-6 bg-white">
         <div>
-            <h3 class="text-lg font-black uppercase tracking-tight text-slate-900">Création Dossier Patient (DMP)</h3>
-            <p class="text-xs font-semibold text-slate-400 mt-0.5">Enregistrement initial et ouverture des droits de suivi</p>
+            <h3 class="text-xl font-black uppercase tracking-tight text-slate-900">Création Dossier Patient (DMP)</h3>
+            <p class="text-xs font-bold text-slate-400 mt-0.5">Enregistrement initial et ouverture des droits de suivi</p>
         </div>
-        <button onclick="document.getElementById('patient-modal').close()" class="p-1.5 border border-slate-900 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-900 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <button onclick="document.getElementById('patient-modal').close()" class="p-2 border-2 border-slate-900 rounded-xl bg-slate-100 hover:bg-red-100 hover:text-red-900 text-slate-900 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
     </div>
 
-  <form method="POST" action="#" class="space-y-4">
-    {% csrf_token %}
-    
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Nom du Patient *</label>
-            <input type="text" name="nom" required placeholder="Ex: AMOUGOU" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 uppercase focus:outline-none">
-        </div>
-        <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Prénom(s)</label>
-            <input type="text" name="prenom" placeholder="Ex: Samuel" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-        </div>
-        <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Sexe *</label>
-            <select name="sexe" required class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
-                <option value="">Choisir...</option>
-                <option value="M">Masculin</option>
-                <option value="F">Féminin</option>
-            </select>
-        </div>
+    <!-- CORPS DU FORMULAIRE (SCROLL DESIGN FIN) -->
+    <div class="p-6 max-h-[65vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-900 scrollbar-track-slate-100 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-900 [&::-webkit-scrollbar-thumb]:rounded-full">
+        <form id="dmp-patient-form" method="POST" action="{%url 'create_patient'%}" class="space-y-6 pr-1">
+            {% csrf_token %}
+            
+            <!-- SECTION 1 : ÉTAT CIVIL ENFANT / PATIENT -->
+            <div class="space-y-4">
+                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
+                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">1</span>
+                    État Civil du Patient / Enfant
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Nom *</label>
+                        <input type="text" name="nom" required placeholder="Ex: AMOUGOU" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 uppercase focus:outline-none focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Prénom(s)</label>
+                        <input type="text" name="prenom" placeholder="Ex: Samuel" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Sexe *</label>
+                        <select name="sexe" required class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
+                            <option value="">Choisir...</option>
+                            <option value="M">Masculin</option>
+                            <option value="F">Féminin</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Date de Naissance</label>
+                        <input type="date" name="date_naissance" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Poids (en kg)</label>
+                        <input type="number" step="0.01" name="poids" placeholder="Ex: 4.50" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Code Patient <span class="text-[10px] text-slate-400">(Optionnel)</span></label>
+                        <input type="text" id="enfant_code_final" name="code" placeholder="Généré si vide" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold font-mono text-slate-900 focus:outline-none focus:bg-white">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2 : INFORMATIONS DE LA MÈRE -->
+            <div class="space-y-4 pt-2">
+                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
+                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">2</span>
+                    Informations de la Mère
+                </h4>
+                
+                <div class="p-4 bg-slate-50 border-2 border-slate-900 rounded-xl space-y-4">
+                    <!-- Sélection principale de la mère -->
+                  
+
+                    <!-- Bloc d'informations d'état civil de la mère (Nom, Prénom, Âge, Date de naissance) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-200 pt-3">
+                        <div>
+                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Nom de la mère</label>
+                            <input type="text" name="mere_nom" placeholder="Nom de famille" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 uppercase focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Prénom de la mère</label>
+                            <input type="text" name="mere_prenom" placeholder="Prénom(s)" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Âge de la mère</label>
+                            <input type="number" name="mere_age" placeholder="Ex: 28" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Date de naissance mère</label>
+                            <input type="date" name="mere_date_naissance" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
+                        </div>
+                         <div>
+                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Contact de la mère</label>
+                            <input type="number" name="contact_mere" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3 : RATTACHEMENTS STRUCTURELS -->
+            <div class="space-y-4 pt-2">
+                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
+                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">3</span>
+                    Liaison & Structure
+                </h4>
+                <div>
+                    <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">FOSA (Structure Sanitaire) *</label>
+                    <select name="fosa" required class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
+                        <option value="">Sélectionner une FOSA...</option>
+                        
+                    </select>
+                </div>
+            </div>
+
+            <!-- SECTION 4 : PARCOURS DE SOINS -->
+            <div class="space-y-4 pt-2">
+                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
+                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">4</span>
+                    Parcours de Soins & Suivi Réseau
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Porte d'Entrée</label>
+                        <select name="porte_entree" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
+                            <option value="">Sélectionner...</option>
+                            {% for pe in portes_entree %}
+                                <option value="{{ pe.id }}">{{ pe.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                  
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Personnel Réseau</label>
+                        <select name="contact" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
+                            <option value="">Sélectionner...</option>
+                            {% for p in personnels %}
+                                <option value="{{ p.id }}">{{ p.nom }} {{ p.prenom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Date de Naissance</label>
-            <input type="date" name="date_naissance" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-        </div>
-        <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Poids (en kg)</label>
-            <input type="number" step="0.01" name="poids" placeholder="Ex: 4.50" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-        </div>
-        <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Code Patient (Optionnel)</label>
-            <input type="text" name="code" placeholder="Généré auto si vide" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 font-mono focus:outline-none">
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t-2 border-dashed border-slate-200 pt-4">
-        <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">FOSA (Structure Sanitaire)</label>
-            <select name="fosa" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
-                <option value="">Sélectionner une FOSA...</option>
-                {% for s in structures %}
-                    <option value="{{ s.id }}">{{ s.nom }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Mère Associée</label>
-            <select name="mere" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
-                <option value="">Associer à une mère...</option>
-                {% for m in meres %}
-                    <option value="{{ m.id }}">{{ m.nom }} {{ m.prenom }} (Code: {{ m.code }})</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="sm:col-span-1">
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Porte d'Entrée</label>
-            <select name="porte_entree" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
-                <option value="">Sélectionner la filière...</option>
-                {% for pe in portes_entree %}
-                    <option value="{{ pe.id }}">{{ pe.nom }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="sm:col-span-1">
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Prophylaxie ARV</label>
-            <select name="profilaxie" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
-                <option value="">Choisir le protocole...</option>
-                {% for pr in profilaxies %}
-                    <option value="{{ pr.id }}">{{ pr.nom }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="sm:col-span-1">
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Personnel / Contact Réseau</label>
-            <select name="contact" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
-                <option value="">Sélectionner l'agent...</option>
-                {% for p in personnels %}
-                    <option value="{{ p.id }}">{{ p.nom }} {{ p.prenom }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="flex items-center justify-end gap-3 pt-4 border-t-2 border-slate-900 mt-6">
-        <button type="button" onclick="document.getElementById('patient-modal').close()" class="px-4 py-2 border border-slate-900 rounded-xl bg-slate-50 hover:bg-slate-100 font-bold text-xs uppercase tracking-wider text-slate-900 transition-colors">
+    <!-- FOOTER FIXE DU MODAL -->
+    <div class="flex items-center justify-end gap-3 p-6 border-t-4 border-slate-900 bg-slate-50">
+        <button type="button" onclick="document.getElementById('patient-modal').close()" class="px-4 py-2.5 border-2 border-slate-900 rounded-xl bg-slate-100 hover:bg-slate-200 font-black text-xs uppercase tracking-wider text-slate-900 transition-colors">
             Annuler
         </button>
-        <button type="submit" class="px-4 py-2 bg-slate-900 hover:bg-slate-950 border-2 border-slate-900 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-y-0.5 cursor-pointer">
+        <button type="submit" form="dmp-patient-form" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 border-2 border-slate-900 text-slate-100 font-black rounded-xl text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none cursor-pointer">
             Valider et Créer le Patient
         </button>
     </div>
-</form>
+</dialog>
+<!-- MODAL SUCCÈS -->
+<dialog id="modal-succes" class="backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm bg-white border-4 border-slate-900 rounded-2xl p-0 max-w-md w-full shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] overflow-hidden">
+    <div class="p-6 text-center space-y-4">
+        <!-- Badge Icône Succès -->
+        <div class="w-16 h-16 mx-auto bg-emerald-100 border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        
+        <div class="space-y-1">
+            <h3 class="text-xl font-black uppercase tracking-tight text-slate-900">Enregistrement Réussi !</h3>
+            <p class="text-xs font-bold text-slate-500">L'échantillon a bien été synchronisé avec la base de données.</p>
+        </div>
+
+        <div class="bg-slate-50 border-2 border-slate-900 rounded-xl p-4 text-left space-y-2 font-mono text-xs text-slate-700">
+            <div class="flex justify-between border-b border-dashed border-slate-200 pb-1">
+                <span class="font-bold">Date prélèvement :</span>
+                <span id="recap-date" class="font-black text-slate-900">-</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-bold">Préleveur :</span>
+                <span id="recap-preleveur" class="font-black text-slate-900">-</span>
+            </div>
+        </div>
+
+        <button onclick="document.getElementById('modal-succes').close()" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none cursor-pointer">
+            Fermer et continuer
+        </button>
+    </div>
+</dialog>
+
+<!-- MODAL ERREUR -->
+<dialog id="modal-erreur" class="backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm bg-white border-4 border-slate-900 rounded-2xl p-0 max-w-md w-full shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] overflow-hidden">
+    <div class="p-6 text-center space-y-4">
+        <!-- Badge Icône Erreur -->
+        <div class="w-16 h-16 mx-auto bg-rose-100 border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        </div>
+        
+        <div class="space-y-1">
+            <h3 class="text-xl font-black uppercase tracking-tight text-slate-900">Échec de l'Opération</h3>
+            <p class="text-xs font-bold text-slate-500">Le serveur a refusé de traiter la demande d'échantillon.</p>
+        </div>
+
+        <div class="bg-rose-50 border-2 border-rose-900 rounded-xl p-4 text-center font-mono text-xs font-bold text-rose-900" id="recap-erreur-msg">
+            Détail de l'erreur inconnu.
+        </div>
+
+        <button onclick="document.getElementById('modal-erreur').close()" class="w-full py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-900 text-slate-900 font-black rounded-xl text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none cursor-pointer">
+            Corriger les données
+        </button>
+    </div>
+</dialog>
 <script>
      lucide.createIcons();
      // Gestion de la fermeture en cliquant à côté du cadre blanc
@@ -918,6 +1176,485 @@
             ) {
                 modal.close();
             }
+        });
+    }
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const dobInput = document.getElementById('enfant_dob');
+    const ageDisplay = document.getElementById('enfant_age_display');
+
+    function calculerAge() {
+        const dobValue = dobInput.value;
+        
+        if (!dobValue) {
+            ageDisplay.value = "Calcul automatique...";
+            return;
+        }
+
+        const dob = new Date(dobValue);
+        const aujourdhui = new Date();
+
+        // Sécurité si la date est invalide
+        if (isNaN(dob.getTime())) {
+            ageDisplay.value = "Date invalide";
+            return;
+        }
+
+        let ans = aujourdhui.getFullYear() - dob.getFullYear();
+        let mois = aujourdhui.getMonth() - dob.getMonth();
+        let jours = aujourdhui.getDate() - dob.getDate();
+
+        // Ajustement si l'anniversaire n'est pas encore passé cette année
+        if (mois < 0 || (mois === 0 && jours < 0)) {
+            ans--;
+            mois += 12;
+        }
+        
+        if (jours < 0) {
+            // Prendre le dernier jour du mois précédent
+            const dernierJourMoisPrecedent = new Date(aujourdhui.getFullYear(), aujourdhui.getMonth(), 0).getDate();
+            jours += dernierJourMoisPrecedent;
+            mois--;
+            if (mois < 0) {
+                mois += 12;
+                ans--;
+            }
+        }
+
+        // Formatage de l'affichage selon l'âge du patient (très utile en pédiatrie)
+        if (ans > 0) {
+            ageDisplay.value = `${ans} an(s) et ${mois} mois`;
+        } else if (mois > 0) {
+            ageDisplay.value = `${mois} mois et ${jours} jour(s)`;
+        } else {
+            ageDisplay.value = `${jours} jour(s)`;
+        }
+    }
+
+    // Écouter les changements sur le champ Date
+    dobInput.addEventListener('change', calculerAge);
+
+    // Lancer une première fois le calcul au cas où le champ est pré-rempli au chargement
+    if (dobInput.value) {
+        calculerAge();
+    }
+});
+</script>
+<script>
+    // Gestion dynamique des sélections Région -> District -> FOSA
+    const selectRegion = document.getElementById('select-region');
+    const selectDistrict = document.getElementById('select-district');
+    const selectFosa = document.getElementById('select-fosa');
+
+    const inputCodeRegion = document.getElementById('code_region');
+    const inputCodeDistrict = document.getElementById('code_district');
+    const inputCodeFosa = document.getElementById('code_fosa');
+    const inputSuffixe = document.getElementById('code_suffixe');
+    const hiddenFosaCode = document.getElementById('fosa-code-hidden');
+
+    const otp1 = document.getElementById('fosa-otp-1');
+    const otp2 = document.getElementById('fosa-otp-2');
+    const otp3 = document.getElementById('fosa-otp-3');
+
+    // Fonction utilitaire pour vider proprement les cases OTP FOSA
+    function resetFosaOtp() {
+        if (otp1) otp1.value = '';
+        if (otp2) otp2.value = '';
+        if (otp3) otp3.value = '';
+        if (hiddenFosaCode) hiddenFosaCode.value = '';
+        if (inputCodeFosa) inputCodeFosa.value = '';
+    }
+
+    // 1. Événement lors du changement de Région
+    selectRegion.addEventListener('change', function() {
+        const regionId = this.value;
+        
+        const selectedOption = this.options[this.selectedIndex];
+        const regionCode = selectedOption ? selectedOption.getAttribute('data-code') : '';
+        
+        if (inputCodeRegion) {
+            inputCodeRegion.value = regionCode || '';
+        }
+        
+        // Réinitialisation complète des descendants
+        selectDistrict.innerHTML = '<option value="">Choisir un district...</option>';
+        selectDistrict.disabled = true;
+        selectFosa.innerHTML = '<option value="">Choisir la FOSA...</option>';
+        selectFosa.disabled = true;
+        
+        if (inputCodeDistrict) inputCodeDistrict.value = '';
+        resetFosaOtp();
+
+        if (regionId) {
+            fetch(`/search_district/${regionId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Erreur réseau lors de la récupération des districts');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && Array.isArray(data.districts) && data.districts.length > 0) {
+                        data.districts.forEach(district => {
+                            const option = document.createElement('option');
+                            option.value = district.id;
+                            option.textContent = district.nom;
+                            option.setAttribute('data-code', district.designation || '');
+                            selectDistrict.appendChild(option);
+                        });
+                    } else {
+                        selectDistrict.innerHTML = '<option value="">Aucun district trouvé pour cette région</option>';
+                    }
+                    selectDistrict.disabled = false;
+                })
+                .catch(error => {
+                    console.error(error);
+                    selectDistrict.innerHTML = '<option value="">Erreur de chargement des données</option>';
+                    selectDistrict.disabled = false;
+                });
+        }
+    });
+
+    // 2. Événement lors du changement de District
+    selectDistrict.addEventListener('change', function() {
+        const districtId = this.value;
+        
+        const selectedOption = this.options[this.selectedIndex];
+        const districtCode = selectedOption ? selectedOption.getAttribute('data-code') : '';
+
+        if (inputCodeDistrict) {
+            inputCodeDistrict.value = districtCode || '';
+        }
+        
+        // Réinitialisation de la FOSA et des blocs OTP
+        selectFosa.innerHTML = '<option value="">Choisir la FOSA...</option>';
+        selectFosa.disabled = true;
+        resetFosaOtp();
+
+        if (districtId) {
+            fetch(`/search_fosa/${districtId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Erreur réseau lors de la récupération des FOSAs');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && Array.isArray(data.fosas) && data.fosas.length > 0) {
+                        data.fosas.forEach(fosa => {
+                            const option = document.createElement('option');
+                            option.value = fosa.id;
+                            option.textContent = fosa.nom;
+                            option.setAttribute('data-code', fosa.designation || '');
+                            selectFosa.appendChild(option);
+                        });
+                    } else {
+                        selectFosa.innerHTML = '<option value="">Aucune FOSA trouvée pour ce district</option>';
+                    }
+                    selectFosa.disabled = false;
+                })
+                .catch(error => {
+                    console.error(error);
+                    selectFosa.innerHTML = '<option value="">Erreur de chargement des données</option>';
+                    selectFosa.disabled = false;
+                });
+        }
+    });
+
+    // 3. Événement unique lors du changement de FOSA (Logique fusionnée)
+    selectFosa.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const fosaCode = selectedOption ? selectedOption.getAttribute('data-code') : '';
+        
+        // 1. Mise à jour de l'input classique #code_fosa
+        if (inputCodeFosa) {
+            inputCodeFosa.value = fosaCode || '';
+        }
+
+        // 2. Mise à jour du champ hidden pour l'envoi Django
+        if (hiddenFosaCode) {
+            hiddenFosaCode.value = fosaCode || '';
+        }
+
+        // 3. Distribution des 3 caractères dans les blocs OTP
+        if (fosaCode && fosaCode.length >= 3) {
+            if (otp1) otp1.value = fosaCode.charAt(0).toUpperCase();
+            if (otp2) otp2.value = fosaCode.charAt(1).toUpperCase();
+            if (otp3) otp3.value = fosaCode.charAt(2).toUpperCase();
+        } else {
+            if (otp1) otp1.value = '';
+            if (otp2) otp2.value = '';
+            if (otp3) otp3.value = '';
+        }
+    });
+</script>
+<script>
+   // 4. Événement lors du changement de la Porte d'Entrée
+    const selectPorteEntree = document.getElementById('select-porte-entree');
+    const inputCodePt = document.getElementById('code_pt');
+
+    selectPorteEntree.addEventListener('change', function() {
+        const porteEntreeId = this.value;
+        
+        if (inputCodePt) inputCodePt.value = '';
+
+        if (porteEntreeId) {
+            fetch(`/search_porte_entree/${porteEntreeId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    // AJOUT POUR LE DÉBANNAGE : Affiche ce que renvoie le serveur dans la console F12
+                    console.log("Données reçues de l'API :", data);
+
+                    if (data && inputCodePt) {
+                        // On teste si la clé directe 'code' existe, sinon on cherche 'designation'
+                        const codeTrouve = data.code || data.designation || '';
+                        inputCodePt.value = codeTrouve.toUpperCase();
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur lors du fetch de la porte d'entrée :", error);
+                    if (inputCodePt) inputCodePt.value = '';
+                });
+        }
+    });
+</script>
+
+
+<script>
+ // Variable de verrouillage pour éviter les doubles clics accidentels
+let isSearching = false;
+
+document.getElementById('btn-rechercher-code').addEventListener('click', function(e) {
+    // 1. Bloquer immédiatement la soumission native du formulaire si le bouton est dedans
+    e.preventDefault();
+    e.stopPropagation();
+
+    // 2. Anti-rebond (Debounce) : Si une recherche est déjà en cours, on ignore le clic
+    if (isSearching) return;
+
+    // Récupération sécurisée et nettoyage des valeurs
+    const reg = (inputCodeRegion.value || '').trim().toUpperCase();
+    const dist = (inputCodeDistrict.value || '').trim().toUpperCase();
+    const fosa = (inputCodeFosa.value || '').trim().toUpperCase();
+    const pt = (inputCodePt.value || '').trim().toUpperCase();
+    const inputSerie = document.getElementById('numero_serie');
+    const inputSuffixe = document.getElementById('code_suffixe');
+
+    const serie = (inputSerie ? inputSerie.value : '').trim().toUpperCase();
+    const suffixe = (inputSuffixe ? inputSuffixe.value : '').trim().toUpperCase();
+
+    // Validation stricte des segments obligatoires
+    if (!reg || !dist || !fosa || !pt || !serie) {
+        alert("Veuillez renseigner complètement les éléments constitutifs du code.");
+        return;
+    }
+
+    // Verrouillage du process
+    isSearching = true;
+    this.disabled = true; // Optionnel : désactive visuellement le bouton pendant le fetch
+
+    // Construction linéaire rigoureuse du code complexe
+    let codeComplexe = `${reg}-${dist}-${fosa}-${pt}-${serie}`;
+    if (suffixe.length > 0) {
+        codeComplexe += `-${suffixe}`;
+    }
+
+    // Mise à jour de la valeur finale dans le DOM
+    const targetFinal = document.getElementById('enfant_code_final');
+    if (targetFinal) {
+        targetFinal.value = codeComplexe;
+    }
+
+    // Exécution de l'unique appel réseau
+    fetch(`/verifier_patient/?code=${encodeURIComponent(codeComplexe)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.existe) {
+                alimenterChampsPrincipaux(data.patient);
+            } else {
+                const patientModal = document.getElementById('patient-modal');
+                const modalForm = document.getElementById('dmp-patient-form');
+                
+                if (patientModal && modalForm) {
+                    if (modalForm.querySelector('input[name="code"]')) {
+                        modalForm.querySelector('input[name="code"]').value = codeComplexe;
+                    }
+
+                    const modalSelectFosa = modalForm.querySelector('select[name="fosa"]');
+                    if (modalSelectFosa) {
+                        modalSelectFosa.innerHTML = ''; 
+                        const activeFosaOpt = selectFosa.options[selectFosa.selectedIndex];
+                        
+                        if (activeFosaOpt && activeFosaOpt.value !== "") {
+                            const cloneOpt = document.createElement('option');
+                            cloneOpt.value = activeFosaOpt.value;
+                            cloneOpt.textContent = activeFosaOpt.textContent;
+                            cloneOpt.selected = true;
+                            modalSelectFosa.appendChild(cloneOpt);
+                        } else {
+                            modalSelectFosa.innerHTML = '<option value="">Aucune FOSA sélectionnée...</option>';
+                        }
+                    }
+
+                    const modalSelectPE = modalForm.querySelector('select[name="porte_entree"]');
+                    if (modalSelectPE) {
+                        modalSelectPE.value = selectPorteEntree.value;
+                    }
+
+                    patientModal.showModal();
+                }
+            }
+        })
+        .catch(err => console.error("Erreur LIMS lors de la vérification :", err))
+        .finally(() => {
+            // Libération du verrou après la réponse (succès ou échec)
+            isSearching = false;
+            this.disabled = false;
+        });
+});
+</script>
+
+<script>
+    // Interception de l'envoi du formulaire de création du modal
+document.getElementById('dmp-patient-form').addEventListener('submit', function(e) {
+    e.preventDefault(); // Empêche le rechargement brutal de la page
+
+    const formData = new FormData(this);
+
+    fetch(this.action || '#', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest' // Indique à Django que c'est de l'AJAX
+        }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Erreur lors de la création");
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // 1. On injecte les données fraîchement créées dans la page de traitement principale
+            alimenterChampsPrincipaux(data.patient);
+
+            // 2. On ferme le modal proprement
+            document.getElementById('patient-modal').close();
+            
+            // 3. Optionnel : On réinitialise le formulaire du modal pour la prochaine fois
+            document.getElementById('dmp-patient-form').reset();
+        } else {
+            alert("Erreur : " + (data.error || "Impossible de créer le dossier."));
+        }
+    })
+    .catch(error => {
+        console.error("Erreur:", error);
+        alert("Une erreur est survenue lors de l'enregistrement.");
+    });
+});
+</script>
+<script>
+// Fonction globale pour remplir les champs de la page principale
+// Fonction globale pour remplir les champs de la page principale
+function alimenterChampsPrincipaux(patientData) {
+    if (!patientData) return;
+
+    // 1. Identifiants techniques (Hidden inputs ou Readonly)
+    if (document.getElementById('main_enfant_id')) {
+        document.getElementById('main_enfant_id').value = patientData.id || '';
+    }
+    if (document.getElementById('main_enfant_mere_id')) {
+        document.getElementById('main_enfant_mere_id').value = (patientData.mere && patientData.mere.id) ? patientData.mere.id : '';
+    }
+   
+    // 2. État civil de l'enfant
+    if (document.getElementById('main_enfant_nom')) document.getElementById('main_enfant_nom').value = patientData.nom || '';
+    if (document.getElementById('main_enfant_prenom')) document.getElementById('main_enfant_prenom').value = patientData.prenom || '';
+    if (document.getElementById('main_sexe')) document.getElementById('main_sexe').value = patientData.sexe || '';
+    if (document.getElementById('enfant_dob')) document.getElementById('enfant_dob').value = patientData.date_naissance || '';
+    if (document.getElementById('main_poids')) document.getElementById('main_poids').value = patientData.poids || '';
+    if (document.getElementById('main_porte_entree')) document.getElementById('main_porte_entree').value = patientData.porte_entree || '';
+
+    // 3. Remplissage des données de la MÈRE sur l'écran principal
+    if (patientData.mere) {
+        if (document.getElementById('main_mere_nom')) {
+            document.getElementById('main_mere_nom').value = patientData.mere.nom || '';
+        }
+        if (document.getElementById('main_mere_prenom')) {
+            document.getElementById('main_mere_prenom').value = patientData.mere.prenom || '';
+        }
+        // Ajout de l'âge de la mère
+        if (document.getElementById('main_mere_age')) {
+            document.getElementById('main_mere_age').value = patientData.mere.age !== null ? patientData.mere.age : '';
+        }
+        // Ajout de la date de naissance de la mère
+        if (document.getElementById('main_mere_date_naissance')) {
+            document.getElementById('main_mere_date_naissance').value = patientData.mere.date_naissance || '';
+        }
+        // Ajout du contact / personnel réseau associé à la mère si nécessaire
+        if (document.getElementById('main_contact_familial')) {
+            document.getElementById('main_contact_familial').value = patientData.mere.contact || '';
+        }
+    } else {
+        // Optionnel : Vider les champs de la mère si le patient trouvé n'a pas de mère liée
+        if (document.getElementById('main_mere_nom')) document.getElementById('main_mere_nom').value = '';
+        if (document.getElementById('main_mere_prenom')) document.getElementById('main_mere_prenom').value = '';
+        if (document.getElementById('main_mere_age')) document.getElementById('main_mere_age').value = '';
+        if (document.getElementById('main_mere_date_naissance')) document.getElementById('main_mere_date_naissance').value = '';
+    }
+
+    // Déclencher manuellement l'événement de calcul d'âge de l'enfant
+    if (document.getElementById('enfant_dob') && patientData.date_naissance) {
+        document.getElementById('enfant_dob').dispatchEvent(new Event('change'));
+    }
+}
+
+
+</script>
+<script>
+ document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('form_echantillon'); 
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+
+            const formData = new FormData(form);
+
+            fetch(form.action || window.location.href, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 1. On peuple le récapitulatif du succès avec les données du formulaire
+                    document.getElementById('recap-date').innerText = formData.get('date_prelevement') || '-';
+                    
+                    const nomP = formData.get('nom_preleveur') || '';
+                    const prenomP = formData.get('prenom_preleveur') || '';
+                    document.getElementById('recap-preleveur').innerText = `${nomP} ${prenomP}`.trim() || '-';
+
+                    // 2. On ouvre le modal de succès
+                    document.getElementById('modal-succes').showModal();
+                    
+                    // 3. On remet à zéro le formulaire
+                    form.reset();
+                } else {
+                    // On injecte le message d'erreur renvoyé par Django et on l'affiche
+                    document.getElementById('recap-erreur-msg').innerText = data.error || "Erreur indéterminée.";
+                    document.getElementById('modal-erreur').showModal();
+                }
+            })
+            .catch(error => {
+                console.error("Erreur critique AJAX :", error);
+                document.getElementById('recap-erreur-msg').innerText = "Impossible de joindre le serveur ou problème réseau.";
+                document.getElementById('modal-erreur').showModal();
+            });
         });
     }
 });
