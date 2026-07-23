@@ -1,64 +1,64 @@
 {% extends "../dashbord_hosp.html" %}
 
 {% block main %}
-<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50 custom-scrollbar">
-    <div class="max-w-7xl mx-auto space-y-8">
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50/50 custom-scrollbar">
+    <div class="max-w-7xl mx-auto space-y-6">
         
-        <!-- HEADER EN-TÊTE -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b-4 border-slate-900 pb-6">
+        <!-- EN-TÊTE ULTRA-FIN -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-slate-200">
             <div>
-                <h1 class="text-2xl sm:text-3xl font-black uppercase tracking-tight text-slate-900">Dossiers Patients & DMP</h1>
-                <p class="text-sm font-bold text-slate-500 mt-1">Consultation, recherche et suivi des dossiers médicaux partagés</p>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-mono">Dossier Médical Partagé</span>
+                <h1 class="text-xl font-semibold tracking-tight text-slate-900 mt-0.5">Dossiers Patients & DMP</h1>
+                <p class="text-xs text-slate-500 mt-0.5">Indexation globale, recherche clinique et suivi réglementaire des admissions.</p>
             </div>
             <div>
-                <button onclick="document.getElementById('patient-modal').showModal()" class="w-full sm:w-auto px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white font-black rounded-xl border-2 border-slate-900 text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_rgba(15,23,42,1)]">
+                <button onclick="document.getElementById('patient-modal').showModal()" class="w-full sm:w-auto px-4 py-2 bg-slate-950 hover:bg-slate-900 text-white font-medium rounded-lg text-xs tracking-wide shadow-sm transition-colors">
                     + Nouveau Dossier Patient
                 </button>
             </div>
         </div>
 
-        <!-- STATISTIQUES CARDS -->
+        <!-- STATISTIQUES FINES -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="p-5 bg-white border-2 border-slate-900 rounded-xl shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between min-h-[100px]">
-                <span class="text-xs font-black uppercase tracking-wider text-slate-400">Total Patients</span>
-                <span class="text-3xl font-black text-slate-900 mt-2">{{patients|length}}</span>
+            <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col justify-between">
+                <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Total Patients</span>
+                <span class="text-2xl font-semibold text-slate-900 mt-1">{{ patients|length }}</span>
             </div>
-            <div class="p-5 bg-white border-2 border-slate-900 rounded-xl shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between min-h-[100px]">
-                <span class="text-xs font-black uppercase tracking-wider text-slate-400">Admissions (24h)</span>
-                <span class="text-3xl font-black text-emerald-600 mt-2">+14</span>
+            <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col justify-between">
+                <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Admissions (24h)</span>
+                <span class="text-2xl font-semibold text-emerald-600 mt-1">+14</span>
             </div>
-            <div class="p-5 bg-white border-2 border-slate-900 rounded-xl shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between min-h-[100px]">
-                <span class="text-xs font-black uppercase tracking-wider text-slate-400">En hospitalisation</span>
-                <span class="text-3xl font-black text-slate-900 mt-2">42</span>
+            <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col justify-between">
+                <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Hospitalisés</span>
+                <span class="text-2xl font-semibold text-slate-900 mt-1">42</span>
             </div>
-            <div class="p-5 bg-white border-2 border-slate-900 rounded-xl shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between min-h-[100px]">
-                <span class="text-xs font-black uppercase tracking-wider text-slate-400">Urgences actives</span>
-                <span class="text-3xl font-black text-red-600 mt-2">5</span>
+            <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col justify-between">
+                <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Urgences actives</span>
+                <span class="text-2xl font-semibold text-rose-600 mt-1">5</span>
             </div>
         </div>
 
-        <!-- BARRE DE RECHERCHE ET FILTRES -->
-        <div class="p-4 bg-white border-2 border-slate-900 rounded-xl shadow-[4px_4px_0px_0px_#0f172a] grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- RECHERCHE & FILTRES -->
+        <div class="p-3 bg-white border border-slate-200 rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-3 gap-3">
             <div class="relative">
-                <input type="text" placeholder="Rechercher par Nom, IPP ou Code DMP..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white transition-colors">
-                <div class="absolute left-3.5 top-4 text-slate-900">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Rechercher un patient, IPP..." class="w-full pl-9 pr-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-lg text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-300 focus:bg-white transition-colors">
+                <div class="absolute left-3 top-3 text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 </div>
             </div>
             
             <div>
-                <select class="w-full px-3 py-3 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:bg-white transition-colors cursor-pointer">
+                <select class="w-full px-3 py-2.5 bg-slate-50/50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:border-slate-300 focus:bg-white transition-colors cursor-pointer">
                     <option value="">Tous les services</option>
                     <option value="urgences">Urgences</option>
                     <option value="pédiatrie">Pédiatrie</option>
                     <option value="cardiologie">Cardiologie</option>
-                    <option value="maternité">Maternité</option>
                 </select>
             </div>
 
             <div>
-                <select class="w-full px-3 py-3 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:bg-white transition-colors cursor-pointer">
-                    <option value="">Statut du patient</option>
+                <select class="w-full px-3 py-2.5 bg-slate-50/50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:border-slate-300 focus:bg-white transition-colors cursor-pointer">
+                    <option value="">Statut patient</option>
                     <option value="externe">Consultation Externe</option>
                     <option value="hosp">Hospitalisé</option>
                     <option value="sorti">Sortie autorisée</option>
@@ -66,301 +66,123 @@
             </div>
         </div>
 
-        <!-- TABLEAU DES PATIENTS -->
-       <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-200">
-                    <th class="p-4 font-semibold">IPP / Patient</th>
-                    <th class="p-4 font-semibold">Date Naissance & Sexe</th>
-                    <th class="p-4 font-semibold">Porte d'entrée</th>
-                    <th class="p-4 font-semibold">Nom du Parent</th>
-                    <th class="p-4 font-semibold">Contact</th>
-                    <th class="p-4 text-right font-semibold">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y border-b border-slate-200 divide-slate-100 text-sm text-slate-700">
-                
-                {% for patient in patients %}
-                <tr class="hover:bg-slate-50/70 transition-colors">
-                    <!-- IPP / Patient -->
-                    <td class="p-4">
-                        <div class="font-semibold text-slate-900 tracking-tight">{{ patient.nom }} {{ patient.prenom }}</div>
-                        <div class="text-xs text-slate-400 font-mono mt-0.5">{{ patient.code }}</div>
-                    </td>
-                    
-                    <!-- Date Naissance & Sexe -->
-                    <td class="p-4">
-                        <div class="text-slate-800 font-medium">{{ patient.date_naissance|default:"Non renseignée" }}</div>
-                        <div class="text-xs text-slate-400 uppercase tracking-wide mt-0.5">{{ patient.sexe|default:"Non renseigné" }}</div>
-                    </td>
-                    
-                    <!-- Porte d'entrée -->
-                    <td class="p-4">
-                        <span class="inline-flex items-center px-2 py-0.5 bg-blue-50 text-blue-700 text-xs font-medium rounded border border-blue-100">
-                            {{ patient.porte_entree|default:"Non renseignée" }}
-                        </span>
-                    </td>
-                    
-                    <!-- Parent -->
-                    <td class="p-4">
-                        <div class="text-slate-700 font-medium">
-                            {{ patient.mere.nom|default:"Non renseigné" }} {{ patient.mere.prenom|default:"" }}
-                        </div>
-                    </td>
-                    
-                    <!-- Contact -->
-                    <td class="p-4">
-                        {% if patient.parent.contact %}
-                            <span class="inline-flex items-center gap-1 font-mono text-xs text-slate-600 bg-slate-100 px-2.5 py-1 rounded border border-slate-200">
-                                <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                                </svg>
-                                {{ patient.parent.contact }}
-                            </span>
-                        {% else %}
-                            <span class="text-xs text-slate-400 italic">Aucun</span>
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Actions -->
-                    <td class="p-4 text-right">
-                        <div class="flex items-center justify-end gap-2">
-                            <a href="{% url 'details-patient' patient.code %}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-lg text-xs font-semibold text-blue-600 transition-colors shadow-sm">
-                                Consulter
-                            </a>
-                            <button class="p-1.5 border border-slate-200 hover:border-slate-300 rounded-lg bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-700 transition-colors shadow-sm" title="Modifier le dossier">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 20h9"/>
-                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="p-8 text-center text-slate-400 italic">
-                        Aucun patient trouvé dans la base de données.
-                    </td>
-                </tr>
-                {% endfor %}
+        <!-- TABLEAU ÉPURÉ -->
+        <div class="bg-white border border-slate-200/80 rounded-xl shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50/70 text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-200">
+                            <th class="p-3.5 font-medium">Patient / IPP</th>
+                            <th class="p-3.5 font-medium">Infos Vitales</th>
+                            <th class="p-3.5 font-medium">Porte d'entrée</th>
+                            <th class="p-3.5 font-medium">Identité Parent</th>
+                            <th class="p-3.5 font-medium">Contact</th>
+                            <th class="p-3.5 text-right font-medium w-36">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-xs text-slate-600 font-medium">
+                        
+                        {% for patient in patients %}
+                        <tr class="hover:bg-slate-50/40 transition-colors">
+                            <!-- Patient / IPP -->
+                            <td class="p-3.5">
+                                <div class="font-semibold text-slate-900 tracking-tight text-xs">{{ patient.nom }} {{ patient.prenom }}</div>
+                                <div class="text-[10px] text-slate-400 font-mono mt-0.5">{{ patient.code }}</div>
+                            </td>
+                            
+                            <!-- Infos Vitales -->
+                            <td class="p-3.5">
+                                <div class="text-slate-800">{{ patient.date_naissance|default:"--" }}</div>
+                                <div class="mt-1">
+                                    {% if patient.sexe|upper == "M" or "MASC" in patient.sexe|upper %}
+                                        <span class="text-[9px] font-medium bg-blue-50/60 text-blue-600 px-1.5 py-0.5 rounded">Masculin</span>
+                                    {% elif patient.sexe|upper == "F" or "FEMI" in patient.sexe|upper %}
+                                        <span class="text-[9px] font-medium bg-pink-50/60 text-pink-600 px-1.5 py-0.5 rounded">Féminin</span>
+                                    {% else %}
+                                        <span class="text-[9px] font-medium bg-slate-100/60 text-slate-500 px-1.5 py-0.5 rounded">{{ patient.sexe|default:"Non spécifié" }}</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            
+                            <!-- Porte d'entrée -->
+                            <td class="p-3.5">
+                                <span class="inline-flex items-center px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-medium rounded border border-slate-200/60">
+                                    {{ patient.porte_entree|default:"Standard" }}
+                                </span>
+                            </td>
+                            
+                            <!-- Parent -->
+                            <td class="p-3.5">
+                                <div class="text-slate-700 font-medium">{{ patient.mere.nom|default:"--" }} {{ patient.mere.prenom|default:"" }}</div>
+                                <div class="text-[9px] text-slate-400 mt-0.5">Lien : Mère</div>
+                            </td>
+                            
+                            <!-- Contact -->
+                            <td class="p-3.5">
+                                {% if patient.parent.contact %}
+                                    <span class="inline-flex items-center gap-1 font-mono text-[11px] text-slate-600">
+                                        {{ patient.parent.contact }}
+                                    </span>
+                                {% else %}
+                                    <span class="text-[11px] text-slate-400 italic">Aucun</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- Actions Fines -->
+                            <td class="p-3.5 text-right">
+                                <div class="flex items-center justify-end gap-1.5">
+                                    <!-- Consulter -->
+                                    <a href="{% url 'details-patient' patient.code %}" title="Consulter la fiche" class="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-md border border-transparent hover:border-slate-200 transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                    </a>
+                                    
+                                    <!-- Imprimer Fiche -->
+                                    <a href="#" title="Imprimer le dossier" class="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-md border border-transparent hover:border-slate-200 transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                            <rect x="6" y="14" width="12" height="8"></rect>
+                                        </svg>
+                                    </a>
 
-            </tbody>
-        </table>
-    </div>
-    
-    <!-- PAGINATION -->
-    <div class="p-4 border-t border-slate-200 flex items-center justify-between bg-slate-50 text-xs font-medium text-slate-600">
-        <span>Affichage de <span class="font-semibold text-slate-900">1-2</span> sur <span class="font-semibold text-slate-900">1 284</span> patients</span>
-        <div class="flex gap-1.5">
-            <button class="px-3 py-1.5 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:hover:bg-white transition-colors" disabled>
-                Précédent
-            </button>
-            <button class="px-3 py-1.5 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 text-slate-700 transition-colors shadow-sm">
-                Suivant
-            </button>
-        </div>
-    </div>
-</div>
-    </div>
-
-    <!-- MODAL DE CRÉATION PATIENT -->
-  <dialog id="patient-modal" class="backdrop:bg-slate-900/50 backdrop:backdrop-blur-sm bg-white border-4 border-slate-900 rounded-2xl p-0 max-w-2xl w-full shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] open:animate-in open:fade-in open:zoom-in-95 duration-150 overflow-hidden">
-    
-    <!-- EN-TÊTE FIXE DU MODAL -->
-    <div class="flex items-center justify-between border-b-4 border-slate-900 p-6 bg-white">
-        <div>
-            <h3 class="text-xl font-black uppercase tracking-tight text-slate-900">Création Dossier Patient (DMP)</h3>
-            <p class="text-xs font-bold text-slate-400 mt-0.5">Enregistrement initial et ouverture des droits de suivi</p>
-        </div>
-        <button onclick="document.getElementById('patient-modal').close()" class="p-2 border-2 border-slate-900 rounded-xl bg-slate-100 hover:bg-red-100 hover:text-red-900 text-slate-900 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-    </div>
-
-    <!-- CORPS DU FORMULAIRE (SCROLL DESIGN FIN) -->
-    <div class="p-6 max-h-[65vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-900 scrollbar-track-slate-100 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-900 [&::-webkit-scrollbar-thumb]:rounded-full">
-        <form id="dmp-patient-form" method="POST" action="#" class="space-y-6 pr-1">
-            {% csrf_token %}
-            
-            <!-- SECTION 1 : ÉTAT CIVIL ENFANT / PATIENT -->
-            <div class="space-y-4">
-                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
-                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">1</span>
-                    État Civil du Patient / Enfant
-                </h4>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Nom *</label>
-                        <input type="text" name="nom" required placeholder="Ex: AMOUGOU" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 uppercase focus:outline-none focus:bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Prénom(s)</label>
-                        <input type="text" name="prenom" placeholder="Ex: Samuel" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Sexe *</label>
-                        <select name="sexe" required class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
-                            <option value="">Choisir...</option>
-                            <option value="M">Masculin</option>
-                            <option value="F">Féminin</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Date de Naissance</label>
-                        <input type="date" name="date_naissance" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Poids (en kg)</label>
-                        <input type="number" step="0.01" name="poids" placeholder="Ex: 4.50" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Code Patient <span class="text-[10px] text-slate-400">(Optionnel)</span></label>
-                        <input type="text" name="code" placeholder="Généré si vide" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold font-mono text-slate-900 focus:outline-none focus:bg-white">
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION 2 : INFORMATIONS DE LA MÈRE -->
-            <div class="space-y-4 pt-2">
-                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
-                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">2</span>
-                    Informations de la Mère
-                </h4>
-                
-                <div class="p-4 bg-slate-50 border-2 border-slate-900 rounded-xl space-y-4">
-                    <!-- Sélection principale de la mère -->
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Associer une mère existante *</label>
-                        <select name="mere" required class="w-full px-3 py-2.5 bg-white border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none cursor-pointer">
-                            <option value="">Sélectionner la mère...</option>
-                            {% for m in meres %}
-                                <option value="{{ m.id }}">{{ m.nom }} {{ m.prenom }} (Code: {{ m.code }})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!-- Bloc d'informations d'état civil de la mère (Nom, Prénom, Âge, Date de naissance) -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-200 pt-3">
-                        <div>
-                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Nom de la mère</label>
-                            <input type="text" name="mere_nom" placeholder="Nom de famille" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 uppercase focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Prénom de la mère</label>
-                            <input type="text" name="mere_prenom" placeholder="Prénom(s)" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Âge de la mère</label>
-                            <input type="number" name="mere_age" placeholder="Ex: 28" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Date de naissance mère</label>
-                            <input type="date" name="mere_date_naissance" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION 3 : RATTACHEMENTS STRUCTURELS -->
-            <div class="space-y-4 pt-2">
-                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
-                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">3</span>
-                    Liaison & Structure
-                </h4>
-                <div>
-                    <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">FOSA (Structure Sanitaire) *</label>
-                    <select name="fosa" required class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
-                        <option value="">Sélectionner une FOSA...</option>
-                        {% for s in structures %}
-                            <option value="{{ s.id }}">{{ s.nom }}</option>
+                                    <!-- Éditer -->
+                                    <button title="Modifier le dossier" class="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-md border border-transparent hover:border-slate-200 transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 20h9"/>
+                                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="p-8 text-center text-slate-400 italic bg-slate-50/30">
+                                Aucun dossier patient enregistré dans la base de données.
+                            </td>
+                        </tr>
                         {% endfor %}
-                    </select>
+
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- PAGINATION -->
+            <div class="p-3 border-t border-slate-200 flex items-center justify-between bg-slate-50/50 text-[11px] text-slate-500 font-medium">
+                <span>Affichage <span class="text-slate-800 font-semibold">1-2</span> sur <span class="text-slate-800 font-semibold">1 284</span> dossiers</span>
+                <div class="flex gap-1">
+                    <button class="px-2.5 py-1.5 border border-slate-200 rounded-md bg-white text-slate-300 cursor-not-allowed" disabled>
+                        Précédent
+                    </button>
+                    <button class="px-2.5 py-1.5 border border-slate-200 rounded-md bg-white hover:bg-slate-50 text-slate-700 transition-colors shadow-sm">
+                        Suivant
+                    </button>
                 </div>
             </div>
-
-            <!-- SECTION 4 : PARCOURS DE SOINS -->
-            <div class="space-y-4 pt-2">
-                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
-                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">4</span>
-                    Parcours de Soins & Suivi Réseau
-                </h4>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Porte d'Entrée</label>
-                        <select name="porte_entree" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
-                            <option value="">Sélectionner...</option>
-                            {% for pe in portes_entree %}
-                                <option value="{{ pe.id }}">{{ pe.nom }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Prophylaxie ARV</label>
-                        <select name="profilaxie" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
-                            <option value="">Sélectionner...</option>
-                            {% for pr in profilaxies %}
-                                <option value="{{ pr.id }}">{{ pr.nom }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Personnel Réseau</label>
-                        <select name="contact" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
-                            <option value="">Sélectionner...</option>
-                            {% for p in personnels %}
-                                <option value="{{ p.id }}">{{ p.nom }} {{ p.prenom }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
-
-    <!-- FOOTER FIXE DU MODAL -->
-    <div class="flex items-center justify-end gap-3 p-6 border-t-4 border-slate-900 bg-slate-50">
-        <button type="button" onclick="document.getElementById('patient-modal').close()" class="px-4 py-2.5 border-2 border-slate-900 rounded-xl bg-slate-100 hover:bg-slate-200 font-black text-xs uppercase tracking-wider text-slate-900 transition-colors">
-            Annuler
-        </button>
-        <button type="submit" form="dmp-patient-form" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 border-2 border-slate-900 text-white font-black rounded-xl text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none cursor-pointer">
-            Valider et Créer le Patient
-        </button>
-    </div>
-</dialog>
 </main>
-{% endblock %}
-
-{% block scripts %}
-<script>
-     if (typeof lucide !== 'undefined') {
-         lucide.createIcons();
-     }
-     
-     // Fermeture au clic en dehors du modal
-     ['patient-modal'].forEach(id => {
-        const modal = document.getElementById(id);
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                const rect = modal.getBoundingClientRect();
-                if (
-                    e.clientX < rect.left ||
-                    e.clientX > rect.right ||
-                    e.clientY < rect.top ||
-                    e.clientY > rect.bottom
-                ) {
-                    modal.close();
-                }
-            });
-        }
-    });
-</script>
 {% endblock %}

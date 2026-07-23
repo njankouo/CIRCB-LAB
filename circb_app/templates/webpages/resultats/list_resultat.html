@@ -1,0 +1,152 @@
+{% extends '../dashbord_hosp.html' %}
+{% block main %}
+
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-6 flex flex-col gap-6 bg-slate-100 w-full max-w-[100vw] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full">
+    
+    <!-- BARRE D'ACTION & EN-TÊTE DU REGISTRE -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border-2 border-slate-900 border-b-[4px] rounded-xl p-6 shadow-sm">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-teal-600 rounded-full border border-teal-950"></span>
+                <h1 class="text-xl font-black text-slate-900 tracking-tight uppercase font-mono">Registre des Résultats Biologiques</h1>
+            </div>
+            <p class="text-xs font-bold text-slate-500 mt-0.5 uppercase tracking-wider">Archives & Validation des Analyses Moléculaires · CIRCB LIMS</p>
+        </div>
+        
+        <!-- Bouton Nouveau Résultat -->
+        <div>
+            <a href="/resultats-test/" class="px-5 py-3 rounded-xl border-2 border-slate-950 bg-slate-900 text-white text-xs font-black hover:bg-slate-800 border-b-[4px] active:border-b-0 active:translate-y-[4px] shadow transition-all inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span class="font-mono uppercase tracking-wide">Nouvel Enregistrement</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- MODULE DE FILTRES ET RECHERCHE AVANCÉE -->
+    <div class="bg-white border-2 border-slate-800 border-b-[4px] border-r-[3px] p-4 rounded-xl">
+        <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Recherche par code barre -->
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] font-black text-slate-600 uppercase font-mono">Échantillon / Patient</label>
+                <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Ex: ECH-2026..." class="w-full bg-slate-50 border-2 border-slate-800 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-800 focus:bg-white focus:outline-none transition-all font-mono">
+            </div>
+
+            <!-- Filtrer par Verdict PCR -->
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] font-black text-slate-600 uppercase font-mono">Verdict Biologique</label>
+                <div class="relative">
+                    <select name="verdict" class="w-full bg-slate-50 border-2 border-slate-800 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-800 focus:bg-white focus:outline-none appearance-none pr-8">
+                        <option value="">-- Tous les verdicts --</option>
+                        <option value="negatif" {% if request.GET.verdict == 'negatif' %}selected{% endif %}>NÉGATIF</option>
+                        <option value="positif" {% if request.GET.verdict == 'positif' %}selected{% endif %}>POSITIF</option>
+                        <option value="indetermine" {% if request.GET.verdict == 'indetermine' %}selected{% endif %}>INDÉTERMINÉ</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-slate-500">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtrer par Test/Kit -->
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] font-black text-slate-600 uppercase font-mono">Kit d'analyse utilisé</label>
+                <div class="relative">
+                    <select name="test" class="w-full bg-slate-50 border-2 border-slate-800 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-800 focus:bg-white focus:outline-none appearance-none pr-8">
+                        <option value="">-- Tous les kits --</option>
+                        <option value="1">Abbott RealTime HIV-1</option>
+                        <option value="2">Roche COBAS HIV-1</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-slate-500">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bouton d'application des filtres -->
+            <div class="flex items-end">
+                <button type="submit" class="w-full py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-black uppercase font-mono border-2 border-slate-800 border-b-[3px] active:border-b-0 active:translate-y-[3px] transition-all flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span>Filtrer la base</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- TABLEAU TECHNIQUE DES RÉSULTATS -->
+    <div class="bg-white border-2 border-slate-950 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-900 border-b-2 border-slate-950 text-[11px] font-mono font-black uppercase text-slate-200 tracking-wider">
+                    <tr>
+                        <th class="p-3.5 border-r border-slate-800">ID Run</th>
+                        <th class="p-3.5 border-r border-slate-800">Échantillon Code</th>
+                        <th class="p-3.5 border-r border-slate-800">Kit de Test & Protocole</th>
+                        <th class="p-3.5 border-r border-slate-800 text-center">Verdict Biologique</th>
+                        <th class="p-3.5 border-r border-slate-800">Date Prélèvement</th>
+                        <th class="p-3.5 border-r border-slate-800">Commentaire</th>
+                        <th class="p-3.5 text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y-2 divide-slate-200 text-xs font-mono font-bold text-slate-700">
+                    
+                    {% for resultat in resultats %}
+                    <tr class="hover:bg-slate-50 transition-colors {% if 'POSITIF' in resultat.resultat_pcr.nom|upper %}bg-rose-50/20{% endif %}">
+                        <td class="p-3.5 border-r border-slate-200 text-slate-900 font-black">#{{ resultat.id }}</td>
+                        <td class="p-3.5 border-r border-slate-200 text-slate-900 font-black tracking-tight">
+                            <!-- Sécurité si le champ est code_barre ou si str(echantillon) est configuré -->
+                            {{ resultat.echantillon.code_barre|default:resultat.echantillon }}
+                        </td>
+                        <td class="p-3.5 border-r border-slate-200 text-slate-600">
+                            <span class="block text-slate-900 font-bold">{{ resultat.test.nom|default:"Non spécifié" }}</span>
+                            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-tight">Analyse Moléculaire</span>
+                        </td>
+                        <td class="p-3.5 border-r border-slate-200 text-center">
+                            {% if 'NÉGATIF' in resultat.resultat_pcr.nom|upper or 'NEGATIF' in resultat.resultat_pcr.nom|upper %}
+                                <span class="inline-block px-3 py-1 rounded border-2 border-emerald-800 bg-emerald-50 text-emerald-950 font-black text-[10px] tracking-wide uppercase">
+                                    ⬤ {{ resultat.resultat_pcr.nom }}
+                                </span>
+                            {% elif 'POSITIF' in resultat.resultat_pcr.nom|upper %}
+                                <span class="inline-block px-3 py-1 rounded border-2 border-rose-800 bg-rose-50 text-rose-950 font-black text-[10px] tracking-wide uppercase">
+                                    ⬤ {{ resultat.resultat_pcr.nom }}
+                                </span>
+                            {% else %}
+                                <span class="inline-block px-3 py-1 rounded border-2 border-amber-800 bg-amber-50 text-amber-950 font-black text-[10px] tracking-wide uppercase">
+                                    🛈 {{ resultat.resultat_pcr.nom }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="p-3.5 border-r border-slate-200 text-slate-600">
+                            <!-- Gère l'affichage si c'est un objet Date ou un String brute -->
+                            {{ resultat.date_prelevement|date:"d/m/Y"|default:resultat.date_prelevement }}
+                        </td>
+                        <td class="p-3.5 border-r border-slate-200 text-slate-500 font-sans max-w-xs truncate" title="{{ resultat.commentaire }}">
+                            {{ resultat.commentaire|default:"Aucun commentaire" }}
+                        </td>
+                        <td class="p-3.5 text-center flex items-center justify-center gap-2">
+                            <a href='/imprimer_resultat_pdf/{{resultat.id}}/' title="Voir la fiche détaillée" class="p-1.5 rounded border border-slate-800 bg-white hover:bg-slate-100 text-slate-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="p-12 text-center text-slate-400 font-bold uppercase tracking-wide bg-slate-50">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 mx-auto text-slate-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                            Aucun résultat enregistré dans la base de données.
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- COMPTEUR GLOBAL -->
+        <div class="bg-slate-50 border-t-2 border-slate-950 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono">
+            <span class="font-bold text-slate-600">Total : {{ resultats.count }} enregistrement(s) biologique(s)</span>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

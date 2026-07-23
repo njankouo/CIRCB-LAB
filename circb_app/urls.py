@@ -17,8 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
+from django.urls import path, include
 urlpatterns = [
-    
+    path('', include('pwa.urls')),
     path('', views.connexion_view, name='connexion'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('personnel/', views.personnel, name='personnel'),
@@ -27,7 +28,7 @@ urlpatterns = [
     path('dossiers/patients/', views.dossiers_patients, name='dossiers_patients'),
     path('configurations/', views.configurations, name='configurations'),
     path('fiches-echantillons/', views.fiches_echantillons, name='fiches_echantillons'),
-    path('saisir-echantillon/<int:code>/', views.echantillons, name='saisir-echantillon'),
+    path('saisir-echantillon/<int:id>/', views.echantillons, name='saisir-echantillon'),
     
     path('structures/', views.structures, name='structures'),
     
@@ -53,7 +54,38 @@ urlpatterns = [
     path('ajouter_echantillon/', views.ajouter_echantillon, name='ajouter_echantillon'),
     
     path('detail-fiche/<str:code>/', views.detail_fiche, name='detail-fiche'),
-    path('fiche-echantillon/<slug:slug>/', views.fiche_echantillon, name='fiche-echantillon')
+    path('fiche-echantillon/<slug:slug>/', views.fiche_echantillon, name='fiche-echantillon'),
+    
+    path('resultats-test/', views.resultats_test, name='resultats-test'),
+    
+    path('enregistrer_resultat_ajax/', views.enregistrer_resultat_ajax, name='enregistrer_resultat_ajax'),
+    
+    path('resultats/', views.resultats, name='resultats'),
+    
+    path('imprimer_resultat_pdf/<int:resultat_id>/', views.imprimer_resultat_pdf,name='imprimer_resultat_pdf'),
+    
+    path('bordeaux-sortie/', views.bordeaux_sortie, name='bordeaux-sortie'),
+    
+    path('supprimer-fiche/<int:id>/', views.supprimer_fiche, name='supprimer-fiche'),
+    
+    path('fiches/', views.fiches, name='fiches'),
+    
+    path('verification-code/<str:code>/', views.verification_code, name='verification-code'),
+    
+    path('rechercher-patient/', views.rechercher_patient, name='rechercher_patient'),
+    
+    path('search_fosas/<int:district_id>/', views.search_fosas, name='search_fosas'),
+    
+    path('search_districts/<int:region_id>/', views.search_districts, name='search_districts'),
+    
+    path('delete-role/<int:id>/', views.delete_role, name='delete-role'),
+    
+    path('save-personnel/', views.save_personnel, name='save-personnel'),
+    
+    path('recherche-patient/', views.recherche_patient, name='recherche-patient'),
+    
+    path('profile/', views.profile, name='profile')
+  
    
 ]
     

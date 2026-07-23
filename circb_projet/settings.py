@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,11 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$=fg$^vjbh427qvwr)ti5qq3z$8)h$1pu+k^ep*$4=zrq^ygmm'
 
+SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+load_dotenv(BASE_DIR / '.env')
 # settings.py
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
 
@@ -38,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'circb_app'
+    'circb_app',
+    'pwa',
+    
 ]
 
 MIDDLEWARE = [
@@ -70,7 +74,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'circb_projet.wsgi.application'
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/django_errors.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
@@ -83,11 +104,12 @@ WSGI_APPLICATION = 'circb_projet.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'circb',          # Nom de la base de données créée sur Postgres
-        'USER': 'postgres',          # Ton utilisateur PostgreSQL (par défaut 'postgres')
-        'PASSWORD': 'corporate2019', # Le mot de passe de ton utilisateur
-        'HOST': '127.0.0.1',         # Ou 'localhost'
-        'PORT': '5432',              # Port par défaut de PostgreSQL
+        'NAME': os.getenv('DB_NAME'),          # Nom de la base de données créée sur Postgres
+        'USER': os.getenv('DB_USER'),          # Ton utilisateur PostgreSQL (par défaut 'postgres')
+        'PASSWORD': os.getenv('DB_PASSWORD'), # Le mot de passe de ton utilisateur
+        'HOST': os.getenv('DB_HOST'),         # Ou 'localhost'
+        'PORT': os.getenv('DB_PORT'),              # Port par défaut de PostgreSQL
+        'CONN_MAX_AGE': 600,
     }
 }
 
@@ -125,4 +147,47 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+# 1. The URL used to access static files in the browser
 STATIC_URL = 'static/'
+
+# 2. Additional directories where Django looks for static files during development
+STATICFILES_DIRS = [
+    BASE_DIR / 'static', 
+]
+
+# 3. The absolute path to the directory where collected static files will be placed for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+
+PWA_APP_NAME = 'LIMS Laboratory'
+PWA_APP_SHORT_NAME = 'LIMS'
+PWA_APP_DESCRIPTION = "Système de suivi et de gestion des fiches d'échantillons"
+PWA_APP_THEME_COLOR = '#0f172a'  # Couleur de la barre de titre (Slate 900)
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'   # Cache la barre d'adresse du navigateur !
+PWA_APP_SCOPE = '/'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+
+# Icônes de l'application (à placer dans vos fichiers statiques)
+PWA_APP_ICONS = [
+    {
+        "src": "/static/images/icons-512.png",
+        "sizes": "1024x1024",
+        "purpose": "any"
+    },
+    {
+        "src": "/static/images/icons-512.png",
+        "sizes": "1024x1024",
+        "purpose": "any"
+    },
+    {
+        "src": "/static/images/icons-512.png",
+        "sizes": "1024x1024",
+        "purpose": "any"
+    }
+]
+
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'fr-FR'

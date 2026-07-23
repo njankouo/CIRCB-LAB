@@ -8,10 +8,7 @@ class PersonnelAdmin(admin.ModelAdmin):
     list_filter = ('sexe',)
     ordering = ('nom',)
 
-@admin.register(Test)
-class TestAdmin(admin.ModelAdmin):
-    list_display = ('code', 'nom')
-    search_fields = ('code', 'nom')
+
 
 @admin.register(Transporteur)
 class TransporteurAdmin(admin.ModelAdmin):
@@ -95,3 +92,34 @@ class ResultatPcrAdmin(admin.ModelAdmin):
     search_fields = ('nom', 'code')
     list_per_page = 20
 
+
+
+
+
+@admin.register(Pcr)
+class Pcr(admin.ModelAdmin):
+    list_display = ('nom', 'code')
+    search_fields = ('nom', 'code')
+    list_per_page = 20
+
+@admin.register(Test)
+class TestAdmin(admin.ModelAdmin):
+    # Affichage en colonnes dans la liste (on ajoute le type de PCR liée)
+    list_display = ('code', 'nom', 'get_pcr_nom')
+    
+    # Recherche par code, nom du test, et aussi par le nom du type de PCR liée (__nom)
+    search_fields = ('code', 'nom', 'pcr__nom', 'pcr__code')
+    
+    # Filtre latéral ultra-pratique pour l'ERP (permet de trier par type de PCR en un clic)
+    list_filter = ('pcr',)
+    
+    # Pagination
+    list_per_page = 20
+    
+    # Amélioration de l'interface d'édition : charge la PCR sous forme de liste propre
+    autocomplete_fields = ('pcr',)
+
+    # Méthode pour afficher proprement la PCR liée dans la liste
+    @admin.display(ordering='pcr__nom', description='Type de PCR')
+    def get_pcr_nom(self, obj):
+        return obj.pcr.nom if obj.pcr else "-"

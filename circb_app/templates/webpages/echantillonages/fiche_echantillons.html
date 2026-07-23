@@ -3,373 +3,252 @@
 
 {% block main %}
 <main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white">
-<div class="p-6 bg-[#f8fafc] min-h-screen font-sans antialiased relative">
+<div class="p-6 bg-slate-50 min-h-screen font-sans antialiased text-slate-900">
 
-<!-- EN-TÊTE CONTEXTUEL ERP (DARK MODE) -->
-<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-slate-700 gap-4 bg-slate-800 p-4 rounded-xl border shadow-md">
-    <div>
-        <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
-            <span>Core Modules</span>
-            <span class="text-slate-600">/</span>
-            <span>LIMS Portal</span>
-            <span class="text-slate-600">/</span>
-            <span class="text-sky-400">Specimen Registry</span>
-        </div>
-        <h1 class="text-lg font-bold text-white tracking-tight mt-1 flex items-center gap-2">
-            Registre Général des Fiches d'Échantillons
-            <span class="text-xs font-mono font-normal bg-slate-900 text-slate-300 px-2 py-0.5 rounded-full border border-slate-600 shadow-inner">
-                {{ fiches|length }} fiches actives
-            </span>
-        </h1>
-    </div>
-    <button onclick="document.getElementById('lims-modal').showModal()" 
-            class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-slate-800 hover:bg-sky-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-sm border border-sky-400 font-sans tracking-wide">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="4" y1="12" x2="19" y2="12"></line></svg>
-        Créer une fiche de suivi (F04)
-    </button>
-</div>
-
-<!-- BARRE DE FILTRES AVANCÉE (FORMAT LOGICIEL ERP - DARK MODE) -->
-<div class="mt-4 border border-slate-700 rounded-xl p-3 shadow-md bg-gradient-to-b from-slate-800 to-slate-900">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <!-- Recherche par mots clés -->
-        <div class="relative">
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" placeholder="ID Fiche, Code FOSA, Expéditeur..." 
-                   class="w-full pl-8 pr-3 py-1.5 bg-slate-900/80 border border-slate-600 rounded-lg text-xs font-medium focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 text-slate-200 placeholder-slate-500 shadow-inner transition-all">
-        </div>
-        <!-- Filtre Régions -->
-        <select class="w-full px-3 py-1.5 bg-slate-900/80 border border-slate-600 rounded-lg text-xs font-medium text-slate-200 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 shadow-inner transition-all [&>option]:bg-slate-800">
-            <option value="">-- Sélection Région --</option>
-            <option value="littoral">Littoral</option>
-            <option value="centre">Centre</option>
-        </select>
-        <!-- Filtre Districts -->
-        <select class="w-full px-3 py-1.5 bg-slate-900/80 border border-slate-600 rounded-lg text-xs font-medium text-slate-200 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 shadow-inner transition-all [&>option]:bg-slate-800">
-            <option value="">-- Sélection District --</option>
-            <option value="bonassama">Bonassama</option>
-            <option value="deido">Deido</option>
-        </select>
-        <!-- Filtre Statuts Qualité -->
-        <select class="w-full px-3 py-1.5 bg-slate-900/80 border border-slate-600 rounded-lg text-xs font-medium text-slate-200 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 shadow-inner transition-all [&>option]:bg-slate-800">
-            <option value="">-- Statut Échantillon --</option>
-            <option value="conforme">Conforme (Validation)</option>
-            <option value="alerte">Non conforme (Alerte)</option>
-        </select>
-    </div>
-</div>
-
-<!-- CONTAINER DE GRILLE DE DONNÉES ERP -->
-<div class="mt-3 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-    
-    <!-- TABLEAU DE BORD RESPONSIVE MOBILE -->
-    <div class="block lg:hidden divide-y divide-slate-100">
-        <div class="p-3.5 hover:bg-slate-50 transition-colors cursor-pointer" onclick="toggleRegistryRow('row-lims-1', this)">
-            <div class="flex justify-between items-start gap-3">
-                <div class="space-y-1">
-                    <div class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        Hôpital de District (Bonassama)
-                    </div>
-                    <div class="text-[11px] text-slate-400 font-mono">ID: #0294-A • Dr. Ndoumbe</div>
-                </div>
-                <div class="text-right space-y-1 shrink-0">
-                    <div class="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">24 Ech.</div>
-                    <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">Reçu</div>
-                </div>
+    <!-- 1. EN-TÊTE CONTEXTUEL ERP PREMIUM -->
+    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative overflow-hidden">
+        <div class="absolute left-0 top-0 bottom-0 w-[4px] bg-indigo-600"></div>
+        <div class="pl-2">
+            <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
+                <span>Core Modules</span>
+                <span class="text-slate-300">/</span>
+                <span>LIMS Portal</span>
+                <span class="text-slate-300">/</span>
+                <span class="text-indigo-600">Specimen Registry</span>
             </div>
-            <div id="row-lims-1" class="hidden pt-3 mt-2 border-t border-slate-100 text-[11px] font-mono text-slate-600 bg-slate-50 p-2 rounded">
-                <span class="font-bold text-slate-800">Note:</span> Intégrité chaîne de froid préservée.
-            </div>
-        </div>
-    </div>
-
-    <!-- GRILLE DES CARTES DE SUIVI (DESKTOP) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
-        {% for fiche in fiches %}
-        <div class="group bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all duration-200">
-            
-            <!-- Haut de carte -->
-            <div class="bg-slate-50/70 px-4 py-3 border-b border-slate-100 flex justify-between items-center rounded-t-xl">
-                <div class="text-xs font-bold text-slate-800">
-                    <span>Fiche : </span>
-                    <span class="font-mono font-black text-slate-950 pb-0.5 border-b-2 border-red-600 tracking-tight">
-                        {{ fiche.code }}
-                    </span>
-                </div>
-                
-                <span class="inline-flex items-center gap-1 font-mono text-[11px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md font-bold border border-blue-100" title="Échantillons saisis / Échantillons attendus">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    {{ fiche.echantillons.count|default:"0" }}/{{ fiche.nombre_echantillon|default:"0" }}
+            <h1 class="text-lg font-bold text-slate-900 tracking-tight mt-1 flex items-center gap-2.5">
+                Registre Général des Fiches d'Échantillons
+                <span class="text-[11px] font-mono font-bold bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full border border-indigo-100">
+                    {{ fiches|length }} fiches actives
                 </span>
+            </h1>
+        </div>
+        <a href='/fiches/'
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-colors shadow-sm cursor-pointer tracking-wide">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="4" y1="12" x2="19" y2="12"></line></svg>
+            Créer une fiche de suivi 
+    </a>
+    </div>
+
+    <!-- 2. BARRE DE FILTRES AVANCÉE (STYLE LOGICIEL BLANC ÉPURÉ) -->
+    <div class="mt-4 bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <!-- Recherche par mots clés -->
+            <div class="relative">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" placeholder="ID Fiche, Code FOSA, Expéditeur..." 
+                       class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800 placeholder-slate-400 transition-all">
             </div>
+            <!-- Filtre Régions -->
+            <select class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer">
+                <option value="">-- Sélection Région --</option>
+                <option value="littoral">Littoral</option>
+                <option value="centre">Centre</option>
+            </select>
+            <!-- Filtre Districts -->
+            <select class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer">
+                <option value="">-- Sélection District --</option>
+                <option value="bonassama">Bonassama</option>
+                <option value="deido">Deido</option>
+            </select>
+            <!-- Filtre Statuts Qualité -->
+            <select class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer">
+                <option value="">-- Statut Échantillon --</option>
+                <option value="conforme">Conforme (Validation)</option>
+                <option value="alerte">Non conforme (Alerte)</option>
+            </select>
+        </div>
+    </div>
 
-            <!-- Contenu de la fiche -->
-            <div class="p-4 text-xs space-y-2.5 text-slate-600 flex-1">
-                <div class="flex justify-between items-center pb-1.5 border-b border-slate-50">
-                    <span class="text-slate-400 font-medium">Expédié le</span>
-                    <span class="font-mono text-slate-600">{{ fiche.date_expedition|date:"d/m/Y"|default:"--" }}</span>
+    <!-- 3. GRILLE DE DONNÉES ET CARTES DE SUIVI -->
+    <div class="mt-4">
+        
+        <!-- AFFICHAGE MOBILE (LISTE COMPACTE) -->
+        <div class="block lg:hidden bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm overflow-hidden">
+            <div class="p-4 hover:bg-slate-50 transition-colors cursor-pointer" onclick="toggleRegistryRow('row-lims-1', this)">
+                <div class="flex justify-between items-start gap-3">
+                    <div class="space-y-1">
+                        <div class="text-xs font-bold text-slate-900 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            Hôpital de District (Bonassama)
+                        </div>
+                        <div class="text-[11px] text-slate-400 font-mono">ID: #0294-A • Dr. Ndoumbe</div>
+                    </div>
+                    <div class="text-right space-y-1 shrink-0">
+                        <div class="text-xs font-mono font-bold text-slate-700 bg-slate-50 px-2 py-0.5 rounded border border-slate-200">24 Ech.</div>
+                        <div class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">Reçu</div>
+                    </div>
                 </div>
-                
-                <div class="flex justify-between items-center pb-1.5 border-b border-slate-50">
-                    <span class="text-slate-400 font-medium">Reçu le</span>
-                    <span class="font-mono text-slate-900 font-semibold">{{ fiche.date_reception|date:"d/m/Y"|default:"--" }}</span>
+                <div id="row-lims-1" class="hidden pt-3 mt-3 border-t border-slate-100 text-[11px] font-mono text-slate-600 bg-slate-50 p-2.5 rounded">
+                    <span class="font-bold text-slate-800">Note:</span> Intégrité chaîne de froid préservée.
                 </div>
-
-                <div class="flex justify-between items-center pb-1.5 border-b border-slate-50">
-                    <span class="text-slate-400 font-medium">Logistique</span>
-                    <span class="text-slate-800 font-medium truncate max-w-[140px]" title="{{ fiche.transporteur.nom }}">
-                        {{ fiche.transporteur.nom|default:fiche.moyen_transport.nom|default:"N/A" }}
-                    </span>
-                </div>
-                
-                <div class="flex justify-between items-center pt-0.5">
-                    <span class="text-slate-400 font-medium">Réceptionniste</span>
-                    <span class="text-slate-800 font-medium truncate max-w-[140px]">
-                        {{ fiche.receptioniste.get_full_name|default:fiche.receptioniste.username }}
-                    </span>
-                </div>
-            </div>
-
-            <!-- Actions de pied de carte -->
-            <div class="bg-slate-50/50 px-3 py-3 border-t border-slate-100 flex gap-2 rounded-b-xl">
-                <a href="/saisir-echantillon/{{ fiche.code }}/" class="flex-1 inline-flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-semibold tracking-wide py-2 px-3 rounded-lg transition-colors shadow-sm shadow-blue-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    Saisir échantillon
-                </a>
-                
-                <a href="/details-fiche/{{fiche.code}}/" class="inline-flex items-center justify-center bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200 p-2 rounded-lg transition-colors shadow-sm" title="Voir la fiche">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                </a>
             </div>
         </div>
-        {% empty %}
-        <!-- État vide (Empty State) -->
-        <div class="col-span-full bg-slate-50/50 rounded-xl border border-dashed border-slate-300 py-12 text-center">
-            <div class="inline-flex p-3 bg-white rounded-full shadow-sm border border-slate-100 mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+
+        <!-- GRILLE DES CARTES DE SUIVI (DESKTOP) -->
+        <div class="hidden lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {% for fiche in fiches %}
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all duration-200 relative overflow-hidden">
+                
+                <!-- En-tête de la Carte -->
+                <div class="bg-slate-50 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
+                   <div class="text-xs font-medium text-slate-500 flex items-center gap-1.5">
+    Fiche : 
+    <span class="font-mono font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded text-[11px]">
+        {{ fiche.code }}
+    </span>
+</div>
+                    <span class="inline-flex items-center gap-1 font-mono text-[11px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold border border-indigo-100" title="Échantillons saisis / Échantillons attendus">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        {{ fiche.echantillons.count|default:"0" }}/{{ fiche.nombre_echantillon|default:"0" }}
+                    </span>
+                </div>
+
+                <!-- Informations Médicales / Logistiques -->
+                <div class="p-4 text-xs space-y-2.5 flex-1">
+                    <div class="flex justify-between items-center pb-1.5 border-b border-slate-100/60">
+                        <span class="text-slate-400 font-medium">Expédié le</span>
+                        <span class="font-mono text-slate-700 font-medium">{{ fiche.date_expedition|date:"d/m/Y"|default:"--" }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center pb-1.5 border-b border-slate-100/60">
+                        <span class="text-slate-400 font-medium">Reçu le</span>
+                        <span class="font-mono text-slate-900 font-bold">{{ fiche.date_reception|date:"d/m/Y"|default:"--" }}</span>
+                    </div>
+
+                    <div class="flex justify-between items-center pb-1.5 border-b border-slate-100/60">
+                        <span class="text-slate-400 font-medium">Logistique</span>
+                        <span class="text-slate-800 font-semibold truncate max-w-[140px]" title="{{ fiche.transporteur.nom }}">
+                            {{ fiche.transporteur.nom|default:fiche.moyen_transport.nom|default:"N/A" }}
+                        </span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400 font-medium">Réceptionniste</span>
+                        <span class="text-slate-700 font-medium truncate max-w-[140px]">
+                            {{ fiche.receptioniste.get_full_name|default:fiche.receptioniste.username }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Pied de Carte : Barre d'Actions Complète -->
+                <div class="bg-slate-50 px-3 py-2.5 border-t border-slate-100 flex items-center justify-between gap-1.5">
+                    
+                    <!-- Action Principale : Saisie -->
+                    <a href="/saisir-echantillon/{{ fiche.id }}/" 
+                       class="flex-1 inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold py-2 px-2.5 rounded-md transition-colors shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Saisir
+                    </a>
+
+                     <a href="/verification-code/{{ fiche.code }}/" 
+                       class="flex-1 inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold py-2 px-2.5 rounded-md transition-colors shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Verification
+                    </a>
+                    
+                    <!-- Groupe d'outils (Consulter, Modifier, Supprimer) -->
+                    <div class="flex items-center gap-1">
+                        <!-- Voir -->
+                        <a href="/details-fiche/{{fiche.code}}/" 
+                           class="inline-flex items-center justify-center bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 p-2 rounded-md transition-colors" 
+                           title="Consulter les détails">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </a>
+
+                        <!-- Modifier -->
+                        <a href="/modifier-fiche/{{ fiche.id }}/" 
+                           class="inline-flex items-center justify-center bg-white hover:bg-amber-50 text-slate-600 hover:text-amber-700 border border-slate-200 hover:border-amber-200 p-2 rounded-md transition-colors" 
+                           title="Modifier la fiche">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </a>
+
+                        <!-- Bouton Supprimer modifié -->
+                    <button type="button"
+                            onclick="openDeleteModal('{{ fiche.id }}', '{{ fiche.code }}')"
+                            class="inline-flex items-center justify-center bg-white hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-slate-200 hover:border-rose-200 p-2 rounded-md transition-colors cursor-pointer" 
+                            title="Supprimer la fiche">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                    </button>
+                    </div>
+                </div>
             </div>
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Aucune donnée correspondante</p>
-            <p class="text-slate-400 text-xs mt-1">Il n'y a actuellement aucune fiche disponible dans cette section.</p>
+            {% empty %}
+            <!-- État vide (Empty State) -->
+            <div class="col-span-full bg-white rounded-xl border border-dashed border-slate-300 py-12 text-center shadow-sm">
+                <div class="inline-flex p-3 bg-slate-50 rounded-full border border-slate-100 mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+                </div>
+                <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Aucune donnée correspondante</p>
+                <p class="text-slate-400 text-xs mt-1">Il n'y a actuellement aucune fiche disponible dans ce registre.</p>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+        
     </div>
 </div>
 
-<dialog id="lims-modal" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm bg-white border-2 border-slate-900 rounded-2xl p-6 max-w-5xl w-full shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] open:animate-in open:fade-in open:zoom-in-95 duration-200 overflow-y-auto max-h-[90vh] [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-r-2xl [&::-webkit-scrollbar-track]:border-l-2 [&::-webkit-scrollbar-track]:border-slate-900 [&::-webkit-scrollbar-thumb]:bg-slate-900 [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-slate-100 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-indigo-600">
+
+    <script>
+function openDeleteModal(ficheId, ficheCode) {
+    const modal = document.getElementById('delete-lims-modal');
+    const codeSpan = document.getElementById('delete-modal-fiche-code');
+    const submitBtn = document.getElementById('delete-modal-submit-btn');
     
-    <!-- Modal Header -->
-    <div class="flex items-center justify-between border-b-2 border-slate-900 pb-4 mb-4">
-        <h3 class="text-base font-black uppercase tracking-tight text-slate-900">Enregistrement Fiche Échantillon</h3>
-        <button onclick="document.getElementById('lims-modal').close()" class="p-1.5 border-2 border-slate-900 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-900 transition-colors shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-    </div>
+    // Injecte dynamiquement les données de la ligne sélectionnée
+    codeSpan.innerText = ficheCode;
+    submitBtn.setAttribute('href', `/supprimer-fiche/${ficheId}/`);
+    
+    // Ouvre le modal de manière native
+    modal.showModal();
+}
 
-    <!-- Formulaire d'administration LIMS -->
-   <form method="POST" action="{%url 'enregistrer_fiche_echantillon'%}" class="space-y-6 text-xs text-slate-700 pr-2" id="lims-form">
-    {% csrf_token %}
-
-    <div class="space-y-3">
-        <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest bg-slate-100 p-1.5 border-2 border-slate-900 inline-block rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)]">
-            1. Logistique & Territoires
-        </h4>
-          <div class="space-y-1">
-                <label class="font-bold text-slate-900">Code *</label>
-                <input type="number" name="code" min="20" required placeholder="Ex: 15122515560" 
-                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white font-mono">
+</script>
+                        <!-- Supprimer -->
+                       <!-- Modal de Confirmation de Suppression Spécifique ERP -->
+<dialog id="delete-lims-modal" class="rounded-xl border border-slate-200 bg-white p-0 shadow-xl max-w-md w-full backdrop:bg-slate-950/40 backdrop:backdrop-blur-sm">
+    <div class="p-6 space-y-4">
+        <!-- Icône d'Alerte Stylisée -->
+        <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
             </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-3 border-2 border-slate-900 rounded-xl shadow-[3px_3px_0px_0px_rgba(15,23,42,0.05)]">
-           
-            <div class="space-y-1">
-                <label class="font-black text-slate-900 uppercase tracking-wide text-[10px]">Région *</label>
-                <select name="region" id="select-region" required class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-100 font-bold text-slate-800 bg-white cursor-pointer transition-all">
-                    <option value="">Sélectionner la Région</option>
-                    {% for r in regions %}
-                        <option value="{{ r.id }}">{{ r.nom }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="space-y-1">
-                <label class="font-black text-slate-900 uppercase tracking-wide text-[10px]">District de Santé *</label>
-                <select name="district" id="select-district" required disabled class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-100 font-bold text-slate-800 bg-white cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                   
-                </select>
-            </div>
-
-            <div class="space-y-1">
-                <label class="font-black text-slate-900 uppercase tracking-wide text-[10px]">Formation Sanitaire (FOSA) *</label>
-                <select name="fosa" id="select-fosa" required disabled class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-100 font-bold text-slate-800 bg-white cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                    <option value="">Choisir la FOSA...</option>
-                </select>
+            <div>
+                <h3 class="text-sm font-bold text-slate-950">Confirmer la suppression</h3>
+                <p class="text-[11px] font-medium text-slate-400 italic">Confirm data deletion</p>
             </div>
         </div>
 
-        <div class="space-y-1">
-            <label class="font-bold text-slate-900">Expediteur *</label>
-            <input type="text" name="expediteur" required placeholder="Ex: M. Kamga Amadou, Moto (Isotherme)" class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-medium text-slate-800 bg-white">
-        </div>
-    </div>
-
-  <div class="space-y-3">
-        <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest bg-slate-100 p-1.5 border-2 border-slate-900 inline-block rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)]">
-            2. Spécifications du Prélèvement
-        </h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div class="space-y-1">
-                <label class="font-bold text-slate-900">Date d'expédition *</label>
-                <input type="date" name="date_expedition" required 
-                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white">
-            </div>
-            <div class="space-y-1">
-                <label class="font-bold text-slate-900">Nombre d'échantillons *</label>
-                <input type="number" name="nombre_echantillon" min="1" required placeholder="Ex: 5" 
-                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white font-mono">
-            </div>
-
-           
-        </div>
-    </div>
-
-   <div class="space-y-3">
-        <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest bg-slate-100 p-1.5 border-2 border-slate-900 inline-block rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)]">
-            3. Détails du Transporteur
-        </h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div class="space-y-1">
-                <label class="font-bold text-slate-900">Nom du Transporteur *</label>
-                <select id='transporteur' name="transporteur" required class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white">
-                    <option value="">Sélectionner le transporteur</option>
-                    {% for t in transporteurs %}
-                        <option value="{{ t.id }}">{{ t.nom }} {% if t.code %}({{ t.code }}){% endif %}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="space-y-1">
-                <label class="font-bold text-slate-900">Moyen de transport *</label>
-                <select name="moyen_transport" required class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white">
-                    <option value="">Sélectionner le moyen</option>
-                    {% for m in moyens_transport %}
-                        <option value="{{ m.id }}">{{ m.nom }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <div class="space-y-1">
-            <label class="font-bold text-slate-900">Contact Téléphonique du Transporteur</label>
-            <input readonly id='contact-transporter' type="text" name="contact_transporteur" placeholder="Ex: +237 6xx xxx xxx" 
-                   class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-medium text-slate-800 bg-white font-mono">
-        </div>
-    </div>
-
-   <div class="space-y-3">
-        <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest bg-slate-100 p-1.5 border-2 border-slate-900 inline-block rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)]">
-            4. Réception & Traçabilité
-        </h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div class="space-y-1">
-                <label class="font-bold text-slate-900">Nom du Réceptionniste *</label>
-                <select name="receptioniste" required class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white">
-                    <option value="">Sélectionner le réceptionniste</option>
-                    
-                        <option value="{{ request.user.id }}">{{ request.user.first_name }} {{ request.user.username }}</option>
-                  
-                </select>
-            </div>
-            <div class="space-y-1">
-                <label class="font-bold text-slate-900">Date de réception *</label>
-                <input type="date" name="date_reception" required 
-                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-bold text-slate-800 bg-white">
-            </div>
-            <div class="space-y-1">
-                <label class="font-bold text-slate-900">Nom du Destinataire / Labo *</label>
-                <input type="text" name="destinataire" placeholder="Ex: Laboratoire de Référence CPC" 
-                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-medium text-slate-800 bg-white">
-            </div>
-            <div class="space-y-1">
-                <label class="font-bold text-slate-900">Contact du Réceptionniste</label>
-                <input type="text" name="contact_receptionniste" placeholder="Ex: +237 6xx xxx xxx" 
-                       class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-medium text-slate-800 bg-white font-mono">
-            </div>
-        </div>
-        <div class="space-y-1">
-            <label class="font-bold text-slate-900">Observations / Notes de conformité</label>
-            <textarea name="observation" rows="2" placeholder="Ex: Échantillons reçus sous chaîne de froid positive, conformes..." 
-                      class="w-full px-3 py-2.5 border-2 border-slate-900 rounded-lg focus:outline-none focus:bg-slate-50 transition-all font-medium text-slate-800 bg-white resize-none"></textarea>
-        </div>
-    </div>
-
-   <!-- Boutons d'Action Style Néo-Brutaliste Épuré -->
-    <div class="pt-5 mt-4 border-t-2 border-slate-900 flex justify-end gap-3 bg-white sticky bottom-0 z-10">
-        <button type="button" 
-                onclick="document.getElementById('lims-modal').close()" 
-                class="px-5 py-2.5 border-2 border-slate-900 font-black bg-white text-slate-950 rounded-xl transition-all shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none uppercase tracking-wide cursor-pointer">
-            Annuler
-        </button>
-        <button type="submit" 
-                class="px-6 py-2.5 border-2 border-slate-900 font-black bg-indigo-500 text-slate-950 rounded-xl transition-all shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none uppercase tracking-wide cursor-pointer">
-            Enregistrer la Fiche
-        </button>
-    </div>
-</form>
-</dialog>
-<dialog id="recap-modal" class="p-6 border-4 border-slate-900 rounded-2xl bg-white shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] max-w-md w-full backdrop:bg-slate-900/40">
-    <div class="text-center space-y-4">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-emerald-700 font-black text-xl">
-            ✓
-        </div>
-        
-        <h3 class="text-lg font-black text-slate-900 uppercase tracking-tight">Fiche Enregistrée avec Succès !</h3>
-        <p class="text-xs text-slate-500 font-medium" id="recap-code-fiche">Code de suivi : #---------</p>
-        
-        <hr class="border-t-2 border-dashed border-slate-300 my-2">
-        
-        <div class="text-left space-y-2 bg-slate-50 p-3 border-2 border-slate-900 rounded-xl max-h-60 overflow-y-auto font-medium text-slate-700 text-[11px]">
-            <div class="flex justify-between border-b border-slate-200 pb-1">
-                <span class="text-slate-400 font-bold uppercase text-[9px]">Région</span>
-                <span class="font-bold text-slate-900" id="recap-region">-</span>
-            </div>
-            <div class="flex justify-between border-b border-slate-200 pb-1">
-                <span class="text-slate-400 font-bold uppercase text-[9px]">District</span>
-                <span class="font-bold text-slate-900" id="recap-district">-</span>
-            </div>
-            <div class="flex justify-between border-b border-slate-200 pb-1">
-                <span class="text-slate-400 font-bold uppercase text-[9px]">FOSA</span>
-                <span class="font-bold text-slate-900" id="recap-fosa">-</span>
-            </div>
-            <div class="flex justify-between border-b border-slate-200 pb-1">
-                <span class="text-slate-400 font-bold uppercase text-[9px]">Expédition</span>
-                <span class="font-bold text-slate-900 font-mono" id="recap-date-exp">-</span>
-            </div>
-            <div class="flex justify-between border-b border-slate-200 pb-1">
-                <span class="text-slate-400 font-bold uppercase text-[9px]">Échantillons</span>
-                <span class="font-black text-indigo-600 font-mono" id="recap-nb-ech">-</span>
-            </div>
-            <div class="flex justify-between border-b border-slate-200 pb-1">
-                <span class="text-slate-400 font-bold uppercase text-[9px]">Transporteur</span>
-                <span class="font-bold text-slate-900" id="recap-transp">-</span>
-            </div>
-            <div class="flex justify-between border-b border-slate-200 pb-1">
-                <span class="text-slate-400 font-bold uppercase text-[9px]">Réceptionniste</span>
-                <span class="font-bold text-slate-900" id="recap-recep">-</span>
-            </div>
-            <div class="flex flex-col pt-1">
-                <span class="text-slate-400 font-bold uppercase text-[9px] mb-0.5">Observations</span>
-                <p class="text-slate-600 bg-white p-1.5 border border-slate-300 rounded italic text-[10px]" id="recap-obs">Aucune observation.</p>
-            </div>
+        <!-- Corps du message -->
+        <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
+            <p>Êtes-vous sûr de vouloir supprimer définitivement la fiche de suivi <span id="delete-modal-fiche-code" class="font-mono font-bold text-slate-950 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded">--</span> ?</p>
+            <p class="text-[11px] text-rose-600 font-medium">Attention : Cette action est irréversible et supprimera également tous les échantillons rattachés à cette fiche.</p>
         </div>
 
-        <div class="pt-2">
-            <button type="button" onclick="document.getElementById('recap-modal').close()" class="w-full py-2 border-2 border-slate-900 font-black bg-slate-900 text-white rounded-xl shadow-[3px_3px_0px_0px_rgba(99,102,241,1)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none uppercase tracking-wider text-[11px] cursor-pointer">
-                Terminer & Fermer
+        <!-- Boutons d'Action -->
+        <div class="pt-2 flex justify-end gap-2.5 text-xs">
+            <button type="button" 
+                    onclick="document.getElementById('delete-lims-modal').close()"
+                    class="px-3.5 py-2 border border-slate-200 font-semibold bg-white text-slate-700 rounded hover:bg-slate-50 transition-colors uppercase tracking-wider text-[10px]">
+                Annuler
             </button>
+            <a id="delete-modal-submit-btn" href="#" 
+               class="px-4 py-2 border border-rose-700 font-bold bg-rose-600 text-white rounded hover:bg-rose-700 transition-colors uppercase tracking-wider text-[10px] flex items-center justify-center">
+                Supprimer définitivement
+            </a>
         </div>
     </div>
 </dialog>
+
+
+
 </main>
 <script>
 // Toggle de la ligne mobile (Accordéon)
@@ -424,193 +303,5 @@ modal.addEventListener('click', (e) => {
 .animate-rowSlide { animation: rowSlide 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .animate-modalScale { animation: modalScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 </style>
-<script>
-    // Gestion dynamique des sélections Région -> District -> FOSA
-    const selectRegion = document.getElementById('select-region');
-    const selectDistrict = document.getElementById('select-district');
-    const selectFosa = document.getElementById('select-fosa');
 
-    // 1. Événement lors du changement de Région
-    selectRegion.addEventListener('change', function() {
-        const regionId = this.value;
-        
-        // Réinitialisation complète des descendants
-        selectDistrict.innerHTML = '<option value="">Choisir un district...</option>';
-        selectDistrict.disabled = true;
-        selectFosa.innerHTML = '<option value="">Choisir la FOSA...</option>';
-        selectFosa.disabled = true;
-
-        if (regionId) {
-            fetch(`/search_district/${regionId}/`)
-                .then(response => {
-                    if (!response.ok) throw new Error('Erreur réseau lors de la récupération des districts');
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && Array.isArray(data.districts) && data.districts.length > 0) {
-                        data.districts.forEach(district => {
-                            const option = document.createElement('option');
-                            option.value = district.id;
-                            option.textContent = district.nom;
-                            selectDistrict.appendChild(option);
-                        });
-                    } else {
-                        selectDistrict.innerHTML = '<option value="">Aucun district trouvé pour cette région</option>';
-                    }
-                    // Déblocage du champ quoi qu'il arrive
-                    selectDistrict.disabled = false;
-                })
-                .catch(error => {
-                    console.error(error);
-                    selectDistrict.innerHTML = '<option value="">Erreur de chargement des données</option>';
-                    selectDistrict.disabled = false;
-                });
-        }
-    });
-
-    // 2. Événement lors du changement de District
-    selectDistrict.addEventListener('change', function() {
-        const districtId = this.value;
-        
-        // Réinitialisation de la FOSA uniquement
-        selectFosa.innerHTML = '<option value="">Choisir la FOSA...</option>';
-        selectFosa.disabled = true;
-
-        if (districtId) {
-            fetch(`/search_fosa/${districtId}/`)
-                .then(response => {
-                    if (!response.ok) throw new Error('Erreur réseau lors de la récupération des FOSAs');
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && Array.isArray(data.fosas) && data.fosas.length > 0) {
-                        data.fosas.forEach(fosa => {
-                            const option = document.createElement('option');
-                            option.value = fosa.id;
-                            option.textContent = fosa.nom;
-                            selectFosa.appendChild(option);
-                        });
-                    } else {
-                        selectFosa.innerHTML = '<option value="">Aucune FOSA trouvée pour ce district</option>';
-                    }
-                    // Déblocage du champ quoi qu'il arrive
-                    selectFosa.disabled = false;
-                })
-                .catch(error => {
-                    console.error(error);
-                    selectFosa.innerHTML = '<option value="">Erreur de chargement des données</option>';
-                    selectFosa.disabled = false;
-                });
-        }
-    });
-</script>
-<script>
-    const selectTransporter = document.querySelector('select[name="transporteur"]');
-    const inputContact = document.querySelector('input[name="contact_transporteur"]');
-
-    if (selectTransporter && inputContact) {
-        selectTransporter.addEventListener('change', function() {
-            const transporterId = this.value;
-
-            // Réinitialiser le champ si aucun transporteur n'est sélectionné
-            if (!transporterId) {
-                inputContact.value = '';
-                return;
-            }
-
-            // Appel AJAX vers la vue Django
-            fetch(`/search_contact/${transporterId}/`)
-                .then(response => {
-                    if (!response.ok) throw new Error('Erreur lors de la récupération du contact');
-                    return response.json();
-                })
-                .then(data => {
-                    // Si on a bien reçu le numéro de téléphone, on l'injecte dans l'input
-                    if (data && data.tel) {
-                        inputContact.value = data.tel;
-                    } else {
-                        inputContact.value = ''; // Vide si aucun numéro n'est enregistré
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur Fetch:', error);
-                    inputContact.value = 'Erreur de chargement';
-                });
-        });
-    }
-</script>
-<script>
-    document.getElementById('lims-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const form = this;
-        const formData = new FormData(form);
-        const submitButton = form.querySelector('button[type="submit"]');
-        
-        // Blocage du bouton d'envoi
-        const originalButtonText = submitButton.textContent;
-        submitButton.disabled = true;
-        submitButton.textContent = 'Enregistrement...';
-
-        // --- CAPTURE DES TEXTES DU FORMULAIRE POUR LE RÉCAPITULATIF ---
-        const txtRegion = form.querySelector('#select-region') ? form.querySelector('#select-region').options[form.querySelector('#select-region').selectedIndex].text : '-';
-        const txtDistrict = form.querySelector('#select-district') ? form.querySelector('#select-district').options[form.querySelector('#select-district').selectedIndex].text : '-';
-        const txtFosa = form.querySelector('#select-fosa') ? form.querySelector('#select-fosa').options[form.querySelector('#select-fosa').selectedIndex].text : '-';
-        const txtTransp = form.querySelector('select[name="transporteur"]') ? form.querySelector('select[name="transporteur"]').options[form.querySelector('select[name="transporteur"]').selectedIndex].text : '-';
-        const txtRecep = form.querySelector('select[name="receptioniste"]') ? form.querySelector('select[name="receptioniste"]').options[form.querySelector('select[name="receptioniste"]').selectedIndex].text : '-';
-        
-        const valDateExp = form.querySelector('input[name="date_expedition"]').value;
-        const valNbEch = form.querySelector('input[name="nombre_echantillon"]').value;
-        const valObs = form.querySelector('textarea[name="observation"]').value.strip ? form.querySelector('textarea[name="observation"]').value.strip() : form.querySelector('textarea[name="observation"]').value;
-
-        fetch(form.action || window.location.href, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Erreur lors de la soumission.');
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                // 1. Fermer le modal de saisie d'origine
-                const inputModal = document.getElementById('lims-modal');
-                if (inputModal && typeof inputModal.close === 'function') inputModal.close();
-
-                // 2. Injecter les données capturées dans le modal de récapitulatif
-                document.getElementById('recap-code-fiche').textContent = data.message || 'Fiche enregistrée';
-                document.getElementById('recap-region').textContent = txtRegion;
-                document.getElementById('recap-district').textContent = txtDistrict;
-                document.getElementById('recap-fosa').textContent = txtFosa;
-                document.getElementById('recap-date-exp').textContent = valDateExp;
-                document.getElementById('recap-nb-ech').textContent = valNbEch;
-                document.getElementById('recap-transp').textContent = txtTransp;
-                document.getElementById('recap-recep').textContent = txtRecep;
-                if(valObs) document.getElementById('recap-obs').textContent = valObs;
-
-                // 3. Ouvrir le modal de récapitulatif
-                const recapModal = document.getElementById('recap-modal');
-                if (recapModal && typeof recapModal.showModal === 'function') {
-                    recapModal.showModal();
-                }
-
-                // 4. Réinitialiser le formulaire pour la prochaine ouverture
-                form.reset();
-            } else {
-                alert('Erreur : ' + (data.errors || 'Impossible d\'enregistrer la fiche.'));
-            }
-        })
-        .catch(error => {
-            console.error('Erreur AJAX:', error);
-            alert('Une erreur système est survenue lors de l\'enregistrement.');
-        })
-        .finally(() => {
-            submitButton.disabled = false;
-            submitButton.textContent = originalButtonText;
-        });
-    });
-</script>
 {% endblock %}

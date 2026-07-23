@@ -1,0 +1,98 @@
+{% extends './dashbord_hosp.html' %}
+
+{% block main %}
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-8 bg-slate-50">
+
+<div class="p-8 max-w-7xl mx-auto space-y-8">
+    
+    <!-- Header de section ERP -->
+    <div class="flex items-center justify-between border-b-2 border-slate-900 pb-6">
+        <div>
+            <h1 class="text-3xl font-black text-slate-900 uppercase">Configuration du compte</h1>
+            <p class="text-sm font-bold text-slate-400 mt-1">ID Utilisateur : <span class="font-mono text-indigo-600">{{ request.user.id }}</span></p>
+        </div>
+        <div class="flex gap-3">
+            <button class="flex items-center gap-2 px-4 py-2 border-2 border-slate-900 rounded-xl font-black text-sm hover:bg-slate-900 hover:text-white transition-all">
+                <i data-lucide="download" class="w-4 h-4"></i> Exporter Logs
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-12 gap-8">
+        
+        <!-- Sidebar Navigation (Type ERP) -->
+        <div class="col-span-12 lg:col-span-3 space-y-2">
+            <nav class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200">
+                <a href="#" class="flex items-center gap-3 p-3 bg-white border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 shadow-[2px_2px_0px_0px_#0f172a]">
+                    <i data-lucide="user-circle" class="w-4 h-4"></i> Informations
+                </a>
+                <a href="#" class="flex items-center gap-3 p-3 text-slate-500 hover:text-slate-900 font-bold text-sm transition-all">
+                    <i data-lucide="shield" class="w-4 h-4"></i> Sécurité & Accès
+                </a>
+                <a href="#" class="flex items-center gap-3 p-3 text-slate-500 hover:text-slate-900 font-bold text-sm transition-all">
+                    <i data-lucide="bell" class="w-4 h-4"></i> Notifications
+                </a>
+            </nav>
+        </div>
+
+        <!-- Zone Principale de données -->
+        <div class="col-span-12 lg:col-span-9 space-y-6">
+            
+            <!-- Card Profil -->
+            <div class="bg-white border-2 border-slate-900 rounded-2xl p-6 shadow-[8px_8px_0px_0px_#0f172a]">
+                <div class="flex items-start justify-between mb-8">
+                    <div class="flex items-center gap-5">
+                        <div class="relative">
+                            <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=0f172a&color=fff&size=128" 
+                                 class="w-20 h-20 rounded-2xl border-4 border-slate-100" alt="Avatar">
+                            <div class="absolute -bottom-1 -right-1 bg-emerald-500 w-5 h-5 rounded-full border-4 border-white"></div>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-black text-slate-900">{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+                            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mt-1">Administrateur Système</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-black text-slate-400 uppercase">Adresse Email</label>
+                        <div class="p-3 bg-slate-50 rounded-xl border-2 border-slate-200 font-bold text-sm text-slate-700">{{ request.user.email }}</div>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-black text-slate-400 uppercase">Dernière session</label>
+                        <div class="p-3 bg-slate-50 rounded-xl border-2 border-slate-200 font-bold text-sm text-slate-700">{{ request.user.last_login|date:"d/m/Y H:i" }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Activités récentes (Data Table style) -->
+            <div class="bg-white border-2 border-slate-900 rounded-2xl p-6 shadow-[8px_8px_0px_0px_#0f172a]">
+                <h3 class="text-lg font-black text-slate-900 mb-4">Activités récentes</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs font-bold">
+                        <thead>
+                            <tr class="text-slate-400 border-b-2 border-slate-100 uppercase">
+                                <th class="pb-3">Action</th>
+                                <th class="pb-3">Module</th>
+                                <th class="pb-3">Date</th>
+                                <th class="pb-3">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-700">
+                            <tr class="border-b border-slate-50">
+                                <td class="py-4">Connexion au système</td>
+                                <td class="py-4">Auth</td>
+                                <td class="py-4">18/07/2026 06:00</td>
+                                <td class="py-4"><span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded">Succès</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</main>
+{% endblock %}

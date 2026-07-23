@@ -1,0 +1,39 @@
+{% for p in patients %}
+<a href="{% url 'details-patient' p.code %}" 
+   class="group block p-3 mb-1 bg-white hover:bg-slate-50 border border-transparent hover:border-indigo-100 rounded-lg transition-all duration-200">
+    
+    <div class="flex justify-between items-start">
+        <div class="flex flex-col">
+            <span class="text-xs font-black text-slate-900 group-hover:text-indigo-700">{{ p.nom }} {{ p.prenom }}</span>
+            <span class="text-[10px] text-slate-400 font-bold uppercase mt-0.5">Code: {{ p.code }}</span>
+        </div>
+        <div class="flex flex-col items-end gap-1">
+            <span class="text-[10px] bg-pink-50 text-pink-700 px-1.5 py-0.5 rounded border border-pink-100 font-bold">
+                {{ p.mere.nom|default:"Mère inconnue" }}
+            </span>
+            <span class="text-[10px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded border border-emerald-100 font-bold">
+                {{ p.mere.telephone|default:"-" }}
+            </span>
+        </div>
+    </div>
+</a>
+{% empty %}
+<div class="p-6 text-center">
+    <p class="text-xs font-bold text-slate-400">Aucun résultat trouvé.</p>
+</div>
+{% endfor %}
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+</style>

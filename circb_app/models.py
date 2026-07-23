@@ -25,19 +25,13 @@ class Personnel(models.Model):
     photo = models.FileField(blank=True, null=True, upload_to='personnel_photos/')
     sexe = models.CharField(max_length=255, null=True, blank=True)
     bd_user = models.OneToOneField(User, blank=True, null=True, on_delete=models.SET_NULL)
+    service = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         if self.nom or self.prenom:
             return f"{self.nom or ''} {self.prenom or ''}".strip()
         return f"Personnel N°{self.id}"
 
-
-class Test(models.Model):
-    code = models.CharField(null=True, max_length=255)
-    nom = models.CharField(null=True, max_length=255)
-
-    def __str__(self):
-        return f"{self.code} - {self.nom}" if self.code else f"{self.nom}"
 
 
 class Transporteur(models.Model):
@@ -84,7 +78,7 @@ class FicheEchantillon(models.Model):
     code = models.SlugField(unique=True)
     transporteur = models.ForeignKey(Transporteur, null=True, blank=True, on_delete=models.CASCADE)
     moyen_transport = models.ForeignKey(MoyenTransport, null=True, blank=True, on_delete=models.CASCADE)
-    receptioniste = models.ForeignKey(User, on_delete=models.CASCADE)
+    receptioniste = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     date_reception = models.DateField(null=True)
     observation = models.TextField(null=True, blank=True)
     
@@ -92,21 +86,25 @@ class FicheEchantillon(models.Model):
     region = models.ForeignKey(
         Structure, 
         on_delete=models.CASCADE, 
-        related_name='fiches_regionales'
+        related_name='fiches_regionales', null=True
     )
     district = models.ForeignKey(
         Structure, 
         on_delete=models.CASCADE, 
-        related_name='fiches_districtuales'
+        related_name='fiches_districtuales', null=True
     )
     fosa = models.ForeignKey(
         Structure, 
         on_delete=models.CASCADE, 
-        related_name='fiches_fosa'
+        related_name='fiches_fosa', null=True
     )
     
     nombre_echantillon = models.IntegerField(null=True)
     date_expedition = models.DateField(null=True)
+    numero_ordre = models.IntegerField(null=True)
+    date_enregistrement = models.DateField(null=True)
+    
+    
 
     def __str__(self):
         return f"Fiche {self.code} ({self.fosa.nom if self.fosa else 'Inconnue'})"
@@ -248,23 +246,65 @@ class Echantillon(models.Model):
             # Donne un slug du style : "ech-20260710-1032"
             self.slug = slugify(f"ech-{timestamp}")
         super().save(*args, **kwargs)
-        
-        
+    def __str__(self):
+        return f"Echantillon {self.slug} (Fiche: {self.fiche.code})"
 
-class Resultat(models.Model):
-    echantillon = models.ForeignKey(Echantillon, on_delete=models.CASCADE, null=True)
-    date_prelevement = models.DateField()
-    commentaire = models.TextField()
-    responsable = models.ForeignKey(User, on_delete=models.CASCADE)
-    
-    
-  
-    
-    
-   
- 
-    
-    
+
+
+class Pcr(models.Model):
+    """Classification de la PCR (ex: PCR-1, PCR-2, Charge Virale)."""
+    code = models.CharField(max_length=50, null=True, blank=True, unique=True)
+    nom = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = "Type de PCR"
+        verbose_name_plural = "Types de PCR"
 
     def __str__(self):
-        return f"Echantillon {self.code} (Fiche: {self.fiche.code})"
+        return f"[{self.code}] {self.nom}" if self.code else self.nom
+
+
+class Test(models.Model):
+    """Configuration/Kit technique ou protocole utilisé."""
+    code = models.CharField(max_length=255, null=True, blank=True)
+    nom = models.CharField(max_length=255, null=True, blank=True)
+    pcr = models.ForeignKey(Pcr, on_delete=models.CASCADE, null=True, blank=True, related_name="tests")
+
+    class Meta:
+        verbose_name = "Configuration de Test"
+        verbose_name_plural = "Configurations de Tests"
+
+    def __str__(self):
+        return f"{self.nom} ({self.pcr.nom if self.pcr else 'Sans type'})"
+
+
+
+
+
+
+class Resultat(models.Model):
+    """
+    Fiche de validation finale d'un dossier d'analyse.
+    Le résultat est directement lié à un verdict de la table ResultatPcr.
+    """
+    echantillon = models.ForeignKey('Echantillon', on_delete=models.CASCADE, null=True, related_name="resultats")
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, null=True, blank=True, related_name="resultats")
+    
+    # Liaison avec la table Lexique que tu as demandée
+    resultat_pcr = models.ForeignKey(ResultatPcr, on_delete=models.PROTECT, null=True, related_name="resultats_associes")
+    
+    date_prelevement = models.DateField()
+    commentaire = models.TextField(blank=True, null=True)
+    responsable = models.ForeignKey(User, on_delete=models.CASCADE, related_name="resultats_valides")
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Résultat d'Analyse"
+        verbose_name_plural = "Résultats d'Analyses"
+        ordering = ['-date_prelevement']
+
+    def __str__(self):
+        verdict = self.resultat_pcr.nom if self.resultat_pcr else "En attente"
+        return f"Échantillon {self.echantillon} -> Verdict : {verdict}"

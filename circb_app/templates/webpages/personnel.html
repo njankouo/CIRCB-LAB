@@ -1,7 +1,17 @@
 {% extends './dashbord_hosp.html' %}
 
 {% block main %}
-<!-- Conteneur principal optimisé : ajoute de l'espace avec l'aside à gauche et limite la largeur maximale -->
+<style>
+    /* Permet d'avoir une transition fluide entre caché et visible */
+#success-confirmation.hidden {
+    display: none !important;
+}
+#success-confirmation:not(.hidden) {
+    display: block; /* Ou flex, selon votre besoin */
+}
+</style>
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-8 bg-slate-50">
+
 <div class="pl-4 sm:pl-6 lg:pl-10 pr-4 sm:pr-6 py-6 max-w-7xl mx-auto w-full space-y-8">
     
     <!-- En-tête de la page -->
@@ -12,7 +22,7 @@
         </div>
         <div>
           <button onclick="document.getElementById('personnel-modal').showModal()" class="w-full sm:w-auto px-4 py-2.5 bg-slate-900 hover:bg-slate-950 text-white font-bold rounded-xl border-2 border-slate-900 text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-y-0.5">
-    + Ajouter un agent
+    + Ajouter un Personnel
 </button>
         </div>
     </div>
@@ -47,121 +57,41 @@
     </div>
 
     <!-- Grille du Personnel : Ajustement des colonnes selon la largeur -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         
-        <!-- Carte Agent 1 -->
-        <div class="bg-white border-2 border-slate-900 rounded-xl p-6 shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between">
-            <div>
-                <div class="flex items-start justify-between mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-slate-100 border-2 border-slate-900 flex items-center justify-center font-black text-slate-900 text-lg">
-                        Dr
-                    </div>
-                    <span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wide bg-emerald-50 text-emerald-700 border border-emerald-600 rounded-md">
-                        Disponible
-                    </span>
-                </div>
-                
-                <h3 class="font-black text-lg text-slate-900 uppercase tracking-tight">Jean-Marc LENOIR</h3>
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">Médecin Chef · Urgences</p>
-                <div class="text-xs font-semibold text-slate-400 mt-1">Matricule : #MED-2026-883</div>
-
-                <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-sm font-medium text-slate-700">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
-                        <span class="truncate">jm.lenoir@circb-hopital.org</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
-                        <span>+237 6xx xx xx xx</span>
-                    </div>
-                </div>
+        <!-- Dans votre grille -->
+{% for p in personnels %}
+<div class="bg-white border-2 border-slate-900 rounded-xl p-6 shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between">
+    <div>
+        <div class="flex items-start justify-between mb-4">
+            <!-- Initiales dynamiques -->
+            <div class="w-12 h-12 rounded-xl bg-slate-100 border-2 border-slate-900 flex items-center justify-center font-black text-slate-900 text-lg">
+                {{ p.prenom|slice:":1"|upper }}{{ p.nom|slice:":1"|upper }}
             </div>
-
-            <div class="mt-6 pt-4 border-t-2 border-slate-900 flex gap-2">
-                <a href="#" class="flex-1 text-center py-2 bg-slate-50 hover:bg-slate-100 border border-slate-900 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors text-slate-900">
-                    Fiche Agent
-                </a>
-                <a href="#" class="p-2 bg-white hover:bg-slate-50 border border-slate-900 rounded-lg text-slate-900">
-                    <i data-lucide="calendar" class="w-4 h-4"></i>
-                </a>
+            <span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wide bg-emerald-50 text-emerald-700 border border-emerald-600 rounded-md">
+                Actif
+            </span>
+        </div>
+        
+        <h3 class="font-black text-lg text-slate-900 uppercase tracking-tight">{{ p.nom }} {{ p.prenom }}</h3>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">{{ p.service }}</p>
+        
+        <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-sm font-medium text-slate-700">
+            <div class="flex items-center gap-2">
+                <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
+                <span class="truncate">{{ p.mail }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
+                <span>{{ p.tel|default:"Non renseigné" }}</span>
             </div>
         </div>
+    </div>
+    <!-- ... rest of card ... -->
+</div>
+{% endfor %}
 
-        <!-- Carte Agent 2 -->
-        <div class="bg-white border-2 border-slate-900 rounded-xl p-6 shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between">
-            <div>
-                <div class="flex items-start justify-between mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-slate-100 border-2 border-slate-900 flex items-center justify-center font-black text-slate-900 text-lg">
-                        Ph
-                    </div>
-                    <span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wide bg-amber-50 text-amber-700 border border-amber-600 rounded-md">
-                        En Garde
-                    </span>
-                </div>
-                
-                <h3 class="font-black text-lg text-slate-900 uppercase tracking-tight">Marie EBOUE</h3>
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">Analyste Senior · Hématologie</p>
-                <div class="text-xs font-semibold text-slate-400 mt-1">Matricule : #LAB-2026-441</div>
-
-                <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-sm font-medium text-slate-700">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
-                        <span class="truncate">m.eboue@circb-hopital.org</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
-                        <span>+237 6xx xx xx xx</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-6 pt-4 border-t-2 border-slate-900 flex gap-2">
-                <a href="#" class="flex-1 text-center py-2 bg-slate-50 hover:bg-slate-100 border border-slate-900 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors text-slate-900">
-                    Fiche Agent
-                </a>
-                <a href="#" class="p-2 bg-white hover:bg-slate-50 border border-slate-900 rounded-lg text-slate-900">
-                    <i data-lucide="calendar" class="w-4 h-4"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- Carte Agent 3 -->
-        <div class="bg-white border-2 border-slate-900 rounded-xl p-6 shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between">
-            <div>
-                <div class="flex items-start justify-between mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-slate-100 border-2 border-slate-900 flex items-center justify-center font-black text-slate-900 text-lg">
-                        Ad
-                    </div>
-                    <span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wide bg-slate-100 text-slate-600 border border-slate-400 rounded-md">
-                        Absent
-                    </span>
-                </div>
-                
-                <h3 class="font-black text-lg text-slate-900 uppercase tracking-tight">Alain TCHAMENI</h3>
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">Admin Système · DSI</p>
-                <div class="text-xs font-semibold text-slate-400 mt-1">Matricule : #ADM-2026-012</div>
-
-                <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-sm font-medium text-slate-700">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
-                        <span class="truncate">a.tchameni@circb-hopital.org</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
-                        <span>+237 6xx xx xx xx</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-6 pt-4 border-t-2 border-slate-900 flex gap-2">
-                <a href="#" class="flex-1 text-center py-2 bg-slate-50 hover:bg-slate-100 border border-slate-900 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors text-slate-900">
-                    Fiche Agent
-                </a>
-                <a href="#" class="p-2 bg-white hover:bg-slate-50 border border-slate-900 rounded-lg text-slate-900">
-                    <i data-lucide="calendar" class="w-4 h-4"></i>
-                </a>
-            </div>
-        </div>
+      
 
     </div>
 </div>
@@ -174,7 +104,7 @@
         </button>
     </div>
 
-    <form method="POST" action="#" class="space-y-4">
+    <form method="POST" action="#" class="space-y-4" id='form-personnel'>
         {% csrf_token %}
         
         <div class="grid grid-cols-2 gap-4">
@@ -206,10 +136,9 @@
             <div>
                 <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Rôle / Grade</label>
                 <select name="role" required class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
-                    <option value="medecin">Médecin</option>
-                    <option value="infirmier">Infirmier(e)</option>
-                    <option value="technicien">Technicien Labo</option>
-                    <option value="rh">Gestionnaire RH</option>
+                    {%for roles in role%}
+                    <option value="{{roles.id}}">{{roles.nom}}</option>
+                   {%endfor%}
                 </select>
             </div>
         </div>
@@ -223,7 +152,33 @@
             </button>
         </div>
     </form>
+    <div id="success-confirmation" class="hidden opacity-0 transition-opacity duration-500 space-y-4 text-center">
+    <div class="p-4 bg-green-50 border border-green-200 rounded-xl">
+        <h3 class="text-green-800 font-black uppercase text-sm mb-2">Agent créé avec succès !</h3>
+        <p class="text-xs text-green-600 mb-4">Voici ses identifiants temporaires :</p>
+        
+        <div class="bg-white p-3 rounded-lg border border-green-200 mb-2">
+            <span class="block text-[10px] text-slate-400 font-bold uppercase">Identifiant (Email)</span>
+            <span id="display-email" class="font-bold text-slate-900"></span>
+        </div>
+        
+        <div class="bg-white p-3 rounded-lg border border-green-200 relative">
+            <span class="block text-[10px] text-slate-400 font-bold uppercase">Mot de passe</span>
+            <span id="display-password" class="font-bold text-indigo-600 text-lg tracking-widest"></span>
+            
+            <button onclick="copyToClipboard()" class="absolute right-2 top-2 p-1.5 hover:bg-slate-100 rounded">
+                <i data-lucide="copy" class="w-4 h-4 text-slate-400"></i>
+            </button>
+        </div>
+    </div>
+    <button onclick="window.location.reload()" class="w-full py-2 bg-slate-900 text-white font-bold rounded-lg text-xs uppercase">
+        Fermer et recharger
+    </button>
+</div>
 </dialog>
+<!-- À placer dans votre <dialog>, après le </form> -->
+
+</main>
 {% endblock %}
 
 {% block scripts %}
@@ -239,6 +194,61 @@ modal.addEventListener('click', (e) => {
         e.clientY > dialogDimensions.bottom
     ) {
         modal.close();
+    }
+});
+</script>
+<script>
+ // Fonction de copie avec retour visuel
+async function copyToClipboard() {
+    const password = document.getElementById('display-password').innerText;
+    try {
+        await navigator.clipboard.writeText(password);
+        const btn = event.currentTarget;
+        btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-green-600"></i>';
+        lucide.createIcons();
+        setTimeout(() => {
+            btn.innerHTML = '<i data-lucide="copy" class="w-4 h-4 text-slate-400"></i>';
+            lucide.createIcons();
+        }, 2000);
+    } catch (err) {
+        alert("Erreur lors de la copie.");
+    }
+}
+
+// Votre gestionnaire de submit (mise à jour)
+document.querySelector('#form-personnel').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const headerTitle = document.querySelector('#modal-header h3');
+    const successBlock = document.getElementById('success-confirmation');
+
+    // Désactiver le bouton pendant le fetch
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Enregistrement en cours...";
+
+    const response = await fetch('/save-personnel/', {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value }
+    });
+    const result = await response.json();
+
+    if (result.success) {
+        form.classList.add('hidden'); // Cache le formulaire
+        headerTitle.innerText = "Enregistrement Réussi";
+        
+        successBlock.classList.remove('hidden');
+        // Déclencher l'apparition en fondu
+        setTimeout(() => successBlock.classList.remove('opacity-0'), 10);
+
+        document.getElementById('display-email').innerText = form.querySelector('[name="email"]').value;
+        document.getElementById('display-password').innerText = result.generated_password;
+        lucide.createIcons();
+    } else {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Enregistrer l'agent";
+        alert('Erreur: ' + result.message);
     }
 });
 </script>

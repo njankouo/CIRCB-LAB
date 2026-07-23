@@ -1,0 +1,222 @@
+{% extends '../dashbord_hosp.html' %}
+
+{% block main %}
+<!-- Conteneur des notifications (Fixed pour rester visible au scroll) -->
+<div id="toast-container" class="fixed top-24 right-8 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+<main class="flex-1 h-full overflow-y-auto p-8 bg-slate-50">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-center font-bold text-slate-800 mb-8">
+            FICHE D'EXPEDITION DES ECHANTILLONS/RESULTATS(FICHE 4)
+            <br><span class="text-xs text-slate-500 uppercase tracking-widest">FORM FOR RESULTS / SAMPLES DELIVERY (FORM 4)</span>
+        </h1>
+        
+        <form  method="POST" action="{% url 'enregistrer_fiche_echantillon' %}" 
+              class="bg-white p-10 rounded-2xl shadow-xl border-2 border-blue-500">
+            {% csrf_token %}
+
+           <div class="mb-6 p-4 bg-white border border-slate-300 rounded shadow-sm sticky top-4 z-30">
+    
+    <!-- Label -->
+    <label class="block text-blue-900 font-bold text-[10px] uppercase tracking-wider mb-2 mono">Code Fiche Échantillon</label>
+    
+    <!-- Valeur du code style ERP en rouge -->
+    <input type="text" id="code" name="code" readonly 
+           class="w-full text-2xl font-mono font-bold text-red-700 bg-red-50 border border-red-300 rounded p-2.5 text-center shadow-inner cursor-default focus:ring-0">
+    
+    <!-- Séparateur technique style ERP -->
+    <div class="relative my-4">
+        <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-slate-300"></div>
+        </div>
+        <div class="relative flex justify-center">
+            <span class="bg-white px-3 text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            </span>
+        </div>
+    </div>
+
+    <!-- Date -->
+    <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-3">
+        <label class="text-xs font-semibold text-slate-700">Date enregistrement *</label>
+        <div class="md:col-span-2 relative">
+            <input type="date" id="date_enregistrement" name="date_enregistrement" required 
+                   class="w-full border border-slate-300 rounded text-xs p-2.5 bg-white text-slate-800 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none transition-all mono">
+        </div>
+    </div>
+</div>
+            <div class="space-y-6">
+                <!-- Champs -->
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 border-b-2 border-blue-100 pb-6">
+                    <label class="text-sm font-semibold text-slate-700">Région / Region *</label>
+                    <select name="region" id="select-region" required class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg text-sm p-3 focus:ring-2 focus:ring-blue-600">
+                        <option value="">Sélectionner...</option>
+                        {% for r in regions %} <option value="{{ r.id }}">{{ r.nom }}</option> {% endfor %}
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 border-b border-slate-200 pb-6">
+                    <label class="text-sm font-semibold text-slate-700">District de Santé/Health District *</label>
+                    <select name="district" id="select-district" required disabled class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg text-sm p-3 bg-slate-50"></select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 border-b-2 border-blue-100 pb-6">
+                    <label class="text-sm font-semibold text-slate-700">Formation Sanitaire / Hospital *</label>
+                    <select name="fosa" id="select-fosa" required disabled class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg text-sm p-3 bg-slate-50"></select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 border-b border-slate-200 pb-6">
+                    <label class="text-sm font-semibold text-slate-700">Nom de L'Expéditeur & Contact/Sender *</label>
+                    <input type="text" name="expediteur" required class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg text-sm p-3 focus:ring-2 focus:ring-blue-600">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 border-b-2 border-blue-100 pb-6">
+                    <label class="text-sm font-semibold text-slate-700">Date D'expédition/Sending date*</label>
+                    <input type="date" name="date_expedition" required class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg text-sm p-3 focus:ring-2 focus:ring-blue-600">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 border-b border-slate-200 pb-6">
+                    <label class="text-sm font-semibold text-slate-700">Nombre Échantillons/Resultats (Number of Samples/Results)*</label>
+                    <input type="number" name="nombre_echantillon" required class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg text-sm p-3 focus:ring-2 focus:ring-blue-600">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 border-b-2 border-blue-100 pb-6">
+                    <label class="text-sm font-semibold text-slate-700">Nom et Contact Du Transporteur/Name and Contact of Transporter *</label>
+                    <select name="transporteur" id="transporteur" class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg text-sm p-3 focus:ring-2 focus:ring-blue-600">
+                        {% for t in transporteurs %} <option value="{{ t.id }}">{{ t.nom }}</option> {% endfor %}
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 border-b border-slate-200 pb-6">
+                    <label class="text-sm font-semibold text-slate-700">Moyen transport/ Means of Transport*</label>
+                    <select name="moyen_transport" class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg text-sm p-3 focus:ring-2 focus:ring-blue-600">
+                        {% for m in moyens_transport %} <option value="{{ m.id }}">{{ m.nom }}</option> {% endfor %}
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 border-b-2 border-blue-100 pb-6">
+                    <label class="text-sm font-semibold text-slate-700">Nom et Contact du Destinataire(Name Of Receiver) *</label>
+                    <input type="text" name="destinataire" class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg text-sm p-3 focus:ring-2 focus:ring-blue-600">
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 border-b border-slate-200 pb-6">
+                    <label class="text-sm font-semibold text-slate-700">Date de réception/Date of Receipt*</label>
+                    <input type="date" name="date_reception" required class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg text-sm p-3 focus:ring-2 focus:ring-blue-600">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 border-b-2 border-blue-100 pb-6">
+                    <label class="text-sm font-semibold text-slate-700">Nom et contact du Réceptionniste/Name Of Receptionist</label>
+                    <input type="text" readonly value="{{ request.user.username }}" name="receptioniste" class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg bg-slate-50 text-sm p-3 text-slate-500">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 items-start gap-4 pb-4">
+                    <label class="text-sm font-semibold text-slate-700 pt-2">Observations</label>
+                    <textarea name="observation" class="md:col-span-2 w-full border-2 border-blue-400 rounded-lg text-sm p-3 focus:ring-2 focus:ring-blue-600" rows="3"></textarea>
+                </div>
+            </div>
+
+            <input type="hidden" id="numero_ordre" name="numero_ordre" value="{{ prochain_numero }}">
+
+            <div class="flex justify-end gap-3 mt-8 pt-6 border-t-2 border-blue-100">
+                <button type="button" onclick="window.history.back()" class="px-6 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Annuler</button>
+                <button type="submit" class="px-8 py-2.5 bg-blue-700 text-white text-sm font-bold rounded-lg hover:bg-blue-800 shadow-lg transition-all">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+
+
+<style>
+    @keyframes slide-in { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .animate-toast { animation: slide-in 0.4s ease-out; }
+</style>
+
+<script>
+    // 1. Logique notifications
+    const showToast = (message, isSuccess) => {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `pointer-events-auto animate-toast px-6 py-4 rounded-xl shadow-2xl text-white font-semibold flex items-center gap-3 ${isSuccess ? 'bg-blue-600' : 'bg-red-600'}`;
+        toast.innerHTML = `<span>${isSuccess ? '✅' : '❌'}</span><span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }, 5000);
+    };
+
+    // 2. Génération code
+// 1. Définir la date actuelle par défaut au chargement
+const dateInput = document.getElementById('date_enregistrement');
+const today = new Date().toISOString().split('T')[0];
+dateInput.value = today;
+
+// 2. Votre logique existante
+const numInput = document.getElementById('numero_ordre');
+const codeDisplay = document.getElementById('code');
+
+dateInput.addEventListener('change', updateCode);
+
+function updateCode() {
+    if (dateInput.value && numInput.value) {
+        const d = new Date(dateInput.value);
+        const dateStr = `${String(d.getDate()).padStart(2,'0')}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getFullYear()).slice(-2)}`;
+        codeDisplay.value = `${dateStr}-${String(numInput.value).padStart(4,'0')}`;
+    }
+}
+
+// Optionnel : appeler la fonction une première fois au chargement pour générer le code immédiatement
+updateCode();
+
+   // 4. Selects Dynamiques (AJAX)
+    const updateSelect = (url, target, id, key) => {
+        if (!id) return;
+        fetch(url + id + '/')
+            .then(r => r.json())
+            .then(data => {
+                target.innerHTML = '<option value="">Choisir...</option>';
+                data[key].forEach(item => target.innerHTML += `<option value="${item.id}">${item.nom}</option>`);
+                target.disabled = false;
+            });
+    };
+    document.getElementById('select-region').addEventListener('change', (e) => updateSelect('/search_district/', document.getElementById('select-district'), e.target.value, 'results'));
+    document.getElementById('select-district').addEventListener('change', (e) => updateSelect('/search_fosa/', document.getElementById('select-fosa'), e.target.value, 'fosas'));
+    // 4. Soumission
+  
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Liste des messages générés dynamiquement par Django
+    const messages = [
+        {% if messages %}
+            {% for message in messages %}
+            {
+                text: "{{ message|escapejs }}",
+                type: "{{ message.tags|default:'info' }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        {% endif %}
+    ];
+
+    // Déclenchement du Toast SweetAlert2 pour chaque message
+    messages.forEach((msg) => {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            // Style Brutaliste / Sombre aligné à votre charte
+            background: "#0f172a", 
+            color: "#ffffff",
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+
+        Toast.fire({
+            icon: msg.type === 'error' ? 'error' : 'success',
+            title: msg.text
+        });
+    });
+});
+</script>
+{% endblock %}

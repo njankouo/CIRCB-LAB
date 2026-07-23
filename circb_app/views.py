@@ -12,6 +12,9 @@ from django.db import IntegrityError
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from django.utils.text import slugify
+from django.views.decorators.http import require_POST
+from django.utils.crypto import get_random_string
+from django.db.models import Q
 # 1. On garde l'import de Django sous un autre nom ou on importe ton fichier models local
 from .models import Structure_Hierachy, Structure 
 # Create your views here.
@@ -24,7 +27,12 @@ def dashboard(request):
     return render(request, 'webpages/dashbord_hosp.html')
 @login_required(login_url='/')
 def personnel(request):
-    return render(request, 'webpages/personnel.html')
+    context ={
+        'user':User.objects.all(),
+        'role':Role.objects.all(),
+        'personnels': Personnel.objects.all(),
+    }
+    return render(request, 'webpages/personnel.html',context)
 
 
 def authentification(request):
@@ -72,7 +80,7 @@ def details_patient(request, slug):
     patient = get_object_or_404(Patient, code=slug)
     context ={
         'patient':patient,
-        'fiches':Echantillon.objects.filter(enfant=patient).order_by('-date_reception')
+        'echantillon':Echantillon.objects.filter(enfant=patient).order_by('-id')
     }
     return render(request, 'webpages/patients/details-patient.html', context)
 
@@ -84,17 +92,22 @@ def configurations(request):
     return render(request, 'webpages/config/configurations.html', context)
 @login_required(login_url='/')
 def fiches_echantillons(request):
+    dernier_numero= FicheEchantillon.objects.order_by('-numero_ordre').first()
+    prochain_numero= (dernier_numero.numero_ordre + 1) if dernier_numero else 1
     context={
         'regions':Structure.objects.filter(parent__isnull=True).order_by('nom'),
         'transporteurs':Transporteur.objects.all().order_by('nom'),
         'moyens_transport':MoyenTransport.objects.all().order_by('nom'),
-        'fiches':FicheEchantillon.objects.all().order_by('-date_reception')
+        'fiches':FicheEchantillon.objects.order_by('-id'),
+        'dernier_numero':dernier_numero,
+        'prochain_numero': prochain_numero
+        
     }
     return render(request, 'webpages/echantillonages/fiche_echantillons.html', context)
 @login_required(login_url='/')
-def echantillons(request, code):
+def echantillons(request, id):
     context={
-        'fiches_echantillon':FicheEchantillon.objects.get(code=code),
+        'fiches_echantillon':FicheEchantillon.objects.get(id=id),
         'tests':Test.objects.all().order_by('nom'),
         'raisons_prelevement':RaisonPrelevement.objects.all().order_by('nom'),
         'modes_allaitement':ModeAllaitement.objects.all().order_by('nom'),
@@ -108,7 +121,7 @@ def echantillons(request, code):
     return render(request, 'webpages/echantillonages/echantillons.html', context)
 @login_required(login_url='/')
 def echantillonages(request):
-    fiches = FicheEchantillon.objects.all().order_by('-date_reception')
+    fiches = FicheEchantillon.objects.all().order_by('id')
     
    
 
@@ -215,18 +228,16 @@ def add_sub_structure(request):
 
 
 def search_district(request, region_id):
-    """Récupère les districts liés à une région"""
-    districts = Structure.objects.filter(parent_id=region_id).values('id', 'nom', 'designation').order_by('nom')
-    # Clé 'districts' exigée par le JavaScript (data.districts)
-    return JsonResponse({'districts': list(districts)})
+    # On filtre les districts qui ont la région comme parent
+    districts = Structure.objects.filter(parent_id=region_id).values('id', 'nom')
+    # On renvoie la clé 'results' comme attendu par votre JS
+    return JsonResponse({'results': list(districts)})
 
 def search_fosa(request, district_id):
-    """Récupère les FOSAs liées à un district"""
-    # Ajoute bien 'designation' dans les .values()
-    fosas = Structure.objects.filter(parent_id=district_id).values('id', 'nom', 'designation').order_by('nom')
+    # On filtre les FOSAs qui ont le district comme parent
+    fosas = Structure.objects.filter(parent_id=district_id).values('id', 'nom').order_by('nom')
+    # On renvoie la clé 'fosas' comme attendu par votre JS
     return JsonResponse({'fosas': list(fosas)})
-
-
 def search_contact(request, contact_id):
     """
     Récupère le numéro de téléphone d'un transporteur spécifique.
@@ -237,69 +248,73 @@ def search_contact(request, contact_id):
     # On renvoie directement un dictionnaire simple avec la clé 'tel'
     return JsonResponse({'tel': transporter.tel})
 
+
+def search_districts(request, region_id):
+    # On filtre les enfants de la région
+    districts = Structure.objects.filter(parent_id=region_id).values('id', 'nom', 'designation')
+    # On renvoie une liste sous la clé 'districts'
+    return JsonResponse({'districts': list(districts)})
+
+def search_fosas(request, district_id):
+    # On filtre les enfants du district
+    fosas = Structure.objects.filter(parent_id=district_id).values('id', 'nom', 'designation')
+    # On renvoie une liste sous la clé 'fosas'
+    return JsonResponse({'fosas': list(fosas)})
 def enregistrer_fiche_echantillon(request):
     if request.method == "POST":
-        # 1. Récupération des données du formulaire
-        region_id = request.POST.get('region')
-        district_id = request.POST.get('district')
-        fosa_id = request.POST.get('fosa')
-        transporteur_id = request.POST.get('transporteur')
-        moyen_id = request.POST.get('moyen_transport')
-        receptioniste_id = request.POST.get('receptioniste')
-        code = request.POST.get('code')
+        # 1. Récupération des données
+        data = request.POST
         
-        date_reception = request.POST.get('date_reception')
-        date_expedition = request.POST.get('date_expedition')
-        nombre_echantillon = request.POST.get('nombre_echantillon')
-        observation = request.POST.get('observation')
+        region_id = data.get('region')
+        district_id = data.get('district')
+        fosa_id = data.get('fosa')
+        transporteur_id = data.get('transporteur') or None
+        moyen_id = data.get('moyen_transport') or None
+        
+        # On utilise directement l'ID de l'utilisateur connecté pour éviter les erreurs
+        receptioniste = request.user 
+        
+        code = data.get('code')
+        date_reception = data.get('date_reception')
+        date_expedition = data.get('date_expedition')
+        date_enregistrement = data.get('date_enregistrement')
+        nombre_echantillon = data.get('nombre_echantillon')
+        observation = data.get('observation')
+        numero_ordre = data.get('numero_ordre')
 
-        # 2. Sécurité : Nettoyage des chaînes vides pour les clés étrangères optionnelles
-        # Si l'utilisateur n'a rien choisi, on passe None plutôt qu'une chaîne vide ""
-        transporteur_id = transporteur_id if transporteur_id else None
-        moyen_id = moyen_id if moyen_id else None
-
-        # 3. Validation des champs obligatoires non négociables
-        if not all([region_id, district_id, fosa_id, receptioniste_id, date_reception, date_expedition, nombre_echantillon]):
-            return JsonResponse({
-                'success': False, 
-                'errors': 'Certains champs obligatoires (*) n\'ont pas été transmis.'
-            }, status=400)
+        # 3. Validation simplifiée
+        required_fields = [region_id, district_id, fosa_id, date_reception, date_expedition, nombre_echantillon, date_enregistrement]
+        if not all(required_fields):
+            return JsonResponse({'success': False, 'errors': 'Champs obligatoires manquants.'}, status=400)
 
         try:
             # 4. Création de la fiche
-            fiche = FicheEchantillon(
+            # Note: On passe l'objet User (receptioniste) directement si c'est une ForeignKey
+            fiche = FicheEchantillon.objects.create(
                 code=code,
                 region_id=region_id,
                 district_id=district_id,
                 fosa_id=fosa_id,
                 transporteur_id=transporteur_id,
                 moyen_transport_id=moyen_id,
-                receptioniste_id=receptioniste_id,
+                receptioniste=receptioniste, 
                 date_reception=date_reception,
                 date_expedition=date_expedition,
+                date_enregistrement=date_enregistrement,
                 nombre_echantillon=nombre_echantillon,
-                observation=observation
+                observation=observation,
+                numero_ordre=numero_ordre
             )
-            fiche.save()
 
-            return JsonResponse({
-                'success': True, 
-                'message': f'La fiche {fiche.code} a été enregistrée avec succès !'
-            })
+            return redirect('verification-code', code=fiche.code)
 
         except IntegrityError as e:
-            # Cette erreur se déclenche si un ID n'existe pas dans vos tables Structure, Personnel, etc.
-            print(f"Erreur d'intégrité BDD : {e}")
-            return JsonResponse({
-                'success': False, 
-                'errors': "Erreur d'association (Clé étrangère introuvable). Vérifiez que les sélections (Région/District/FOSA/Personnel) existent bien en base de données."
-            }, status=400)
-            
+            messages.error(request, f"Erreur BDD: {str(e)}")
         except Exception as e:
-            return JsonResponse({'success': False, 'errors': str(e)}, status=500)
+          
+            messages.error(request, f"Erreur BDD: {str(e)}")
 
-    return JsonResponse({'success': False, 'errors': 'Méthode non autorisée.'}, status=405)
-
+    return redirect(request.META.get('HTTP_REFERER','/'))
 
 def details_fiche(request, slug):
     fiche = FicheEchantillon.objects.get(code=slug)
@@ -698,3 +713,277 @@ def fiche_echantillon(request, slug):
         'echantillon':Echantillon.objects.get(slug=slug)
     }
     return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+
+
+def resultats_test(request):
+    context = {
+        'echantillons':Echantillon.objects.all(),
+        'resultat_pcr': ResultatPcr.objects.all(),
+        'tests': Test.objects.select_related('pcr').all()
+    }
+    return render(request, 'webpages/resultats/resultats-test.html', context)
+
+
+
+@login_required
+@require_POST
+def enregistrer_resultat_ajax(request):
+    try:
+        echantillon_id = request.POST.get('echantillon')
+        test_id = request.POST.get('test')
+        resultat_pcr_id = request.POST.get('resultat_pcr')
+        date_prelevement = request.POST.get('date_prelevement')
+        commentaire = request.POST.get('commentaire', '')
+
+        if not echantillon_id or not resultat_pcr_id or not date_prelevement:
+            return JsonResponse({'success': False, 'error': 'Champs obligatoires manquants.'}, status=400)
+
+        echantillon = Echantillon.objects.get(id=echantillon_id)
+        resultat_pcr = ResultatPcr.objects.get(id=resultat_pcr_id)
+        test = Test.objects.get(id=test_id) if test_id else None
+
+        resultat = Resultat.objects.create(
+            echantillon=echantillon,
+            test=test,
+            resultat_pcr=resultat_pcr,
+            date_prelevement=date_prelevement,
+            commentaire=commentaire,
+            responsable=request.user
+        )
+
+        # On renvoie le succès ET les représentations textuelles pour le modal
+        return JsonResponse({
+            'success': True,
+            'data': {
+                'id': resultat.id,
+                'echantillon': str(echantillon),
+                'test': test.nom if test else "Non spécifié",
+                'resultat_pcr': resultat_pcr.nom,
+                'date_prelevement': "-".join(date_prelevement.split("-")[::-1]) if "-" in str(date_prelevement) else str(date_prelevement),
+                'commentaire': commentaire or "Aucun commentaire rédigé."
+            }
+        })
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+def resultats(request):
+    context ={
+        'resultats':Resultat.objects.all()
+    }
+    return render(request, 'webpages/resultats/list_resultat.html',context)
+
+import io
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
+from .models import Resultat
+
+def imprimer_resultat_pdf(request, resultat_id):
+    resultat = get_object_or_404(Resultat, id=resultat_id)
+    
+    # Préparation d'un contexte propre et simplifié
+    context = {
+        'id_run': resultat.id,
+        'echantillon_code': resultat.echantillon.code_barre if hasattr(resultat.echantillon, 'code_barre') else resultat.echantillon,
+        'test_nom': resultat.test.nom if resultat.test else "Non spécifié",
+        'verdict': (resultat.resultat_pcr.nom if resultat.resultat_pcr else "En attente").upper(),
+        'date_prelevement': resultat.date_prelevement, # Le filtre Django gérera le format dans le template
+        'commentaire': resultat.commentaire or "Aucun commentaire particulier mentionné.",
+    }
+
+    # 1. Rendu du template HTML sous forme de chaîne de caractères
+    html_content = render_to_string('webpages/resultats/resultat_pdf.html', context)
+
+    # 2. Préparation de la réponse HTTP binaire
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="Resultat_{resultat.id}.pdf"'
+    
+    # 3. Génération sécurisée du PDF
+    pisa_status = pisa.pisaDocument(
+        io.BytesIO(html_content.encode("utf-8")),
+        response,
+        encoding='utf-8'
+    )
+    
+    if pisa_status.err:
+        return HttpResponse("Erreur lors de la compilation du PDF.", status=500)
+        
+    return response
+
+
+def bordeaux_sortie(request):
+    return render(request, 'webpages/borderaux.html')
+
+
+
+def supprimer_fiche(request, id):
+    # 1. Récupère la fiche ou renvoie une erreur 404 proprement si l'ID n'existe pas
+    fiche = get_object_or_404(FicheEchantillon, id=int(id))
+    
+    try:
+        # 2. Supprime tous les échantillons liés à cette fiche en une seule requête SQL (Bulk Delete)
+        Echantillon.objects.filter(fiche=fiche).delete()
+        
+        # Note : Si vous avez configuré "on_delete=models.CASCADE" sur la clé étrangère 'fiche' 
+        # dans votre modèle Echantillon, l'étape ci-dessus est automatique lors de la suppression de la fiche.
+        
+        # 3. Supprime la fiche elle-même
+        code_fiche = fiche.code
+        fiche.delete()
+        
+        # 4. Message de succès ERP standard
+        messages.success(request, f"La fiche [{code_fiche}] et tous ses échantillons associés ont été supprimés avec succès.")
+        
+    except Exception as e:
+        messages.error(request, f"Une erreur est survenue lors de la suppression : {str(e)}")
+        
+    # 5. Redirection vers le registre général
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+def fiches(request):
+    dernier_numero= FicheEchantillon.objects.order_by('-numero_ordre').first()
+    prochain_numero= (dernier_numero.numero_ordre + 1) if dernier_numero else 1
+    context={
+        'regions':Structure.objects.filter(parent__isnull=True).order_by('nom'),
+        'transporteurs':Transporteur.objects.all().order_by('nom'),
+        'moyens_transport':MoyenTransport.objects.all().order_by('nom'),
+        'fiches':FicheEchantillon.objects.all(),
+        'dernier_numero':dernier_numero,
+        'prochain_numero': prochain_numero
+        
+    }
+    return render(request,'webpages/echantillonages/fiches.html', context)
+
+
+
+
+def verification_code(request, code):
+    fiche = FicheEchantillon.objects.get(code=code)
+    # Create the range here in Python
+    sample_range = range(fiche.nombre_echantillon)
+    
+    context = {
+        'fiche': fiche,
+        'porte_entree': PorteEntree.objects.all(),
+        'sample_range': sample_range # Pass this to the template
+    }
+    return render(request, 'webpages/echantillonages/verification-code.html', context)
+
+
+
+def rechercher_patient(request):
+    code = request.GET.get('code', '').strip().upper()
+    patient = Patient.objects.filter(code=code).first()
+    
+    if patient:
+        # Construction sécurisée du dictionnaire de la mère
+        mere_data = None
+        if patient.mere:
+            mere_data = {
+                'id': patient.mere.id,
+                'nom': patient.mere.nom,
+                'prenom': patient.mere.prenom if hasattr(patient.mere, 'prenom') else '',
+                'contact': patient.mere.contact.id if patient.mere.contact else None,
+                'age': patient.mere.age if hasattr(patient.mere, 'age') else None,
+                'date_naissance': patient.mere.date_naissance.strftime('%Y-%m-%d') if patient.mere.date_naissance else None,
+            }
+
+        return JsonResponse({
+            'exists': True, # Unifié en 'exists'
+            'patient': {
+                'id': patient.id,
+                'code':patient.code,
+                'nom': patient.nom,
+                'prenom': patient.prenom,
+                'sexe': patient.sexe,
+                'porte_entree': patient.porte_entree.id if patient.porte_entree else None,
+                'date_naissance': patient.date_naissance.strftime('%Y-%m-%d') if patient.date_naissance else None,
+                'mere': mere_data,
+            }
+        })
+    else:
+        # Correction ici : utilisez 'exists' aussi
+        return JsonResponse({'exists': False})
+
+
+
+def delete_role(request, id):
+    role = Role.objects.get(id=int(id))
+    role.delete()
+    messages.success(request, 'suppression reussie')
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+
+
+def save_personnel(request):
+    if request.method == "POST":
+        try:
+            nom = request.POST.get('last_name')
+            prenom = request.POST.get('first_name')
+            email = request.POST.get('email')
+            service = request.POST.get('service')
+            role_id = request.POST.get('role')
+
+            if not all([nom, prenom, email, service, role_id]):
+                return JsonResponse({'success': False, 'message': 'Tous les champs sont requis.'}, status=400)
+
+            # Utilisation de transaction.atomic pour éviter les données orphelines
+            with transaction.atomic():
+                # 1. Création de l'utilisateur
+                # On génère un mot de passe aléatoire de 12 caractères
+                password = get_random_string(length=12)
+                user = User.objects.create_user(
+                    username=email, # L'email sert de login
+                    email=email,
+                    password=password,
+                    first_name=prenom,
+                    last_name=nom
+                )
+
+                # 2. Création de l'instance Personnel liée à cet utilisateur
+                personnel = Personnel.objects.create(
+                    nom=nom,
+                    prenom=prenom,
+                    mail=email,
+                    service=service,
+                    bd_user=user
+                )
+
+                # 3. Ajout du rôle
+                role = Role.objects.get(id=role_id)
+                personnel.roles.add(role)
+
+            # Vous pourriez envoyer ce mot de passe par email ici
+            return JsonResponse({
+                'success': True, 
+                'message': f'Agent enregistré. Mot de passe généré : {password}',
+                'generated_password': password # Utile pour l'afficher à l'admin
+            })
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)
+    
+    return JsonResponse({'success': False, 'message': 'Méthode non autorisée.'}, status=405)
+
+
+def recherche_patient(request): 
+    query = request.GET.get('q', '').strip()
+    
+    if query:
+        # Testons d'abord avec les champs directs du patient
+        patients = Patient.objects.filter(
+            Q(nom__icontains=query) | 
+            Q(prenom__icontains=query) | 
+            Q(code__icontains=query)
+        ).distinct()
+    else:
+        patients = Patient.objects.all().order_by('-id')[:20]
+        
+    return render(request, 'webpages/partials/patient_list.html', {'patients': patients})
+
+
+def profile(request):
+    return render(request, 'webpages/profile.html')
