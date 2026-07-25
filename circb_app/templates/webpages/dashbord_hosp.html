@@ -386,7 +386,7 @@ function switchTab(segmentId) {
   {%block main%}
 <main class="flex-1 h-full min-h-0 overflow-y-auto p-6 flex flex-col gap-6 bg-slate-50 w-full max-w-[100vw] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full relative">
     
-    <!-- HEADER INSTITUTIONNEL - BIEN ANCRÉ EN 3D CYAN/INDIGO -->
+    <!-- HEADER INSTITUTIONNEL - CIRCB LIMS CORE -->
     <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-t border-l border-cyan-200 border-b-4 border-r-4 border-indigo-500/30 rounded-2xl p-6 shadow-lg shadow-indigo-500/5">
         <div>
             <div class="flex items-center gap-2 mb-1">
@@ -394,288 +394,544 @@ function switchTab(segmentId) {
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-600"></span>
                 </span>
-                <span class="text-[10px] font-black tracking-widest text-cyan-600 uppercase font-mono">CIRCB LIMS • LAB CORE</span>
+                <span class="text-[10px] font-black tracking-widest text-cyan-600 uppercase font-mono">CIRCB LIMS • LAB MONITORING</span>
             </div>
             <h1 class="text-xl font-extrabold text-slate-900 tracking-tight font-mono uppercase">
-                Console de Décision Clinique
+                Console de Suivi des Échantillons & Résultats
             </h1>
-            <p class="text-xs font-semibold text-slate-500 mt-0.5">Suivi moléculaire & Surveillance virologique PTME</p>
+            <p class="text-xs font-semibold text-slate-500 mt-0.5">Réception, niveau de validation & répartition par formation sanitaire (FOSA)</p>
         </div>
-        <div class="flex items-center gap-3">
-            <a href="" class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white text-xs font-bold transition-all shadow-md shadow-indigo-500/20 border-b-2 border-indigo-700 active:border-b-0 active:mt-0.5 flex items-center gap-2 group">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-100 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                <span>Nouvelle admission</span>
-            </a>
-            <button class="px-4 py-2 rounded-xl border-t border-l border-slate-200 border-b-2 border-r-2 border-slate-400 bg-white text-slate-700 text-xs font-bold hover:bg-slate-50 transition-all active:border-b active:border-r flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>Exporter (.xlsx)</span>
-            </button>
-        </div>
+     
     </div>
 
-    <!-- ZONE VIGILANCE CLINIQUE LIMS (3D ULTRA-PRONONCÉ) -->
-    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+<!-- ========================================== -->
+<!-- BARRE D'ACTION & DECLENCHEUR DU FILTRE LIMS -->
+<!-- ========================================== -->
+<div class="flex flex-wrap items-center gap-2">
+    <!-- 1. BOUTON D'OUVERTURE DE LA MODALE -->
+    <button type="button" id="openFilterModal" class="inline-flex items-center gap-3 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold font-mono rounded-xl border border-slate-200 shadow-xs hover:border-slate-300 active:scale-[0.98] transition-all cursor-pointer group">
+        <div class="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+        </div>
         
-        <!-- Alerte Ruptures Thérapeutiques (Rose/Rouge) -->
-        <div class="bg-gradient-to-b from-rose-50/40 to-white border-t border-l border-rose-300 border-b-[5px] border-r-[5px] border-rose-500 rounded-2xl p-5 flex flex-col justify-between gap-5 shadow-md shadow-rose-500/10 relative overflow-hidden">
-            <div class="flex gap-4 items-start">
-                <div class="p-2.5 bg-rose-100 text-rose-600 rounded-xl border border-rose-300 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                </div>
-                <div>
-                    <h3 class="text-xs font-black uppercase text-rose-950 tracking-widest font-mono">Ruptures de Protocole</h3>
-                    <p class="text-xs text-slate-700 mt-2 leading-relaxed">
-                        Il y a <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-mono font-bold">{{ enfants_positifs_sans_tarv|default:"3" }} enfants</span> testés <span class="text-rose-600 font-bold">PCR Positifs</span> hors protocole TARV actif. Action requise.
-                    </p>
-                </div>
-            </div>
-            <a class="w-full text-center px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs rounded-xl transition-all cursor-pointer font-mono uppercase tracking-wider border-b-2 border-rose-800 shadow-sm">
-                Générer la liste critique
-            </a>
+        <div class="flex items-center gap-2">
+            <span>Filtres Analytiques LIMS</span>
+            <!-- Badge des filtres actifs -->
+            {% if request.GET.fosa or request.GET.periode_type and request.GET.periode_type != 'toutes' %}
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-200/80 rounded-md">
+                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-pulse"></span>
+                    Actif : {{ request.GET.periode_type|default:"FOSA"|upper }}
+                </span>
+            {% else %}
+                <span class="px-2 py-0.5 text-[10px] font-extrabold bg-slate-100 text-slate-600 border border-slate-200/60 rounded-md">
+                    Vue globale
+                </span>
+            {% endif %}
         </div>
+    </button>
 
-        <!-- Alerte Nouveau-nés Symptomatiques (Ambre) -->
-        <div class="bg-gradient-to-b from-amber-50/40 to-white border-t border-l border-amber-300 border-b-[5px] border-r-[5px] border-amber-500 rounded-2xl p-5 flex flex-col justify-between gap-5 shadow-md shadow-amber-500/10 relative overflow-hidden">
-            <div class="flex gap-4 items-start">
-                <div class="p-2.5 bg-amber-100 text-amber-600 rounded-xl border border-amber-300 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="5" r="2"></circle><path d="M4 14.5a2.5 2.5 0 0 1 2.5-2.5h11a2.5 2.5 0 0 1 2.5 2.5v1a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 15.5v-1z"></path></svg>
-                </div>
-                <div>
-                    <h3 class="text-xs font-black uppercase text-amber-950 tracking-widest font-mono">Signes Symptomatiques</h3>
-                    <p class="text-xs text-slate-700 mt-2 leading-relaxed">
-                        Détection de <span class="text-amber-700 font-mono font-bold">{{ nouveaux_nes_symptomatiques|default:"12" }} nouveaux cas</span> ce mois affichant des critères cliniques hautement suspects.
-                    </p>
-                </div>
-            </div>
-            <a class="w-full text-center px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs rounded-xl transition-all cursor-pointer font-mono uppercase tracking-wider border-b-2 border-amber-700 shadow-sm">
-                Consulter les dossiers
-            </a>
-        </div>
+    <!-- Bouton de réinitialisation rapide si filtre actif -->
+    {% if request.GET.fosa or request.GET.periode_type and request.GET.periode_type != 'toutes' %}
+    <a href="?" class="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all" title="Réinitialiser tous les filtres">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+        <span>Effacer</span>
+    </a>
+    {% endif %}
+</div>
 
-        <!-- Alerte Vigilance Relances (Indigo) -->
-        <div class="bg-gradient-to-b from-indigo-50/40 to-white border-t border-l border-indigo-300 border-b-[5px] border-r-[5px] border-indigo-500 rounded-2xl p-5 flex flex-col justify-between gap-5 shadow-md shadow-indigo-500/10 relative overflow-hidden">
-            <div class="flex gap-4 items-start">
-                <div class="p-2.5 bg-indigo-100 text-indigo-600 rounded-xl border border-indigo-300 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8" cy="7" r="4"></circle></svg>
-                </div>
-                <div>
-                    <h3 class="text-xs font-black uppercase text-indigo-950 tracking-widest font-mono">Perdus de Vue Latents</h3>
-                    <p class="text-xs text-slate-700 mt-2 leading-relaxed">
-                        <span class="text-indigo-700 font-mono font-bold">{{ enfants_perdus_de_vue|default:"8" }} enfants exposés</span> ont franchi la fenêtre de tolérance critique (+14j).
-                    </p>
-                </div>
-            </div>
-            <a class="w-full text-center px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl transition-all cursor-pointer font-mono uppercase tracking-wider border-b-2 border-indigo-800 shadow-sm">
-                Lancer les relances
-            </a>
-        </div>
-    </div>
 
-    <!-- 6 BLOCS KPI ANALYTIQUES - EFFET BOUTONS LABORATOIRE INCRUSTÉS -->
-  <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+<!-- ========================================== -->
+<!-- STRUCTURE DE LA FENÊTRE MODALE ENTERPRISE  -->
+<!-- ========================================== -->
+<div id="filterModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    
+    <!-- Arrière-plan sombre avec flou -->
+    <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-200 opacity-0"></div>
+
+    <!-- Conteneur Centré -->
+    <div class="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 flex items-center justify-center">
         
-    <!-- KPI 1 (Slate/Bleu Foncé) -->
-    <div class="bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-slate-400 p-4 rounded-xl flex flex-col justify-between shadow-sm">
-        <div class="flex items-start justify-between gap-2">
-            <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Total Échantillons</span>
-                <span class="text-2xl font-black mt-1 block tracking-tight text-slate-800 font-mono">{{ total_echantillons|default:"1,240" }}</span>
-            </div>
-            <div class="p-1.5 bg-slate-50 text-slate-500 rounded-lg border border-slate-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-            </div>
-        </div>
-        <div class="mt-4 text-[9px] font-bold uppercase tracking-widest text-slate-400 font-mono flex items-center gap-1.5 border-t border-slate-100 pt-2">
-            <span class="w-1 h-1 rounded-full bg-slate-400"></span> Bio-banque globale
-        </div>
-    </div>
+        <!-- Panneau Modale -->
+        <div id="modalPanel" class="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-slate-200 transform transition-all duration-200 opacity-0 scale-95 overflow-hidden">
+            
+            <form method="GET" action="/filter-stats/" id="filterForm">
+                
+                <!-- EN-TÊTE MODALE -->
+                <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/60">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl border border-indigo-100/80 shadow-2xs">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-black uppercase text-slate-900 tracking-wider font-mono">Filtres de Segmentation LIMS</h3>
+                            <p class="text-[11px] text-slate-500 font-medium mt-0.5">Sélection par site sanitaire et plage temporelle analytique</p>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="closeFilterModal" class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-all outline-none cursor-pointer">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
 
-    <!-- KPI 2 (Ambre) -->
-    <div class="bg-white border-t border-l border-amber-200 border-b-4 border-r-4 border-amber-400 p-4 rounded-xl flex flex-col justify-between shadow-sm">
-        <div class="flex items-start justify-between gap-2">
-            <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">En attente Labo</span>
-                <span class="text-2xl font-black mt-1 block tracking-tight text-amber-600 font-mono">{{ analyses_en_cours|default:"18" }}</span>
-            </div>
-            <div class="p-1.5 bg-amber-50 text-amber-600 rounded-lg border border-amber-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            </div>
-        </div>
-        <div class="mt-4 text-[9px] font-bold uppercase tracking-widest text-amber-600 font-mono flex items-center gap-1.5 border-t border-slate-100 pt-2">
-            <span class="w-1 h-1 rounded-full bg-amber-400 animate-pulse"></span> Files d'attente
-        </div>
-    </div>
+                <!-- CORPS DE LA MODALE -->
+                <div class="p-6 space-y-6 max-h-[75vh] overflow-y-auto custom-scrollbar">
+                    
+                    <!-- SECTEUR 1 : SELECTION FOSA + CHOIX DE LA PERIODE -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                        
+                        <!-- SELECT FOSA -->
+                        <div class="lg:col-span-5">
+                            <label for="fosa_select" class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1.5 font-mono flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"></path><path d="M3 21h18"></path></svg>
+                                Formation Sanitaire (FOSA)
+                            </label>
+                            <div class="relative">
+                                <select name="fosa" id="fosa_select" class="w-full text-xs font-bold font-mono text-slate-800 bg-slate-50 border border-slate-200 rounded-xl p-2.5 pr-8 outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 transition-all appearance-none cursor-pointer">
+                                    <option value="" {% if not request.GET.fosa %}selected{% endif %}>🏢 Toutes les FOSA (Vue nationale globale)</option>
+                                    <optgroup label="Hôpitaux Nationaux & Régionaux">
+                                        <option value="HCY" {% if request.GET.fosa == 'HCY' %}selected{% endif %}>Hôpital Central de Yaoundé (HCY)</option>
+                                        <option value="HLD" {% if request.GET.fosa == 'HLD' %}selected{% endif %}>Hôpital Laquintinie de Douala (HLD)</option>
+                                        <option value="HRE" {% if request.GET.fosa == 'HRE' %}selected{% endif %}>Hôpital Régional d'Ebolowa (HRE)</option>
+                                        <option value="HRB" {% if request.GET.fosa == 'HRB' %}selected{% endif %}>Hôpital Régional de Bafoussam (HRB)</option>
+                                        <option value="HRG" {% if request.GET.fosa == 'HRG' %}selected{% endif %}>Hôpital Régional de Garoua (HRG)</option>
+                                    </optgroup>
+                                    <optgroup label="Centres Médicaux & Districts">
+                                        <option value="CMA_MESSA" {% if request.GET.fosa == 'CMA_MESSA' %}selected{% endif %}>CMA de Messamendongo</option>
+                                        <option value="DS_DEIDO" {% if request.GET.fosa == 'DS_DEIDO' %}selected{% endif %}>District de Santé de Deido</option>
+                                    </optgroup>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2.5 pointer-events-none text-slate-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
+                            </div>
+                        </div>
 
-    <!-- KPI 3 (Rose - Taux Reprél: 3.2%) -->
-    <div class="bg-white border-t border-l border-rose-200 border-b-4 border-r-4 border-rose-400 p-4 rounded-xl flex flex-col justify-between shadow-sm">
-        <div class="flex items-start justify-between gap-2">
-            <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Taux Reprél.</span>
-                <span class="text-2xl font-black mt-1 block tracking-tight text-rose-600 font-mono">{{ taux_reprelevement|default:"3.2%" }}</span>
-            </div>
-            <!-- Mini Camembert (3.2% de 63 = ~2) -->
-            <div class="relative w-7 h-7 flex items-center justify-center shrink-0">
-                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" class="stroke-rose-100 fill-none" stroke-width="4"/>
-                    <circle cx="12" cy="12" r="10" class="stroke-rose-500 fill-none" stroke-width="4" stroke-dasharray="63" stroke-dashoffset="{{ taux_reprelevement_offset|default:'61' }}"/>
-                </svg>
-            </div>
-        </div>
-        <div class="mt-4 text-[9px] font-bold uppercase tracking-widest text-rose-500 font-mono flex items-center gap-1.5 border-t border-slate-100 pt-2">
-            <span class="w-1 h-1 rounded-full bg-rose-400"></span> Non-conformité DBS
-        </div>
-    </div>
+                        <!-- ÉCHELLE TEMPORELLE (SEGMENTED CONTROL) -->
+                        <div class="lg:col-span-7">
+                            <label class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1.5 font-mono flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                Type de Période Analytique
+                            </label>
+                            <div class="flex flex-wrap items-center gap-1 p-1 bg-slate-100 border border-slate-200/80 rounded-xl">
+                                <button type="button" data-period="toutes" class="period-btn px-2.5 py-1.5 text-[11px] font-bold font-mono rounded-lg transition-all cursor-pointer">Toutes</button>
+                                <button type="button" data-period="journalier" class="period-btn px-2.5 py-1.5 text-[11px] font-bold font-mono rounded-lg transition-all cursor-pointer">Journalier</button>
+                                <button type="button" data-period="mensuel" class="period-btn px-2.5 py-1.5 text-[11px] font-bold font-mono rounded-lg transition-all cursor-pointer">Mensuel</button>
+                                <button type="button" data-period="trimestriel" class="period-btn px-2.5 py-1.5 text-[11px] font-bold font-mono rounded-lg transition-all cursor-pointer">Trimestriel</button>
+                                <button type="button" data-period="semestriel" class="period-btn px-2.5 py-1.5 text-[11px] font-bold font-mono rounded-lg transition-all cursor-pointer">Semestriel</button>
+                                <button type="button" data-period="annuel" class="period-btn px-2.5 py-1.5 text-[11px] font-bold font-mono rounded-lg transition-all cursor-pointer">Annuel</button>
+                                <button type="button" data-period="custom" class="period-btn px-2.5 py-1.5 text-[11px] font-bold font-mono rounded-lg transition-all cursor-pointer">Perso</button>
+                            </div>
+                            <input type="hidden" name="periode_type" id="periode_type" value="{{ request.GET.periode_type|default:'toutes' }}">
+                        </div>
+                    </div>
 
-    <!-- KPI 4 (Cyan - Taux Positivité: 4.8%) -->
-    <div class="bg-white border-t border-l border-cyan-200 border-b-4 border-r-4 border-cyan-400 p-4 rounded-xl flex flex-col justify-between shadow-sm">
-        <div class="flex items-start justify-between gap-2">
-            <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Taux Positivité</span>
-                <span class="text-2xl font-black mt-1 block tracking-tight text-cyan-700 font-mono">{{ taux_positivite|default:"4.8%" }}</span>
-            </div>
-            <!-- Mini Camembert (4.8% de 63 = ~3) -->
-            <div class="relative w-7 h-7 flex items-center justify-center shrink-0">
-                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" class="stroke-cyan-100 fill-none" stroke-width="4"/>
-                    <circle cx="12" cy="12" r="10" class="stroke-cyan-500 fill-none" stroke-width="4" stroke-dasharray="63" stroke-dashoffset="{{ taux_positivite_offset|default:'60' }}"/>
-                </svg>
-            </div>
-        </div>
-        <div class="mt-4 text-[9px] font-bold uppercase tracking-widest text-cyan-600 font-mono flex items-center gap-1.5 border-t border-slate-100 pt-2">
-            Cible OMS &lt; 2%
-        </div>
-    </div>
+                    <!-- SECTEUR 2 : INPUTS DYNAMIQUES SELON PERIODE -->
+                    <div class="pt-4 border-t border-slate-100">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-end">
+                            
+                            <!-- Information 'Toutes' -->
+                            <div class="period-field field-toutes col-span-full">
+                                <div class="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center gap-2.5">
+                                    <span class="w-2 h-2 rounded-full bg-cyan-500 shrink-0 animate-pulse"></span>
+                                    <p class="text-xs text-slate-600 font-mono font-medium">Affichage consolidé de l'historique complet sans contrainte temporelle.</p>
+                                </div>
+                            </div>
 
-    <!-- KPI 5 (Émeraude - Couv. TARV Mère: 92.3%) -->
-    <div class="bg-white border-t border-l border-emerald-200 border-b-4 border-r-4 border-emerald-400 p-4 rounded-xl flex flex-col justify-between shadow-sm">
-        <div class="flex items-start justify-between gap-2">
-            <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Couv. TARV Mère</span>
-                <span class="text-2xl font-black mt-1 block tracking-tight text-emerald-600 font-mono">{{ couverture_ptme_mere|default:"92.3%" }}</span>
-            </div>
-            <!-- Mini Camembert (92.3% de 63 = ~58) -->
-            <div class="relative w-7 h-7 flex items-center justify-center shrink-0">
-                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" class="stroke-emerald-100 fill-none" stroke-width="4"/>
-                    <circle cx="12" cy="12" r="10" class="stroke-emerald-500 fill-none" stroke-width="4" stroke-dasharray="63" stroke-dashoffset="{{ couverture_ptme_mere_offset|default:'5' }}"/>
-                </svg>
-            </div>
-        </div>
-        <div class="mt-4 text-[9px] font-bold uppercase tracking-widest text-emerald-600 font-mono flex items-center gap-1.5 border-t border-slate-100 pt-2">
-            <span class="w-1 h-1 rounded-full bg-emerald-400"></span> Protocole Actif
-        </div>
-    </div>
+                            <!-- Date exacte (Journalier) -->
+                            <div class="period-field field-journalier hidden">
+                                <label class="text-[10px] font-black uppercase text-slate-500 font-mono mb-1 block">Date exacte</label>
+                                <input type="date" name="date_jour" value="{{ request.GET.date_jour }}" class="w-full text-xs font-bold font-mono bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 transition-all">
+                            </div>
 
-    <!-- KPI 6 (Indigo - Taux Sevrage: 74%) -->
-    <div class="bg-white border-t border-l border-indigo-200 border-b-4 border-r-4 border-indigo-400 p-4 rounded-xl flex flex-col justify-between shadow-sm">
-        <div class="flex items-start justify-between gap-2">
-            <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Taux Sevrage</span>
-                <span class="text-2xl font-black mt-1 block tracking-tight text-indigo-600 font-mono">{{ taux_sevrage_realise|default:"74%" }}</span>
-            </div>
-            <!-- Mini Camembert (74% de 63 = ~46) -->
-            <div class="relative w-7 h-7 flex items-center justify-center shrink-0">
-                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" class="stroke-indigo-100 fill-none" stroke-width="4"/>
-                    <circle cx="12" cy="12" r="10" class="stroke-indigo-500 fill-none" stroke-width="4" stroke-dasharray="63" stroke-dashoffset="{{ taux_sevrage_offset|default:'16' }}"/>
-                </svg>
-            </div>
-        </div>
-        <div class="mt-4 text-[9px] font-bold uppercase tracking-widest text-indigo-500 font-mono flex items-center gap-1.5 border-t border-slate-100 pt-2">
-            Fenêtre validée
+                            <!-- Mois (Mensuel) -->
+                            <div class="period-field field-mensuel hidden">
+                                <label class="text-[10px] font-black uppercase text-slate-500 font-mono mb-1 block">Mois cible</label>
+                                <input type="month" name="mois" value="{{ request.GET.mois }}" class="w-full text-xs font-bold font-mono bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 transition-all">
+                            </div>
+
+                            <!-- Trimestre -->
+                            <div class="period-field field-trimestriel hidden">
+                                <label class="text-[10px] font-black uppercase text-slate-500 font-mono mb-1 block">Trimestre</label>
+                                <select name="trimestre" class="w-full text-xs font-bold font-mono bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer">
+                                    <option value="1" {% if request.GET.trimestre == '1' %}selected{% endif %}>Q1 : 1er Trimestre (Jan - Mar)</option>
+                                    <option value="2" {% if request.GET.trimestre == '2' %}selected{% endif %}>Q2 : 2ème Trimestre (Avr - Juin)</option>
+                                    <option value="3" {% if request.GET.trimestre == '3' %}selected{% endif %}>Q3 : 3ème Trimestre (Juil - Sept)</option>
+                                    <option value="4" {% if request.GET.trimestre == '4' %}selected{% endif %}>Q4 : 4ème Trimestre (Oct - Déc)</option>
+                                </select>
+                            </div>
+
+                            <!-- Semestre -->
+                            <div class="period-field field-semestriel hidden">
+                                <label class="text-[10px] font-black uppercase text-slate-500 font-mono mb-1 block">Semestre</label>
+                                <select name="semestre" class="w-full text-xs font-bold font-mono bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer">
+                                    <option value="S1" {% if request.GET.semestre == 'S1' %}selected{% endif %}>S1 : 1er Semestre (Jan - Juin)</option>
+                                    <option value="S2" {% if request.GET.semestre == 'S2' %}selected{% endif %}>S2 : 2ème Semestre (Juil - Déc)</option>
+                                </select>
+                            </div>
+
+                            <!-- Année -->
+                            <div class="period-field field-annee hidden">
+                                <label class="text-[10px] font-black uppercase text-slate-500 font-mono mb-1 block">Année fiscale/LIMS</label>
+                                <input type="number" name="annee" min="2020" max="2030" value="{{ request.GET.annee|default:'2026' }}" class="w-full text-xs font-bold font-mono bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 transition-all">
+                            </div>
+
+                            <!-- Période Personnalisée -->
+                            <div class="period-field field-custom hidden">
+                                <label class="text-[10px] font-black uppercase text-slate-500 font-mono mb-1 block">Date de Début</label>
+                                <input type="date" name="date_debut" value="{{ request.GET.date_debut }}" class="w-full text-xs font-bold font-mono bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 transition-all">
+                            </div>
+
+                            <div class="period-field field-custom hidden">
+                                <label class="text-[10px] font-black uppercase text-slate-500 font-mono mb-1 block">Date de Fin</label>
+                                <input type="date" name="date_fin" value="{{ request.GET.date_fin }}" class="w-full text-xs font-bold font-mono bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 transition-all">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PIED DE MODALE & SOUMISSION -->
+                <div class="px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <a href="?" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold font-mono transition-all active:scale-[0.98]">
+                        Réinitialiser tout
+                    </a>
+
+                    <div class="flex items-center gap-2">
+                        <button type="button" id="cancelFilterModal" class="px-4 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 text-xs font-bold font-mono transition-all cursor-pointer">
+                            Annuler
+                        </button>
+                        
+                        <!-- BOUTON SUBMIT AVEC STATE DE CHARGEMENT -->
+                        <button type="submit" id="submitFilterBtn" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-xs font-black font-mono transition-all shadow-md shadow-indigo-500/20 flex items-center gap-2 cursor-pointer">
+                            <svg id="submitIcon" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <svg id="submitSpinner" class="w-3.5 h-3.5 animate-spin hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            <span id="submitText">Appliquer Filtres</span>
+                        </button>
+                    </div>
+                </div>
+
+            </form>
         </div>
     </div>
 </div>
-    <!-- BLOCS GRAPHIQUES ET MONITEURS DE FLUX (BORDURES BLUES/SLATE DIRECTIONNELLES) -->
-    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+
+<!-- ========================================== -->
+<!-- SCRIPT JAVASCRIPT COMPLET                  -->
+<!-- ========================================== -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // ÉLÉMENTS DE LA MODALE ET FORMULAIRE
+    const modal = document.getElementById('filterModal');
+    const backdrop = document.getElementById('modalBackdrop');
+    const panel = document.getElementById('modalPanel');
+    const openBtn = document.getElementById('openFilterModal');
+    const closeBtn = document.getElementById('closeFilterModal');
+    const cancelBtn = document.getElementById('cancelFilterModal');
+    const filterForm = document.getElementById('filterForm');
+    const submitBtn = document.getElementById('submitFilterBtn');
+    const submitIcon = document.getElementById('submitIcon');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const submitText = document.getElementById('submitText');
+
+    // FONCTIONS OUVERTURE / FERMETURE
+    function openModal() {
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            backdrop.classList.remove('opacity-0');
+            panel.classList.remove('opacity-0', 'scale-95');
+            panel.classList.add('opacity-100', 'scale-100');
+        }, 10);
+    }
+
+    function closeModal() {
+        backdrop.classList.add('opacity-0');
+        panel.classList.remove('opacity-100', 'scale-100');
+        panel.classList.add('opacity-0', 'scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 200);
+    }
+
+    if(openBtn) openBtn.addEventListener('click', openModal);
+    if(closeBtn) closeBtn.addEventListener('click', closeModal);
+    if(cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    if(backdrop) backdrop.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+
+    // BASCULE DYNAMIQUE DES PERIODES
+    const periodBtns = document.querySelectorAll('.period-btn');
+    const periodInput = document.getElementById('periode_type');
+    const fields = document.querySelectorAll('.period-field');
+
+    const activeBtnClass = "period-btn px-2.5 py-1.5 text-[11px] font-bold font-mono rounded-lg transition-all bg-indigo-600 text-white shadow-xs border border-indigo-700 cursor-pointer";
+    const inactiveBtnClass = "period-btn px-2.5 py-1.5 text-[11px] font-bold font-mono rounded-lg transition-all text-slate-600 hover:bg-white hover:text-slate-900 border border-transparent cursor-pointer";
+
+    function updateFields(selectedPeriod) {
+        periodInput.value = selectedPeriod;
+
+        periodBtns.forEach(btn => {
+            btn.className = (btn.dataset.period === selectedPeriod) ? activeBtnClass : inactiveBtnClass;
+        });
+
+        fields.forEach(f => f.classList.add('hidden'));
+
+        if (selectedPeriod === 'toutes') {
+            document.querySelectorAll('.field-toutes').forEach(el => el.classList.remove('hidden'));
+        } else if (selectedPeriod === 'journalier') {
+            document.querySelectorAll('.field-journalier').forEach(el => el.classList.remove('hidden'));
+        } else if (selectedPeriod === 'mensuel') {
+            document.querySelectorAll('.field-mensuel').forEach(el => el.classList.remove('hidden'));
+        } else if (selectedPeriod === 'trimestriel') {
+            document.querySelectorAll('.field-trimestriel, .field-annee').forEach(el => el.classList.remove('hidden'));
+        } else if (selectedPeriod === 'semestriel') {
+            document.querySelectorAll('.field-semestriel, .field-annee').forEach(el => el.classList.remove('hidden'));
+        } else if (selectedPeriod === 'annuel') {
+            document.querySelectorAll('.field-annee').forEach(el => el.classList.remove('hidden'));
+        } else if (selectedPeriod === 'custom') {
+            document.querySelectorAll('.field-custom').forEach(el => el.classList.remove('hidden'));
+        }
+    }
+
+    periodBtns.forEach(btn => {
+        btn.addEventListener('click', () => updateFields(btn.dataset.period));
+    });
+
+    // Initialisation
+    updateFields(periodInput.value || 'toutes');
+
+    // NETTOYAGE DES INPUTS ET SOUMISSION DE LA REQUÊTE
+    filterForm.addEventListener('submit', (e) => {
+        // Animation de chargement
+        submitIcon.classList.add('hidden');
+        submitSpinner.classList.remove('hidden');
+        submitText.textContent = "Filtrage...";
+        submitBtn.disabled = true;
+
+        // Désactive les champs masqués pour éviter de polluer la requête GET avec des paramètres vides
+        const hiddenContainers = document.querySelectorAll('.period-field.hidden');
+        hiddenContainers.forEach(container => {
+            const inputs = container.querySelectorAll('input, select');
+            inputs.forEach(input => input.disabled = true);
+        });
+    });
+});
+</script>
+
+    <!-- 5 BLOCS KPI ANALYTIQUES PRINCIPAUX -->
+    <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         
-        <!-- Graphique 1 (Bordure Indigo) -->
-        <div class="bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-indigo-500/40 p-5 rounded-2xl shadow-sm">
-            <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono mb-0.5">Cascade Thérapeutique Pédiatrique</h3>
-            <p class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-tight">Volume d'enfants sous directives nationales</p>
-            <div class="w-full bg-slate-50/50 border border-slate-200 p-1.5 rounded-xl">
-                <div id="chart-cascade-enfant" class="w-full"></div>
+        <!-- KPI 1 : Échantillons Entrés -->
+        <div class="bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-slate-500 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Échantillons Reçus</span>
+                    <span class="text-2xl font-black mt-1 block tracking-tight text-slate-800 font-mono">{{ total_echantillons|default:"..." }}</span>
+                </div>
+                <div class="p-1.5 bg-slate-100 text-slate-600 rounded-lg border border-slate-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+            </div>
+            <div class="mt-4 text-[9px] font-bold uppercase tracking-widest text-slate-400 font-mono flex items-center gap-1.5 border-t border-slate-100 pt-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Total enregistrés LIMS
             </div>
         </div>
 
-        <!-- Graphique 2 (Bordure Cyan) -->
-        <div class="bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-cyan-500/40 p-5 rounded-2xl shadow-sm">
-            <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono mb-0.5">Profils de Prophylaxie Bébé</h3>
-            <p class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-tight">Protocoles ARV d'urgence à la naissance</p>
-            <div class="w-full bg-slate-50/50 border border-slate-200 p-1.5 rounded-xl">
-                <div id="chart-prophylaxie-bar" class="w-full"></div>
+        <!-- KPI 2 : Résultats Validés -->
+        <div class="bg-white border-t border-l border-emerald-200 border-b-4 border-r-4 border-emerald-500 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Résultats Validés</span>
+                    <span class="text-2xl font-black mt-1 block tracking-tight text-emerald-600 font-mono">{{ echantillons_valides|default:"1,620" }}</span>
+                </div>
+                <div class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+            </div>
+            <div class="mt-4 text-[9px] font-bold uppercase tracking-widest text-emerald-600 font-mono flex items-center gap-1.5 border-t border-slate-100 pt-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> {{ taux_validation|default:"87.5%" }} du volume total
             </div>
         </div>
 
-        <!-- Graphique 3 (Bordure Émeraude) -->
-        <div class="bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-emerald-500/40 p-5 rounded-2xl shadow-sm">
-            <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono mb-0.5">Équilibre Allaitement vs Sevrage</h3>
-            <p class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-tight">Comparaison directe file active nutritionnelle</p>
-            <div class="w-full bg-slate-50/50 border border-slate-200 p-1.5 rounded-xl">
-                <div id="chart-allaitement-sevrage" class="w-full"></div>
+        <!-- KPI 3 : Résultats Positifs -->
+        <div class="bg-white border-t border-l border-rose-200 border-b-4 border-r-4 border-rose-500 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Résultats Positifs</span>
+                    <span class="text-2xl font-black mt-1 block tracking-tight text-rose-600 font-mono">{{ resultats_positifs|default:"85" }}</span>
+                </div>
+                <div class="p-1.5 bg-rose-50 text-rose-600 rounded-lg border border-rose-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                </div>
+            </div>
+            <div class="mt-4 text-[9px] font-bold uppercase tracking-widest text-rose-600 font-mono flex items-center gap-1.5 border-t border-slate-100 pt-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Taux Posit. : {{ taux_positivite|default:"5.2%" }}
             </div>
         </div>
+
+        <!-- KPI 4 : Résultats Négatifs -->
+        <div class="bg-white border-t border-l border-cyan-200 border-b-4 border-r-4 border-cyan-500 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Résultats Négatifs</span>
+                    <span class="text-2xl font-black mt-1 block tracking-tight text-cyan-700 font-mono">{{ resultats_negatifs|default:"1,535" }}</span>
+                </div>
+                <div class="p-1.5 bg-cyan-50 text-cyan-600 rounded-lg border border-cyan-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+            </div>
+            <div class="mt-4 text-[9px] font-bold uppercase tracking-widest text-cyan-600 font-mono flex items-center gap-1.5 border-t border-slate-100 pt-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> {{ taux_negativite|default:"94.8%" }} des validés
+            </div>
+        </div>
+
+        <!-- KPI 5 : En Attente de Validation -->
+        <div class="bg-white border-t border-l border-amber-200 border-b-4 border-r-4 border-amber-500 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Non Validés / En cours</span>
+                    <span class="text-2xl font-black mt-1 block tracking-tight text-amber-600 font-mono">{{ echantillons_en_attente|default:"230" }}</span>
+                </div>
+                <div class="p-1.5 bg-amber-50 text-amber-600 rounded-lg border border-amber-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </div>
+            </div>
+            <div class="mt-4 text-[9px] font-bold uppercase tracking-widest text-amber-600 font-mono flex items-center gap-1.5 border-t border-slate-100 pt-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> Traitement labo en cours
+            </div>
+        </div>
+
     </div>
 
-    <!-- VUE DE CHARGE INTERNE & SITES ADJACENTS (BORDURES PLATES ÉPAISSES) -->
+    <!-- GRAPHIQUES CLÉS ET RÉPARTITION -->
     <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <!-- Flux Analytique Hebdomadaire (Bordure Ardoise) -->
-        <div class="lg:col-span-2 bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-slate-600/40 p-5 rounded-2xl shadow-sm">
-            <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono mb-0.5">Flux Analytique Moléculaire Hebdomadaire</h3>
-            <p class="text-[11px] font-bold text-slate-400 uppercase mb-6">Comparatif de charges LIMS : Screening (PCR1) vs Confirmation (PCR2)</p>
-            <div class="w-full bg-slate-50/50 border border-slate-200 p-1.5 rounded-xl">
-                <div id="chart" class="w-full"></div>
+        <!-- Graphique 1 : Échantillons par Formation Sanitaire (Horizontal Bar) -->
+        <div class="lg:col-span-2 bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-indigo-500/40 p-5 rounded-2xl shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono">Volume d'Échantillons par Formation Sanitaire (Top FOSA)</h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Répartition des réceptions par structure émettrice</p>
+                </div>
+                <span class="px-2.5 py-1 text-[10px] font-mono font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg">Top 7 FOSA</span>
+            </div>
+            <div class="w-full bg-slate-50/50 border border-slate-200 p-2 rounded-xl">
+                <div id="chart-fosa-bar" class="w-full"></div>
             </div>
         </div>
 
-        <!-- MONITORING QUALITÉ DES STRUCTURES SATELLITES (Bordure Cyan) -->
-        <div class="bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-cyan-600/40 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+        <!-- Graphique 2 : Répartition des Résultats (Positifs vs Négatifs vs En Attente) -->
+        <div class="bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-cyan-500/40 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+            <div>
+                <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono mb-0.5">Ventilation des Analyses</h3>
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-tight">Statut biologique et statut de validation</p>
+                <div class="w-full bg-slate-50/50 border border-slate-200 p-2 rounded-xl flex items-center justify-center">
+                    <div id="chart-resultats-donut" class="w-full"></div>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-around text-center font-mono">
+                <div>
+                    <span class="text-[10px] font-bold text-rose-500 block">Positifs</span>
+                    <span class="text-xs font-extrabold text-slate-800">{{ resultats_positifs|default:"85" }}</span>
+                </div>
+                <div class="h-6 w-[1px] bg-slate-200"></div>
+                <div>
+                    <span class="text-[10px] font-bold text-cyan-600 block">Négatifs</span>
+                    <span class="text-xs font-extrabold text-slate-800">{{ resultats_negatifs|default:"1,535" }}</span>
+                </div>
+                <div class="h-6 w-[1px] bg-slate-200"></div>
+                <div>
+                    <span class="text-[10px] font-bold text-amber-500 block">En Attente</span>
+                    <span class="text-xs font-extrabold text-slate-800">{{ echantillons_en_attente|default:"230" }}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FLUX QUOTIDIEN DES ENTRÉES ET TABLEAU DÉTAILLÉ FOSA -->
+    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-1 gap-6">
+        
+       
+        <!-- Liste / Classement Détaillé des FOSA (1 Col) -->
+        <div class="bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-indigo-600/40 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono mb-4 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    Statut Qualité des FOSA Remontantes
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"></path><path d="M3 21h18"></path></svg>
+                    Détail par Formation Sanitaire
                 </h3>
                 
-                <div class="space-y-3">
-                    <!-- FOSA Card 1 (Incrustée dans le conteneur) -->
-                    <div class="p-3 bg-slate-50 border border-slate-200 border-b-2 border-r-2 border-amber-400/70 rounded-xl flex justify-between items-center hover:bg-slate-100/50 transition-all">
+                <div class="space-y-2.5 max-h-[290px] overflow-y-auto pr-1">
+                    
+                    <!-- FOSA 1 -->
+                    <div class="p-3 bg-slate-50 border border-slate-200 border-b-2 border-r-2 border-indigo-400/70 rounded-xl flex justify-between items-center hover:bg-slate-100 transition-all">
                         <div>
-                            <span class="font-bold text-slate-800 block font-mono text-[11px]">Hôpital Régional Ébolowa</span>
-                            <span class="text-[10px] text-slate-500 font-medium mt-0.5 block">Tubes non conformes / Rejets LIMS</span>
+                            <span class="font-bold text-slate-800 block font-mono text-[11px]">Hôpital Central Yaoundé</span>
+                            <span class="text-[10px] text-slate-500 font-medium mt-0.5 block">Validés: 380 | Positifs: 18</span>
                         </div>
-                        <span class="px-2 py-0.5 font-mono text-[11px] font-extrabold bg-amber-50 text-amber-700 border border-amber-300 rounded-md shadow-sm">8.4%</span>
+                        <span class="px-2.5 py-1 font-mono text-[11px] font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-300 rounded-md shadow-sm">410 éch.</span>
                     </div>
 
-                    <!-- FOSA Card 2 -->
-                    <div class="p-3 bg-slate-50 border border-slate-200 border-b-2 border-r-2 border-indigo-400/70 rounded-xl flex justify-between items-center hover:bg-slate-100/50 transition-all">
+                    <!-- FOSA 2 -->
+                    <div class="p-3 bg-slate-50 border border-slate-200 border-b-2 border-r-2 border-cyan-400/70 rounded-xl flex justify-between items-center hover:bg-slate-100 transition-all">
                         <div>
-                            <span class="font-bold text-slate-800 block font-mono text-[11px]">CMA de Messamendongo</span>
-                            <span class="text-[10px] text-slate-500 font-medium mt-0.5 block">Délais d'acheminement critiques</span>
+                            <span class="font-bold text-slate-800 block font-mono text-[11px]">Hôpital Laquintinie Douala</span>
+                            <span class="text-[10px] text-slate-500 font-medium mt-0.5 block">Validés: 310 | Positifs: 22</span>
                         </div>
-                        <span class="px-2 py-0.5 font-mono text-[11px] font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-300 rounded-md shadow-sm">4 Cas</span>
+                        <span class="px-2.5 py-1 font-mono text-[11px] font-extrabold bg-cyan-50 text-cyan-700 border border-cyan-300 rounded-md shadow-sm">345 éch.</span>
                     </div>
 
-                    <!-- FOSA Card 3 -->
-                    <div class="p-3 bg-slate-50 border border-slate-200 border-b-2 border-r-2 border-rose-400/70 rounded-xl flex justify-between items-center hover:bg-slate-100/50 transition-all">
+                    <!-- FOSA 3 -->
+                    <div class="p-3 bg-slate-50 border border-slate-200 border-b-2 border-r-2 border-emerald-400/70 rounded-xl flex justify-between items-center hover:bg-slate-100 transition-all">
                         <div>
-                            <span class="font-bold text-slate-800 block font-mono text-[11px]">District de Santé Deido</span>
-                            <span class="text-[10px] text-slate-500 font-medium mt-0.5 block">Absence de fiche PCR2 d'urgence</span>
+                            <span class="font-bold text-slate-800 block font-mono text-[11px]">HR Ebolowa</span>
+                            <span class="text-[10px] text-slate-500 font-medium mt-0.5 block">Validés: 210 | Positifs: 12</span>
                         </div>
-                        <span class="px-2 py-0.5 font-mono text-[11px] font-extrabold bg-rose-50 text-rose-700 border border-rose-300 rounded-md shadow-sm">5 Cas</span>
+                        <span class="px-2.5 py-1 font-mono text-[11px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-300 rounded-md shadow-sm">230 éch.</span>
                     </div>
+
+                    <!-- FOSA 4 -->
+                    <div class="p-3 bg-slate-50 border border-slate-200 border-b-2 border-r-2 border-amber-400/70 rounded-xl flex justify-between items-center hover:bg-slate-100 transition-all">
+                        <div>
+                            <span class="font-bold text-slate-800 block font-mono text-[11px]">CMA Messamendongo</span>
+                            <span class="text-[10px] text-slate-500 font-medium mt-0.5 block">Validés: 160 | Positifs: 8</span>
+                        </div>
+                        <span class="px-2.5 py-1 font-mono text-[11px] font-extrabold bg-amber-50 text-amber-700 border border-amber-300 rounded-md shadow-sm">180 éch.</span>
+                    </div>
+
+                    <!-- FOSA 5 -->
+                    <div class="p-3 bg-slate-50 border border-slate-200 border-b-2 border-r-2 border-rose-400/70 rounded-xl flex justify-between items-center hover:bg-slate-100 transition-all">
+                        <div>
+                            <span class="font-bold text-slate-800 block font-mono text-[11px]">Hôpital Régional Bafoussam</span>
+                            <span class="text-[10px] text-slate-500 font-medium mt-0.5 block">Validés: 125 | Positifs: 11</span>
+                        </div>
+                        <span class="px-2.5 py-1 font-mono text-[11px] font-extrabold bg-rose-50 text-rose-700 border border-rose-300 rounded-md shadow-sm">145 éch.</span>
+                    </div>
+
                 </div>
             </div>
 
-            <div class="mt-5 pt-4 border-t border-slate-100 text-[10px] font-semibold text-slate-400 leading-relaxed flex items-start gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                <span>Généré selon les règles de validation analytique automates du CIRCB.</span>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-[10px] font-semibold text-slate-400 leading-relaxed flex items-center justify-between">
+                <span>Mise à jour automatique LIMS</span>
+                <a href="" class="text-indigo-600 font-bold hover:underline">Voir toutes les {{ total_fosa|default:"42" }} FOSA &rarr;</a>
             </div>
         </div>
+
     </div>
 
 </main>
-<!-- CONFIGURATION CLAIRE ET MODERNE POUR APEXCHARTS -->
+
+<!-- SCRIPT APEXCHARTS METIER LIMS -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -686,66 +942,86 @@ document.addEventListener("DOMContentLoaded", function() {
         grid: { borderColor: '#f1f5f9' }
     };
 
-    // 1. Cascade Thérapeutique Enfant
-    new ApexCharts(document.querySelector("#chart-cascade-enfant"), {
+    // 1. Échantillons par Formation Sanitaire (Horizontal Bar Chart)
+    new ApexCharts(document.querySelector("#chart-fosa-bar"), {
         ...baseChartOptions,
-        chart: { type: 'bar', height: 200, toolbar: { show: false } },
-        plotOptions: { bar: { horizontal: false, columnWidth: '40%', borderRadius: 4 } },
-        colors: ['#4f46e5', '#10b981', '#f59e0b'],
-        dataLabels: { enabled: false },
+        chart: { type: 'bar', height: 250, toolbar: { show: false } },
+        plotOptions: { 
+            bar: { 
+                horizontal: true, 
+                barHeight: '55%', 
+                borderRadius: 5,
+                distributed: true
+            } 
+        },
+        colors: ['#4f46e5', '#06b6d4', '#10b981', '#f59e0b', '#f43f5e', '#6366f1', '#64748b'],
+        dataLabels: { 
+            enabled: true,
+            style: { fontSize: '10px', fontWeight: 'bold', colors: ['#ffffff'] },
+            offsetX: 10
+        },
         series: [{
-            name: 'Nombre d\'enfants',
-            data: [{{ total_enfants|default:450 }}, {{ enfants_sous_cotri|default:380 }}, {{ enfants_sous_tarv|default:310 }}]
+            name: 'Échantillons reçus',
+            data: [
+                {{ fosa_count_1|default:410 }}, 
+                {{ fosa_count_2|default:345 }}, 
+                {{ fosa_count_3|default:230 }}, 
+                {{ fosa_count_4|default:180 }}, 
+                {{ fosa_count_5|default:145 }}, 
+                {{ fosa_count_6|default:110 }}, 
+                {{ fosa_count_7|default:95 }}
+            ]
         }],
-        xaxis: { categories: ['Exposés', 'Sous Cotri.', 'Sous TARV'], axisBorder: { show: false }, axisTicks: { show: false } }
+        xaxis: { 
+            categories: [
+                'HC Yaoundé', 
+                'HL Douala', 
+                'HR Ebolowa', 
+                'CMA Messamendongo', 
+                'HR Bafoussam', 
+                'HD Deido', 
+                'HR Garoua'
+            ],
+            axisBorder: { show: false } 
+        },
+        legend: { show: false }
     }).render();
 
-    // 2. Profils de Prophylaxie Bébé
-    new ApexCharts(document.querySelector("#chart-prophylaxie-bar"), {
-        ...baseChartOptions,
-        chart: { type: 'bar', height: 200, toolbar: { show: false } },
-        plotOptions: { bar: { horizontal: true, barHeight: '45%', borderRadius: 4 } },
-        colors: ['#06b6d4'],
-        dataLabels: { enabled: false },
-        series: [{
-            name: 'Enfants',
-            data: [{{ NVP_seule|default:180 }}, {{ AZT_NVP|default:210 }}, {{ autre_arv|default:45 }}]
-        }],
-        xaxis: { categories: ['NVP seule', 'AZT + NVP', 'Autres'], axisBorder: { show: false } }
-    }).render();
-
-    // 3. Allaités vs Sevrés
-    new ApexCharts(document.querySelector("#chart-allaitement-sevrage"), {
-        chart: { type: 'donut', height: 200, fontFamily: 'inherit' },
-        colors: ['#3b82f6', '#10b981'],
-        labels: ['En cours d\'allaitement', 'Sevrés sécurisés'],
-        series: [{{ total_allaites|default:260 }}, {{ total_sevres|default:190 }}],
+    // 2. Répartition des Résultats (Donut Chart: Positifs vs Négatifs vs En Attente)
+    new ApexCharts(document.querySelector("#chart-resultats-donut"), {
+        chart: { type: 'donut', height: 240, fontFamily: 'inherit' },
+        colors: ['#f43f5e', '#06b6d4', '#f59e0b'],
+        labels: ['Résultats Positifs', 'Résultats Négatifs', 'En Attente / En Cours'],
+        series: [
+            {{ resultats_positifs|default:85 }}, 
+            {{ resultats_negatifs|default:1535 }}, 
+            {{ echantillons_en_attente|default:230 }}
+        ],
         legend: { position: 'bottom', fontSize: '11px', labels: { colors: '#64748b' } },
         plotOptions: {
             pie: {
                 donut: {
-                    size: '75%',
+                    size: '72%',
                     labels: {
                         show: true,
-                        total: { show: true, label: 'File Active', fontSize: '11px', color: '#94a3b8', fontWeight: 'bold' },
-                        value: { color: '#1e293b' }
+                        total: { 
+                            show: true, 
+                            label: 'Total Échantillons', 
+                            fontSize: '10px', 
+                            color: '#94a3b8', 
+                            fontWeight: 'bold',
+                            formatter: function (w) {
+                                return {{ total_echantillons|default:1850 }};
+                            }
+                        },
+                        value: { color: '#1e293b', fontSize: '18px', fontWeight: 'bold' }
                     }
                 }
             }
         }
     }).render();
 
-    // 4. Flux Hebdomadaire PCR1 vs PCR2
-    new ApexCharts(document.querySelector("#chart"), {
-        ...baseChartOptions,
-        chart: { type: 'line', height: 260, toolbar: { show: false } },
-        colors: ['#0f172a', '#06b6d4'],
-        series: [
-            { name: 'Screening (PCR 1)', data: [31, 40, 28, 51, 42, 109, 100] },
-            { name: 'Confirmation (PCR 2)', data: [11, 32, 45, 32, 34, 52, 41] }
-        ],
-        xaxis: { categories: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'], axisBorder: { show: false } }
-    }).render();
+ 
 
 });
 </script>

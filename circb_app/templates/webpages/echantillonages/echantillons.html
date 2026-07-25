@@ -1,7 +1,7 @@
 {% extends '../dashbord_hosp.html' %}
 {% block main %}
 <main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white">
-<div class="max-w-full mx-auto my-1 p-1">
+<div class="max-w-5xl mx-auto my-1 p-1">
 <div class="mb-6 bg-slate-900 text-white p-6 border-4 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(99,102,241,1)]">
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         
@@ -51,152 +51,107 @@
       <!-- SECTION 1 : INFORMATIONS DE LA FORMATION SANITAIRE -->
 <!-- SECTION 1 : FORMATION SANITAIRE (FOSA) -->
 <!-- Bloc Section 1 - Style ERP Professionnel / Health Facility Information -->
-<div class="bg-white border border-slate-300 rounded-lg shadow-sm font-sans overflow-hidden">
+<div class="bg-white border border-slate-200 rounded-xl shadow-sm font-sans overflow-hidden transition-all">
     
-    <!-- En-tête de section particulier (Style ERP Premium Dark) -->
-    <div class="relative bg-slate-950 border-b border-slate-900 px-5 py-4 flex items-center justify-between rounded-t-lg overflow-hidden">
-        <!-- Ligne d'accentuation gauche typique ERP -->
-        <div class="absolute left-0 top-0 bottom-0 w-[4px] bg-blue-500"></div>
+    <!-- En-tête de section (Style ERP Premium Dark avec Dégradé) -->
+    <div class="relative bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-slate-800 px-5 py-3.5 flex items-center justify-between rounded-t-xl">
+        <!-- Ligne d'accentuation gauche -->
+        <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-tl-xl"></div>
         
-        <div class="flex items-center gap-3.5 pl-1">
+        <div class="flex items-center gap-3 pl-1">
             <!-- Badge Section -->
-            <span class="bg-slate-800 text-slate-200 border border-slate-700 text-[10px] font-mono font-black px-2.5 py-0.5 rounded uppercase tracking-wider">
-               SECTION 1
+            <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-mono font-bold px-2.5 py-0.5 rounded uppercase tracking-wider">
+               Section 1
             </span>
             <div class="flex flex-col">
-                <h3 class="text-sm font-bold text-white tracking-tight leading-tight">
+                <h3 class="text-xs sm:text-sm font-bold text-slate-100 tracking-tight leading-none">
                     Renseignements sur la formation sanitaire
                 </h3>
-                <span class="text-[11px] font-medium text-slate-400 tracking-normal mt-0.5 font-sans italic">
+                <span class="text-[10px] font-medium text-slate-400 tracking-wide mt-1 italic">
                     Health facility information
                 </span>
             </div>
         </div>
 
         <!-- Indicateur visuel discret à droite -->
-        <div class="hidden sm:flex items-center text-slate-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="hidden sm:flex items-center gap-2 text-slate-400 text-xs font-mono bg-slate-800/50 px-2.5 py-1 rounded-md border border-slate-700/50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
+            <span class="text-[10px]">FOSA</span>
         </div>
     </div>
 
-    <!-- Corps du formulaire / Form Fields Grid -->
-    <div class="p-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 text-xs items-end">
+    <!-- Corps du formulaire / Form Fields Grid (12 Colonnes complètes) -->
+    <div class="p-5 sm:p-6 bg-slate-50/30">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 text-xs">
             
-            <!-- Région -->
-            <div class="space-y-1.5 lg:col-span-2">
-                <label class="font-medium text-slate-700 block">Région / Region <span class="text-rose-500">*</span></label>
-                <select id="select-region" name="region" required 
-                        class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                    <option value="">Sélectionner...</option>
-                    {% for r in regions %}
-                        <option value="{{ r.id }}" data-code="{{ r.designation }}">{{ r.nom }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <!-- District de Santé -->
+            <!-- Région (3 cols) -->
             <div class="space-y-1.5 lg:col-span-3">
-                <label class="font-medium text-slate-700 block">District de Santé / Health District <span class="text-rose-500">*</span></label>
-                <select id="select-district" name="district" required 
-                        class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                    <option value="">Sélectionner...</option>
-                </select>
-            </div>
-
-            <!-- Structure (FOSA) -->
-            <div class="space-y-1.5 lg:col-span-3">
-                <label class="font-medium text-slate-700 block">Structure (FOSA) / Facility <span class="text-rose-500">*</span></label>
-                <select id="select-fosa" name="fosa" required 
-                        class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                    <option value="">Sélectionner la structure...</option>
-                </select>
-            </div>
-
-            <!-- Code FOSA (Style Intégré ERP - Grisé Système) -->
-            <div class="space-y-1.5 lg:col-span-2">
-                <label class="font-medium text-slate-500 block font-mono text-[11px]">CODE FOSA</label>
-                <div class="flex items-center gap-1 bg-slate-100 p-1 border border-slate-300 rounded justify-center h-[34px]">
-                    <input type="text" id="fosa-otp-1" maxlength="1" readonly placeholder="-" class="w-7 text-center py-0.5 border border-slate-300 rounded bg-slate-50 text-slate-600 font-mono font-bold text-xs cursor-not-allowed focus:outline-none">
-                    <input type="text" id="fosa-otp-2" maxlength="1" readonly placeholder="-" class="w-7 text-center py-0.5 border border-slate-300 rounded bg-slate-50 text-slate-600 font-mono font-bold text-xs cursor-not-allowed focus:outline-none">
-                    <input type="text" id="fosa-otp-3" maxlength="1" readonly placeholder="-" class="w-7 text-center py-0.5 border border-slate-300 rounded bg-slate-50 text-slate-600 font-mono font-bold text-xs cursor-not-allowed focus:outline-none">
-                    <input type="hidden" name="fosa_code" id="fosa-code-hidden">
+                <label for="input_region" class="font-semibold text-slate-700 flex items-center justify-between">
+                    <span>Région <span class="text-slate-400 font-normal italic text-[10px]">/ Region</span></span>
+                    <span class="text-rose-500 font-bold">*</span>
+                </label>
+                <div class="relative">
+                    <input type="text" id="input_region" name="region" readonly value="{{ fiches_echantillon.region.nom }}"
+                           class="w-full px-3 py-2 bg-slate-100/80 border border-slate-200 rounded-lg text-slate-700 font-semibold text-xs cursor-not-allowed focus:outline-none truncate"
+                           title="{{ fiches_echantillon.region.nom }}">
                 </div>
             </div>
 
-            <!-- Porte d'Entrée -->
-            <div class="space-y-1.5 lg:col-span-2">
-                <label class="font-medium text-slate-700 block">Porte d'Entrée / Point of Entry <span class="text-rose-500">*</span></label>
-                <select id="select-porte-entree" name="porte_entree" required 
-                        class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                    <option value="">Sélectionner...</option>
-                    {% for pe in portes_entree %}
-                        <option value="{{ pe.id }}">{{ pe.nom }}</option>
-                    {% endfor %}
-                </select>
+            <!-- District de Santé (3 cols) -->
+            <div class="space-y-1.5 lg:col-span-3">
+                <label for="input_district" class="font-semibold text-slate-700 flex items-center justify-between">
+                    <span>District de Santé <span class="text-slate-400 font-normal italic text-[10px]">/ Health District</span></span>
+                    <span class="text-rose-500 font-bold">*</span>
+                </label>
+                <div class="relative">
+                    <input type="text" id="input_district" name="district" readonly value="{{ fiches_echantillon.district.nom }}"
+                           class="w-full px-3 py-2 bg-slate-100/80 border border-slate-200 rounded-lg text-slate-700 font-semibold text-xs cursor-not-allowed focus:outline-none truncate"
+                           title="{{ fiches_echantillon.district.nom }}">
+                </div>
+            </div>
+
+            <!-- Structure (FOSA) (3 cols) -->
+            <div class="space-y-1.5 lg:col-span-3">
+                <label for="input_fosa" class="font-semibold text-slate-700 flex items-center justify-between">
+                    <span>Structure (FOSA) <span class="text-slate-400 font-normal italic text-[10px]">/ Facility</span></span>
+                    <span class="text-rose-500 font-bold">*</span>
+                </label>
+                <div class="relative">
+                    <input type="text" id="input_fosa" name="fosa" readonly value="{{ fiches_echantillon.fosa.nom }}"
+                           class="w-full px-3 py-2 bg-slate-100/80 border border-slate-200 rounded-lg text-slate-700 font-semibold text-xs cursor-not-allowed focus:outline-none truncate"
+                           title="{{ fiches_echantillon.fosa.nom }}">
+                </div>
+            </div>
+
+            <!-- Porte d'Entrée (3 cols - Éditable) -->
+            <div class="space-y-1.5 lg:col-span-3">
+                <label for="select-porte-entree" class="font-semibold text-slate-800 flex items-center justify-between">
+                    <span>Porte d'Entrée <span class="text-slate-400 font-normal italic text-[10px]">/ Point of Entry</span></span>
+                    <span class="text-rose-500 font-bold">*</span>
+                </label>
+                <div class="relative">
+                    <select id="select-porte-entree" name="porte_entree" required 
+                            class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 cursor-pointer transition-all shadow-xs appearance-none pr-8">
+                        <option value="">Sélectionner...</option>
+                        {% for pe in portes_entree %}
+                            <option value="{{ pe.id }}">{{ pe.nom }}</option>
+                        {% endfor %}
+                    </select>
+                    <!-- Flèche personnalisée pour le menu déroulant -->
+                    <div class="absolute inset-y-0 right-0 flex items-center px-2.5 pointer-events-none text-slate-400">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
 </div>
-<!-- SCRIPT DE MISE À JOUR DU CODE FOSA OTP -->
-<script>
-    document.getElementById('fosa-select').addEventListener('change', function() {
-        // Récupérer l'option sélectionnée
-        const selectedOption = this.options[this.selectedIndex];
-        // Extraire l'attribut data-code (ex: "ABC" ou "123")
-        const code = selectedOption.getAttribute('data-code') || "";
-        
-        // Cibler nos 3 mini-champs OTP
-        const otp1 = document.getElementById('fosa_otp_1');
-        const otp2 = document.getElementById('fosa_otp_2');
-        const otp3 = document.getElementById('fosa_otp_3');
-        const hiddenInput = document.getElementById('fosa-code-hidden');
-
-        // Mettre à jour le champ caché pour Django
-        hiddenInput.value = code;
-
-        // Distribuer les caractères dans les cases OTP correspondantes
-        otp1.value = code.charAt(0) || "";
-        otp2.value = code.charAt(1) || "";
-        otp3.value = code.charAt(2) || "";
-    });
-</script>
-<!-- SECTION 2 : IDENTIFICATION DE L'ENFANT / INFANT INFORMATION -->
-<!-- En-tête de section Enfant (Style ERP Premium Dark) / Custom Child Section Header -->
-<div class="relative bg-slate-950 border-b border-slate-900 px-5 py-4 flex items-center justify-between rounded-t-lg overflow-hidden font-sans">
-    <!-- Ligne d'accentuation gauche pour structurer l'ERP -->
-    <div class="absolute left-0 top-0 bottom-0 w-[4px] bg-blue-500"></div>
-    
-    <div class="flex items-center gap-3.5 pl-1">
-        <!-- Badge Section contrasté sur fond noir -->
-        <span class="bg-slate-800 text-slate-200 border border-slate-700 text-[10px] font-mono font-black px-2.5 py-0.5 rounded uppercase tracking-wider">
-           Section 2
-        </span>
-        <div class="flex flex-col">
-            <h3 class="text-sm font-bold text-white tracking-tight leading-tight">
-                Identification de l'enfant
-            </h3>
-            <span class="text-[11px] font-medium text-slate-400 tracking-normal mt-0.5 font-sans italic">
-                Child's Identification
-            </span>
-        </div>
-    </div>
-
-    <!-- Indicateur visuel discret à droite -->
-    <div class="hidden sm:flex items-center text-slate-500">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h4m10-9A10 10 0 1114 2h2a10 10 0 0110 10z" />
-        </svg>
-    </div>
-</div>
-<!-- Bloc de Saisie Enfant - Style ERP Professionnel / Child Data Entry Block -->
-<div class="bg-white border border-slate-300 rounded-lg shadow-sm font-sans space-y-6 p-6">
-
-    <!-- 3. CODE D'IDENTIFICATION / IDENTIFICATION CODE -->
-    <div class="space-y-3">
+  <div class="space-y-3">
         <div class="border-b border-slate-200 pb-1.5">
             <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">3. Code d'identification / Identification Code <span class="text-rose-500">*</span></h4>
         </div>
@@ -208,7 +163,7 @@
                 <!-- Région -->
                 <div class="flex flex-col items-center gap-0.5 min-w-[54px]">
                     <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">REGION</span>
-                    <input type="text" id="code_region" maxlength="3" placeholder="---" autocomplete="off" required
+                    <input type="text" id="code_region" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.region.designation}}"
                            class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white font-bold text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
                 </div>
                 
@@ -217,7 +172,7 @@
                 <!-- District -->
                 <div class="flex flex-col items-center gap-0.5 min-w-[54px]">
                     <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">DISTRICT</span>
-                    <input type="text" id="code_district" maxlength="3" placeholder="---" autocomplete="off" required
+                    <input type="text" id="code_district" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.district.designation}}"
                            class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white font-bold text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
                 </div>
                 
@@ -226,7 +181,7 @@
                 <!-- FOSA -->
                 <div class="flex flex-col items-center gap-0.5 min-w-[64px]">
                     <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">Hôpital</span>
-                    <input type="text" id="code_fosa" maxlength="3" placeholder="---" autocomplete="off" required
+                    <input type="text" id="code_fosa" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.fosa.designation}}"
                            class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white font-bold text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
                 </div>
                 
@@ -267,748 +222,45 @@
             </div>
         </div>
     </div>
+<!-- CONTENEUR GLOBAL DU FORMULAIRE VERROUILLÉ (Sections 3, 4, 5, etc.) -->
 
-    <!-- 4. CONTACT FAMILIAL / FAMILY CONTACT -->
-    <div class="space-y-3 pt-2">
-        <div class="border-b border-slate-200 pb-1.5">
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">4. Contact familial / Family Contact <span class="text-rose-500">*</span></h4>
-        </div>
-        <div class="max-w-md text-xs">
-            <input readonly type="tel" name="contact_familial" required placeholder="Ex: +237 6XX XXX XXX" id="main_contact_familial"
-                   class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 font-medium cursor-not-allowed focus:outline-none">
-        </div>
-    </div>
-
-    <!-- 5. IDENTITÉ DE L'ENFANT / CHILD'S IDENTITY -->
-    <div class="space-y-3 pt-2">
-        <div class="border-b border-slate-200 pb-1.5">
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">5. Identité de l'enfant / Child's Identity</h4>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <!-- Nom -->
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-700 block">Nom de l'enfant / Last Name <span class="text-rose-500">*</span></label>
-                <input readonly type="text" name="enfant_nom" required placeholder="Saisir le nom" id="main_enfant_nom"
-                       class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 font-medium cursor-not-allowed focus:outline-none">
-            </div>
-            <!-- Prénom -->
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-700 block">Prénom de l'enfant / First Name</label>
-                <input readonly type="text" name="enfant_prenom" placeholder="Saisir le prénom" id="main_enfant_prenom"
-                       class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 font-medium cursor-not-allowed focus:outline-none">
-            </div>
-        </div>
-    </div>
-
-    <!-- 6. PARAMÈTRES BIOMÉTRIQUES / BIOMETRIC PARAMETERS -->
-    <div class="space-y-3 pt-2">
-        <div class="border-b border-slate-200 pb-1.5">
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">6.</h4>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs items-end">
-            <!-- Date de naissance -->
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-700 block">Date de naissance / Date of birth <span class="text-rose-500">*</span></label>
-                <input readonly type="date" name="date_naissance" id="enfant_dob" required 
-                       class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 cursor-not-allowed focus:outline-none">
-            </div>
-            <!-- Sexe -->
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-700 block">Sexe / Sex <span class="text-rose-500">*</span></label>
-                <select name="sexe" required id="main_sexe" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                    <option value="">Sélectionner...</option>
-                    <option value="M">Masculin (M)</option>
-                    <option value="F">Féminin (F)</option>
-                </select>
-            </div>
-            <!-- Rang de naissance -->
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-700 block">Si Jumeaux ou triplets, Indiquer 1,2,3 / If multiple, indicate 1,2,3</label>
-                <select name="rang_naissance" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                    <option value="1">1 (Unique ou 1er né)</option>
-                    <option value="2">2 (Deuxième né)</option>
-                    <option value="3">3 (Troisième né)</option>
-                </select>
-            </div>
-            <!-- Poids actuel -->
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-700 block">Poids du jour (kg) / Weight <span class="text-rose-500">*</span></label>
-                <input type="number" step="0.01" name="poids" required placeholder="Ex: 4.5" id="main_poids"
-                       class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-            </div>
-        </div>
-
-        <!-- ZONE COMPLÉMENTAIRE : AGE AUTOMATIQUE -->
-        <div class="pt-2 max-w-xs text-xs">
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-500 block">Âge numérique calculé / Calculated Age</label>
-                <div class="relative">
-                    <input type="text" id="enfant_age_display" readonly placeholder="Calcul automatique..." 
-                           class="w-full pl-3 pr-8 py-2 border border-slate-200 rounded bg-slate-50 text-slate-500 font-mono text-xs focus:outline-none cursor-not-allowed">
-                    <div class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line></svg>
-                    </div>
-                </div>
-                <input type="hidden" name="enfant_age" id="enfant_age_raw">
-            </div>
-        </div>
-    </div>
-
-    <!-- 7. PRISE EN CHARGE MEDICALE / MEDICAL CARE -->
-   <!-- 7. PRISE EN CHARGE MEDICALE / MEDICAL CARE -->
-    <div class="space-y-3 pt-2">
-        <div class="border-b border-slate-200 pb-1.5">
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">7. Prophylaxie ARV Donnée à l'enfant / Infant PMTCT Prophylaxis</h4>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            <!-- Prophylaxie ARV -->
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-700 block">Prophylaxie ARV reçue / ARV Prophylaxis Given to child</label>
-                <select name="profilaxie_arv" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                    <option value="">Choisir la prophylaxie...</option>
-                    {% for p in profilaxie_arv %}
-                        <option value="{{ p.id }}">{{ p.nom }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <!-- Date d'initiation -->
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-700 block">Date d'initiation / Initiation Date</label>
-                <input type="date" name="date_initiation_arv" 
-                       class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<script>
-    // --- 1. LOGIQUE COMPOSÉE DE 5 MINI-CHAMPS OTP ---
-    const inputs = [
-        document.getElementById('otp_1'), 
-        document.getElementById('otp_2'), 
-        document.getElementById('otp_3'),
-        document.getElementById('otp_4'),
-        document.getElementById('otp_5')
-    ];
-    const finalInput = document.getElementById('enfant_code_final');
-
-    function updateFinalCode() {
-        const values = inputs.map(input => input.value.toUpperCase());
-        if (values.some(val => val !== "")) {
-            finalInput.value = values.join('-');
-        } else {
-            finalInput.value = '';
-        }
-    }
-
-    inputs.forEach((input, index) => {
-        input.addEventListener('input', () => {
-            input.value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-            if (input.value.length === input.maxLength && index < inputs.length - 1) {
-                inputs[index + 1].focus();
-            }
-            updateFinalCode();
-        });
-
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && input.value.length === 0 && index > 0) {
-                inputs[index - 1].focus();
-            }
-        });
-    });
-
-    // --- 2. CALCUL AUTOMATIQUE DE L'ÂGE PÉDIATRIQUE ---
-    document.getElementById('enfant_dob').addEventListener('change', function() {
-        const dobValue = this.value;
-        if (!dobValue) return;
-
-        const dob = new Date(dobValue);
-        const now = new Date();
-        const diffTime = now - dob;
         
-        if (diffTime < 0) {
-            document.getElementById('enfant_age_display').value = "Date invalide (futur)";
-            return;
-        }
-
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-        const diffWeeks = Math.floor(diffDays / 7);
-        const diffMonths = Math.floor(diffDays / 30.4375);
-
-        let ageText = "";
-        
-        if (diffMonths >= 24) {
-            const years = Math.floor(diffMonths / 12);
-            ageText = years + " an(s)";
-        } else if (diffMonths >= 1) {
-            ageText = diffMonths + " mois";
-        } else {
-            ageText = diffWeeks + " semaine(s)";
-        }
-
-        document.getElementById('enfant_age_display').value = ageText;
-        document.getElementById('enfant_age_raw').value = diffMonths;
-    });
-</script>
-<!-- SECTION 3 : INFORMATIONS SUR LA MÈRE / MOTHER INFORMATION -->
-<!-- Conteneur Principal Style ERP / Main ERP Container -->
-<div class="bg-white border border-slate-300 rounded-lg shadow-sm font-sans">
+        <!-- SECTION 2 : INFORMATIONS SUR LE PATIENT / ENFANT -->
+         <div id="locked-section-wrapper" class="relative transition-all duration-300">
     
-    <!-- En-tête de section principal / Main Section Header -->
-   <!-- En-tête de section particulier (Style ERP Premium Dark) / Custom Main Section Header -->
-    <div class="relative bg-slate-950 border-b border-slate-900 px-5 py-4 flex items-center justify-between rounded-t-lg overflow-hidden">
-        <!-- Ligne d'accentuation gauche pour structurer l'ERP -->
-        <div class="absolute left-0 top-0 bottom-0 w-[4px] bg-blue-500"></div>
-        
-        <div class="flex items-center gap-3.5 pl-1">
-            <!-- Badge Section contrasté sur fond noir -->
-            <span class="bg-slate-800 text-slate-200 border border-slate-700 text-[10px] font-mono font-black px-2.5 py-0.5 rounded uppercase tracking-wider">
-               Section 3
-            </span>
-            <div class="flex flex-col">
-                <h3 class="text-sm font-bold text-white tracking-tight leading-tight">
-                    Informations sur la Mère
-                </h3>
-                <span class="text-[11px] font-medium text-slate-400 tracking-normal mt-0.5 font-sans italic">
-                    Mother's Information
-                </span>
-            </div>
-        </div>
-
-        <!-- Indicateur visuel discret à droite -->
-        <div class="hidden sm:flex items-center text-slate-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <!-- OVERLAY CADENAS (Masque visuel affiché par défaut) -->
+    <div id="lock-overlay" class="absolute inset-0 z-30 bg-slate-100/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-slate-300 transition-all duration-300">
+        <div class="w-14 h-14 rounded-full bg-slate-900 text-amber-400 flex items-center justify-center shadow-xl mb-3">
+            <!-- Icône Cadenas Fermé -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
         </div>
+        <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest font-mono">
+            Formulaire Verrouillé
+        </h4>
+        <p class="text-xs text-slate-600 mt-1 max-w-sm font-medium">
+            Veuillez saisir et vérifier le code patient ci-dessus pour déverrouiller la suite du formulaire.
+        </p>
     </div>
-    
-    <div class="p-6 space-y-6">
 
-        <!-- 8. IDENTITÉ / IDENTITY -->
-        <div class="space-y-3">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">8.Nom / Surname</h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <!-- Nom -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Nom  / Surname <span class="text-rose-500">*</span></label>
-                    <input readonly type="text" id="main_mere_nom" name="mere_nom" required placeholder="Nom de la mère" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 font-medium cursor-not-allowed focus:outline-none">
-                </div>
-                <!-- Prénom -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Prénom  /  First name</label>
-                    <input readonly type="text" id="main_mere_prenom" name="mere_prenom" placeholder="Prénom de la mère" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 font-medium cursor-not-allowed focus:outline-none">
-                </div>
-            </div>
-        </div>
+    <!-- FIELDSET (Désactive nativement tous les inputs/selects/buttons inclus) -->
+    <fieldset id="form-fieldset" disabled class="space-y-6 opacity-40 pointer-events-none transition-all duration-300">
+        {% include "../components/echantillons/section_patient.html" %}
 
-        <!-- 9. SUIVI CHRONOLOGIQUE / CHRONOLOGICAL FOLLOW-UP -->
-        <div class="space-y-3 pt-2">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">9.Prénom  /  First name</h4>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs items-end">
-                <!-- Date de naissance -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Date de naissance / Date of birth</label>
-                    <input readonly type="date" name="mere_date_naissance" id="main_mere_date_naissance"
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 cursor-not-allowed focus:outline-none">
-                </div>
-                <!-- Âge -->
-                <div class="space-y-1.5" style="display:none">
-                    <label class="font-medium text-slate-700 block">Âge (ans) / Age (years) <span class="text-rose-500">*</span></label>
-                    <input readonly type="number" name="mere_age" id="main_mere_age" required placeholder="Ex: 28" min="10" max="65"
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 cursor-not-allowed focus:outline-none">
-                </div>
-                <!-- Date du prochain rdv -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Date du Prochain RDV / Date of Next Appointment <span class="text-rose-500">*</span></label>
-                    <input type="date" name="date_prochain_rdv" required 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-                <!-- Date du diagnostic LAV -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Diag. LAV / LAV Diagnosis Date <span class="text-rose-500">*</span></label>
-                    <input type="date" name="date_diagnostic_lav" required 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-            </div>
-        </div>
+        <!-- SECTION 3 : INFORMATIONS SUR LA MÈRE -->
+        {% include "../components/echantillons/section_mother.html" %}
 
-        <!-- 10. MATERNITÉ / MATERNITY -->
-        <div class="space-y-3 pt-2">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">10. Mode d'accouchement  / Mode of Delivery</h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <!-- Mode d'accouchement -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Mode d'accouchement  / Mode of Delivery <span class="text-rose-500">*</span></label>
-                    <select name="mode_accouchement" required class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                        <option value="">Sélectionner le mode...</option>
-                        {% for m in mode_accouchement %}
-                            <option value="{{ m.id }}">{{ m.nom }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <!-- Numéro de grossesse -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Nº de Grossesse / Grvidity Nº</label>
-                    <input type="number" min="0" name="numero_grossesse" placeholder="0" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-            </div>
-        </div>
+        <!-- SECTION 4 : SUIVI VIROLOGIQUE, MÉDICAL & DIAGNOSTICS -->
+        {% include "../components/echantillons/section_clinics.html" %}
 
-        <!-- 11. STATUT VIH / HIV STATUS -->
-        <div class="space-y-3 pt-2">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">11. Date du diagnostic VIH / HIV Diagnosis Date</h4>
-            </div>
-            <div class="max-w-md text-xs">
-                <!-- Date diagnostic VIH -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Date du diagnostic VIH / HIV Diagnosis Date</label>
-                    <input type="date" name="date_diagnostic_vih" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-            </div>
-        </div>
+        <!-- SECTION 5 : INFORMATIONS SUR L'ÉCHANTILLON -->
+        {% include "../components/echantillons/section_infos_echantillon.html" %}
 
-        <!-- 12. SUIVI DE LA FRATRIE / SIBLING FOLLOW-UP -->
-        <div class="space-y-3 pt-2">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">12. Nombre enfants exposés / Number of Exposed Children</h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <!-- Enfants exposés -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">
-                        Nombre enfants exposés / Number of Exposed Children
-                        <span title="Nombre total d'enfants nés de cette mère suivis dans le programme PMTCT" class="cursor-help text-[10px] text-slate-400 font-sans ml-1">(?)</span>
-                    </label>
-                    <input type="number" min="0" name="nb_enfant_expose" placeholder="0" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-                <!-- Enfants infectés -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Nombre enfants infectés / Number of Infected Children </label>
-                    <input type="number" min="0" name="nb_enfant_infecte" placeholder="0" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-            </div>
-        </div>
+    </fieldset>
 
-        <!-- 13. PRISE EN CHARGE PTME / PMTCT CARE -->
-        <div class="space-y-3 pt-2">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">13. Protocole PTME suivi / ARV Protocol followed by mother</h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <!-- Protocole PTME suivi -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Protocole PTME suivi / ARV Protocol followed by mother <span class="text-rose-500">*</span></label>
-                    <select name="protocole_ptme" required class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                        <option value="">Sélectionner le protocole...</option>
-                        {% for p in protocole_ptme %}
-                            <option value="{{ p.id }}">{{ p.nom }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <!-- Date d'initiation PTME -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Date d'initiation du protocole / Regimen Initiation Date</label>
-                    <input type="date" name="date_initiation_ptme" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-            </div>
-        </div>
-
-    </div>
 </div>
-
-<!-- SCRIPTS DE COMPORTEMENT DE LA SECTION 3 -->
-<script>
-    // --- CALCUL DE L'ÂGE DE LA MÈRE EN TEMPS RÉEL ---
-    document.getElementById('mere_dob').addEventListener('change', function() {
-        const dobValue = this.value;
-        if (!dobValue) return;
-
-        const dob = new Date(dobValue);
-        const now = new Date();
-        
-        let age = now.getFullYear() - dob.getFullYear();
-        const monthDiff = now.getMonth() - dob.getMonth();
-        
-        // Ajustement si l'anniversaire n'est pas encore passé cette année
-        if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < dob.getDate())) {
-            age--;
-        }
-
-        if (age >= 0 && age < 100) {
-            document.getElementById('mere_age').value = age;
-        }
-    });
-</script>
-
-     <!-- SECTION : SUIVI VIROLOGIQUE, MÉDICAL & DIAGNOSTICS -->
-<!-- Bloc Section 4 - Style ERP Professionnel / Clinical Information -->
-<div class="bg-white border border-slate-300 rounded-lg shadow-sm font-sans overflow-hidden">
-    
-    <!-- En-tête de section (Style ERP Premium Dark) -->
-    <div class="relative bg-slate-950 border-b border-slate-900 px-5 py-4 flex items-center justify-between rounded-t-lg overflow-hidden">
-        <div class="absolute left-0 top-0 bottom-0 w-[4px] bg-emerald-600"></div>
-        
-        <div class="flex items-center gap-3.5 pl-1">
-            <span class="bg-slate-800 text-slate-200 border border-slate-700 text-[10px] font-mono font-black px-2.5 py-0.5 rounded uppercase tracking-wider">
-               SECTION 4
-            </span>
-            <div class="flex flex-col">
-                <h3 class="text-sm font-bold text-white tracking-tight leading-tight">
-                    Informations Cliniques
-                </h3>
-                <span class="text-[11px] font-medium text-slate-400 tracking-normal mt-0.5 font-sans italic">
-                    Clinical Information
-                </span>
-            </div>
-        </div>
-
-        <div class="hidden sm:flex items-center text-slate-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z" />
-            </svg>
-        </div>
     </div>
-
-    <!-- Corps du Formulaire -->
-    <div class="p-6 space-y-6">
-
-        <!-- SOUS-BLOC : ÉTAT CLINIQUE & ALIMENTATION (Questions 14 & 15) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <!-- 14. Enfant symptomatique -->
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-700 block">14. Enfant symptomatique ? / Symptomatic child? <span class="text-rose-500">*</span></label>
-                <select name="enfant_symptomatique" required 
-                        class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                    <option value="">Sélectionner...</option>
-                    <option value="oui">Oui</option>
-                    <option value="non">Non</option>
-                </select>
-            </div>
-
-            <!-- 15. Allaitement -->
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-700 block">15. Enfant allaité ? / Is child breastfed? <span class="text-rose-500">*</span></label>
-                <select name="enfant_allaite" id="enfant_allaite" required 
-                        class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                    <option value="">Sélectionner...</option>
-                    <option value="oui">Oui</option>
-                    <option value="non">Non / Jamais</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- ZONE CONDITIONNELLE : MODE D'ALLAITEMENT (Affichée via JS) -->
-        <div id="zone_allaitement" class="hidden text-xs p-4 bg-slate-50 border border-slate-200 rounded-md space-y-1.5">
-            <label class="font-medium text-slate-700 block">Mode d'allaitement / Breastfeeding mode</label>
-            <select name="mode_allaitement" class="w-full sm:w-1/2 px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                <option value="">Sélectionner le mode...</option>
-                {% for m in modes_allaitement %}
-                    <option value="{{ m.id }}">{{ m.nom }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- 16. STATUT DU SEVRAGE -->
-        <div class="space-y-3 bg-slate-50 p-4 border border-slate-200 rounded-md text-xs">
-            <label class="block font-bold text-slate-700 uppercase tracking-wide">
-                16. Statut du Sevrage / Weaning Status <span class="text-rose-500">*</span>
-            </label>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <!-- Option Non -->
-                <label class="group relative flex items-center gap-3 p-2.5 bg-white border border-slate-300 rounded cursor-pointer hover:border-slate-400 hover:bg-slate-50/50 transition-all select-none has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/20">
-                    <div class="flex items-center justify-center shrink-0 w-4 h-4 rounded-full border border-slate-300 bg-white transition-all group-has-[:checked]:border-blue-600">
-                        <input type="radio" name="statut_sevrage" value="non" id="sevrage_non" checked class="sr-only peer">
-                        <div class="w-2 h-2 rounded-full bg-blue-600 scale-0 transition-transform duration-150 peer-checked:scale-100"></div>
-                    </div>
-                    <span class="font-medium text-slate-700 group-has-[:checked]:text-blue-950">Pas encore sevré / Not yet weaned</span>
-                </label>
-
-                <!-- Option Oui -->
-                <label class="group relative flex items-center gap-3 p-2.5 bg-white border border-slate-300 rounded cursor-pointer hover:border-slate-400 hover:bg-slate-50/50 transition-all select-none has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/20">
-                    <div class="flex items-center justify-center shrink-0 w-4 h-4 rounded-full border border-slate-300 bg-white transition-all group-has-[:checked]:border-blue-600">
-                        <input type="radio" name="statut_sevrage" value="oui" id="sevrage_oui" class="sr-only peer">
-                        <div class="w-2 h-2 rounded-full bg-blue-600 scale-0 transition-transform duration-150 peer-checked:scale-100"></div>
-                    </div>
-                    <span class="font-medium text-slate-700 group-has-[:checked]:text-blue-950">Oui, sevré / Yes, weaned</span>
-                </label>
-            </div>
-
-            <!-- Date de sevrage conditionnelle -->
-            <div id="wrapper_date_sevrage" class="hidden space-y-1.5 pt-2 max-w-xs">
-                <label for="date_sevrage" class="block font-medium text-slate-600">
-                    Date effective du sevrage / Date of weaning <span class="text-rose-500">*</span>
-                </label>
-                <input type="date" name="date_sevrage" id="date_sevrage"
-                       class="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white text-slate-900 text-xs transition-colors">
-            </div>
-        </div>
-
-        <!-- SOUS-BLOC : MEDICATION (Questions 17 & 18) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <!-- 17. Prophylaxie Cotrimoxazole -->
-            <div class="p-4 border border-slate-200 bg-slate-50/50 rounded-md space-y-3">
-                <span class="text-[10px] bg-slate-800 text-slate-200 px-2 py-0.5 rounded font-mono uppercase font-bold tracking-wider block w-fit">
-                    17. Prophylaxie Cotrimoxazole
-                </span>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div class="space-y-1.5">
-                        <label class="text-slate-700 font-medium">Sous Cotrim ? <span class="text-rose-500">*</span></label>
-                        <select name="sous_cotrim" id="sous_cotrim" required class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                            <option value="non">Non</option>
-                            <option value="oui">Oui</option>
-                        </select>
-                    </div>
-                    <div class="space-y-1.5">
-                        <label class="text-slate-500 font-medium">Date d'initiation</label>
-                        <input type="date" name="date_initiation_cotrim" id="date_cotrim" disabled
-                               class="w-full px-3 py-2 border border-slate-200 bg-slate-100 text-slate-400 rounded cursor-not-allowed focus:outline-none">
-                    </div>
-                </div>
-            </div>
-
-            <!-- 18. Traitement ARV Enfant (TARV) -->
-            <div class="p-4 border border-slate-200 bg-slate-50/50 rounded-md space-y-3">
-                <span class="text-[10px] bg-slate-800 text-slate-200 px-2 py-0.5 rounded font-mono uppercase font-bold tracking-wider block w-fit">
-                    18. Traitement ARV Enfant (TARV)
-                </span>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div class="space-y-1.5">
-                        <label class="text-slate-700 font-medium">Sous TARV ? <span class="text-rose-500">*</span></label>
-                        <select name="sous_tarv" id="sous_tarv" required class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                            <option value="non">Non</option>
-                            <option value="oui">Oui</option>
-                        </select>
-                    </div>
-                    <div class="space-y-1.5">
-                        <label class="text-slate-500 font-medium">Date d'initiation</label>
-                        <input type="date" name="date_initiation_tarv" id="date_tarv" disabled
-                               class="w-full px-3 py-2 border border-slate-200 bg-slate-100 text-slate-400 rounded cursor-not-allowed focus:outline-none">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 19. EXAMENS LABORATOIRE ET RÉSULTATS PRÉCÉDENTS -->
-       <!-- 19. RÉSULTATS PRÉCÉDENTS -->
-        <div class="pt-4 border-t border-slate-200 space-y-4">
-            <span class="text-[10px] bg-blue-900 text-blue-100 px-2 py-0.5 rounded font-mono uppercase font-bold tracking-wide inline-block">
-                19. Résultats Précédents
-            </span>
-            
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 text-xs">
-                <!-- PCR-1 (Initial) -->
-                <div class="p-3.5 border border-slate-300 bg-white rounded space-y-2.5">
-                    <span class="text-[10px] bg-slate-100 text-slate-700 border border-slate-300 px-2 py-0.5 rounded font-mono font-bold uppercase block w-fit">PCR-1 (Initial)</span>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="space-y-1">
-                            <label class="text-slate-600 font-medium block">Date PCR-1</label>
-                            <input type="date" name="date_pcr1" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-slate-600 font-medium block">Résultat PCR-1</label>
-                            <select name="resultat_pcr1" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                                <option value="">Sélectionner...</option>
-                                {% for res in resultats_pcr %}
-                                    <option value="{{ res.id }}">{{ res.nom }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PCR-2 (Contrôle) -->
-                <div class="p-3.5 border border-slate-300 bg-white rounded space-y-2.5">
-                    <span class="text-[10px] bg-slate-100 text-slate-700 border border-slate-300 px-2 py-0.5 rounded font-mono font-bold uppercase block w-fit">PCR-2 (Contrôle)</span>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="space-y-1">
-                            <label class="text-slate-600 font-medium block">Date PCR-2</label>
-                            <input type="date" name="date_pcr2" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-slate-600 font-medium block">Résultat PCR-2</label>
-                            <select name="resultat_pcr2" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                                <option value="">Sélectionner...</option>
-                                {% for res in resultats_pcr %}
-                                    <option value="{{ res.id }}">{{ res.nom }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Autre PCR / Sérologie -->
-                <div class="p-3.5 border border-slate-300 bg-white rounded space-y-2.5">
-                    <span class="text-[10px] bg-slate-100 text-slate-700 border border-slate-300 px-2 py-0.5 rounded font-mono font-bold uppercase block w-fit">Autre PCR / Sérologie</span>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="space-y-1">
-                            <label class="text-slate-600 font-medium block">Date du prélèvement</label>
-                            <input type="date" name="date_pcr3" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-slate-600 font-medium block">Résultat du PCR-3</label>
-                            <select name="resultat_pcr3" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                                <option value="">Sélectionner...</option>
-                                {% for res in resultats_pcr %}
-                                    <option value="{{ res.id }}">{{ res.nom }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 20. RAISON DU PRÉLÈVEMENT -->
-        <div class="pt-4 border-t border-slate-200 space-y-2.5 text-xs">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-1">
-                <label class="block font-bold text-slate-700 uppercase tracking-wide">
-                    20. Raison du prélèvement / Reason for Sample Collection <span class="text-rose-500">*</span>
-                </label>
-                <span class="text-[10px] font-medium uppercase px-2 py-0.5 bg-slate-100 text-slate-500 rounded border border-slate-200">
-                    Choix unique
-                </span>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                {% for raison in raisons_prelevement %}
-                <label class="group relative flex items-center gap-3 p-3 bg-white border border-slate-200 rounded cursor-pointer hover:border-slate-400 hover:bg-slate-50/40 transition-colors select-none has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/20 min-h-[46px]">
-                    <div class="flex items-center justify-center shrink-0 w-4 h-4 rounded-full border border-slate-300 bg-white transition-all group-has-[:checked]:border-blue-600">
-                        <input type="radio" name="raisons_prelevement" value="{{ raison.id }}" required class="sr-only peer">
-                        <div class="w-2 h-2 rounded-full bg-blue-600 scale-0 transition-transform duration-150 peer-checked:scale-100"></div>
-                    </div>
-                    <div class="font-medium text-slate-700 group-has-[:checked]:text-blue-950 leading-tight select-none truncate" title="{{ raison.nom }}">
-                        {{ raison.nom }}
-                    </div>
-                </label>
-                {% empty %}
-                <div class="col-span-full py-4 text-center border border-dashed border-slate-300 rounded text-slate-400 bg-slate-50/50">
-                    Aucune raison de prélèvement disponible
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-    </div>
-</div>
-<!-- Bloc Section 5 - Style ERP Professionnel / Sample Information -->
-<div class="bg-white border border-slate-300 rounded-lg shadow-sm font-sans overflow-hidden">
-    
-    <!-- En-tête de section (Style ERP Premium Dark) -->
-    <div class="relative bg-slate-950 border-b border-slate-900 px-5 py-4 flex items-center justify-between rounded-t-lg overflow-hidden">
-        <div class="absolute left-0 top-0 bottom-0 w-[4px] bg-slate-400"></div>
-        
-        <div class="flex items-center gap-3.5 pl-1">
-            <span class="bg-slate-800 text-slate-200 border border-slate-700 text-[10px] font-mono font-black px-2.5 py-0.5 rounded uppercase tracking-wider">
-               SECTION 5
-            </span>
-            <div class="flex flex-col">
-                <h3 class="text-sm font-bold text-white tracking-tight leading-tight">
-                    Informations sur l'échantillon
-                </h3>
-                <span class="text-[11px] font-medium text-slate-400 tracking-normal mt-0.5 font-sans italic">
-                    Sample Information
-                </span>
-            </div>
-        </div>
-
-        <div class="hidden sm:flex items-center text-slate-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-            </svg>
-        </div>
-    </div>
-
-    <!-- Corps du Formulaire -->
-    <div class="p-6 space-y-5">
-
-        <!-- 21. CALENDRIER DE PRELEVEMENT -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <!-- Date de prélèvement -->
-            <div class="space-y-1.5">
-                <label class="font-medium text-slate-700 block">21. Date du prélèvement /  Date Of Sample Collection <span class="text-rose-500">*</span></label>
-                <input type="date" name="date_prelevement" required
-                       class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-            </div>
-
-            <!-- Re-prélèvement -->
-            <div class="space-y-1.5">
-                <label models for="is_reprelevement" class="font-medium text-slate-700 block"> re-prélèvement / Recollected <span class="text-rose-500">*</span></label>
-                <select name="duplicate_prelevement" id="is_reprelevement" required
-                        class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                    <option value="non">Non / No</option>
-                    <option value="oui">Oui / Yes</option>
-                </select>  
-            </div>
-        </div>
-
-        <div class="border-t border-slate-200 my-2"></div>
-
-        <!-- 22. LE RESTE (IDENTITÉ DU PERSONNEL & OBSERVATIONS) -->
-        <div class="space-y-4">
-            <span class="text-[10px] bg-slate-100 text-slate-700 border border-slate-300 px-2 py-0.5 rounded font-mono font-bold uppercase block w-fit">
-                22.CONTACT DU PRELEVEUR / CONTACT OF HEALTH PERSONNEL COLLECTING SAMPLE
-            </span>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 text-xs items-end">
-                <!-- Nom du Préleveur -->
-                <div class="space-y-1.5 lg:col-span-4">
-                    <label class="font-medium text-slate-700 block">Nom/Surname</label>
-                    <input type="text" name="nom_preleveur" placeholder="Ex: Mbianda" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-                <!-- Prénom du Préleveur -->
-                <div class="space-y-1.5 lg:col-span-4">
-                    <label class="font-medium text-slate-700 block">Prénom/First name</label>
-                    <input type="text" name="prenom_preleveur" placeholder="Ex: Jean-Pierre" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-                <!-- Contact Réseau -->
-                <div class="space-y-1.5 lg:col-span-4">
-                    <label class="font-medium text-slate-700 block">Contact  du préleveur / Collector's phone <span class="text-rose-500">*</span></label>
-                    <input type="number" name="contact_preleveur" required placeholder="Ex: 677123456" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-            </div>
-
-            <!-- Observations -->
-            <div class="space-y-1.5 text-xs">
-                <label class="font-medium text-slate-700 block">Observations de laboratoire / Laboratory notes</label>
-                <textarea name="observation" rows="3" placeholder="Ex: Intégrité de la chaîne de froid vérifiée, échantillon conforme..." 
-                          class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 font-medium resize-none focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"></textarea>
-            </div>
-        </div>
-<!-- Actions du Formulaire - Style ERP Professionnel -->
-        <div class="pt-4 flex justify-end gap-3 border-t border-slate-200 mt-6">
-            <!-- Bouton Retour / Annuler -->
-            <a href="" 
-               class="px-4 py-2 border border-slate-300 font-semibold bg-white text-slate-700 rounded shadow-sm hover:bg-slate-50 hover:text-slate-900 transition-colors uppercase tracking-wider text-[11px] flex items-center justify-center">
-                Retour
-            </a>
-            
-            <!-- Bouton Soumission -->
-            <button type="submit" 
-                    class="px-5 py-2 border border-indigo-700 font-bold bg-indigo-600 text-white rounded shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors uppercase tracking-wider text-[11px] cursor-pointer">
-                Valider et Créer l'Échantillon
-            </button>
-        </div>
-    </div>
-</div>
-</div>
     </div>
 </div>
 <script>
@@ -1109,163 +361,11 @@
 
        
     </form>
-</div>
-</main>
-  <dialog id="patient-modal" class="backdrop:bg-slate-900/50 backdrop:backdrop-blur-sm bg-white border-4 border-slate-900 rounded-2xl p-0 max-w-2xl w-full shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] open:animate-in open:fade-in open:zoom-in-95 duration-150 overflow-hidden">
     
-    <!-- EN-TÊTE FIXE DU MODAL -->
-    <div class="flex items-center justify-between border-b-4 border-slate-900 p-6 bg-white">
-        <div>
-            <h3 class="text-xl font-black uppercase tracking-tight text-slate-900">Création Dossier Patient (DMP)</h3>
-            <p class="text-xs font-bold text-slate-400 mt-0.5">Enregistrement initial et ouverture des droits de suivi</p>
-        </div>
-        <button onclick="document.getElementById('patient-modal').close()" class="p-2 border-2 border-slate-900 rounded-xl bg-slate-100 hover:bg-red-100 hover:text-red-900 text-slate-900 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-    </div>
+</div>
 
-    <!-- CORPS DU FORMULAIRE (SCROLL DESIGN FIN) -->
-    <div class="p-6 max-h-[65vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-900 scrollbar-track-slate-100 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-900 [&::-webkit-scrollbar-thumb]:rounded-full">
-        <form id="dmp-patient-form" method="POST" action="{%url 'create_patient'%}" class="space-y-6 pr-1">
-            {% csrf_token %}
-            
-            <!-- SECTION 1 : ÉTAT CIVIL ENFANT / PATIENT -->
-            <div class="space-y-4">
-                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
-                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">1</span>
-                    État Civil du Patient / Enfant
-                </h4>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Nom *</label>
-                        <input type="text" name="nom" required placeholder="Ex: AMOUGOU" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 uppercase focus:outline-none focus:bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Prénom(s)</label>
-                        <input type="text" name="prenom" placeholder="Ex: Samuel" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Sexe *</label>
-                        <select name="sexe" required class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
-                            <option value="">Choisir...</option>
-                            <option value="M">Masculin</option>
-                            <option value="F">Féminin</option>
-                        </select>
-                    </div>
-                </div>
+</main>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Date de Naissance</label>
-                        <input type="date" name="date_naissance" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Poids (en kg)</label>
-                        <input type="number" step="0.01" name="poids" placeholder="Ex: 4.50" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Code Patient <span class="text-[10px] text-slate-400">(Optionnel)</span></label>
-                        <input type="text" id="enfant_code_final" name="code" placeholder="Généré si vide" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-bold font-mono text-slate-900 focus:outline-none focus:bg-white">
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION 2 : INFORMATIONS DE LA MÈRE -->
-            <div class="space-y-4 pt-2">
-                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
-                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">2</span>
-                    Informations de la Mère
-                </h4>
-                
-                <div class="p-4 bg-slate-50 border-2 border-slate-900 rounded-xl space-y-4">
-                    <!-- Sélection principale de la mère -->
-                  
-
-                    <!-- Bloc d'informations d'état civil de la mère (Nom, Prénom, Âge, Date de naissance) -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-200 pt-3">
-                        <div>
-                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Nom de la mère</label>
-                            <input type="text" name="mere_nom" placeholder="Nom de famille" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 uppercase focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Prénom de la mère</label>
-                            <input type="text" name="mere_prenom" placeholder="Prénom(s)" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Âge de la mère</label>
-                            <input type="number" name="mere_age" placeholder="Ex: 28" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Date de naissance mère</label>
-                            <input type="date" name="mere_date_naissance" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-                        </div>
-                         <div>
-                            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">Contact de la mère</label>
-                            <input type="number" name="contact_mere" class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION 3 : RATTACHEMENTS STRUCTURELS -->
-            <div class="space-y-4 pt-2">
-                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
-                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">3</span>
-                    Liaison & Structure
-                </h4>
-                <div>
-                    <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">FOSA (Structure Sanitaire) *</label>
-                    <select name="fosa" required class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
-                        <option value="">Sélectionner une FOSA...</option>
-                        
-                    </select>
-                </div>
-            </div>
-
-            <!-- SECTION 4 : PARCOURS DE SOINS -->
-            <div class="space-y-4 pt-2">
-                <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b-2 border-dashed border-slate-200 pb-1 flex items-center gap-2">
-                    <span class="bg-slate-900 text-white w-4 h-4 rounded-sm inline-flex items-center justify-center text-[10px]">4</span>
-                    Parcours de Soins & Suivi Réseau
-                </h4>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Porte d'Entrée</label>
-                        <select name="porte_entree" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
-                            <option value="">Sélectionner...</option>
-                            {% for pe in portes_entree %}
-                                <option value="{{ pe.id }}">{{ pe.nom }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                  
-                    <div>
-                        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">Personnel Réseau</label>
-                        <select name="contact" class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 focus:outline-none focus:bg-white cursor-pointer">
-                            <option value="">Sélectionner...</option>
-                            {% for p in personnels %}
-                                <option value="{{ p.id }}">{{ p.nom }} {{ p.prenom }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <!-- FOOTER FIXE DU MODAL -->
-    <div class="flex items-center justify-end gap-3 p-6 border-t-4 border-slate-900 bg-slate-50">
-        <button type="button" onclick="document.getElementById('patient-modal').close()" class="px-4 py-2.5 border-2 border-slate-900 rounded-xl bg-slate-100 hover:bg-slate-200 font-black text-xs uppercase tracking-wider text-slate-900 transition-colors">
-            Annuler
-        </button>
-        <button type="submit" form="dmp-patient-form" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 border-2 border-slate-900 text-slate-100 font-black rounded-xl text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none cursor-pointer">
-            Valider et Créer le Patient
-        </button>
-    </div>
-</dialog>
 <!-- MODAL SUCCÈS -->
 <dialog id="modal-succes" class="backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm bg-white border-4 border-slate-900 rounded-2xl p-0 max-w-md w-full shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] overflow-hidden">
     <div class="p-6 text-center space-y-4">
@@ -1318,26 +418,7 @@
         </button>
     </div>
 </dialog>
-<script>
-     lucide.createIcons();
-     // Gestion de la fermeture en cliquant à côté du cadre blanc
-['personnel-modal', 'patient-modal'].forEach(id => {
-    const modal = document.getElementById(id);
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            const rect = modal.getBoundingClientRect();
-            if (
-                e.clientX < rect.left ||
-                e.clientX > rect.right ||
-                e.clientY < rect.top ||
-                e.clientY > rect.bottom
-            ) {
-                modal.close();
-            }
-        });
-    }
-});
-</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
     const dobInput = document.getElementById('enfant_dob');
@@ -1580,18 +661,66 @@
 
 
 <script>
- // Variable de verrouillage pour éviter les doubles clics accidentels
 let isSearching = false;
 
+// --- FONCTIONS DE GESTION DU CADENAS ---
+function unlockForm() {
+    const overlay = document.getElementById('lock-overlay');
+    const fieldset = document.getElementById('form-fieldset');
+
+    if (overlay && fieldset) {
+        // Masquer le cadenas
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => overlay.classList.add('hidden'), 300);
+
+        // Déverrouiller le fieldset
+        fieldset.removeAttribute('disabled');
+        fieldset.classList.remove('opacity-40', 'pointer-events-none');
+    }
+}
+
+function lockForm() {
+    const overlay = document.getElementById('lock-overlay');
+    const fieldset = document.getElementById('form-fieldset');
+
+    if (overlay && fieldset) {
+        overlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        fieldset.setAttribute('disabled', 'true');
+        fieldset.classList.add('opacity-40', 'pointer-events-none');
+    }
+}
+
+// --- FONCTION TOAST ---
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    const bgColors = {
+        success: 'bg-emerald-600 text-white',
+        info: 'bg-blue-600 text-white',
+        warning: 'bg-amber-500 text-white',
+        error: 'bg-rose-600 text-white'
+    };
+
+    toast.className = `fixed bottom-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg font-sans text-xs font-semibold tracking-wide transition-all duration-300 transform translate-y-5 opacity-0 ${bgColors[type] || bgColors.info}`;
+    
+    const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+    toast.innerHTML = `<span class="font-bold text-sm">${icon}</span> <span>${message}</span>`;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.remove('translate-y-5', 'opacity-0'), 10);
+    setTimeout(() => {
+        toast.classList.add('translate-y-5', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
+
+// --- ÉVÉNEMENT RECHERCHE CODE ---
 document.getElementById('btn-rechercher-code').addEventListener('click', function(e) {
-    // 1. Bloquer immédiatement la soumission native du formulaire si le bouton est dedans
     e.preventDefault();
     e.stopPropagation();
 
-    // 2. Anti-rebond (Debounce) : Si une recherche est déjà en cours, on ignore le clic
     if (isSearching) return;
 
-    // Récupération sécurisée et nettoyage des valeurs
     const reg = (inputCodeRegion.value || '').trim().toUpperCase();
     const dist = (inputCodeDistrict.value || '').trim().toUpperCase();
     const fosa = (inputCodeFosa.value || '').trim().toUpperCase();
@@ -1602,35 +731,42 @@ document.getElementById('btn-rechercher-code').addEventListener('click', functio
     const serie = (inputSerie ? inputSerie.value : '').trim().toUpperCase();
     const suffixe = (inputSuffixe ? inputSuffixe.value : '').trim().toUpperCase();
 
-    // Validation stricte des segments obligatoires
     if (!reg || !dist || !fosa || !pt || !serie) {
-        alert("Veuillez renseigner complètement les éléments constitutifs du code.");
+        showToast("Veuillez renseigner complètement les éléments du code.", "warning");
         return;
     }
 
-    // Verrouillage du process
     isSearching = true;
-    this.disabled = true; // Optionnel : désactive visuellement le bouton pendant le fetch
+    this.disabled = true;
 
-    // Construction linéaire rigoureuse du code complexe
     let codeComplexe = `${reg}${dist}${fosa}${pt}${serie}`;
     if (suffixe.length > 0) {
         codeComplexe += `-${suffixe}`;
     }
 
-    // Mise à jour de la valeur finale dans le DOM
     const targetFinal = document.getElementById('enfant_code_final');
     if (targetFinal) {
         targetFinal.value = codeComplexe;
     }
 
-    // Exécution de l'unique appel réseau
     fetch(`/verifier_patient/?code=${encodeURIComponent(codeComplexe)}`)
         .then(res => res.json())
         .then(data => {
             if (data.existe) {
+                // 🟢 CAS 1 : PATIENT EXISTE -> DÉVERROUILLER LE FORMULAIRE
+                showToast("Patient trouvé ! Formulaire déverrouillé.", "success");
                 alimenterChampsPrincipaux(data.patient);
+                
+                // Déverrouillage du cadenas
+                unlockForm();
+
             } else {
+                // 🟠 CAS 2 : PATIENT N'EXISTE PAS -> GARDER VERROUILLÉ ET OUVRIR LA MODALE
+                showToast("Code non attribué. Enregistrement requis.", "info");
+                
+                // Le cadenas RESTE VERROUILLÉ tant qu'il n'a pas créé le patient
+                lockForm();
+
                 const patientModal = document.getElementById('patient-modal');
                 const modalForm = document.getElementById('dmp-patient-form');
                 
@@ -1664,13 +800,18 @@ document.getElementById('btn-rechercher-code').addEventListener('click', functio
                 }
             }
         })
-        .catch(err => console.error("Erreur LIMS lors de la vérification :", err))
+        .catch(err => {
+            showToast("Erreur lors de la vérification du code.", "error");
+            console.error("Erreur :", err);
+        })
         .finally(() => {
-            // Libération du verrou après la réponse (succès ou échec)
             isSearching = false;
             this.disabled = false;
         });
 });
+
+// 💡 Astuce : Appelez `unlockForm()` dans le callback de votre modale de création de patient 
+// lorsqu'un nouveau patient est enregistré avec succès !
 </script>
 
 <script>

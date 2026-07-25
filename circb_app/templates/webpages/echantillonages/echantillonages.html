@@ -2,140 +2,267 @@
 {% load static %}
 
 {% block main %}
-<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50 custom-scrollbar">
-<div class="bg-slate-50 min-h-screen text-slate-800 font-sans antialiased">
-    
-    <!-- En-tête de la Console -->
-    <div class="mb-6 bg-slate-900 text-white p-6 border-4 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(99,102,241,1)]">
-        <div>
-            <h1 class="text-xs font-bold text-slate-100 tracking-tight uppercase">Console de Suivi · Échantillonnages</h1>
-            <p class="text-[11px] text-slate-100 mt-0.5">Registre actif : <span class="font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200 text-[10px]">{{ fiches.count }}</span> entrées</p>
-        </div>
-    </div>
-
-    <!-- Formulier de Filtres -->
-    <form method="GET" action="." class="bg-white border border-slate-200 rounded-xl p-4 mb-6 flex flex-wrap items-end gap-3 shadow-sm">
-        <div class="w-full sm:w-auto flex-1 min-w-[120px]">
-            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Date Réception</label>
-            <input type="date" name="date" value="{{ request.GET.date }}" class="w-full text-xs bg-white border border-slate-300 rounded-lg px-2 py-1.5 focus:outline-none focus:border-indigo-500 font-mono">
-        </div>
-        <div class="w-full sm:w-auto flex-1 min-w-[140px]">
-            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Réceptionniste</label>
-            <input type="text" name="user" value="{{ request.GET.user }}" placeholder="ID/Nom..." class="w-full text-xs bg-white border border-slate-300 rounded-lg px-2 py-1.5 focus:outline-none focus:border-indigo-500">
-        </div>
-        <div class="w-full sm:w-auto flex-1 min-w-[120px]">
-            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Région</label>
-            <input type="text" name="region" value="{{ request.GET.region }}" placeholder="Région..." class="w-full text-xs bg-white border border-slate-300 rounded-lg px-2 py-1.5 focus:outline-none focus:border-indigo-500">
-        </div>
-        <div class="w-full sm:w-auto flex-1 min-w-[120px]">
-            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1 tracking-wider">District</label>
-            <input type="text" name="district" value="{{ request.GET.district }}" placeholder="District..." class="w-full text-xs bg-white border border-slate-300 rounded-lg px-2 py-1.5 focus:outline-none focus:border-indigo-500">
-        </div>
-        <div class="w-full sm:w-auto flex-1 min-w-[120px]">
-            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Fosa</label>
-            <input type="text" name="fosa" value="{{ request.GET.fosa }}" placeholder="Structure..." class="w-full text-xs bg-white border border-slate-300 rounded-lg px-2 py-1.5 focus:outline-none focus:border-indigo-500">
-        </div>
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50/60 text-slate-800 w-full custom-scrollbar selection:bg-indigo-600 selection:text-white">
+    <div class="max-w-7xl mx-auto space-y-6 font-sans antialiased">
         
-        <div class="flex gap-1.5">
-            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-4 py-1.8 rounded-lg shadow-sm transition-colors flex items-center gap-1.5 h-[34px]">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.602Z" />
-                </svg>
-                Appliquer
-            </button>
-            {% if request.GET.date or request.GET.user or request.GET.region or request.GET.district or request.GET.fosa %}
-                <a href="." class="bg-white hover:bg-red-50 text-red-600 border border-slate-300 p-2 rounded-lg transition-colors flex items-center justify-center h-[34px] w-[34px]" title="Réinitialiser">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        <!-- ----------------------------------------------------------------- -->
+        <!-- EN-TÊTE PRINCIPAL : COCKPIT MEDICAL LUMINEUX                      -->
+        <!-- ----------------------------------------------------------------- -->
+        <div class="relative overflow-hidden rounded-3xl bg-white border border-slate-200/80 p-6 sm:p-8 shadow-sm">
+            <!-- Touche décorative lumineuse en arrière-plan -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-indigo-50 via-slate-50 to-transparent rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+            <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-mono font-bold tracking-wide uppercase mb-3">
+                        <span class="w-2 h-2 rounded-full bg-indigo-600 animate-ping"></span>
+                        Console LIMS V2.4 · Mode Actif
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sans">
+                        Console de Suivi des Échantillons
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl font-medium">
+                        Registre centralisé des prélèvements, traçabilité des dossiers pédiatriques et suivi du pipeline PCR.
+                    </p>
+                </div>
+
+                <!-- KPI Quick Stats Panel -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full lg:w-auto">
+                    <div class="bg-slate-50 border border-slate-200/70 rounded-2xl p-3.5 flex flex-col shadow-inner/5">
+                        <span class="text-[10px] font-mono font-bold text-slate-500 uppercase">Fiches Chargées</span>
+                        <span class="text-xl font-mono font-black text-slate-900 mt-1">{{ fiches.count }}</span>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200/70 rounded-2xl p-3.5 flex flex-col">
+                        <span class="text-[10px] font-mono font-bold text-slate-500 uppercase">Mode Registre</span>
+                        <span class="text-xl font-mono font-black text-indigo-600 mt-1">Temps Réel</span>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 bg-slate-50 border border-slate-200/70 rounded-2xl p-3.5 flex flex-col">
+                        <span class="text-[10px] font-mono font-bold text-slate-500 uppercase">Statut Réseau</span>
+                        <span class="text-xs font-mono font-bold text-emerald-600 mt-2 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Synchro OK
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ----------------------------------------------------------------- -->
+        <!-- BARRE DE FILTRES AVANCÉE                                         -->
+        <!-- ----------------------------------------------------------------- -->
+        <form method="GET" action="." class="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="p-1.5 bg-indigo-50 rounded-lg border border-indigo-100 text-indigo-600">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-mono font-black uppercase text-slate-900 tracking-wider">
+                        Moteur de recherche & filtres LIMS
+                    </span>
+                </div>
+                
+                {% if request.GET.date or request.GET.user or request.GET.region or request.GET.district or request.GET.fosa %}
+                    <a href="." class="text-xs font-mono font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1.5 transition-colors bg-rose-50 px-3 py-1 rounded-lg border border-rose-200/60">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                        Effacer les filtres
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+                <!-- Date Réception -->
+                <div class="space-y-1">
+                    <label class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block">Date Réception</label>
+                    <input type="date" name="date" value="{{ request.GET.date }}" class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all">
+                </div>
+
+                <!-- Réceptionniste -->
+                <div class="space-y-1">
+                    <label class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block">Réceptionniste</label>
+                    <input type="text" name="user" value="{{ request.GET.user }}" placeholder="ID ou nom..." class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all">
+                </div>
+
+                <!-- Région -->
+                <div class="space-y-1">
+                    <label class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block">Région</label>
+                    <input type="text" name="region" value="{{ request.GET.region }}" placeholder="Toutes régions..." class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all">
+                </div>
+
+                <!-- District -->
+                <div class="space-y-1">
+                    <label class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block">District</label>
+                    <input type="text" name="district" value="{{ request.GET.district }}" placeholder="Tous districts..." class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all">
+                </div>
+
+                <!-- Fosa -->
+                <div class="space-y-1">
+                    <label class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block">Structure (FOSA)</label>
+                    <input type="text" name="fosa" value="{{ request.GET.fosa }}" placeholder="Centre de santé..." class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all">
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-1">
+                <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-mono font-black text-xs uppercase tracking-wider rounded-xl shadow-md shadow-indigo-600/15 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z"/>
                     </svg>
-                </a>
-            {% endif %}
-        </div>
-    </form>
+                    Appliquer le filtre
+                </button>
+            </div>
+        </form>
 
-    <!-- TABLE ERP DES ÉCHANTILLONS -->
-    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
-                        <th class="py-3 px-4">Code Fiche</th>
-                        <th class="py-3 px-4">Patient / Enfant</th>
-                        <th class="py-3 px-4">Structure (FOSA)</th>
-                        <th class="py-3 px-4">Date Prélèvement</th>
-                        <th class="py-3 px-4">Tests PCR</th>
-                        <th class="py-3 px-4">Résultat</th>
-                        <th class="py-3 px-4 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="text-xs divide-y divide-slate-100 text-slate-700">
-                    {% for fiche in fiches %}
-                        {% for echantillon in fiche.echantillons.all %}
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <!-- Code Fiche -->
-                            <td class="py-3 px-4 font-mono font-bold text-indigo-600">
-                                {{ fiche.code }}
-                            </td>
-                            <!-- Patient / Enfant -->
-                            <td class="py-3 px-4">
-                                <div class="font-bold text-slate-900">{{ echantillon.enfant.nom|default:"Anonyme" }} {{ echantillon.enfant.prenom }}</div>
-                                <div class="text-[10px] text-slate-400 font-medium">Mère: {{ echantillon.mere.nom|default:"--" }}</div>
-                            </td>
-                            <!-- FOSA -->
-                            <td class="py-3 px-4 font-medium uppercase text-slate-600">
-                                {{ echantillon.enfant.fosa.nom|default:"Non spécifiée" }}
-                            </td>
-                            <!-- Date Prélèvement -->
-                            <td class="py-3 px-4 font-mono font-medium text-slate-500">
-                                {{ echantillon.date_prelevement|date:"d/m/Y" }}
-                            </td>
-                            <!-- Pipeline des tests PCR -->
-                            <td class="py-3 px-4">
-                                <div class="flex items-center gap-1 text-[10px] font-bold">
-                                    <span class="px-1.5 py-0.5 rounded {% if echantillon.pcr_1 %}bg-slate-900 text-white{% else %}bg-slate-100 text-slate-400{% endif %}">P1</span>
-                                    <span class="px-1.5 py-0.5 rounded {% if echantillon.pcr_2 %}bg-indigo-950 text-white{% else %}bg-slate-100 text-slate-400{% endif %}">P2</span>
-                                    {% if echantillon.duplicate_prelevement %}
-                                        <span class="px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded" title="Re-prélèvement">R</span>
-                                    {% endif %}
-                                </div>
-                            </td>
-                            <!-- Résultat final -->
-                            <td class="py-3 px-4">
-                                {% if echantillon.resultat_pcr %}
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wide bg-rose-50 text-rose-700 border border-rose-200">
-                                        {{ echantillon.resultat_pcr.libelle }}
+        <!-- ----------------------------------------------------------------- -->
+        <!-- TABLEAU ERP DES ÉCHANTILLONS                                      -->
+        <!-- ----------------------------------------------------------------- -->
+        <div class="bg-white border border-slate-200/80 rounded-3xl shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50/80 border-b border-slate-200 font-mono text-[10px] uppercase text-slate-500 tracking-wider">
+                            <th class="py-4 px-5 font-bold">Code Fiche</th>
+                            <th class="py-4 px-5 font-bold">Patient & Mère</th>
+                            <th class="py-4 px-5 font-bold">Formation Sanitaire</th>
+                            <th class="py-4 px-5 font-bold">Date Prélèvement</th>
+                            <th class="py-4 px-5 font-bold">Tests Initiés</th>
+                            <th class="py-4 px-5 font-bold">Résultat / Diagnostic</th>
+                            <th class="py-4 px-5 font-bold text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-xs font-medium">
+                        {% for fiche in fiches %}
+                            {% for echantillon in fiche.echantillons.all %}
+                            <tr class="hover:bg-indigo-50/30 transition-colors group">
+                                
+                                <!-- Code Fiche -->
+                                <td class="py-4 px-5 font-mono">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 font-bold text-[11px] group-hover:border-indigo-300 transition-colors">
+                                        {{ fiche.code }}
                                     </span>
-                                {% else %}
-                                    <span class="text-slate-400 italic text-[11px]">En cours...</span>
-                                {% endif %}
-                            </td>
-                            <!-- Actions -->
-                            <td class="py-3 px-4 text-right">
-                                <a href="/fiche-echantillon/{{echantillon.slug}}/" class="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 font-semibold rounded-lg border border-slate-200 transition-colors text-[11px]">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
-                                    Ouvrir
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    {% empty %}
-                        <tr>
-                            <td colspan="7" class="py-12 text-center text-slate-400 font-medium">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 mx-auto mb-2 opacity-30 text-slate-500">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
-                                </svg>
-                                Aucun enregistrement trouvé pour les critères sélectionnés.
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+                                </td>
 
-</div>
+                                <!-- Patient / Enfant / Mère -->
+                                <td class="py-4 px-5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-indigo-600 shrink-0">
+                                            {{ echantillon.enfant.nom|slice:":1"|default:"E" }}
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-slate-900 uppercase tracking-tight">
+                                                {{ echantillon.enfant.nom|default:"Patient Anonyme" }} {{ echantillon.enfant.prenom }}
+                                            </div>
+                                            <div class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1 font-mono">
+                                                <span>Mère:</span>
+                                                <span class="text-slate-700 font-medium">{{ echantillon.mere.nom|default:"Non renseigné" }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- Structure (FOSA) -->
+                                <td class="py-4 px-5">
+                                    <div class="flex items-center gap-1.5 text-slate-700 font-medium">
+                                        <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                                        </svg>
+                                        <span class="line-clamp-1 uppercase text-[11px]" title="{{ echantillon.enfant.fosa.nom|default:'Non spécifiée' }}">
+                                            {{ echantillon.enfant.fosa.nom|default:"Non spécifiée" }}
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <!-- Date Prélèvement -->
+                                <td class="py-4 px-5 font-mono text-slate-700 whitespace-nowrap">
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 text-[11px]">
+                                        <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+                                        </svg>
+                                        {{ echantillon.date_prelevement|date:"d/m/Y" }}
+                                    </div>
+                                </td>
+
+                                <!-- Pipeline des tests PCR -->
+                                <td class="py-4 px-5 font-mono">
+                                    <div class="flex flex-col gap-1.5">
+                                        {% for res in echantillon.resultats.all %}
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 border border-slate-200 text-slate-700 w-fit">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+                                                {{ res.test.nom|default:"Test PCR" }}
+                                            </span>
+                                        {% empty %}
+                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80 w-fit">
+                                                En attente d'amorçage
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+
+                                <!-- Statut / Résultat -->
+                                <td class="py-4 px-5 font-mono">
+                                    <div class="flex flex-col gap-1.5">
+                                        {% for res in echantillon.resultats.all %}
+                                            {% if res.resultat_pcr %}
+                                                {% if "POSITIF" in res.resultat_pcr.nom|upper %}
+                                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black bg-rose-50 text-rose-700 border border-rose-200 shadow-sm w-fit">
+                                                        <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
+                                                        {{ res.resultat_pcr.nom }}
+                                                    </span>
+                                                {% elif "NEGATIF" in res.resultat_pcr.nom|upper or "NÉGATIF" in res.resultat_pcr.nom|upper %}
+                                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm w-fit">
+                                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                                        {{ res.resultat_pcr.nom }}
+                                                    </span>
+                                                {% else %}
+                                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black bg-amber-50 text-amber-700 border border-amber-200 shadow-sm w-fit">
+                                                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                                        {{ res.resultat_pcr.nom }}
+                                                    </span>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-200 w-fit">
+                                                    Analyse en cours...
+                                                </span>
+                                            {% endif %}
+                                        {% empty %}
+                                            <span class="text-[11px] font-bold text-slate-400 italic">Non analysé</span>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+
+                                <!-- Action -->
+                                <td class="py-4 px-5 text-right whitespace-nowrap">
+                                    <a href="/fiche-echantillon/{{echantillon.slug}}/" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-slate-900 hover:bg-indigo-600 text-white font-mono font-bold text-[11px] rounded-xl transition-all shadow-sm active:scale-95 group-hover:translate-x-0.5">
+                                        <span>Dossier</span>
+                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                                        </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% empty %}
+                            <tr>
+                                <td colspan="7" class="py-20 text-center">
+                                    <div class="max-w-xs mx-auto space-y-3">
+                                        <div class="w-14 h-14 mx-auto rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
+                                            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                                            </svg>
+                                        </div>
+                                        <p class="text-xs font-bold font-mono text-slate-600 uppercase tracking-wider">Aucune fiche enregistrée</p>
+                                        <p class="text-[11px] text-slate-400">Ajustez vos filtres ci-dessus pour afficher d'autres enregistrements.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
 </main>
 {% endblock %}

@@ -73,7 +73,44 @@
             </button>
         </div>
     </form>
+<!-- MODALE DE CONFIRMATION ET BILAN -->
+<div id="resultModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div id="resultBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-200 opacity-0"></div>
 
+    <div class="fixed inset-0 z-10 overflow-y-auto p-4 flex items-center justify-center">
+        <div id="resultPanel" class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100 transform transition-all duration-200 opacity-0 scale-95 overflow-hidden p-6 text-center">
+            
+            <h3 class="text-base font-black text-slate-800 font-mono uppercase tracking-wide mb-1">
+                Bilan de l'Enregistrement
+            </h3>
+            <p class="text-xs text-slate-500 mb-4 font-medium">
+                Voici le détail du traitement de vos codes patients.
+            </p>
+
+            <!-- SECTION CODES ENREGISTRÉS (SUCCÈS) -->
+            <div id="sectionSaved" class="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3 mb-3 text-left hidden">
+                <span class="block text-[10px] font-black text-emerald-700 uppercase tracking-widest font-mono mb-2">
+                    ✓ Code(s) Enregistré(s) avec succès
+                </span>
+                <div id="containerSavedCodes" class="flex flex-wrap gap-1.5"></div>
+            </div>
+
+            <!-- SECTION CODES DÉJÀ EXISTANTS (IGNORÉS) -->
+            <div id="sectionExists" class="bg-amber-50/70 border border-amber-200 rounded-xl p-3 mb-4 text-left hidden">
+                <span class="block text-[10px] font-black text-amber-700 uppercase tracking-widest font-mono mb-2">
+                    ⚠ Code(s) Déjà existant(s) (non réenregistrés)
+                </span>
+                <div id="containerExistsCodes" class="flex flex-wrap gap-1.5"></div>
+            </div>
+
+            <!-- BOUTON DE FERMETURE -->
+            <button type="button" id="closeResultBtn" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 active:scale-[0.98] text-white text-xs font-bold font-mono transition-all shadow-md cursor-pointer">
+                Fermer
+            </button>
+
+        </div>
+    </div>
+</div>
 <!-- Modale Patient Trouvé - Version Design Premium -->
 <div id="patientModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
     <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl transform transition-all">
@@ -131,7 +168,7 @@ form.addEventListener('submit', async (e) => {
     submitBtn.innerText = 'Traitement...';
     const formData = new FormData(form);
     try {
-        const response = await fetch(window.location.href, {
+        const response = await fetch('/save-code-patient/', {
             method: 'POST',
             body: formData,
             headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value }

@@ -82,6 +82,8 @@ class FicheEchantillon(models.Model):
     date_reception = models.DateField(null=True)
     observation = models.TextField(null=True, blank=True)
     
+    date_Envoie_labo = models.DateField(null=True)
+    
     # Vos clés étrangères uniques vers le modèle Structure
     region = models.ForeignKey(
         Structure, 
@@ -145,15 +147,10 @@ class Mere(models.Model):
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255, null=True, blank=True)
     date_naissance = models.DateField(null=True, blank=True)
-    #sexe = models.CharField(max_length=10, choices=[('M', 'Masculin'), ('F', 'Féminin')], null=True, blank=True)
-    contact = models.ForeignKey(Personnel, on_delete=models.SET_NULL, null=True, blank=True)
+
+    contact = models.IntegerField(null=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-   # mode_accouchement = models.ForeignKey(ModeAccouchement, on_delete=models.SET_NULL, null=True, blank=True)
-   # date_prochain_rdv = models.DateField(null=True, blank=True)
-   # date_diagnostic_lav = models.DateField(null=True, blank=True)
-   # protocole_ptme = models.ForeignKey(ProtocolePTME, on_delete=models.SET_NULL, null=True, blank=True)
-   # date_initiation_ptme = models.DateField(null=True, blank=True)
-  
+
 
     def __str__(self):
         return f"{self.nom} {self.prenom or ''}".strip()
@@ -169,6 +166,7 @@ class Patient(models.Model):
     mere = models.ForeignKey(Mere, on_delete=models.SET_NULL, null=True, blank=True, related_name='enfants')
     code = models.SlugField(unique=True, null=True, blank=True)  # Code unique pour chaque patient
     porte_entree = models.ForeignKey(PorteEntree, on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.BooleanField(default=False)
     
 
     def __str__(self):
@@ -191,6 +189,7 @@ class Echantillon(models.Model):
     
     #enfant Informations
     slug = models.SlugField()
+    code = models.IntegerField(null=True)
     fiche = models.ForeignKey(FicheEchantillon, on_delete=models.CASCADE, related_name='echantillons')
     enfant =models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True, related_name='echantillons_enfant')
     poids = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # Poids en kg
@@ -221,12 +220,13 @@ class Echantillon(models.Model):
     date_cotrimoxazole = models.DateField(null=True, blank=True)
     present_tarv = models.BooleanField(default=False)
     date_tarv = models.DateField(null=True, blank=True)
-    pcr_1=models.BooleanField(default=False)
-    pcr_2 = models.BooleanField(default=False)
-    autre_pcr = models.BooleanField(default=False)
-    resultat_pcr = models.ForeignKey(ResultatPcr, on_delete=models.SET_NULL, null=True, blank=True)
+  
+
     raison_prelevement = models.ForeignKey(RaisonPrelevement, on_delete=models.SET_NULL, null=True, blank=True)
     porte_entree = models.ForeignKey(PorteEntree, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    date_enregistrement = models.DateField(null=True)
+    
     
     
     #INformation sur lechantillon
@@ -237,6 +237,22 @@ class Echantillon(models.Model):
     prenom_preleveur = models.CharField(max_length=255)
     contact_preleveur = models.IntegerField()
     observation = models.TextField()
+    
+    
+    test = models.ForeignKey(
+        'Test',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='echantillons',
+    )
+    resultat_pcr = models.ForeignKey(
+        'ResultatPcr',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='echantillons',
+    )
     
     
     def save(self, *args, **kwargs):
@@ -293,7 +309,7 @@ class Resultat(models.Model):
     # Liaison avec la table Lexique que tu as demandée
     resultat_pcr = models.ForeignKey(ResultatPcr, on_delete=models.PROTECT, null=True, related_name="resultats_associes")
     
-    date_prelevement = models.DateField()
+    date_resultat = models.DateField()
     commentaire = models.TextField(blank=True, null=True)
     responsable = models.ForeignKey(User, on_delete=models.CASCADE, related_name="resultats_valides")
     
@@ -303,7 +319,7 @@ class Resultat(models.Model):
     class Meta:
         verbose_name = "Résultat d'Analyse"
         verbose_name_plural = "Résultats d'Analyses"
-        ordering = ['-date_prelevement']
+        ordering = ['-date_resultat']
 
     def __str__(self):
         verdict = self.resultat_pcr.nom if self.resultat_pcr else "En attente"

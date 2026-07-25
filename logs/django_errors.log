@@ -2166,3 +2166,2689 @@ Traceback (most recent call last):
     )
 django.core.exceptions.FieldError: Unsupported lookup 'icontains' for ForeignKey or join on the field not permitted.
 "GET /recherche-patient/?q=njankouo HTTP/1.1" 500 141066
+Internal Server Error: /save-code-patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 205, in _get_response
+    self.check_response(response, callback)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 333, in check_response
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: The view circb_app.views.save_code_patient didn't return an HttpResponse object. It returned None instead.
+"POST /save-code-patient/ HTTP/1.1" 500 76888
+Internal Server Error: /save-code-patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "circb_app_patient_code_key"
+DETAIL:  Key (code)=(CRNEFOCMAIC1458) already exists.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/views/decorators/http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1078, in save_code_patient
+    Patient.objects.create(code=code)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 669, in create
+    obj.save(force_insert=True, using=self.db)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 874, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields=update_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 966, in save_base
+    updated = self._save_table(
+        raw,
+    ...<4 lines>...
+        update_fields,
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 1169, in _save_table
+    results = self._do_insert(
+        cls._base_manager, using, insert_fields, returning_fields, raw
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 1220, in _do_insert
+    return manager._insert(
+           ~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1918, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/compiler.py", line 1925, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.IntegrityError: duplicate key value violates unique constraint "circb_app_patient_code_key"
+DETAIL:  Key (code)=(CRNEFOCMAIC1458) already exists.
+
+"POST /save-code-patient/ HTTP/1.1" 500 167072
+Internal Server Error: /save-code-patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "circb_app_patient_code_key"
+DETAIL:  Key (code)=(CRNEFOCMAIC1458) already exists.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/views/decorators/http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1078, in save_code_patient
+    Patient.objects.create(code=code)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 669, in create
+    obj.save(force_insert=True, using=self.db)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 874, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields=update_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 966, in save_base
+    updated = self._save_table(
+        raw,
+    ...<4 lines>...
+        update_fields,
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 1169, in _save_table
+    results = self._do_insert(
+        cls._base_manager, using, insert_fields, returning_fields, raw
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 1220, in _do_insert
+    return manager._insert(
+           ~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1918, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/compiler.py", line 1925, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.IntegrityError: duplicate key value violates unique constraint "circb_app_patient_code_key"
+DETAIL:  Key (code)=(CRNEFOCMAIC1458) already exists.
+
+"POST /save-code-patient/ HTTP/1.1" 500 167072
+Internal Server Error: /saisir-echantillon/46/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 200, in render
+    template = context.template.engine.select_template(template_name)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 234, in select_template
+    raise TemplateDoesNotExist(", ".join(not_found))
+django.template.exceptions.TemplateDoesNotExist: webpages/echantillonages/components/echantillons/section_patient.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 121, in echantillons
+    return render(request, 'webpages/echantillonages/echantillons.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: webpages/echantillonages/components/echantillons/section_patient.html
+"GET /saisir-echantillon/46/ HTTP/1.1" 500 233135
+Internal Server Error: /saisir-echantillon/46/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 200, in render
+    template = context.template.engine.select_template(template_name)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 234, in select_template
+    raise TemplateDoesNotExist(", ".join(not_found))
+django.template.exceptions.TemplateDoesNotExist: webpages/components/echantillons/section_infos.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 121, in echantillons
+    return render(request, 'webpages/echantillonages/echantillons.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: webpages/components/echantillons/section_infos.html
+"GET /saisir-echantillon/46/ HTTP/1.1" 500 232140
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 123
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 123
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 132
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 132
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 604, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 604, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 604, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 604, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 604, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 604, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 604, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 604, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 604, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 604, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 604, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /search-plage/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1240, in search_plage
+    return render(
+        request, 'webpages/resultats/plages.html', context
+    )  # 👈 Ajustez le chemin de votre template
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 333, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 815, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaultfilters.py", line 789, in date
+    return formats.date_format(value, arg)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/utils/formats.py", line 155, in date_format
+    return dateformat.format(
+           ~~~~~~~~~~~~~~~~~^
+        value, get_format(format or "DATE_FORMAT", use_l10n=use_l10n)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/utils/dateformat.py", line 329, in format
+    return df.format(format_string)
+           ~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/utils/dateformat.py", line 45, in format
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: The format for date objects may not contain time-related format specifiers (found 'H').
+"POST /search-plage/ HTTP/1.1" 500 230267
+Internal Server Error: /search-plage/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Echantillon' object has no attribute 'type_test'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'type_test'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1240, in search_plage
+    return render(
+        request, 'webpages/resultats/plages.html', context
+    )  # 👈 Ajustez le chemin de votre template
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 333, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [type_test] in <Echantillon: Echantillon ech-20260717-1747 (Fiche: 170726-0001)>
+"POST /search-plage/ HTTP/1.1" 500 244093
+Internal Server Error: /search-plage/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1245, in search_plage
+    return render(request, 'webpages/resultats/plages.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 332, in render
+    if match:
+       ^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 404, in __bool__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2002, in _fetch_all
+    self._prefetch_related_objects()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1369, in _prefetch_related_objects
+    prefetch_related_objects(self._result_cache, *self._prefetch_related_lookups)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2426, in prefetch_related_objects
+    raise AttributeError(
+    ...<7 lines>...
+    )
+AttributeError: Cannot find 'tests' on Echantillon object, 'tests' is an invalid parameter to prefetch_related()
+"POST /search-plage/ HTTP/1.1" 500 201081
+Internal Server Error: /search-plage/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1266, in search_plage
+    return render(request, 'webpages/resultats/plages.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 332, in render
+    if match:
+       ^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 404, in __bool__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2002, in _fetch_all
+    self._prefetch_related_objects()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1369, in _prefetch_related_objects
+    prefetch_related_objects(self._result_cache, *self._prefetch_related_lookups)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2426, in prefetch_related_objects
+    raise AttributeError(
+    ...<7 lines>...
+    )
+AttributeError: Cannot find 'tests' on Echantillon object, 'tests' is an invalid parameter to prefetch_related()
+"POST /search-plage/ HTTP/1.1" 500 209697
+Internal Server Error: /search-plage/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1266, in search_plage
+    return render(request, 'webpages/resultats/plages.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 815, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaultfilters.py", line 637, in length
+    return len(value)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2002, in _fetch_all
+    self._prefetch_related_objects()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1369, in _prefetch_related_objects
+    prefetch_related_objects(self._result_cache, *self._prefetch_related_lookups)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2426, in prefetch_related_objects
+    raise AttributeError(
+    ...<7 lines>...
+    )
+AttributeError: Cannot find 'tests' on Echantillon object, 'tests' is an invalid parameter to prefetch_related()
+"POST /search-plage/ HTTP/1.1" 500 225194
+Internal Server Error: /search-plage/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1266, in search_plage
+    return render(request, 'webpages/resultats/plages.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 815, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaultfilters.py", line 637, in length
+    return len(value)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2002, in _fetch_all
+    self._prefetch_related_objects()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1369, in _prefetch_related_objects
+    prefetch_related_objects(self._result_cache, *self._prefetch_related_lookups)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2426, in prefetch_related_objects
+    raise AttributeError(
+    ...<7 lines>...
+    )
+AttributeError: Cannot find 'tests' on Echantillon object, 'tests' is an invalid parameter to prefetch_related()
+"POST /search-plage/ HTTP/1.1" 500 225194
+Internal Server Error: /search-plage/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1266, in search_plage
+    return render(request, 'webpages/resultats/plages.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 815, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaultfilters.py", line 637, in length
+    return len(value)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2002, in _fetch_all
+    self._prefetch_related_objects()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1369, in _prefetch_related_objects
+    prefetch_related_objects(self._result_cache, *self._prefetch_related_lookups)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2426, in prefetch_related_objects
+    raise AttributeError(
+    ...<7 lines>...
+    )
+AttributeError: Cannot find 'tests' on Echantillon object, 'tests' is an invalid parameter to prefetch_related()
+"POST /search-plage/ HTTP/1.1" 500 225194
+Internal Server Error: /search-plage/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1266, in search_plage
+    return render(request, 'webpages/resultats/plages.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 815, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaultfilters.py", line 637, in length
+    return len(value)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2002, in _fetch_all
+    self._prefetch_related_objects()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1369, in _prefetch_related_objects
+    prefetch_related_objects(self._result_cache, *self._prefetch_related_lookups)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 2426, in prefetch_related_objects
+    raise AttributeError(
+    ...<7 lines>...
+    )
+AttributeError: Cannot find 'tests' on Echantillon object, 'tests' is an invalid parameter to prefetch_related()
+"POST /search-plage/ HTTP/1.1" 500 225194
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 128
+Internal Server Error: /filter-stats/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1083, in statistic_echantillon
+    echantillons = echantillons.filter(
+                   ~~~~~~~~~~~~~~~~~~~^
+        date_enregistrement__date=date_jour
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ).count()
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1556, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1363, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1842, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'date_enregistrement' into field. Choices are: code, contact_preleveur, date_cotrimoxazole, date_diagnostic_lav, date_diagnostic_vih, date_initiation_ptme, date_prelevement, date_rdv, date_sevrage, date_tarv, duplicate_prelevement, enfant, enfant_id, fiche, fiche_id, id, mere, mere_id, mode_accouchement, mode_accouchement_id, mode_allaitement, mode_allaitement_id, nb_enfant_expose, nb_enfant_infecte, nom_preleveur, numero_grossesse, observation, poids, porte_entree, porte_entree_id, prenom_preleveur, present_allaitement, present_cotrimoxazole, present_sevrage, present_symptome, present_tarv, profilaxie_arv, profilaxie_arv_id, protocole_ptme, protocole_ptme_id, raison_prelevement, raison_prelevement_id, rang_naissance, resultat_pcr, resultat_pcr_id, resultats, slug, test, test_id
+"GET /filter-stats/?fosa=&periode_type=journalier&date_jour=2026-07-25 HTTP/1.1" 500 121009
+Internal Server Error: /filter-stats/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1084, in statistic_echantillon
+    echantillons = echantillons.filter(
+                   ~~~~~~~~~~~~~~~~~~~^
+        date_enregistrement__date=date_jour
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ).count()
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1618, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1439, in build_lookup
+    lhs = self.try_transform(lhs, lookup_name)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1488, in try_transform
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Unsupported lookup 'date' for DateField or join on the field not permitted.
+"GET /filter-stats/?fosa=&periode_type=journalier&date_jour=2026-07-25 HTTP/1.1" 500 118910
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 603, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /save-plage/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 987, in get_or_create
+    return self.get(**kwargs), False
+           ~~~~~~~~^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+circb_app.models.Resultat.DoesNotExist: Resultat matching query does not exist.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.NotNullViolation: null value in column "date_resultat" of relation "circb_app_resultat" violates not-null constraint
+DETAIL:  Failing row contains (18, null, null, 2026-07-25 10:20:52.31443+00, 2026-07-25 10:20:52.31448+00, 12, 1, 2, 1).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1336, in save_plage
+    Resultat.objects.update_or_create(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        echantillon_id=ech_id,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        }
+        ^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1029, in update_or_create
+    obj, created = self.select_for_update().get_or_create(
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        create_defaults, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 994, in get_or_create
+    return self.create(**params), True
+           ~~~~~~~~~~~^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 669, in create
+    obj.save(force_insert=True, using=self.db)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 874, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields=update_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 966, in save_base
+    updated = self._save_table(
+        raw,
+    ...<4 lines>...
+        update_fields,
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 1169, in _save_table
+    results = self._do_insert(
+        cls._base_manager, using, insert_fields, returning_fields, raw
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 1220, in _do_insert
+    return manager._insert(
+           ~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1918, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/compiler.py", line 1925, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.IntegrityError: null value in column "date_resultat" of relation "circb_app_resultat" violates not-null constraint
+DETAIL:  Failing row contains (18, null, null, 2026-07-25 10:20:52.31443+00, 2026-07-25 10:20:52.31448+00, 12, 1, 2, 1).
+
+"POST /save-plage/ HTTP/1.1" 500 189531
+Internal Server Error: /resultats/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Resultat' object has no attribute 'date_prelevement'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'date_prelevement'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 843, in resultats
+    return render(request, 'webpages/resultats/list_resultat.html',context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [date_prelevement] in <Resultat: Échantillon Echantillon ech-20260717-1747 (Fiche: 170726-0001) -> Verdict : NON DETECTE>
+"GET /resultats/ HTTP/1.1" 500 226365
+Internal Server Error: /resultats/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Resultat' object has no attribute 'date_prelevement'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'date_prelevement'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 843, in resultats
+    return render(request, 'webpages/resultats/list_resultat.html',context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [date_prelevement] in <Resultat: Échantillon Echantillon ech-20260717-1747 (Fiche: 170726-0001) -> Verdict : NON DETECTE>
+"GET /resultats/ HTTP/1.1" 500 226327
+Internal Server Error: /resultats/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Echantillon' object has no attribute 'code_barre'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'code_barre'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 843, in resultats
+    return render(request, 'webpages/resultats/list_resultat.html',context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 581, in render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [code_barre] in <Echantillon: Echantillon ech-20260717-1747 (Fiche: 170726-0001)>
+"GET /resultats/ HTTP/1.1" 500 237858
+Internal Server Error: /imprimer_resultat_pdf/19/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 861, in imprimer_resultat_pdf
+    'date_prelevement': resultat.date_prelevement, # Le filtre Django gérera le format dans le template
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Resultat' object has no attribute 'date_prelevement'
+"GET /imprimer_resultat_pdf/19/ HTTP/1.1" 500 73881
+Internal Server Error: /imprimer_resultat_pdf/20/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 861, in imprimer_resultat_pdf
+    'date_prelevement': resultat.date_prelevement, # Le filtre Django gérera le format dans le template
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Resultat' object has no attribute 'date_prelevement'
+"GET /imprimer_resultat_pdf/20/ HTTP/1.1" 500 73878
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 73802
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1458 HTTP/1.1" 500 73801
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1455 HTTP/1.1" 500 73800
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1455 HTTP/1.1" 500 73800
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1455 HTTP/1.1" 500 73800
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1455 HTTP/1.1" 500 73800
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1455 HTTP/1.1" 500 73800
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1455 HTTP/1.1" 500 73800
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAIC1455 HTTP/1.1" 500 73800
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 77102
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 77102
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 607, in verifier_patient
+    'contact': patient.mere.contact.id if patient.mere.contact else None,
+               ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'id'
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 77102
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 112
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 112
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 112
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 112
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 112
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 112
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 112
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 112
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 619, in verifier_patient
+    'date_naissance': formater_date(getattr(mere_obj, 'date_naissance', None)),
+                      ^^^^^^^^^^^^^
+NameError: name 'formater_date' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 643, in verifier_patient
+    logger.error(f"Erreur lors de la vérification du patient {code_recherche} : {str(e)}", exc_info=True)
+    ^^^^^^
+NameError: name 'logger' is not defined
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 82397
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 619, in verifier_patient
+    'date_naissance': formater_date(getattr(mere_obj, 'date_naissance', None)),
+                      ^^^^^^^^^^^^^
+NameError: name 'formater_date' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 643, in verifier_patient
+    logger.error(f"Erreur lors de la vérification du patient {code_recherche} : {str(e)}", exc_info=True)
+    ^^^^^^
+NameError: name 'logger' is not defined
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 82397
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 619, in verifier_patient
+    'date_naissance': formater_date(getattr(mere_obj, 'date_naissance', None)),
+                      ^^^^^^^^^^^^^
+NameError: name 'formater_date' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 643, in verifier_patient
+    logger.error(f"Erreur lors de la vérification du patient {code_recherche} : {str(e)}", exc_info=True)
+    ^^^^^^
+NameError: name 'logger' is not defined
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 82397
+Internal Server Error: /verifier_patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 619, in verifier_patient
+    'date_naissance': formater_date(getattr(mere_obj, 'date_naissance', None)),
+                      ^^^^^^^^^^^^^
+NameError: name 'formater_date' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 643, in verifier_patient
+    logger.error(f"Erreur lors de la vérification du patient {code_recherche} : {str(e)}", exc_info=True)
+    ^^^^^^
+NameError: name 'logger' is not defined
+"GET /verifier_patient/?code=CRNEFOCMAPT1455 HTTP/1.1" 500 82397
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 73
+Internal Server Error: /imprimer_resultat_pdf/21/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 893, in imprimer_resultat_pdf
+    'date_prelevement': resultat.date_prelevement, # Le filtre Django gérera le format dans le template
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Resultat' object has no attribute 'date_prelevement'
+"GET /imprimer_resultat_pdf/21/ HTTP/1.1" 500 77177
+Internal Server Error: /imprimer_resultat_pdf/20/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 893, in imprimer_resultat_pdf
+    'date_prelevement': resultat.date_prelevement, # Le filtre Django gérera le format dans le template
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Resultat' object has no attribute 'date_prelevement'
+"GET /imprimer_resultat_pdf/20/ HTTP/1.1" 500 77178

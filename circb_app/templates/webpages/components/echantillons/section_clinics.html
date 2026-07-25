@@ -1,0 +1,249 @@
+<div class="bg-white border border-slate-300 rounded-lg shadow-sm font-sans overflow-hidden" id="section_4">
+    
+    <!-- En-tête de section (Style ERP Premium Dark) -->
+    <div class="relative bg-slate-950 border-b border-slate-900 px-5 py-4 flex items-center justify-between rounded-t-lg overflow-hidden">
+        <div class="absolute left-0 top-0 bottom-0 w-[4px] bg-emerald-600"></div>
+        
+        <div class="flex items-center gap-3.5 pl-1">
+            <span class="bg-slate-800 text-slate-200 border border-slate-700 text-[10px] font-mono font-black px-2.5 py-0.5 rounded uppercase tracking-wider">
+               SECTION 4
+            </span>
+            <div class="flex flex-col">
+                <h3 class="text-sm font-bold text-white tracking-tight leading-tight">
+                    Informations Cliniques
+                </h3>
+                <span class="text-[11px] font-medium text-slate-400 tracking-normal mt-0.5 font-sans italic">
+                    Clinical Information
+                </span>
+            </div>
+        </div>
+
+        <div class="hidden sm:flex items-center text-slate-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Corps du Formulaire -->
+    <div class="p-6 space-y-6">
+
+        <!-- SOUS-BLOC : ÉTAT CLINIQUE & ALIMENTATION (Questions 14 & 15) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <!-- 14. Enfant symptomatique -->
+            <div class="space-y-1.5">
+                <label class="font-medium text-slate-700 block">14. Enfant symptomatique ? / Symptomatic child? <span class="text-rose-500">*</span></label>
+                <select name="enfant_symptomatique" required 
+                        class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
+                    <option value="">Sélectionner...</option>
+                    <option value="oui">Oui</option>
+                    <option value="non">Non</option>
+                </select>
+            </div>
+
+            <!-- 15. Allaitement -->
+            <div class="space-y-1.5">
+                <label class="font-medium text-slate-700 block">15. Enfant allaité ? / Is child breastfed? <span class="text-rose-500">*</span></label>
+                <select name="enfant_allaite" id="enfant_allaite" required 
+                        class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
+                    <option value="">Sélectionner...</option>
+                    <option value="oui">Oui</option>
+                    <option value="non">Non / Jamais</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ZONE CONDITIONNELLE : MODE D'ALLAITEMENT (Affichée via JS) -->
+        <div id="zone_allaitement" class="hidden text-xs p-4 bg-slate-50 border border-slate-200 rounded-md space-y-1.5">
+            <label class="font-medium text-slate-700 block">Mode d'allaitement / Breastfeeding mode</label>
+            <select name="mode_allaitement" class="w-full sm:w-1/2 px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
+                <option value="">Sélectionner le mode...</option>
+                {% for m in modes_allaitement %}
+                    <option value="{{ m.id }}">{{ m.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- 16. STATUT DU SEVRAGE -->
+        <div class="space-y-3 bg-slate-50 p-4 border border-slate-200 rounded-md text-xs">
+            <label class="block font-bold text-slate-700 uppercase tracking-wide">
+                16. Statut du Sevrage / Weaning Status <span class="text-rose-500">*</span>
+            </label>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Option Non -->
+                <label class="group relative flex items-center gap-3 p-2.5 bg-white border border-slate-300 rounded cursor-pointer hover:border-slate-400 hover:bg-slate-50/50 transition-all select-none has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/20">
+                    <div class="flex items-center justify-center shrink-0 w-4 h-4 rounded-full border border-slate-300 bg-white transition-all group-has-[:checked]:border-blue-600">
+                        <input type="radio" name="statut_sevrage" value="non" id="sevrage_non" checked class="sr-only peer">
+                        <div class="w-2 h-2 rounded-full bg-blue-600 scale-0 transition-transform duration-150 peer-checked:scale-100"></div>
+                    </div>
+                    <span class="font-medium text-slate-700 group-has-[:checked]:text-blue-950">Pas encore sevré / Not yet weaned</span>
+                </label>
+
+                <!-- Option Oui -->
+                <label class="group relative flex items-center gap-3 p-2.5 bg-white border border-slate-300 rounded cursor-pointer hover:border-slate-400 hover:bg-slate-50/50 transition-all select-none has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/20">
+                    <div class="flex items-center justify-center shrink-0 w-4 h-4 rounded-full border border-slate-300 bg-white transition-all group-has-[:checked]:border-blue-600">
+                        <input type="radio" name="statut_sevrage" value="oui" id="sevrage_oui" class="sr-only peer">
+                        <div class="w-2 h-2 rounded-full bg-blue-600 scale-0 transition-transform duration-150 peer-checked:scale-100"></div>
+                    </div>
+                    <span class="font-medium text-slate-700 group-has-[:checked]:text-blue-950">Oui, sevré / Yes, weaned</span>
+                </label>
+            </div>
+
+            <!-- Date de sevrage conditionnelle -->
+            <div id="wrapper_date_sevrage" class="hidden space-y-1.5 pt-2 max-w-xs">
+                <label for="date_sevrage" class="block font-medium text-slate-600">
+                    Date effective du sevrage / Date of weaning <span class="text-rose-500">*</span>
+                </label>
+                <input type="date" name="date_sevrage" id="date_sevrage"
+                       class="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white text-slate-900 text-xs transition-colors">
+            </div>
+        </div>
+
+        <!-- SOUS-BLOC : MEDICATION (Questions 17 & 18) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <!-- 17. Prophylaxie Cotrimoxazole -->
+            <div class="p-4 border border-slate-200 bg-slate-50/50 rounded-md space-y-3">
+                <span class="text-[10px] bg-slate-800 text-slate-200 px-2 py-0.5 rounded font-mono uppercase font-bold tracking-wider block w-fit">
+                    17. Prophylaxie Cotrimoxazole
+                </span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="space-y-1.5">
+                        <label class="text-slate-700 font-medium">Sous Cotrim ? <span class="text-rose-500">*</span></label>
+                        <select name="sous_cotrim" id="sous_cotrim" required class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                            <option value="non">Non</option>
+                            <option value="oui">Oui</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-slate-500 font-medium">Date d'initiation</label>
+                        <input type="date" name="date_initiation_cotrim" id="date_cotrim" disabled
+                               class="w-full px-3 py-2 border border-slate-200 bg-slate-100 text-slate-400 rounded cursor-not-allowed focus:outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 18. Traitement ARV Enfant (TARV) -->
+            <div class="p-4 border border-slate-200 bg-slate-50/50 rounded-md space-y-3">
+                <span class="text-[10px] bg-slate-800 text-slate-200 px-2 py-0.5 rounded font-mono uppercase font-bold tracking-wider block w-fit">
+                    18. Traitement ARV Enfant (TARV)
+                </span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="space-y-1.5">
+                        <label class="text-slate-700 font-medium">Sous TARV ? <span class="text-rose-500">*</span></label>
+                        <select name="sous_tarv" id="sous_tarv" required class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                            <option value="non">Non</option>
+                            <option value="oui">Oui</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-slate-500 font-medium">Date d'initiation</label>
+                        <input type="date" name="date_initiation_tarv" id="date_tarv" disabled
+                               class="w-full px-3 py-2 border border-slate-200 bg-slate-100 text-slate-400 rounded cursor-not-allowed focus:outline-none">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 19. EXAMENS LABORATOIRE ET RÉSULTATS PRÉCÉDENTS -->
+       <!-- 19. RÉSULTATS PRÉCÉDENTS -->
+        <div class="pt-4 border-t border-slate-200 space-y-4">
+            <span class="text-[10px] bg-blue-900 text-blue-100 px-2 py-0.5 rounded font-mono uppercase font-bold tracking-wide inline-block">
+                19. Résultats Précédents
+            </span>
+            
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 text-xs">
+                <!-- PCR-1 (Initial) -->
+                <div class="p-3.5 border border-slate-300 bg-white rounded space-y-2.5">
+                    <span class="text-[10px] bg-slate-100 text-slate-700 border border-slate-300 px-2 py-0.5 rounded font-mono font-bold uppercase block w-fit">PCR-1 (Initial)</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-slate-600 font-medium block">Date PCR-1</label>
+                            <input type="date" name="date_pcr1" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-slate-600 font-medium block">Résultat PCR-1</label>
+                            <select name="resultat_pcr1" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                                <option value="">Sélectionner...</option>
+                                {% for res in resultats_pcr %}
+                                    <option value="{{ res.id }}">{{ res.nom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PCR-2 (Contrôle) -->
+                <div class="p-3.5 border border-slate-300 bg-white rounded space-y-2.5">
+                    <span class="text-[10px] bg-slate-100 text-slate-700 border border-slate-300 px-2 py-0.5 rounded font-mono font-bold uppercase block w-fit">PCR-2 (Contrôle)</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-slate-600 font-medium block">Date PCR-2</label>
+                            <input type="date" name="date_pcr2" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-slate-600 font-medium block">Résultat PCR-2</label>
+                            <select name="resultat_pcr2" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                                <option value="">Sélectionner...</option>
+                                {% for res in resultats_pcr %}
+                                    <option value="{{ res.id }}">{{ res.nom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Autre PCR / Sérologie -->
+                <div class="p-3.5 border border-slate-300 bg-white rounded space-y-2.5">
+                    <span class="text-[10px] bg-slate-100 text-slate-700 border border-slate-300 px-2 py-0.5 rounded font-mono font-bold uppercase block w-fit">Autre PCR / Sérologie</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-slate-600 font-medium block">Date du prélèvement</label>
+                            <input type="date" name="date_pcr3" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-slate-600 font-medium block">Résultat du PCR-3</label>
+                            <select name="resultat_pcr3" class="w-full px-3 py-1.5 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                                <option value="">Sélectionner...</option>
+                                {% for res in resultats_pcr %}
+                                    <option value="{{ res.id }}">{{ res.nom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 20. RAISON DU PRÉLÈVEMENT -->
+        <div class="pt-4 border-t border-slate-200 space-y-2.5 text-xs">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1">
+                <label class="block font-bold text-slate-700 uppercase tracking-wide">
+                    20. Raison du prélèvement / Reason for Sample Collection <span class="text-rose-500">*</span>
+                </label>
+                <span class="text-[10px] font-medium uppercase px-2 py-0.5 bg-slate-100 text-slate-500 rounded border border-slate-200">
+                    Choix unique
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {% for raison in raisons_prelevement %}
+                <label class="group relative flex items-center gap-3 p-3 bg-white border border-slate-200 rounded cursor-pointer hover:border-slate-400 hover:bg-slate-50/40 transition-colors select-none has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/20 min-h-[46px]">
+                    <div class="flex items-center justify-center shrink-0 w-4 h-4 rounded-full border border-slate-300 bg-white transition-all group-has-[:checked]:border-blue-600">
+                        <input type="radio" name="raisons_prelevement" value="{{ raison.id }}" required class="sr-only peer">
+                        <div class="w-2 h-2 rounded-full bg-blue-600 scale-0 transition-transform duration-150 peer-checked:scale-100"></div>
+                    </div>
+                    <div class="font-medium text-slate-700 group-has-[:checked]:text-blue-950 leading-tight select-none truncate" title="{{ raison.nom }}">
+                        {{ raison.nom }}
+                    </div>
+                </label>
+                {% empty %}
+                <div class="col-span-full py-4 text-center border border-dashed border-slate-300 rounded text-slate-400 bg-slate-50/50">
+                    Aucune raison de prélèvement disponible
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>

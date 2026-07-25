@@ -71,7 +71,7 @@ def logout_view(request):
 @login_required(login_url='/')
 def dossiers_patients(request):
     context ={
-        'patients':Patient.objects.all()
+        'patients':Patient.objects.filter(status=True)
     }
     return render(request, 'webpages/patients/dossiers.html', context)
 
@@ -121,9 +121,13 @@ def echantillons(request, id):
     return render(request, 'webpages/echantillonages/echantillons.html', context)
 @login_required(login_url='/')
 def echantillonages(request):
-    fiches = FicheEchantillon.objects.all().order_by('id')
-    
-   
+    # Préchargement intelligent des relations imbriquées
+    fiches = FicheEchantillon.objects.prefetch_related(
+        'echantillons__enfant__fosa',
+        'echantillons__mere',
+        'echantillons__resultats__test',
+        'echantillons__resultats__resultat_pcr'
+    ).order_by('-id')
 
     context = {
         'fiches': fiches,
@@ -326,10 +330,10 @@ def details_fiche(request, slug):
 
 def detail_fiche(request, code):
     pass
-    
+
+
 def ajouter_echantillon(request):
     if request.method == 'POST':
-        # Détection de la nature de la requête AJAX
         is_ajax = (
             request.headers.get('X-Requested-With') == 'XMLHttpRequest' or 
             request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -337,20 +341,28 @@ def ajouter_echantillon(request):
         
         if is_ajax:
             fiche_id = request.POST.get('fiche_echantillon')
+            code_region = (request.POST.get('code_region') or '').strip().upper()
+            code_district = (request.POST.get('code_district') or '').strip().upper()
+            code_fosa = (request.POST.get('code_fosa') or '').strip().upper()
+            code_pt = (request.POST.get('code_pt') or '').strip().upper()
+            numero_serie = (request.POST.get('numero_serie') or '').strip().upper()
+            mere_id = request.POST.get('mere_id')
+            
             enfant_id = request.POST.get('enfant_id')
-            mere_id = request.POST.get('enfant_mere_id')
+            
+           
+            # 2. Construction du code de base
+            code_patient = f"{code_region}{code_district}{code_fosa}{code_pt}"
 
             try:
-                # Récupération de la fiche (Obligatoire)
+                # 1. Récupération obligatoire de la Fiche
                 fiche = FicheEchantillon.objects.filter(id=fiche_id).first() if fiche_id else None
                 if not fiche:
-                    return JsonResponse({'success': False, 'error': "La fiche d'échantillon associée est introuvable ou manquante."}, status=400)
+                    return JsonResponse({'success': False, 'error': "Fiche d'échantillon introuvable."}, status=400)
 
-                # --- Fonctions Helpers de Nettoyage de Données ---
-                # Interprète "oui" comme True et tout le reste (dont "non") comme False
+                # --- Helpers de nettoyage ---
                 def p_bool(val):
-                    if val is None: return False
-                    return str(val).strip().lower() == 'oui'
+                    return str(val).strip().lower() == 'oui' if val else False
 
                 def p_int(val):
                     return int(val) if val and str(val).isdigit() else None
@@ -362,22 +374,87 @@ def ajouter_echantillon(request):
 
                 def p_date(val):
                     if not val: return None
-                    try: return datetime.strptime(val, '%Y-%m-%d').date()
+                    try: return datetime.strptime(str(val).strip(), '%Y-%m-%d').date()
                     except ValueError: return None
 
-                # --- Création de l'enregistrement dans une transaction sécurisée ---
+                # --- Transaction Atomique ---
                 with transaction.atomic():
+
+                    # -------------------------------------------------------------
+                    # 2. PATIENT / ENFANT : Récupération & Mise à Jour des Infos
+                    # -------------------------------------------------------------
+                    enfant = None
+                    if code_patient:
+                        enfant = Patient.objects.filter(code=code_patient).first()
+                    elif enfant_id:
+                        enfant = Patient.objects.filter(id=enfant_id).first()
+
+                    if not enfant:
+                        return JsonResponse({'success': False, 'error': f"Le patient avec le code '{code_patient}' est introuvable."}, status=404)
+
+                    # Mise à jour des informations spécifiques de l'enfant
+                    if request.POST.get('enfant_nom'):
+                        enfant.nom = request.POST.get('enfant_nom', '').strip()
+                    if request.POST.get('enfant_prenom'):
+                        enfant.prenom = request.POST.get('enfant_prenom', '').strip()
+                    if request.POST.get('date_naissance'):
+                        enfant.date_naissance = p_date(request.POST.get('date_naissance'))
+                    if request.POST.get('sexe'):
+                        enfant.sexe = request.POST.get('sexe', '').strip()
+                    enfant.status=True
+                    
+                    enfant.save()
+
+                    # -------------------------------------------------------------
+                    # 3. MÈRE : Création ou Mise à Jour des Infos
+                    # -------------------------------------------------------------
+                    mere = None
+                    if mere_id:
+                        mere = Mere.objects.filter(id=mere_id).first()
+
+                    # Données Mère envoyées depuis le formulaire
+                    nom_mere = request.POST.get('mere_nom', '').strip()
+                    prenom_mere = request.POST.get('mere_prenom', '').strip()
+                    date_naissance_mere = p_date(request.POST.get('mere_date_naissance'))
+                    contact_mere = request.POST.get('contact_familial', '').strip()
+
+                    if not mere:
+                        # Si la mère n'existe pas, on la crée si au moins un champ est fourni
+                        if nom_mere or prenom_mere or contact_mere:
+                            mere = Mere.objects.create(
+                                nom=nom_mere,
+                                prenom=prenom_mere,
+                                date_naissance=date_naissance_mere,
+                                contact=contact_mere
+                            )
+                    else:
+                        # Si la mère existe déjà, on met à jour ses coordonnées
+                        if nom_mere: mere.nom = nom_mere
+                        if prenom_mere: mere.prenom = prenom_mere
+                        if date_naissance_mere: mere.date_naissance = date_naissance_mere
+                        if contact_mere: mere.contact = contact_mere
+                        mere.save()
+
+                    # Association de la mère à l'enfant
+                    if mere and hasattr(enfant, 'mere'):
+                        enfant.mere = mere
+                        enfant.save()
+
+                    # -------------------------------------------------------------
+                    # 4. ENREGISTREMENT DE L'ÉCHANTILLON
+                    # -------------------------------------------------------------
                     echantillon = Echantillon.objects.create(
+                        code = request.POST.get('code_echantillon'),
                         fiche=fiche,
+                        enfant=enfant,
+                        mere=mere,
                         
-                        # INFORMATIONS SUR ENFANT
-                        enfant_id=p_int(enfant_id),
+                        # INFOS ENFANT (Variables au précompte)
                         rang_naissance=p_int(request.POST.get('rang_naissance')),
                         poids=p_float(request.POST.get('poids')),
                         profilaxie_arv_id=p_int(request.POST.get('profilaxie_arv')),
                         
-                        # INFORMATIONS SUR MERE
-                        mere_id=p_int(mere_id),
+                        # INFOS SUIVI MÈRE
                         protocole_ptme_id=p_int(request.POST.get('protocole_ptme')),
                         date_rdv=p_date(request.POST.get('date_prochain_rdv')),
                         date_initiation_ptme=p_date(request.POST.get('date_initiation_ptme')),
@@ -388,7 +465,7 @@ def ajouter_echantillon(request):
                         mode_accouchement_id=p_int(request.POST.get('mode_accouchement')),
                         date_diagnostic_lav=p_date(request.POST.get('date_diagnostic_lav')),
                         
-                        # SUIVI VIROLOGIQUE (Analyse rigoureuse du Oui/Non)
+                        # SUIVI CLINIQUE ET VIROLOGIQUE
                         present_symptome=p_bool(request.POST.get('enfant_symptomatique')),
                         present_allaitement=p_bool(request.POST.get('enfant_allaite')),
                         mode_allaitement_id=p_int(request.POST.get('mode_allaitement')),
@@ -399,35 +476,30 @@ def ajouter_echantillon(request):
                         present_tarv=p_bool(request.POST.get('sous_tarv')),
                         date_tarv=p_date(request.POST.get('date_initiation_tarv')),
                         
-                        # Gestion des PCRs et raison
-                        pcr_1=p_bool(request.POST.get('date_pcr1')), 
-                        pcr_2=p_bool(request.POST.get('date_pcr2')),
-                        autre_pcr=p_bool(request.POST.get('autre_pcr')),
-                        resultat_pcr_id=p_int(request.POST.get('resultat_pcr')),
+                        # PCR ET PRÉLÈVEMENT
+                      
                         raison_prelevement_id=p_int(request.POST.get('raisons_prelevement')),
                         
-                        # INFOS PRÉLÈVEMENT
                         date_prelevement=p_date(request.POST.get('date_prelevement')),
                         duplicate_prelevement=p_bool(request.POST.get('duplicate_prelevement')),
                         nom_preleveur=request.POST.get('nom_preleveur', '').strip(),
                         prenom_preleveur=request.POST.get('prenom_preleveur', '').strip(),
                         contact_preleveur=p_int(request.POST.get('contact_preleveur')),
                         observation=request.POST.get('observation', '').strip(),
+                        date_enregistrement = datetime.now()
                     )
                 
                 return JsonResponse({
                     'success': True, 
-                    'message': "L'échantillon sanitaire a été enregistré avec succès en base de données."
+                    'message': "Les données du patient et de la mère ont été enregistrées avec succès !"
                 })
 
             except Exception as e:
-                return JsonResponse({'success': False, 'error': f"Erreur base de données : {str(e)}"}, status=500)
+                return JsonResponse({'success': False, 'error': f"Erreur traitement : {str(e)}"}, status=500)
         
-        return JsonResponse({'success': False, 'error': "Méthode ou protocole de requête invalide."}, status=400)
+        return JsonResponse({'success': False, 'error': "Requête non autorisée."}, status=400)
 
-    # Gestion classique du flux GET initial
     return render(request, 'webpages/echantillonages/echantillons.html', {})
-
 def ajouter_patient(request):
     if request.method == 'POST':
         # 1. Récupération des données du POST
@@ -513,7 +585,13 @@ def search_porte_entree(request, porte_entree_id):
     })
 
 from django.http import JsonResponse
-
+def formater_date(valeur_date):
+    """Convertit en toute sécurité une date en chaîne YYYY-MM-DD"""
+    if not valeur_date:
+        return None
+    if hasattr(valeur_date, 'strftime'):
+        return valeur_date.strftime('%Y-%m-%d')
+    return str(valeur_date)
 def verifier_patient(request):
     """Vérifie l'existence d'un patient par son code unique complet"""
     code_recherche = request.GET.get('code', '').strip()
@@ -521,22 +599,39 @@ def verifier_patient(request):
     if not code_recherche:
         return JsonResponse({'existe': False, 'erreur': 'Code manquant'}, status=400)
     
-    # Recherche du patient dans la base de données
-    patient = Patient.objects.filter(code=code_recherche).first()
-    
-    if patient:
-        # Construction sécurisée du dictionnaire de la mère si elle existe
+    try:
+        patient = Patient.objects.filter(code=code_recherche).first()
+        
+        if not patient:
+            return JsonResponse({'existe': False})
+
+        # Données de la mère
         mere_data = None
-        if patient.mere:
+        mere_obj = getattr(patient, 'mere', None)
+        
+        if mere_obj:
+            # Récupération sécurisée de l'ID du contact
+            contact_id = None
+            if hasattr(mere_obj, 'contact_id') and mere_obj.contact_id is not None:
+                contact_id = mere_obj.contact_id
+            elif hasattr(mere_obj, 'contact') and mere_obj.contact is not None:
+                contact_id = mere_obj.contact if isinstance(mere_obj.contact, int) else getattr(mere_obj.contact, 'id', None)
+
             mere_data = {
-                'id': patient.mere.id,
-                'nom': patient.mere.nom,
-                'prenom': patient.mere.prenom if hasattr(patient.mere, 'prenom') else '',
-                'contact': patient.mere.contact.id if patient.mere.contact else None,
-                'age': patient.mere.age if hasattr(patient.mere, 'age') else None,
-                'date_naissance': patient.mere.date_naissance.strftime('%Y-%m-%d') if patient.mere.date_naissance else None,
-                
+                'id': mere_obj.id,
+                'nom': getattr(mere_obj, 'nom', ''),
+                'prenom': getattr(mere_obj, 'prenom', ''),
+                'contact': contact_id,
+                'age': getattr(mere_obj, 'age', None),
+                'date_naissance': formater_date(getattr(mere_obj, 'date_naissance', None)),
             }
+
+        # Données de la porte d'entrée
+        porte_entree_id = None
+        if hasattr(patient, 'porte_entree_id') and patient.porte_entree_id:
+            porte_entree_id = patient.porte_entree_id
+        elif hasattr(patient, 'porte_entree') and patient.porte_entree:
+            porte_entree_id = patient.porte_entree if isinstance(patient.porte_entree, int) else getattr(patient.porte_entree, 'id', None)
 
         return JsonResponse({
             'existe': True,
@@ -544,14 +639,19 @@ def verifier_patient(request):
                 'id': patient.id,
                 'nom': patient.nom,
                 'prenom': patient.prenom,
-                'sexe': patient.sexe,
-                'porte_entree': patient.porte_entree.id if patient.porte_entree else None,
-                'date_naissance': patient.date_naissance.strftime('%Y-%m-%d') if patient.date_naissance else None,
-                'mere': mere_data,  # Renvoie un dictionnaire structuré ou None
+                'sexe': getattr(patient, 'sexe', None),
+                'porte_entree': porte_entree_id,
+                'date_naissance': formater_date(getattr(patient, 'date_naissance', None)),
+                'mere': mere_data,
             }
         })
-    else:
-        return JsonResponse({'existe': False})
+
+    except Exception as e:
+        logger.error(f"Erreur lors de la vérification du patient {code_recherche} : {str(e)}", exc_info=True)
+        return JsonResponse({
+            'existe': False, 
+            'erreur': f"Erreur serveur : {str(e)}"
+        }, status=500)
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -987,3 +1087,338 @@ def recherche_patient(request):
 
 def profile(request):
     return render(request, 'webpages/profile.html')
+
+def define_plage(request):
+    return render(request, 'webpages/resultats/plages.html')
+
+
+def liste_echantillon(request):
+    if request.method=="POST":
+       pass
+
+def statistic_echantillon(request):
+    # 1. QuerySet de base
+    echantillons = Echantillon.objects.all()
+
+    # 2. Filtre par FOSA (sélectionné dans la modale HTML)
+    fosa = request.GET.get('fosa')
+    if fosa:
+        echantillons = echantillons.filter(fosa=fosa)
+
+    # 3. Récupération de la période et de l'année
+    periode_type = request.GET.get('periode_type', 'toutes')
+    annee_val = request.GET.get('annee')
+    annee = (
+        int(annee_val) if annee_val and annee_val.isdigit() else datetime.now().year
+    )
+
+    # 4. Filtres temporels (On conserve un QuerySet à chaque étape)
+    if periode_type == 'journalier':
+        date_jour = request.GET.get('date_jour')
+        if date_jour:
+            # ✅ Pas de __date sur un DateField
+            echantillons = echantillons.filter(date_enregistrement=date_jour)
+
+    elif periode_type == 'mensuel':
+        mois_raw = request.GET.get('mois')  # Format YYYY-MM
+        if mois_raw and '-' in mois_raw:
+            year, month = mois_raw.split('-')
+            echantillons = echantillons.filter(
+                date_enregistrement__year=year, date_enregistrement__month=month
+            )
+
+    elif periode_type == 'trimestriel':
+        trimestre_val = request.GET.get('trimestre', '1')
+        trimestre = int(trimestre_val) if trimestre_val.isdigit() else 1
+        echantillons = echantillons.filter(
+            date_enregistrement__year=annee,
+            date_enregistrement__quarter=trimestre,
+        )
+
+    elif periode_type == 'semestriel':
+        semestre = request.GET.get('semestre', 'S1')
+        mois_semestre = range(1, 7) if semestre == 'S1' else range(7, 13)
+        echantillons = echantillons.filter(
+            date_enregistrement__year=annee,
+            date_enregistrement__month__in=mois_semestre,
+        )
+
+    elif periode_type == 'annuel':
+        echantillons = echantillons.filter(date_enregistrement__year=annee)
+
+    elif periode_type == 'custom':
+        date_debut = request.GET.get('date_debut')
+        date_fin = request.GET.get('date_fin')
+        if date_debut and date_fin:
+            # ✅ __range direct sur DateField
+            echantillons = echantillons.filter(
+                date_enregistrement__range=[date_debut, date_fin]
+            )
+        elif date_debut:
+            echantillons = echantillons.filter(
+                date_enregistrement__gte=date_debut
+            )
+        elif date_fin:
+            echantillons = echantillons.filter(
+                date_enregistrement__lte=date_fin
+            )
+
+    # 5. Calcul du total après filtrage
+    total_echantillons = echantillons.count()
+
+    return render(
+        request,
+        'webpages/dashbord_hosp.html',
+        {
+            'echantillons': echantillons,  # QuerySet filtré (pour boucler dessus)
+            'total_echantillons': total_echantillons,  # Entier pour afficher la métrique
+        },
+    )
+
+@require_POST
+def save_code_patient(request):
+    codes_enregistres = []
+    codes_existants = []
+
+    # 1. Parcourir tous les champs envoyés dans le POST
+    for key, value in request.POST.items():
+        if key.startswith('code_patient') and value.strip():
+            code = value.strip()
+            
+            # 2. Vérifier si le code existe déjà en BDD
+            if Patient.objects.filter(code=code).exists():
+                codes_existants.append(code)
+            else:
+                Patient.objects.create(code=code)
+                codes_enregistres.append(code)
+
+    # Si aucun champ n'était rempli dans le formulaire
+    if not codes_enregistres and not codes_existants:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Aucun code valide n\'a été fourni.'
+        }, status=400)
+
+    # 3. Réponse JSON avec la distinction des deux listes
+    return JsonResponse({
+        'status': 'success',
+        'message': 'Traitement effectué.',
+        'codes_enregistres': codes_enregistres,
+        'codes_existants': codes_existants
+    }, status=200)
+
+
+
+from django.contrib import messages
+from django.db.models import Q
+from django.shortcuts import render
+from .models import Echantillon, ResultatPcr, Test
+
+
+def search_plage(request):
+    tests = Test.objects.all()
+    resultats_pcr = ResultatPcr.objects.all()
+
+    echantillons = None
+    selected_test_id = request.POST.get('test_id', '').strip()
+    selected_resultat_pcr_id = request.POST.get('resultat_pcr_id', '').strip()
+    debut_raw = request.POST.get('debut_ancien_code', '').strip()
+    fin_raw = request.POST.get('fin_code_echantillon', '').strip()
+    exclure_raw = request.POST.get('liste_exclure', '').strip()
+    inclusion_raw = request.POST.get('liste_inclure', '').strip()
+
+    if request.method == 'POST':
+
+        # -------------------------------------------------------------
+        # 1. ACTION : ENREGISTREMENT / ATTRIBUTION DES RÉSULTATS
+        # -------------------------------------------------------------
+        if 'save_results' in request.POST:
+            echantillons_ids = request.POST.getlist('echantillon_ids')
+            count_updated = 0
+
+            for ech_id in echantillons_ids:
+                res_id = request.POST.get(f'resultat_{ech_id}', '').strip()
+                test_id_item = request.POST.get(f'test_{ech_id}', '').strip()
+
+                try:
+                    ech = Echantillon.objects.get(id=ech_id)
+
+                    # Mise à jour du résultat PCR
+                    ech.resultat_pcr_id = int(res_id) if res_id else None
+
+                    # Mise à jour du test si sélectionné
+                    ech.test_id = int(test_id_item) if test_id_item else None
+
+                    ech.save()
+                    count_updated += 1
+                except Echantillon.DoesNotExist:
+                    continue
+
+            messages.success(
+                request,
+                f' {count_updated} résultat(s) d\'échantillon(s) mis à jour avec succès !',
+            )
+
+        # -------------------------------------------------------------
+        # 2. ACTION : FILTRAGE / RECHERCHE DES ÉCHANTILLONS
+        # -------------------------------------------------------------
+        debut = int(debut_raw) if debut_raw.isdigit() else None
+        fin = int(fin_raw) if fin_raw.isdigit() else None
+
+        liste_exclure = [
+            int(i.strip())
+            for i in exclure_raw.replace('\n', ',').split(',')
+            if i.strip().isdigit()
+        ]
+        liste_inclure = [
+            int(i.strip())
+            for i in inclusion_raw.replace('\n', ',').split(',')
+            if i.strip().isdigit()
+        ]
+
+        query_plage = Q()
+        if debut is not None and fin is not None:
+            query_plage |= Q(code__gte=debut, code__lte=fin)
+        elif debut is not None:
+            query_plage |= Q(code__gte=debut)
+        elif fin is not None:
+            query_plage |= Q(code__lte=fin)
+
+        query_totale = query_plage
+        if liste_inclure:
+            query_totale |= Q(code__in=liste_inclure)
+
+        if query_totale:
+            echantillons = Echantillon.objects.filter(query_totale)
+        elif debut is None and fin is None and not liste_inclure:
+            echantillons = Echantillon.objects.all()
+        else:
+            echantillons = Echantillon.objects.none()
+
+        if liste_exclure and echantillons.exists():
+            echantillons = echantillons.exclude(code__in=liste_exclure)
+
+        if selected_test_id and echantillons.exists():
+            echantillons = echantillons.filter(test_id=selected_test_id)
+
+        if selected_resultat_pcr_id and echantillons.exists():
+            echantillons = echantillons.filter(
+                resultat_pcr_id=selected_resultat_pcr_id
+            )
+
+        if echantillons.exists():
+            echantillons = (
+                echantillons.select_related('enfant', 'test', 'resultat_pcr')
+                .distinct()
+                .order_by('code')
+            )
+
+    context = {
+        'debut': debut_raw,
+        'fin': fin_raw,
+        'exclure': exclure_raw,
+        'inclusion': inclusion_raw,
+        'tests': tests,
+        'resultats_pcr': resultats_pcr,
+        'selected_test_id': selected_test_id,
+        'selected_resultat_pcr_id': selected_resultat_pcr_id,
+        'echantillons': echantillons,
+    }
+
+    return render(request, 'webpages/resultats/plages.html', context)
+
+
+
+
+
+
+@login_required
+def save_plage(request):
+    echantillons = []
+    
+    # 1. Récupération des paramètres de filtrage (POST ou GET)
+    debut = request.POST.get('debut_ancien_code') or request.GET.get('debut_ancien_code', '')
+    fin = request.POST.get('fin_code_echantillon') or request.GET.get('fin_code_echantillon', '')
+    inclure_raw = request.POST.get('liste_inclure') or request.GET.get('liste_inclure', '')
+    exclure_raw = request.POST.get('liste_exclure') or request.GET.get('liste_exclure', '')
+
+    # Helper interne pour nettoyer les listes de codes saisies manuellement (ex: "101, 102\n103")
+    def parse_code_list(raw_string):
+        if not raw_string:
+            return []
+        cleaned = raw_string.replace('\r', '').replace('\n', ',')
+        return [c.strip() for c in cleaned.split(',') if c.strip()]
+
+    codes_inclure = parse_code_list(inclure_raw)
+    codes_exclure = parse_code_list(exclure_raw)
+
+    # 2. TRAITEMENT DE L'ENREGISTREMENT DES RÉSULTATS (Soumission du Formulaire)
+    if request.method == 'POST' and 'save_results' in request.POST:
+        echantillon_ids = request.POST.getlist('echantillon_ids')
+        saved_count = 0
+
+        # Utilisation d'une transaction atomique pour assurer la rapidité et la sécurité
+        with transaction.atomic():
+            for ech_id in echantillon_ids:
+                test_id = request.POST.get(f'test_{ech_id}') or None
+                resultat_pcr_id = request.POST.get(f'resultat_{ech_id}') or None
+
+                # On enregistre ou met à jour si au moins une valeur est sélectionnée
+                if test_id or resultat_pcr_id:
+                    Resultat.objects.update_or_create(
+                        echantillon_id=ech_id,
+                        defaults={
+                            'test_id': test_id,
+                            'resultat_pcr_id': resultat_pcr_id,
+                            'responsable': request.user,
+                            'date_resultat': datetime.now()
+                        }
+                    )
+                    
+                    # (Optionnel) Si ton modèle Echantillon conserve aussi le résultat direct :
+                    Echantillon.objects.filter(id=ech_id).update(
+                        test_id=test_id, 
+                        resultat_pcr_id=resultat_pcr_id
+                    )
+                    
+                    saved_count += 1
+
+        messages.success(request, f" {saved_count} résultat(s) enregistré(s) avec succès !")
+
+    # 3. RECHERCHE ET EXTRACTION DES ÉCHANTILLONS
+    if debut or fin or codes_inclure:
+        query = Q()
+
+        # Plage numérique / alphabétique de codes
+        if debut and fin:
+            # On suppose que `code` contient une valeur numérique ou qu'un champ `ancien_code` est utilisé
+            query |= Q(code__gte=debut, code__lte=fin)
+
+        # Ajout des codes spécifiques à inclure
+        if codes_inclure:
+            query |= Q(code__in=codes_inclure)
+
+        # Récupération de la liste filtrée
+        queryset = Echantillon.objects.filter(query).select_related('enfant')
+
+        # Exclusion des codes spécifiés
+        if codes_exclure:
+            queryset = queryset.exclude(code__in=codes_exclure)
+
+        echantillons = queryset.order_by('code')
+
+    # 4. CHARGEMENT DES LISTES POUR LES SELECTS
+    tests = Test.objects.all()
+    resultats_pcr = ResultatPcr.objects.all()
+
+    context = {
+        'echantillons': echantillons,
+        'tests': tests,
+        'resultats_pcr': resultats_pcr,
+        'debut': debut,
+        'fin': fin,
+        'inclusion': inclure_raw,
+        'exclure': exclure_raw,
+    }
+    messages.success(request, 'Resultats Valides avec succes')
+    return render(request, 'webpages/resultats/plages.html', context)

@@ -1,0 +1,102 @@
+<div class="bg-white border border-slate-300 rounded-lg shadow-sm font-sans overflow-hidden" id="_section_5">
+    
+    <!-- En-tête de section (Style ERP Premium Dark) -->
+    <div class="relative bg-slate-950 border-b border-slate-900 px-5 py-4 flex items-center justify-between rounded-t-lg overflow-hidden">
+        <div class="absolute left-0 top-0 bottom-0 w-[4px] bg-slate-400"></div>
+        
+        <div class="flex items-center gap-3.5 pl-1">
+            <span class="bg-slate-800 text-slate-200 border border-slate-700 text-[10px] font-mono font-black px-2.5 py-0.5 rounded uppercase tracking-wider">
+               SECTION 5
+            </span>
+            <div class="flex flex-col">
+                <h3 class="text-sm font-bold text-white tracking-tight leading-tight">
+                    Informations sur l'échantillon
+                </h3>
+                <span class="text-[11px] font-medium text-slate-400 tracking-normal mt-0.5 font-sans italic">
+                    Sample Information
+                </span>
+            </div>
+        </div>
+
+        <div class="hidden sm:flex items-center text-slate-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Corps du Formulaire -->
+    <div class="p-6 space-y-5">
+
+        <!-- 21. CALENDRIER DE PRELEVEMENT -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <!-- Date de prélèvement -->
+            <div class="space-y-1.5">
+                <label class="font-medium text-slate-700 block">21. Date du prélèvement /  Date Of Sample Collection <span class="text-rose-500">*</span></label>
+                <input type="date" name="date_prelevement" required
+                       class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+            </div>
+
+            <!-- Re-prélèvement -->
+            <div class="space-y-1.5">
+                <label models for="is_reprelevement" class="font-medium text-slate-700 block"> re-prélèvement / Recollected <span class="text-rose-500">*</span></label>
+                <select name="duplicate_prelevement" id="is_reprelevement" required
+                        class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
+                    <option value="non">Non / No</option>
+                    <option value="oui">Oui / Yes</option>
+                </select>  
+            </div>
+        </div>
+
+        <div class="border-t border-slate-200 my-2"></div>
+
+        <!-- 22. LE RESTE (IDENTITÉ DU PERSONNEL & OBSERVATIONS) -->
+        <div class="space-y-4">
+            <span class="text-[10px] bg-slate-100 text-slate-700 border border-slate-300 px-2 py-0.5 rounded font-mono font-bold uppercase block w-fit">
+                22.CONTACT DU PRELEVEUR / CONTACT OF HEALTH PERSONNEL COLLECTING SAMPLE
+            </span>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 text-xs items-end">
+                <!-- Nom du Préleveur -->
+                <div class="space-y-1.5 lg:col-span-4">
+                    <label class="font-medium text-slate-700 block">Nom/Surname</label>
+                    <input type="text" name="nom_preleveur" placeholder="Ex: Mbianda" 
+                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                </div>
+                <!-- Prénom du Préleveur -->
+                <div class="space-y-1.5 lg:col-span-4">
+                    <label class="font-medium text-slate-700 block">Prénom/First name</label>
+                    <input type="text" name="prenom_preleveur" placeholder="Ex: Jean-Pierre" 
+                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                </div>
+                <!-- Contact Réseau -->
+                <div class="space-y-1.5 lg:col-span-4">
+                    <label class="font-medium text-slate-700 block">Contact  du préleveur / Collector's phone <span class="text-rose-500">*</span></label>
+                    <input type="number" name="contact_preleveur" required placeholder="Ex: 677123456" 
+                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                </div>
+            </div>
+
+            <!-- Observations -->
+            <div class="space-y-1.5 text-xs">
+                <label class="font-medium text-slate-700 block">Observations de laboratoire / Laboratory notes</label>
+                <textarea name="observation" rows="3" placeholder="Ex: Intégrité de la chaîne de froid vérifiée, échantillon conforme..." 
+                          class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 font-medium resize-none focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"></textarea>
+            </div>
+        </div>
+
+        <div class="pt-4 flex justify-end gap-3 border-t border-slate-200 mt-6">
+            <!-- Bouton Retour / Annuler -->
+            <a href="" 
+               class="px-4 py-2 border border-slate-300 font-semibold bg-white text-slate-700 rounded shadow-sm hover:bg-slate-50 hover:text-slate-900 transition-colors uppercase tracking-wider text-[11px] flex items-center justify-center">
+                Retour
+            </a>
+            
+            <!-- Bouton Soumission -->
+            <button type="submit" 
+                    class="px-5 py-2 border border-indigo-700 font-bold bg-indigo-600 text-white rounded shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors uppercase tracking-wider text-[11px] cursor-pointer">
+                Valider et Créer l'Échantillon
+            </button>
+        </div>
+    </div>
+</div>

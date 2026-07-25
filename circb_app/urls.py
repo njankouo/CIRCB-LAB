@@ -84,8 +84,20 @@ urlpatterns = [
     
     path('recherche-patient/', views.recherche_patient, name='recherche-patient'),
     
-    path('profile/', views.profile, name='profile')
-  
+    path('profile/', views.profile, name='profile'),
+    
+    path('plages/', views.define_plage, name='plages'),
+    
+    path('save-code-patient/', views.save_code_patient, name='save-code-patient'),
+    
+    path('search-plage/', views.search_plage, name='search-plage'),
+    
+    path('filter-stats/', views.statistic_echantillon, name='filter-stats'),
+    
+    
+    path('save-plage/', views.save_plage, name='save-plage')
+    
+   
    
 ]
     
