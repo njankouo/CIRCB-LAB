@@ -13,15 +13,15 @@
             </div>
             <div class="px-5 py-2 bg-red-50 border border-red-100 rounded-xl text-center">
                 <span class="block text-[10px] font-bold text-red-400 uppercase">Code</span>
-                <span class="text-lg font-black text-red-600" id="total-samples">{{ fiche.code}}</span>
+                <span class="text-lg font-black text-red-600" id="total-samples">{{ fiche.code }}</span>
             </div>
             <div class="px-5 py-2 bg-red-50 border border-red-100 rounded-xl text-center">
                 <span class="block text-[10px] font-bold text-red-400 uppercase">Échantillons</span>
-                <span class="text-lg font-black text-red-600" id="total-samples">{{ fiche.nombre_echantillon }}</span>
+                <span class="text-lg font-black text-red-600">{{ fiche.nombre_echantillon }}</span>
             </div>
         </div>
 
-        <!-- Tableau -->
+        <!-- Tableau des codes -->
         <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
             <div class="grid grid-cols-12 gap-0 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 <div class="col-span-1 py-3 text-center">N°</div>
@@ -48,7 +48,7 @@
                     <div class="col-span-2 py-4 px-4">
                         <select name="porte_entree_{{ i }}" class="w-full text-xs font-semibold border-slate-200 rounded-lg py-2 px-2 text-slate-600 outline-none focus:border-blue-300 pt_code">
                             {% for pt in porte_entree %}
-                            <option value="{{ pt.code }}">{{ pt.code }} ({{pt.nom}} )</option>
+                            <option value="{{ pt.code }}">{{ pt.code }} ({{ pt.nom }})</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -68,148 +68,217 @@
         </div>
 
         <div class="flex justify-end">
-            <button type="submit" id="submitBtn" class="px-8 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-md shadow-blue-200 active:scale-[0.98] transition-all">
+            <button type="submit" id="submitBtn" class="px-8 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-md shadow-blue-200 active:scale-[0.98] transition-all cursor-pointer">
                 Valider la liste
             </button>
         </div>
     </form>
-<!-- MODALE DE CONFIRMATION ET BILAN -->
-<div id="resultModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div id="resultBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-200 opacity-0"></div>
 
-    <div class="fixed inset-0 z-10 overflow-y-auto p-4 flex items-center justify-center">
-        <div id="resultPanel" class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100 transform transition-all duration-200 opacity-0 scale-95 overflow-hidden p-6 text-center">
+    <!-- MODAL 1 : RAPPORT DE BILAN DES CODES -->
+    <div id="resultModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             
-            <h3 class="text-base font-black text-slate-800 font-mono uppercase tracking-wide mb-1">
-                Bilan de l'Enregistrement
-            </h3>
-            <p class="text-xs text-slate-500 mb-4 font-medium">
-                Voici le détail du traitement de vos codes patients.
-            </p>
-
-            <!-- SECTION CODES ENREGISTRÉS (SUCCÈS) -->
-            <div id="sectionSaved" class="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3 mb-3 text-left hidden">
-                <span class="block text-[10px] font-black text-emerald-700 uppercase tracking-widest font-mono mb-2">
-                    ✓ Code(s) Enregistré(s) avec succès
-                </span>
-                <div id="containerSavedCodes" class="flex flex-wrap gap-1.5"></div>
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Rapport d'enregistrement</h3>
+                    <p class="text-xs text-slate-400">Résultat du traitement par lots</p>
+                </div>
+                <button type="button" onclick="closeResultModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-600 flex items-center justify-center font-bold text-sm transition-colors cursor-pointer">
+                    ✕
+                </button>
             </div>
 
-            <!-- SECTION CODES DÉJÀ EXISTANTS (IGNORÉS) -->
-            <div id="sectionExists" class="bg-amber-50/70 border border-amber-200 rounded-xl p-3 mb-4 text-left hidden">
-                <span class="block text-[10px] font-black text-amber-700 uppercase tracking-widest font-mono mb-2">
-                    ⚠ Code(s) Déjà existant(s) (non réenregistrés)
-                </span>
-                <div id="containerExistsCodes" class="flex flex-wrap gap-1.5"></div>
+            <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+                <!-- Section Initialisés -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] uppercase font-bold text-slate-400">Codes Initialisés</span>
+                        <span id="countInitialises" class="text-xs font-bold px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full">0</span>
+                    </div>
+                    <div id="listInitialises" class="space-y-2">
+                        <!-- Injécté dynamiquement -->
+                    </div>
+                </div>
+
+                <!-- Section Refusés -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] uppercase font-bold text-slate-400">Codes Refusés / Ignorés</span>
+                        <span id="countRefuses" class="text-xs font-bold px-2 py-0.5 bg-rose-100 text-rose-700 rounded-full">0</span>
+                    </div>
+                    <div id="listRefuses" class="space-y-2">
+                        <!-- Injecté dynamiquement -->
+                    </div>
+                </div>
             </div>
 
-            <!-- BOUTON DE FERMETURE -->
-            <button type="button" id="closeResultBtn" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 active:scale-[0.98] text-white text-xs font-bold font-mono transition-all shadow-md cursor-pointer">
-                Fermer
+            <div class="pt-4 border-t border-slate-100 mt-4">
+                <button type="button" onclick="closeResultModal()" class="w-full py-2.5 bg-slate-800 text-white font-semibold text-xs rounded-xl hover:bg-slate-900 transition-colors shadow-lg shadow-slate-200 cursor-pointer">
+                    Fermer le rapport
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL 2 : DETAILS D'UN PATIENT -->
+    <div id="patientModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl transform transition-all">
+            <div class="flex flex-col items-center mb-6">
+                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-xl font-black text-slate-800">Dossier Patient</h2>
+                <p class="text-slate-400 text-xs uppercase tracking-widest font-bold mt-1">Informations vérifiées</p>
+            </div>
+
+            <div id="modalContent" class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                <!-- Contenu JS -->
+            </div>
+
+            <button type="button" onclick="closeModal()" class="mt-8 w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all active:scale-[0.98] cursor-pointer">
+                Compris, fermer
             </button>
-
         </div>
     </div>
-</div>
-<!-- Modale Patient Trouvé - Version Design Premium -->
-<div id="patientModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl transform transition-all">
-        <!-- En-tête avec icône de succès -->
-        <div class="flex flex-col items-center mb-6">
-            <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-3">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-            </div>
-            <h2 class="text-xl font-black text-slate-800">Dossier Patient</h2>
-            <p class="text-slate-400 text-xs uppercase tracking-widest font-bold mt-1">Informations vérifiées</p>
-        </div>
 
-        <!-- Contenu injecté dynamiquement -->
-        <div id="modalContent" class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-100">
-            <!-- Contenu JS ici -->
-        </div>
-
-        <button onclick="document.getElementById('patientModal').classList.add('hidden')" 
-                class="mt-8 w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all active:scale-[0.98]">
-            Compris, fermer
-        </button>
-    </div>
-</div>
-  <style>
-  @keyframes appleFall {
-    0% { 
-        opacity: 0; 
-        transform: translateY(-100vh) rotate(-10deg); 
+    <style>
+    @keyframes appleFall {
+        0% { opacity: 0; transform: translateY(-100vh) rotate(-10deg); }
+        60% { opacity: 1; transform: translateY(0) rotate(2deg); }
+        80% { transform: translateY(-15px) rotate(-1deg); }
+        100% { transform: translateY(0) rotate(0deg); }
     }
-    60% { 
-        opacity: 1; 
-        transform: translateY(0) rotate(2deg); 
+    .apple-fall-animation {
+        animation: appleFall 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
-    80% { 
-        transform: translateY(-15px) rotate(-1deg); /* Le rebond */
-    }
-    100% { 
-        transform: translateY(0) rotate(0deg); 
-    }
-}
-
-.apple-fall-animation {
-    animation: appleFall 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-  </style>
+    </style>
 </main>
 
 <script>
-const form = document.getElementById('verificationForm');
-const submitBtn = document.getElementById('submitBtn');
+// ==========================================
+// 1. GESTION DES MODALES
+// ==========================================
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    submitBtn.disabled = true;
-    submitBtn.innerText = 'Traitement...';
-    const formData = new FormData(form);
-    try {
-        const response = await fetch('/save-code-patient/', {
-            method: 'POST',
-            body: formData,
-            headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value }
-        });
-        if (response.ok) {
-            submitBtn.innerText = 'Validé avec succès !';
-            submitBtn.classList.replace('bg-blue-600', 'bg-green-600');
+// --- Modal Rapport Bilan (Initialisés / Refusés) ---
+function showResultModal(initialises = [], refuses = []) {
+    const modal = document.getElementById('resultModal');
+    if (!modal) return;
+
+    const listInitData = Array.isArray(initialises) ? initialises : [];
+    const listRefData = Array.isArray(refuses) ? refuses : [];
+
+    const countInit = document.getElementById('countInitialises');
+    const countRef = document.getElementById('countRefuses');
+    const listInit = document.getElementById('listInitialises');
+    const listRef = document.getElementById('listRefuses');
+    const modalBox = modal.querySelector('.bg-white');
+
+    // Mettre à jour les compteurs
+    if (countInit) countInit.innerText = listInitData.length;
+    if (countRef) countRef.innerText = listRefData.length;
+
+    // Remplir les codes Initialisés
+    if (listInit) {
+        if (listInitData.length > 0) {
+            listInit.innerHTML = listInitData.map(item => {
+                const codeTxt = typeof item === 'object' ? (item.code || JSON.stringify(item)) : item;
+                return `
+                    <div class="flex items-center gap-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-semibold">
+                        <span class="text-emerald-600 font-bold">✓</span>
+                        <span class="font-mono tracking-wide">${codeTxt}</span>
+                    </div>`;
+            }).join('');
+        } else {
+            listInit.innerHTML = `<div class="p-2 text-xs text-slate-400 italic text-center bg-slate-50 rounded-lg">Aucun code initialisé</div>`;
         }
-    } catch (err) {
-        submitBtn.disabled = false;
-        submitBtn.innerText = 'Erreur - Réessayer';
     }
-});
 
+    // Remplir les codes Refusés
+    if (listRef) {
+        if (listRefData.length > 0) {
+            listRef.innerHTML = listRefData.map(item => {
+                const codeTxt = typeof item === 'object' ? (item.code || JSON.stringify(item)) : item;
+                const motifTxt = (typeof item === 'object' && item.motif) ? item.motif : '';
+                return `
+                    <div class="flex items-center justify-between p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-semibold">
+                        <div class="flex items-center gap-2">
+                            <span class="text-rose-600 font-bold">✕</span>
+                            <span class="font-mono tracking-wide">${codeTxt}</span>
+                        </div>
+                        ${motifTxt ? `<span class="text-[10px] text-rose-500 italic font-normal">${motifTxt}</span>` : ''}
+                    </div>`;
+            }).join('');
+        } else {
+            listRef.innerHTML = `<div class="p-2 text-xs text-slate-400 italic text-center bg-slate-50 rounded-lg">Aucun code refusé</div>`;
+        }
+    }
+
+    // Réinitialisation CSS & Animation
+    if (modalBox) {
+        modalBox.style.transition = '';
+        modalBox.style.transform = '';
+        modalBox.style.opacity = '';
+        modalBox.classList.remove('apple-fall-animation');
+        void modalBox.offsetWidth;
+        modalBox.classList.add('apple-fall-animation');
+    }
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeResultModal() {
+    const modal = document.getElementById('resultModal');
+    if (!modal) return;
+    const modalBox = modal.querySelector('.bg-white');
+
+    if (modalBox) {
+        modalBox.style.transition = 'all 0.3s ease-in';
+        modalBox.style.transform = 'translateY(100vh) rotate(10deg)';
+        modalBox.style.opacity = '0';
+    }
+
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        if (modalBox) {
+            modalBox.style.transition = '';
+            modalBox.style.transform = '';
+            modalBox.style.opacity = '';
+            modalBox.classList.remove('apple-fall-animation');
+        }
+    }, 300);
+}
+
+// --- Modal Consultation Patient ---
 function showModal(data) {
     const p = data.patient;
-    const m = p.mere;
+    const m = p ? p.mere : null;
     const content = document.getElementById('modalContent');
     const modal = document.getElementById('patientModal');
-    const modalBox = modal.querySelector('.bg-white'); // La carte blanche
+    if (!modal || !content) return;
 
-    // 1. Préparation du contenu (votre structure Waouh précédente)
+    const modalBox = modal.querySelector('.bg-white');
     const mereDateNaissance = (m && m.date_naissance) ? m.date_naissance : 'N/A';
     
     content.innerHTML = `
         <div class="bg-blue-600 rounded-xl p-4 mb-4 text-center shadow-lg shadow-blue-200">
             <span class="block text-blue-100 text-[10px] uppercase tracking-widest font-bold mb-1">Code Patient</span>
-            <span class="text-2xl font-black text-white tracking-tighter">${p.code}</span>
+            <span class="text-2xl font-black text-white tracking-tighter">${p ? p.code : 'N/A'}</span>
         </div>
         <div class="space-y-3">
             <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                 <span class="text-[10px] uppercase font-bold text-slate-400">Nom Complet</span>
-                <span class="text-sm font-semibold text-slate-700">${p.nom} ${p.prenom}</span>
+                <span class="text-sm font-semibold text-slate-700">${p ? p.nom + ' ' + (p.prenom || '') : 'N/A'}</span>
             </div>
             <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                 <span class="text-[10px] uppercase font-bold text-slate-400">Sexe</span>
-                <span class="text-sm font-semibold text-slate-700">${p.sexe === 'M' ? 'Masculin' : 'Féminin'}</span>
+                <span class="text-sm font-semibold text-slate-700">${p && p.sexe === 'M' ? 'Masculin' : 'Féminin'}</span>
             </div>
             <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                 <span class="text-[10px] uppercase font-bold text-slate-400">Date Naiss.</span>
-                <span class="text-sm font-semibold text-slate-700">${p.date_naissance || 'Non renseignée'}</span>
+                <span class="text-sm font-semibold text-slate-700">${(p && p.date_naissance) || 'Non renseignée'}</span>
             </div>
             <div class="pt-2">
                 <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Informations Mère</span>
@@ -221,131 +290,216 @@ function showModal(data) {
         </div>
     `;
 
-   modal.classList.remove('hidden');
+    modal.classList.remove('hidden');
     modal.classList.add('flex');
     
-    // On réinitialise l'animation si elle a déjà été jouée
-    modalBox.classList.remove('apple-fall-animation');
-    void modalBox.offsetWidth; // Astuce pour forcer le recalcul du CSS
-    modalBox.classList.add('apple-fall-animation');
+    if (modalBox) {
+        modalBox.classList.remove('apple-fall-animation');
+        void modalBox.offsetWidth;
+        modalBox.classList.add('apple-fall-animation');
+    }
 }
+
 function closeModal() {
     const modal = document.getElementById('patientModal');
+    if (!modal) return;
     const modalBox = modal.querySelector('.bg-white');
     
-    // Animation de sortie : chute vers le bas
-    modalBox.style.transition = 'all 0.4s ease-in';
-    modalBox.style.transform = 'translateY(100vh) rotate(10deg)';
-    modalBox.style.opacity = '0';
+    if (modalBox) {
+        modalBox.style.transition = 'all 0.3s ease-in';
+        modalBox.style.transform = 'translateY(100vh) rotate(10deg)';
+        modalBox.style.opacity = '0';
+    }
     
     setTimeout(() => {
         modal.classList.add('hidden');
-        // Reset des styles pour la prochaine ouverture
-        modalBox.style.transition = '';
-        modalBox.style.transform = '';
-        modalBox.style.opacity = '';
-        modalBox.classList.remove('apple-fall-animation');
-    }, 400);
-}
-document.querySelectorAll('[data-otp-group]').forEach(group => {
-    const inputs = group.querySelectorAll('.otp-input');
-    const ptCode = group.querySelector('.pt_code'); // Votre select "Porte d'entrée"
-    const hiddenInput = group.querySelector('.hidden-code');
-    const iconContainer = group.querySelector('.status-icon');
-    
-    // Longueur : 3 (Région) + 3 (District) + 3 (Fosa) + 2 (PT) + 4 (Code) = 15
-    const REQUIRED_LENGTH = 15; 
-
-    // Fonction de mise à jour du code complet
-    function updateHiddenField() {
-        const fixed = Array.from(group.querySelectorAll('input[readonly]')).map(i => i.value).join('');
-        const ptValue = ptCode ? ptCode.value : ''; // Valeur du select PT
-        const dynamic = Array.from(inputs).map(i => i.value).join('');
-        
-        const fullCode = fixed + ptValue + dynamic;
-        hiddenInput.value = fullCode;
-
-        if (fullCode.length === REQUIRED_LENGTH) {
-            searchPatient(fullCode, group);
-        } else {
-            iconContainer.innerHTML = `<svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/></svg>`;
+        modal.classList.remove('flex');
+        if (modalBox) {
+            modalBox.style.transition = '';
+            modalBox.style.transform = '';
+            modalBox.style.opacity = '';
+            modalBox.classList.remove('apple-fall-animation');
         }
-    }
+    }, 300);
+}
 
+
+// ==========================================
+// 2. RECHERCHE DE CODE INDIVIDUEL (AJAX)
+// ==========================================
 async function searchPatient(codeComplet, groupElement) {
     const iconContainer = groupElement.querySelector('.status-icon');
-    
-    // 1. État de chargement élégant (Spinner avec fondu)
+    if (!iconContainer) return;
+
     iconContainer.innerHTML = `
-        <div class="flex items-center text-blue-500 animate-pulse">
-            <svg class="w-6 h-6 animate-spin" viewBox="0 0 24 24">
+        <div class="flex items-center text-blue-600 animate-pulse">
+            <svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
             </svg>
-            <span class="ml-2 text-xs font-medium uppercase tracking-wider">Recherche...</span>
+            <span class="ml-1.5 text-xs font-semibold uppercase tracking-wider">Recherche...</span>
         </div>
     `;
-    
-    try {
-        const response = await fetch(`/rechercher-patient/?code=${codeComplet}`);
-        const data = await response.json();
-        
-        // 2. Animation de transition (Opacity)
-        iconContainer.style.opacity = "0";
-        setTimeout(() => {
-            iconContainer.className = "status-icon flex items-center gap-3 transition-opacity duration-500 ease-in-out";
-            iconContainer.style.opacity = "1";
 
-            if (data.exists) {
-                // UI Succès : Élégant et aéré
-                iconContainer.innerHTML = `
-                    <button class="view-btn group flex items-center gap-1.5 px-3 py-1 bg-red-50 text-red-600 rounded-full hover:bg-red-100 transition-all duration-300 border border-green-200">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        <span class="text-xs font-bold uppercase">Consulter</span>
-                    </button>
-                    <button class="delete-btn p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-300">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                `;
-                iconContainer.querySelector('.view-btn').addEventListener('click', () => showModal(data));
-            } else {
-                // UI Introuvable : Sobre avec un rappel visuel green
-                iconContainer.innerHTML = `
-                    <span class="flex items-center gap-2 text-green-500 bg-green-50 px-3 py-1 rounded-full border border-green-100">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                        <span class="text-xs font-bold">Nouveau</span>
-                    </span>
-                    <button class="delete-btn p-1.5 text-slate-300 hover:text-red-500 hover:bg-green-50 rounded-lg transition-all">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                `;
-            }
-            // Attachement suppression
-            iconContainer.querySelector('.delete-btn').addEventListener('click', () => {
+    try {
+        const response = await fetch(`/rechercher-patient/?code=${encodeURIComponent(codeComplet)}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const data = await response.json();
+        const patientExiste = data.exists === true || data.existe === true;
+
+        iconContainer.style.opacity = "0";
+        iconContainer.className = "status-icon flex items-center gap-2 transition-opacity duration-300";
+
+        if (patientExiste) {
+            iconContainer.innerHTML = `
+                <button type="button" class="view-btn flex items-center gap-1 px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-full transition-all text-xs font-bold uppercase cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    <span>Consulter</span>
+                </button>
+                <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </button>
+            `;
+
+            const viewBtn = iconContainer.querySelector('.view-btn');
+            if (viewBtn) viewBtn.addEventListener('click', () => showModal(data));
+
+        } else {
+            iconContainer.innerHTML = `
+                <span class="flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 text-xs font-bold">
+                    <svg class="w-3 h-3 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                    <span>Nouveau</span>
+                </span>
+                <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </button>
+            `;
+        }
+
+        const deleteBtn = iconContainer.querySelector('.delete-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', () => {
                 groupElement.classList.add('opacity-0', 'transition-opacity', 'duration-300');
                 setTimeout(() => groupElement.remove(), 300);
             });
-        }, 100);
+        }
 
-    } catch (e) { console.error(e); }
+        requestAnimationFrame(() => { iconContainer.style.opacity = "1"; });
+
+    } catch (err) {
+        console.error("Erreur searchPatient :", err);
+        iconContainer.style.opacity = "1";
+        iconContainer.innerHTML = `
+            <span class="text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">⚠️ Erreur</span>
+            <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 rounded-lg cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </button>
+        `;
+        const deleteBtn = iconContainer.querySelector('.delete-btn');
+        if (deleteBtn) deleteBtn.addEventListener('click', () => groupElement.remove());
+    }
 }
 
-    // Écouteur sur la Porte d'entrée
-    if (ptCode) {
-        ptCode.addEventListener('change', updateHiddenField);
-    }
 
-    // Écouteurs sur les inputs OTP
-    inputs.forEach((input, index) => {
-        input.addEventListener('input', (e) => {
-            e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/, '');
-            if (e.target.value.length === 1 && index < inputs.length - 1) inputs[index + 1].focus();
-            updateHiddenField();
-        });
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && !e.target.value && index > 0) inputs[index - 1].focus();
+// ==========================================
+// 3. INITIALISATION PRINCIPALE (DOM)
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Gestion des champs OTP & assemblage du code ---
+    document.querySelectorAll('[data-otp-group]').forEach(group => {
+        const inputs = group.querySelectorAll('.otp-input');
+        const ptCode = group.querySelector('.pt_code');
+        const hiddenInput = group.querySelector('.hidden-code');
+        const iconContainer = group.querySelector('.status-icon');
+        
+        const REQUIRED_LENGTH = 15; 
+
+        function updateHiddenField() {
+            const fixed = Array.from(group.querySelectorAll('input[readonly]')).map(i => i.value).join('');
+            const ptValue = ptCode ? ptCode.value : '';
+            const dynamic = Array.from(inputs).map(i => i.value).join('');
+            
+            const fullCode = fixed + ptValue + dynamic;
+            if (hiddenInput) hiddenInput.value = fullCode;
+
+            if (fullCode.length === REQUIRED_LENGTH) {
+                searchPatient(fullCode, group);
+            } else if (iconContainer) {
+                iconContainer.innerHTML = `<svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/></svg>`;
+            }
+        }
+
+        if (ptCode) ptCode.addEventListener('change', updateHiddenField);
+
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/, '');
+                if (e.target.value.length === 1 && index < inputs.length - 1) inputs[index + 1].focus();
+                updateHiddenField();
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) inputs[index - 1].focus();
+            });
         });
     });
+
+    // --- Soumission du formulaire par lots & déclenchement du modal ---
+    const form = document.getElementById('verificationForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'Traitement en cours...';
+            }
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/save-code-patient/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+                    }
+                });
+
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok && !data.codes_initialises && !data.codes_refuses && !data.saved && !data.exists) {
+                    throw new Error(data.erreur || `Erreur serveur (${response.status})`);
+                }
+
+                // Récupération multi-clés sécurisée pour capter les réponses de Django
+                const initialises = data.codes_initialises || data.initialises || data.saved || data.codes_valides || [];
+                const refuses = data.codes_refuses || data.refuses || data.exists || data.codes_invalides || [];
+
+                // 🚀 Affichage dynamique dans le modal
+                showResultModal(initialises, refuses);
+
+                if (submitBtn) {
+                    submitBtn.innerText = 'Validé avec succès !';
+                    if (submitBtn.classList.contains('bg-blue-600')) {
+                        submitBtn.classList.replace('bg-blue-600', 'bg-emerald-600');
+                    }
+                }
+
+            } catch (err) {
+                console.error("Erreur soumission :", err);
+                if (submitBtn) submitBtn.innerText = 'Erreur - Réessayer';
+                alert("❌ Erreur lors du traitement : " + err.message);
+            } finally {
+                setTimeout(() => {
+                    if (submitBtn) submitBtn.disabled = false;
+                }, 2000);
+            }
+        });
+    }
 });
 </script>
 {% endblock %}

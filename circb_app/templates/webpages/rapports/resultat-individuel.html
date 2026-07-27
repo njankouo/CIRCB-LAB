@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fiche de Résultat Individuelle - CIRCB</title>
+    <style>
+        /* MARGES DE PAGE COMPACTES POUR S'ASSURER DU MONOPAGE */
+        @page {
+            size: a4 landscape;
+            margin: 4mm 6mm;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 7.5pt;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* GRAND CADRE NOIR GLOBAL */
+        .outer-frame {
+            border: 1px solid #000000;
+            padding: 6px 8px;
+            width: 100%;
+        }
+
+        /* TABLES ET CELLULES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .header-table td {
+            vertical-align: top;
+            text-align: center;
+        }
+
+        .dotted-line {
+            border-bottom: 1px dotted #000000;
+            width: 60%;
+            margin: 2px auto;
+        }
+
+        .title-box {
+            border: 1px solid #000000;
+            padding: 3px 8px;
+            font-size: 9pt;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 3px;
+        }
+
+        /* CELLULES D'INFORMATIONS */
+        .box-cell {
+            border: 1px solid #000000;
+            padding: 3px 5px;
+            font-size: 7.5pt;
+            vertical-align: top;
+        }
+
+        .box-cell strong {
+            font-weight: bold;
+        }
+
+        /* TABLEAU DES RÉSULTATS */
+        .results-table {
+            border: 1px solid #000000;
+            margin-top: 6px;
+            margin-bottom: 8px;
+        }
+
+        .results-table th, .results-table td {
+            border: 1px solid #000000;
+            padding: 4px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 7.5pt;
+        }
+
+        .results-table th {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CADRE EXTÉRIEUR NOIR -->
+    <div class="outer-frame">
+
+        <!-- 1. EN-TÊTE INSTITUTIONNEL -->
+        <table class="header-table" style="margin-bottom: 6px;">
+            <tr>
+                <!-- GAUCHE : MINISTÈRE -->
+                <td style="width: 32%; font-weight: bold; font-size: 7.5pt;">
+                    MINISTERE DE LA SANTE PUBLIQUE
+                    <div class="dotted-line"></div>
+                    <span style="font-weight: normal; font-size: 7pt;">DIRECTION DE LA LUTTE CONTRE LA MALADIE</span>
+                </td>
+                
+                <!-- CENTRE : LOGO ET TITRE -->
+                <td style="width: 36%;">
+                    {% if logo_base64 %}
+                        <img src="data:image/png;base64,{{ logo_base64 }}" style="height: 26px; width: auto;" alt="Logo CIRCB"><br>
+                    {% endif %}
+                    <div style="font-size: 6pt; font-weight: bold;">CENTRE INTERNATIONAL DE REFERENCE "CHANTAL BIYA"</div>
+                    <div style="font-size: 5pt; margin-bottom: 2px;">POUR LA RECHERCHE SUR LA PREVENTION ET LA PRISE EN CHARGE DU VIH/SIDA</div>
+                    
+                    <div class="title-box">
+                        FICHE DE RESULTAT<br>
+                        <span style="font-size: 7pt; font-weight: normal;">(Diagnostic précoce du VIH-1)</span>
+                    </div>
+                </td>
+                
+                <!-- DROITE : RÉPUBLIQUE -->
+                <td style="width: 32%; font-weight: bold; font-size: 7.5pt;">
+                    REPUBLIQUE DU CAMEROUN<br>
+                    <span style="font-weight: normal; font-size: 7pt;">Paix - Travail - Patrie</span>
+                </td>
+            </tr>
+        </table>
+
+        <!-- 2. BLOCS D'INFORMATIONS (8 BOÎTES COMPACTES) -->
+        <table style="margin-bottom: 4px;">
+            <!-- LIGNE 1 : LABO / MÈRE -->
+            <tr>
+                <td style="width: 49%; padding-bottom: 4px;">
+                    <div class="box-cell">
+                        <strong>Nom et adresse du Laboratoire de référence :</strong><br>
+                        Centre International de Référence « Chantal Biya » (CIRCB)<br>
+                        B.P. 3307, Téléphone : 222-31-5450 / Fax: 222-31-56 Email : circbdoc@yahoo.fr
+                    </div>
+                </td>
+                <td style="width: 2%;"></td>
+                <td style="width: 49%; padding-bottom: 4px;">
+                    <div class="box-cell">
+                        <strong>Nom ou contact de la mère :</strong><br>
+                        {{ resultat.echantillon.mere.nom|default:"" }} {{ resultat.echantillon.mere.telephone|default:"" }}
+                    </div>
+                </td>
+            </tr>
+
+            <!-- LIGNE 2 : ENFANT / DATE NAISSANCE -->
+            <tr>
+                <td style="padding-bottom: 4px;">
+                    <div class="box-cell">
+                        <strong>Nom de l'enfant :</strong><br>
+                        {{ resultat.echantillon.enfant.nom|default:"" }} {{ resultat.echantillon.enfant.prenom|default:"" }}
+                    </div>
+                </td>
+                <td></td>
+                <td style="padding-bottom: 4px;">
+                    <div class="box-cell">
+                        <strong>Date de naissance ou Age de l'enfant :</strong><br>
+                        {{ resultat.echantillon.enfant.date_naissance|date:"d/m/Y"|default:"" }}
+                    </div>
+                </td>
+            </tr>
+
+            <!-- LIGNE 3 : RÉGION / DISTRICT -->
+            <tr>
+                <td style="padding-bottom: 4px;">
+                    <div class="box-cell">
+                        <strong>Région :</strong><br>
+                        {{ resultat.echantillon.fiche.region.nom|default:"NON DEFINI" }}
+                    </div>
+                </td>
+                <td></td>
+                <td style="padding-bottom: 4px;">
+                    <div class="box-cell">
+                        <strong>District :</strong><br>
+                        {{ resultat.echantillon.fiche.district.nom|default:"NON DEFINI" }}
+                    </div>
+                </td>
+            </tr>
+
+            <!-- LIGNE 4 : CODE / FOSA -->
+            <tr>
+                <td style="padding-bottom: 4px;">
+                    <div class="box-cell">
+                        <strong>Code de l'enfant :</strong><br>
+                        {{ resultat.echantillon.enfant.code}}
+                    </div>
+                </td>
+                <td></td>
+                <td style="padding-bottom: 4px;">
+                    <div class="box-cell">
+                        <strong>Formation sanitaire :</strong><br>
+                       {{ resultat.echantillon.fiche.fosa.nom|default:"NON DEFINI" }}
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- 3. NOM DU TEST -->
+        <div style="text-align: center; font-size: 8pt; margin: 4px 0;">
+            <strong>Nom du test :</strong> {{ resultat.test.nom|default:"Non defini" }}
+        </div>
+
+        <!-- 4. TABLEAU DES RÉSULTATS -->
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th colspan="4" style="font-size: 8.5pt; padding: 4px;">
+                        RESULTATS
+                    </th>
+                </tr>
+                <tr>
+                    <th style="width: 25%;">Numéro du test</th>
+                    <th style="width: 25%;">Date de prélèvement</th>
+                    <th style="width: 25%;">Résultats</th>
+                    <th style="width: 25%;">Date de rendu du résultat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ resultat.test.code|default:"Abbott PCR1" }}</td>
+                    <td>{{ resultat.echantillon.date_prelevement|date:"d/m/Y"|default:"Non defini" }}</td>
+                    <td style="font-weight: bold;">{{ resultat.resultat_pcr.nom|default:"Non defini" }}</td>
+                    <td>{{ resultat.date_resultat|date:"d/m/Y"|default:"Non defini" }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 5. OBSERVATIONS -->
+        <div style="font-size: 7.5pt; margin-bottom: 18px;">
+            <strong>Observations :</strong><br>
+            <div style="margin-left: 15px; margin-top: 2px;">
+                {{ resultat.observation|default:"Suivre l'enfant : Reprendre le test 4 semaines après sevrage ou Reprendre le test si clinique suspecte." }}
+            </div>
+        </div>
+
+        <!-- 6. SIGNATURES EN BAS -->
+        <table style="font-size: 8pt; font-weight: bold; margin-bottom: 10px;">
+            <tr>
+                <td style="width: 50%; text-align: left;">
+                    Nom du responsable du laboratoire
+                </td>
+                <td style="width: 50%; text-align: right;">
+                    Signature du responsable du laboratoire
+                </td>
+            </tr>
+        </table>
+
+        <!-- DATE D'IMPRESSION -->
+        <div style="font-size: 6.5pt;">
+            Date impression {{ date_impression|date:"d/m/Y"|default:"29/05/2026" }}
+        </div>
+
+    </div>
+
+</body>
+</html>

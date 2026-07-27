@@ -176,26 +176,3 @@
     </div>
 </div>
 
-<!-- SCRIPTS DE COMPORTEMENT DE LA SECTION 3 -->
-<script>
-    // --- CALCUL DE L'ÂGE DE LA MÈRE EN TEMPS RÉEL ---
-    document.getElementById('mere_dob').addEventListener('change', function() {
-        const dobValue = this.value;
-        if (!dobValue) return;
-
-        const dob = new Date(dobValue);
-        const now = new Date();
-        
-        let age = now.getFullYear() - dob.getFullYear();
-        const monthDiff = now.getMonth() - dob.getMonth();
-        
-        // Ajustement si l'anniversaire n'est pas encore passé cette année
-        if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < dob.getDate())) {
-            age--;
-        }
-
-        if (age >= 0 && age < 100) {
-            document.getElementById('mere_age').value = age;
-        }
-    });
-</script>

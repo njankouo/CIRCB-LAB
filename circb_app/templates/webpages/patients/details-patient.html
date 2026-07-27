@@ -1,195 +1,283 @@
 {% extends '../dashbord_hosp.html' %}
 
 {% block main %}
-<main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white">
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-slate-50">
 
-<div class="p-6 max-w-[1600px] mx-auto space-y-6">
+<div class="p-6 max-w-[1600px] mx-auto space-y-6 w-full">
 
     <!-- 1. EN-TÊTE DU DOSSIER PATIENT -->
-    <div class="bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-slate-900 p-6 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
+    <div class="bg-white border-2 border-slate-900 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-indigo-100 border-2 border-indigo-500 rounded-xl flex items-center justify-center text-indigo-600">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <div class="w-14 h-14 bg-indigo-100 border-2 border-slate-900 rounded-xl flex items-center justify-center text-indigo-700 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
             </div>
             <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Dossier Médical</span>
-                <h1 class="text-2xl font-black text-slate-900 font-mono tracking-tight">{{ patient.nom }} {{ patient.prenom }}</h1>
+                <span class="text-[11px] font-black text-indigo-600 uppercase tracking-widest font-mono block">DOSSIER PATIENT #LIMS</span>
+                <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-mono tracking-tight">{{ patient.nom }} {{ patient.prenom }}</h1>
             </div>
         </div>
         
-        <div class="bg-slate-900 text-white px-4 py-2 rounded-lg font-mono text-sm font-bold tracking-wider border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(99,102,241,1)]">
-            CODE: {{ patient.code }}
+        <div class="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-mono text-sm font-black tracking-wider border-2 border-slate-900 shadow-[3px_3px_0px_0px_rgba(99,102,241,1)]">
+            CODE PATIENT : {{ patient.code }}
         </div>
     </div>
 
-    <!-- 2. CORPS DU DOSSIER (GRILLE 2 COLONNES) -->
+    <!-- 2. CORPS DU DOSSIER (GRILLE 3 COLONNES) -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- COLONNE GAUCHE : Fiche d'informations Fixes du Patient -->
         <div class="lg:col-span-1 space-y-6">
-            <div class="bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-slate-400 p-5 rounded-xl shadow-sm">
-                <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider font-mono border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-slate-400"></span> Informations Générales
+            <div class="bg-white border-2 border-slate-900 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider font-mono border-b-2 border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-indigo-600 border border-slate-900"></span> Informations Patient
                 </h3>
                 <dl class="space-y-3 font-mono text-xs">
-                    <div class="flex justify-between border-b border-dashed border-slate-100 pb-1.5">
-                        <dt class="text-slate-400">Date de Naissance :</dt>
-                        <dd class="font-bold text-slate-800">{{ patient.date_naissance|date:"d/m/Y"|default:"-" }}</dd>
+                    <div class="flex justify-between border-b border-dashed border-slate-200 pb-2">
+                        <dt class="text-slate-500 font-medium">Date de Naissance :</dt>
+                        <dd class="font-bold text-slate-900">{{ patient.date_naissance|date:"d/m/Y"|default:"-" }}</dd>
                     </div>
-                    <div class="flex justify-between border-b border-dashed border-slate-100 pb-1.5">
-                        <dt class="text-slate-400">Sexe :</dt>
-                        <dd class="font-bold text-slate-800">{{ patient.sexe|default:"-" }}</dd>
+                    <div class="flex justify-between border-b border-dashed border-slate-200 pb-2">
+                        <dt class="text-slate-500 font-medium">Sexe :</dt>
+                        <dd class="font-bold text-slate-900">{{ patient.sexe|default:"-" }}</dd>
                     </div>
-                    <div class="flex justify-between border-b border-dashed border-slate-100 pb-1.5">
-                        <dt class="text-slate-400">Structure d'origine :</dt>
-                        <dd class="font-bold text-slate-800">{{ patient.structure|default:"Centre de Santé Hospitalier" }}</dd>
+                    <div class="flex justify-between border-b border-dashed border-slate-200 pb-2">
+                        <dt class="text-slate-500 font-medium">Structure d'origine :</dt>
+                        <dd class="font-bold text-slate-900 text-right">{{ patient.structure|default:"Centre de Santé Hospitalier" }}</dd>
                     </div>
                 </dl>
             </div>
 
-            <div class="bg-indigo-50 border-t border-l border-indigo-200 border-b-4 border-r-4 border-indigo-400 p-5 rounded-xl">
-                <h3 class="text-xs font-black text-indigo-900 uppercase tracking-wider font-mono mb-2">Nouveau Prélèvement</h3>
-                <p class="text-xs text-indigo-700 font-sans mb-4">Besoin d'enregistrer un nouvel échantillon (Fiche d'investigation PCR) ?</p>
-                <a href="#" class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-mono font-bold text-xs uppercase rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-transform active:translate-y-0.5">
-                    + Saisir une fiche échantillon
+            <div class="bg-indigo-50 border-2 border-slate-900 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse"></span>
+                    <h3 class="text-xs font-black text-indigo-950 uppercase tracking-wider font-mono">Nouveau Prélèvement</h3>
+                </div>
+                <p class="text-xs text-indigo-800 font-sans mb-4 leading-relaxed">Saisir une nouvelle fiche d'investigation PCR pour cet enfant ?</p>
+                <a href="/fiches-echantillons/" class="inline-flex items-center justify-center w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-mono font-black text-xs uppercase tracking-wider rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-0.5 active:translate-y-0.5 transition-all">
+                    + Saisir un échantillon
                 </a>
             </div>
         </div>
 
-        <!-- COLONNE DROITE : Historique complet avec tous les champs du modèle Echantillon -->
+        <!-- COLONNE DROITE : Historique avec Verdict Haute Visibilité -->
         <div class="lg:col-span-2">
-            <div class="bg-white border-t border-l border-slate-200 border-b-4 border-r-4 border-slate-400 p-6 rounded-xl shadow-sm">
+            <div class="bg-white border-2 border-slate-900 p-6 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
                 
-                <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
-                    <div class="flex items-center gap-2">
-                        <div class="p-1.5 bg-slate-100 text-slate-700 rounded-lg border border-slate-200">
+                <div class="flex items-center justify-between border-b-2 border-slate-100 pb-4 mb-6">
+                    <div class="flex items-center gap-2.5">
+                        <div class="p-2 bg-slate-900 text-white rounded-xl border border-slate-900">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <h2 class="text-sm font-black text-slate-800 uppercase tracking-wider font-mono">Historique des Échantillons</h2>
+                        <h2 class="text-sm font-black text-slate-900 uppercase tracking-wider font-mono">Historique des Analyses PCR</h2>
                     </div>
-                    <span class="bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-mono font-bold px-2 py-0.5 rounded">
-                        Total : {{ echantillon.count }} fiche(s)
+                    <span class="bg-slate-100 text-slate-800 border-2 border-slate-900 text-[11px] font-mono font-black px-3 py-1 rounded-lg shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                        TOTAL : {{ echantillon.count }} ÉCHANTILLON(S)
                     </span>
                 </div>
 
                 {% if echantillon %}
-                    <!-- FRISÉ CHRONOLOGIQUE (TIMELINE) -->
-                    <div class="relative border-l-2 border-slate-200 pl-6 ml-3 space-y-8">
+                    <!-- FRISÉ CHRONOLOGIQUE -->
+                    <div class="relative border-l-2 border-slate-300 pl-6 ml-3 space-y-8">
                         
                         {% for ech in echantillon %}
                             <div class="relative">
                                 
-                                <!-- Couleur du point selon le résultat PCR -->
-                                {% if ech.resultat_pcr.nom == 'Positif' or ech.resultat_pcr.libelle == 'Positif' %}
-                                    <span class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-rose-500 border-2 border-white ring-4 ring-rose-100"></span>
-                                {% elif ech.resultat_pcr.nom == 'Négatif' or ech.resultat_pcr.libelle == 'Négatif' %}
-                                    <span class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white ring-4 ring-emerald-100"></span>
+                                <!-- Couleur de la puces timeline selon le résultat PCR -->
+                                {% if 'positif' in ech.resultat_pcr|stringformat:"s"|lower %}
+                                    <span class="absolute -left-[32px] top-4 w-5 h-5 rounded-full bg-rose-600 border-2 border-slate-900 ring-4 ring-rose-100"></span>
+                                {% elif 'négatif' in ech.resultat_pcr|stringformat:"s"|lower or 'negatif' in ech.resultat_pcr|stringformat:"s"|lower %}
+                                    <span class="absolute -left-[32px] top-4 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-900 ring-4 ring-emerald-100"></span>
                                 {% else %}
-                                    <span class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-amber-500 border-2 border-white ring-4 ring-amber-100"></span>
+                                    <span class="absolute -left-[32px] top-4 w-5 h-5 rounded-full bg-amber-400 border-2 border-slate-900 ring-4 ring-amber-100"></span>
                                 {% endif %}
                                 
-                                <!-- BLOC ÉCHANTILLON PRINCIPAL -->
-                                <div class="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:border-slate-400 transition-colors">
+                                <!-- CARTE D'ÉCHANTILLON PRINCIPALE -->
+                                <div class="bg-white border-2 border-slate-900 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] transition-all">
                                     
-                                    <!-- Entête de l'échantillon -->
-                                    <div class="p-4 bg-white border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                                        <div>
-                                            <div class="flex items-center gap-2 flex-wrap">
-                                                <span class="text-xs font-black text-slate-800 font-mono">SLUG: {{ ech.slug }}</span>
-                                                <span class="text-[10px] font-bold text-slate-400 font-mono">— Prélèvement du : {{ ech.date_prelevement|date:"d F Y" }}</span>
-                                            </div>
-                                            <p class="text-[11px] text-slate-500 mt-1 font-mono">Lié à la Fiche ID : #{{ ech.fiche.id }}</p>
+                                    <!-- Entête technique de l'échantillon -->
+                                    <div class="px-5 py-3.5 bg-slate-900 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 font-mono">
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-xs font-black tracking-wider text-cyan-400">SLUG: {{ ech.slug }}</span>
+                                            <span class="text-slate-400 text-xs">|</span>
+                                            <span class="text-[11px] text-slate-300">Prélevé le : <strong>{{ ech.date_prelevement|date:"d/m/Y" }}</strong></span>
                                         </div>
-                                        <div class="flex items-center gap-2">
-                                            <!-- Type de PCR ciblé -->
-                                            {% if ech.pcr_1 %}<span class="px-2 py-0.5 text-[9px] font-bold font-mono rounded bg-blue-50 text-blue-600 border border-blue-200">PCR 1</span>{% endif %}
-                                            {% if ech.pcr_2 %}<span class="px-2 py-0.5 text-[9px] font-bold font-mono rounded bg-purple-50 text-purple-600 border border-purple-200">PCR 2</span>{% endif %}
-                                            {% if ech.autre_pcr %}<span class="px-2 py-0.5 text-[9px] font-bold font-mono rounded bg-slate-100 text-slate-600 border border-slate-200">Autre PCR</span>{% endif %}
-                                            
-                                            <!-- Résultat Final -->
-                                            <span class="px-2.5 py-1 text-[10px] font-black uppercase font-mono rounded {% if ech.resultat_pcr %}bg-slate-900 text-white{% else %}bg-amber-50 text-amber-600 border border-amber-200{% endif %}">
-                                                {{ ech.resultat_pcr|default:"EN ATTENTE LABO" }}
-                                            </span>
+                                        <div class="flex items-center gap-1.5 text-[10px]">
+                                            {% if ech.pcr_1 %}<span class="px-2 py-0.5 font-bold rounded bg-cyan-900 text-cyan-300 border border-cyan-500">PCR 1</span>{% endif %}
+                                            {% if ech.pcr_2 %}<span class="px-2 py-0.5 font-bold rounded bg-purple-900 text-purple-300 border border-purple-500">PCR 2</span>{% endif %}
+                                            {% if ech.autre_pcr %}<span class="px-2 py-0.5 font-bold rounded bg-slate-800 text-slate-300 border border-slate-600">AUTRE PCR</span>{% endif %}
+                                            <span class="text-slate-400 ml-1">Fiche #{{ ech.fiche.id }}</span>
                                         </div>
                                     </div>
 
-                                    <!-- Grille des métadonnées (Saisie complète) -->
-                                    <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans">
+                                    <!-- 🚨 BLOC VERDICT DIAGNOSTIQUE HAUTE VISIBILITÉ (HERO VERDICT) 🚨 -->
+                                    {% if 'positif' in ech.resultat_pcr|stringformat:"s"|lower %}
+                                        <!-- VERDICT : POSITIF -->
+                                        <div class="bg-rose-50 border-b-2 border-slate-900 p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                                            <div class="flex items-center gap-3.5">
+                                                <div class="w-12 h-12 rounded-xl bg-rose-600 text-white flex items-center justify-center font-mono font-black text-2xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] shrink-0">
+                                                    +
+                                                </div>
+                                                <div>
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="px-2 py-0.5 text-[9px] font-mono font-black uppercase bg-rose-200 text-rose-950 rounded border border-rose-400">
+                                                            [ DIAGNOSTIC BIOLOGIQUE CRITIQUE ]
+                                                        </span>
+                                                    </div>
+                                                    <h3 class="text-lg font-black font-mono text-rose-950 uppercase tracking-tight mt-1">
+                                                        VERDICT : POSITIF (DÉTECTÉ)
+                                                    </h3>
+                                                    <p class="text-xs text-rose-800 font-sans mt-0.5">L'ADN/ARN cible a été formellement détecté par PCR.</p>
+                                                </div>
+                                            </div>
+                                            <div class="md:text-right font-mono shrink-0 w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0 border-rose-200">
+                                                <span class="text-[10px] text-rose-800 block uppercase font-black">Statut d'Analyse</span>
+                                                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-rose-600 text-white text-xs font-black rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                                                    <span class="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
+                                                    {{ ech.resultat_pcr|upper }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    {% elif 'négatif' in ech.resultat_pcr|stringformat:"s"|lower or 'negatif' in ech.resultat_pcr|stringformat:"s"|lower %}
+                                        <!-- VERDICT : NÉGATIF -->
+                                        <div class="bg-emerald-50 border-b-2 border-slate-900 p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                                            <div class="flex items-center gap-3.5">
+                                                <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-mono font-black text-2xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] shrink-0">
+                                                    ✓
+                                                </div>
+                                                <div>
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="px-2 py-0.5 text-[9px] font-mono font-black uppercase bg-emerald-200 text-emerald-950 rounded border border-emerald-400">
+                                                            [ RÉSULTAT CONCLUANT ]
+                                                        </span>
+                                                    </div>
+                                                    <h3 class="text-lg font-black font-mono text-emerald-950 uppercase tracking-tight mt-1">
+                                                        VERDICT : NÉGATIF (NON DÉTECTÉ)
+                                                    </h3>
+                                                    <p class="text-xs text-emerald-800 font-sans mt-0.5">Aucune trace ciblée n'a été détectée lors du cycle d'amplification.</p>
+                                                </div>
+                                            </div>
+                                            <div class="md:text-right font-mono shrink-0 w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0 border-emerald-200">
+                                                <span class="text-[10px] text-emerald-800 block uppercase font-black">Statut d'Analyse</span>
+                                                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-600 text-white text-xs font-black rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                                                    <span class="w-2.5 h-2.5 rounded-full bg-white"></span>
+                                                    {{ ech.resultat_pcr|upper }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    {% else %}
+                                        <!-- VERDICT : EN ATTENTE / INDÉTERMINÉ -->
+                                        <div class="bg-amber-50 border-b-2 border-slate-900 p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                                            <div class="flex items-center gap-3.5">
+                                                <div class="w-12 h-12 rounded-xl bg-amber-400 text-slate-900 flex items-center justify-center font-mono font-black text-2xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] shrink-0">
+                                                    ⏳
+                                                </div>
+                                                <div>
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="px-2 py-0.5 text-[9px] font-mono font-black uppercase bg-amber-200 text-amber-950 rounded border border-amber-400">
+                                                            [ STATUT LABORATOIRE ]
+                                                        </span>
+                                                    </div>
+                                                    <h3 class="text-lg font-black font-mono text-amber-950 uppercase tracking-tight mt-1">
+                                                        VERDICT : {{ ech.resultat_pcr|default:"EN ATTENTE DE RÉSULTAT"|upper }}
+                                                    </h3>
+                                                    <p class="text-xs text-amber-800 font-sans mt-0.5">L'échantillon est en cours de traitement biomédical ou en attente d'imputation.</p>
+                                                </div>
+                                            </div>
+                                            <div class="md:text-right font-mono shrink-0 w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0 border-amber-200">
+                                                <span class="text-[10px] text-amber-800 block uppercase font-black">Statut d'Analyse</span>
+                                                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-400 text-slate-950 text-xs font-black rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                                                    <span class="w-2 h-2 rounded-full bg-slate-900 animate-ping"></span>
+                                                    EN ATTENTE LABO
+                                                </span>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- Grille des métadonnées détaillées du prélèvement -->
+                                    <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans bg-slate-50/50">
                                         
                                         <!-- Bloc Enfant & Clinique -->
-                                        <div class="space-y-2 bg-white p-3 rounded-lg border border-slate-100">
-                                            <h4 class="text-[10px] font-bold uppercase tracking-wider font-mono text-slate-400 flex items-center gap-1.5 mb-2">
-                                                <span class="w-1 h-1 rounded-full bg-indigo-500"></span> Données Enfant & Clinique
+                                        <div class="space-y-2 bg-white p-4 rounded-xl border-2 border-slate-200">
+                                            <h4 class="text-[10px] font-black uppercase tracking-wider font-mono text-slate-500 border-b border-slate-100 pb-2 flex items-center gap-1.5">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span> Données Enfant & Clinique
                                             </h4>
-                                            <p><span class="text-slate-400 font-mono">Poids :</span> <strong class="text-slate-700">{{ ech.poids|default:"-" }} kg</strong></p>
-                                            <p><span class="text-slate-400 font-mono">Rang de naissance :</span> <strong class="text-slate-700">{{ ech.rang_naissance|default:"1" }}</strong></p>
-                                            <p><span class="text-slate-400 font-mono">Prophylaxie ARV :</span> <strong class="text-slate-700">{{ ech.profilaxie_arv|default:"Aucune" }}</strong></p>
-                                            <p><span class="text-slate-400 font-mono">Porte d'entrée :</span> <strong class="text-slate-700">{{ ech.porte_entree|default:"Non spécifiée" }}</strong></p>
-                                            <p><span class="text-slate-400 font-mono">Raison prélèvement :</span> <strong class="text-slate-700">{{ ech.raison_prelevement|default:"Suivi systématique" }}</strong></p>
-                                            <p><span class="text-slate-400 font-mono">Symptômes présents :</span> 
-                                                {% if ech.present_symptome %}<span class="text-rose-600 font-bold">Oui</span>{% else %}<span class="text-slate-500">Non</span>{% endif %}
+                                            <p class="flex justify-between"><span class="text-slate-500 font-mono">Poids :</span> <strong class="text-slate-900 font-bold">{{ ech.poids|default:"-" }} kg</strong></p>
+                                            <p class="flex justify-between"><span class="text-slate-500 font-mono">Rang de naissance :</span> <strong class="text-slate-900 font-bold">{{ ech.rang_naissance|default:"1" }}</strong></p>
+                                            <p class="flex justify-between"><span class="text-slate-500 font-mono">Prophylaxie ARV :</span> <strong class="text-slate-900 font-bold">{{ ech.profilaxie_arv|default:"Aucune" }}</strong></p>
+                                            <p class="flex justify-between"><span class="text-slate-500 font-mono">Porte d'entrée :</span> <strong class="text-slate-900 font-bold">{{ ech.porte_entree|default:"Non spécifiée" }}</strong></p>
+                                            <p class="flex justify-between"><span class="text-slate-500 font-mono">Raison prélèvement :</span> <strong class="text-slate-900 font-bold">{{ ech.raison_prelevement|default:"Suivi systématique" }}</strong></p>
+                                            <p class="flex justify-between"><span class="text-slate-500 font-mono">Symptômes :</span> 
+                                                {% if ech.present_symptome %}
+                                                    <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-800 font-mono font-bold text-[10px]">OUI (PRÉSENTS)</span>
+                                                {% else %}
+                                                    <span class="text-slate-600 font-bold">Non</span>
+                                                {% endif %}
                                             </p>
                                         </div>
 
                                         <!-- Bloc Traitements & Allaitement -->
-                                        <div class="space-y-2 bg-white p-3 rounded-lg border border-slate-100">
-                                            <h4 class="text-[10px] font-bold uppercase tracking-wider font-mono text-slate-400 flex items-center gap-1.5 mb-2">
-                                                <span class="w-1 h-1 rounded-full bg-cyan-500"></span> Statuts Nutritionnel & Médicamenteux
+                                        <div class="space-y-2 bg-white p-4 rounded-xl border-2 border-slate-200">
+                                            <h4 class="text-[10px] font-black uppercase tracking-wider font-mono text-slate-500 border-b border-slate-100 pb-2 flex items-center gap-1.5">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-600"></span> Statuts Nutritionnel & Médicamenteux
                                             </h4>
-                                            <div class="border-b border-slate-100 pb-1.5">
-                                                <p><span class="text-slate-400 font-mono">Allaitement en cours :</span> {% if ech.present_allaitement %}<span class="text-indigo-600 font-bold">Oui</span> (Mode: {{ ech.mode_allaitement|default:"-" }}){% else %}<span class="text-slate-500">Non</span>{% endif %}</p>
+                                            <div class="border-b border-slate-100 pb-2 space-y-1">
+                                                <p class="flex justify-between"><span class="text-slate-500 font-mono">Allaitement :</span> {% if ech.present_allaitement %}<strong class="text-indigo-700 font-bold">Oui ({{ ech.mode_allaitement|default:"-" }})</strong>{% else %}<span class="text-slate-600">Non</span>{% endif %}</p>
                                                 {% if ech.present_sevrage %}
-                                                    <p class="text-slate-500 text-[11px]"><span class="font-mono">Sevrage effectué le :</span> {{ ech.date_sevrage|date:"d/m/Y" }}</p>
+                                                    <p class="text-slate-600 text-[11px]"><span class="font-mono text-slate-400">Sevrage le :</span> {{ ech.date_sevrage|date:"d/m/Y" }}</p>
                                                 {% endif %}
                                             </div>
-                                            <div>
-                                                <p><span class="text-slate-400 font-mono">Cotrimoxazole :</span> {% if ech.present_cotrimoxazole %}<span class="text-emerald-600 font-bold">Oui</span> (depuis le {{ ech.date_cotrimoxazole|date:"d/m/Y" }}){% else %}<span class="text-slate-500">Non</span>{% endif %}</p>
-                                                <p><span class="text-slate-400 font-mono">Traitement TARV :</span> {% if ech.present_tarv %}<span class="text-emerald-600 font-bold">Oui</span> (depuis le {{ ech.date_tarv|date:"d/m/Y" }}){% else %}<span class="text-slate-500">Non</span>{% endif %}</p>
+                                            <div class="space-y-1 pt-1">
+                                                <p class="flex justify-between"><span class="text-slate-500 font-mono">Cotrimoxazole :</span> {% if ech.present_cotrimoxazole %}<strong class="text-emerald-700 font-bold">Oui (depuis {{ ech.date_cotrimoxazole|date:"d/m/Y" }})</strong>{% else %}<span class="text-slate-600">Non</span>{% endif %}</p>
+                                                <p class="flex justify-between"><span class="text-slate-500 font-mono">Traitement TARV :</span> {% if ech.present_tarv %}<strong class="text-emerald-700 font-bold">Oui (depuis {{ ech.date_tarv|date:"d/m/Y" }})</strong>{% else %}<span class="text-slate-600">Non</span>{% endif %}</p>
                                             </div>
                                         </div>
 
-                                        <!-- Bloc Informations Mère & PTME -->
-                                        <div class="space-y-2 bg-white p-3 rounded-lg border border-slate-100 md:col-span-2">
-                                            <h4 class="text-[10px] font-bold uppercase tracking-wider font-mono text-slate-400 flex items-center gap-1.5 mb-2">
-                                                <span class="w-1 h-1 rounded-full bg-emerald-500"></span> Antécédents de la Mère & Suivi PTME
+                                        <!-- Bloc Informations Mère & Suivi PTME -->
+                                        <div class="space-y-2 bg-white p-4 rounded-xl border-2 border-slate-200 md:col-span-2">
+                                            <h4 class="text-[10px] font-black uppercase tracking-wider font-mono text-slate-500 border-b border-slate-100 pb-2 flex items-center gap-1.5">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Antécédents de la Mère & Suivi PTME
                                             </h4>
-                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
-                                                <p><span class="text-slate-400 font-mono">Mère liée :</span> <strong class="text-slate-700">{{ ech.mere|default:"Non renseignée" }}</strong></p>
-                                                <p><span class="text-slate-400 font-mono">Protocole PTME :</span> <strong class="text-slate-700">{{ ech.protocole_ptme|default:"Aucun" }}</strong></p>
-                                                <p><span class="text-slate-400 font-mono">N° Grossesse :</span> <strong class="text-slate-700">{{ ech.numero_grossesse|default:"-" }}</strong></p>
-                                                <p><span class="text-slate-400 font-mono">Mode accouchement :</span> <strong class="text-slate-700">{{ ech.mode_accouchement|default:"-" }}</strong></p>
-                                                <p><span class="text-slate-400 font-mono">Initiation PTME le :</span> <strong class="text-slate-700">{{ ech.date_initiation_ptme|date:"d/m/Y"|default:"-" }}</strong></p>
-                                                <p><span class="text-slate-400 font-mono">Diagnostic VIH le :</span> <strong class="text-slate-700">{{ ech.date_diagnostic_vih|date:"d/m/Y"|default:"-" }}</strong></p>
-                                                <p><span class="text-slate-400 font-mono">Diagnostic LAV le :</span> <strong class="text-slate-700">{{ ech.date_diagnostic_lav|date:"d/m/Y"|default:"-" }}</strong></p>
-                                                <p><span class="text-slate-400 font-mono">Prochain RDV :</span> <strong class="text-slate-700">{{ ech.date_rdv|date:"d/m/Y"|default:"-" }}</strong></p>
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5">
+                                                <p class="flex justify-between"><span class="text-slate-500 font-mono">Mère :</span> <strong class="text-slate-900">{{ ech.mere|default:"Non renseignée" }}</strong></p>
+                                                <p class="flex justify-between"><span class="text-slate-500 font-mono">Protocole PTME :</span> <strong class="text-slate-900">{{ ech.protocole_ptme|default:"Aucun" }}</strong></p>
+                                                <p class="flex justify-between"><span class="text-slate-500 font-mono">N° Grossesse :</span> <strong class="text-slate-900">{{ ech.numero_grossesse|default:"-" }}</strong></p>
+                                                <p class="flex justify-between"><span class="text-slate-500 font-mono">Mode accouchement :</span> <strong class="text-slate-900">{{ ech.mode_accouchement|default:"-" }}</strong></p>
+                                                <p class="flex justify-between"><span class="text-slate-500 font-mono">Initiation PTME :</span> <strong class="text-slate-900">{{ ech.date_initiation_ptme|date:"d/m/Y"|default:"-" }}</strong></p>
+                                                <p class="flex justify-between"><span class="text-slate-500 font-mono">Diagnostic VIH :</span> <strong class="text-slate-900">{{ ech.date_diagnostic_vih|date:"d/m/Y"|default:"-" }}</strong></p>
+                                                <p class="flex justify-between"><span class="text-slate-500 font-mono">Diagnostic LAV :</span> <strong class="text-slate-900">{{ ech.date_diagnostic_lav|date:"d/m/Y"|default:"-" }}</strong></p>
+                                                <p class="flex justify-between"><span class="text-slate-500 font-mono">Prochain RDV :</span> <strong class="text-slate-900">{{ ech.date_rdv|date:"d/m/Y"|default:"-" }}</strong></p>
                                             </div>
-                                            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500 font-mono">
-                                                <div>Enfants exposés de la fratrie : <span class="font-bold text-slate-800">{{ ech.nb_enfant_expose|default:"0" }}</span></div>
-                                                <div>Enfants infectés de la fratrie : <span class="font-bold text-rose-600">{{ ech.nb_enfant_infecte|default:"0" }}</span></div>
+                                            <div class="grid grid-cols-2 gap-2 pt-3 mt-2 border-t border-slate-100 text-[11px] font-mono">
+                                                <div class="bg-slate-50 p-2 rounded border border-slate-200">Enfants exposés fratrie : <strong class="text-slate-900">{{ ech.nb_enfant_expose|default:"0" }}</strong></div>
+                                                <div class="bg-slate-50 p-2 rounded border border-slate-200">Enfants infectés fratrie : <strong class="text-rose-700 font-bold">{{ ech.nb_enfant_infecte|default:"0" }}</strong></div>
                                             </div>
                                         </div>
 
                                     </div>
 
-                                    <!-- Footer de l'échantillon : Traçabilité du Préleveur & Observations -->
-                                    <div class="px-4 py-2.5 bg-slate-100 border-t border-slate-200 flex flex-col sm:flex-row justify-between gap-2 text-[11px] text-slate-600 font-mono">
+                                    <!-- Footer : Préleveur & Alerte doublon -->
+                                    <div class="px-5 py-3 bg-slate-100 border-t-2 border-slate-900 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-[11px] text-slate-700 font-mono">
                                         <div>
                                             <span>Préleveur : <strong>{{ ech.nom_preleveur }} {{ ech.prenom_preleveur }}</strong></span>
                                             {% if ech.contact_preleveur %}
-                                                <span class="text-slate-400 ml-1">({{ ech.contact_preleveur }})</span>
+                                                <span class="text-slate-500 ml-1">({{ ech.contact_preleveur }})</span>
                                             {% endif %}
                                         </div>
                                         {% if ech.duplicate_prelevement %}
-                                            <span class="text-amber-600 font-bold uppercase text-[10px]">⚠️ Échantillon Dupliqué</span>
+                                            <span class="px-2 py-0.5 rounded bg-amber-200 text-amber-950 border border-amber-400 font-bold uppercase text-[10px]">
+                                                ⚠️ Prélèvement Dupliqué
+                                            </span>
                                         {% endif %}
                                     </div>
                                     
                                     {% if ech.observation %}
-                                        <div class="px-4 py-2 bg-amber-50/50 border-t border-slate-200 text-xs text-slate-500 italic">
+                                        <div class="px-5 py-2.5 bg-amber-50 border-t border-slate-200 text-xs text-amber-900 font-sans italic">
                                             <strong>Observation :</strong> "{{ ech.observation }}"
                                         </div>
                                     {% endif %}
@@ -201,14 +289,14 @@
                     </div>
                 {% else %}
                     <!-- État Vide -->
-                    <div class="flex flex-col items-center justify-center text-center py-12 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
-                        <div class="p-3 bg-white rounded-xl border border-slate-200 text-slate-400 mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <div class="flex flex-col items-center justify-center text-center py-16 border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50">
+                        <div class="p-4 bg-white rounded-2xl border-2 border-slate-900 text-slate-400 mb-3 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
                         </div>
-                        <h4 class="text-xs font-black text-slate-700 uppercase font-mono">Aucun échantillon enregistré</h4>
-                        <p class="text-xs text-slate-400 mt-1 max-w-sm">Aucune fiche d'investigation d'échantillon n'est disponible pour cet enfant.</p>
+                        <h4 class="text-sm font-black text-slate-900 uppercase font-mono">Aucun échantillon enregistré</h4>
+                        <p class="text-xs text-slate-500 mt-1 max-w-sm">Aucune fiche d'analyse PCR n'a encore été enregistrée pour ce patient.</p>
                     </div>
                 {% endif %}
 

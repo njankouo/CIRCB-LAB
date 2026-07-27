@@ -127,7 +127,7 @@ def echantillonages(request):
         'echantillons__mere',
         'echantillons__resultats__test',
         'echantillons__resultats__resultat_pcr'
-    ).order_by('-id')
+    ).order_by('-id')[:2]
 
     context = {
         'fiches': fiches,
@@ -307,7 +307,9 @@ def enregistrer_fiche_echantillon(request):
                 date_enregistrement=date_enregistrement,
                 nombre_echantillon=nombre_echantillon,
                 observation=observation,
-                numero_ordre=numero_ordre
+                numero_ordre=numero_ordre,
+                date_Envoie_labo = request.POST.get('date_entree_labo')
+                
             )
 
             return redirect('verification-code', code=fiche.code)
@@ -874,46 +876,137 @@ def resultats(request):
     }
     return render(request, 'webpages/resultats/list_resultat.html',context)
 
+import base64
 import io
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
+import os
+from django.conf import settings
+from django.contrib.staticfiles import finders
+from django.shortcuts import get_object_or_404, HttpResponse
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
-from .models import Resultat
+
 
 def imprimer_resultat_pdf(request, resultat_id):
     resultat = get_object_or_404(Resultat, id=resultat_id)
-    
-    # Préparation d'un contexte propre et simplifié
+
+    # 1. Récupération et conversion du logo en Base64
+    logo_base64 = ""
+    # Mettez le nom exact de votre fichier (vérifiez la casse : Logo-CIRCB.png ou logo_circb.png)
+    logo_path = finders.find("images/Logo-CIRCB.png") or finders.find(
+        "images/logo_circb.png"
+    )
+
+    if logo_path and os.path.exists(logo_path):
+        with open(logo_path, "rb") as image_file:
+            logo_base64 = base64.b64encode(image_file.read()).decode("utf-8")
+
+    # 2. Transmission au template
     context = {
-        'id_run': resultat.id,
-        'echantillon_code': resultat.echantillon.code_barre if hasattr(resultat.echantillon, 'code_barre') else resultat.echantillon,
-        'test_nom': resultat.test.nom if resultat.test else "Non spécifié",
-        'verdict': (resultat.resultat_pcr.nom if resultat.resultat_pcr else "En attente").upper(),
-        'date_prelevement': resultat.date_prelevement, # Le filtre Django gérera le format dans le template
-        'commentaire': resultat.commentaire or "Aucun commentaire particulier mentionné.",
+        "resultat": resultat,
+        "logo_base64": logo_base64,
     }
 
-    # 1. Rendu du template HTML sous forme de chaîne de caractères
-    html_content = render_to_string('webpages/resultats/resultat_pdf.html', context)
-
-    # 2. Préparation de la réponse HTTP binaire
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename="Resultat_{resultat.id}.pdf"'
-    
-    # 3. Génération sécurisée du PDF
-    pisa_status = pisa.pisaDocument(
-        io.BytesIO(html_content.encode("utf-8")),
-        response,
-        encoding='utf-8'
+    html_content = render_to_string(
+        "webpages/resultats/resultat_pdf.html", context
     )
-    
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = (
+        f'inline; filename="Resultat_{resultat.id}.pdf"'
+    )
+
+    pisa_status = pisa.pisaDocument(
+        io.BytesIO(html_content.encode("utf-8")), response, encoding="utf-8"
+    )
+
     if pisa_status.err:
         return HttpResponse("Erreur lors de la compilation du PDF.", status=500)
-        
+
     return response
 
 
+def resultats_individuel(request, id):
+    resultat = get_object_or_404(Resultat, id=id)
+
+    # 1. Récupération et conversion du logo en Base64 (contourne tout souci de chemin relatif avec xhtml2pdf)
+    logo_base64 = ""
+    logo_path = finders.find("images/Logo-CIRCB.png") or finders.find(
+        "images/logo_circb.png"
+    )
+
+    if logo_path and os.path.exists(logo_path):
+        with open(logo_path, "rb") as image_file:
+            logo_base64 = base64.b64encode(image_file.read()).decode("utf-8")
+
+    # 2. Transmission au template avec la date du jour d'impression
+    context = {
+        "resultat": resultat,
+        "logo_base64": logo_base64,
+        "date_impression": timezone.now(),  # Permet d'avoir la date du jour dynamique sur le PDF
+    }
+
+    # 3. Rendu du template HTML
+    html_content = render_to_string(
+        "webpages/rapports/resultat-individuel.html", context
+    )
+
+    # 4. Génération du PDF
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = (
+        f'inline; filename="Resultat_{resultat.id}.pdf"'
+    )
+
+    pisa_status = pisa.pisaDocument(
+        io.BytesIO(html_content.encode("utf-8")), response, encoding="utf-8"
+    )
+
+    if pisa_status.err:
+        return HttpResponse("Erreur lors de la compilation du PDF.", status=500)
+
+    return response
+
+
+
+
+def resultats_collectifs(request):
+   
+
+    # 1. Récupération et conversion du logo en Base64 (contourne tout souci de chemin relatif avec xhtml2pdf)
+    logo_base64 = ""
+    logo_path = finders.find("images/Logo-CIRCB.png") or finders.find(
+        "images/logo_circb.png"
+    )
+
+    if logo_path and os.path.exists(logo_path):
+        with open(logo_path, "rb") as image_file:
+            logo_base64 = base64.b64encode(image_file.read()).decode("utf-8")
+
+    # 2. Transmission au template avec la date du jour d'impression
+    context = {
+       
+        "logo_base64": logo_base64,
+        "date_impression": timezone.now(),  # Permet d'avoir la date du jour dynamique sur le PDF
+    }
+
+    # 3. Rendu du template HTML
+    html_content = render_to_string(
+        "webpages/rapports/resultats-collectif.html", context
+    )
+
+    # 4. Génération du PDF
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = (
+        f'inline; filename="Resultat.pdf"'
+    )
+
+    pisa_status = pisa.pisaDocument(
+        io.BytesIO(html_content.encode("utf-8")), response, encoding="utf-8"
+    )
+
+    if pisa_status.err:
+        return HttpResponse("Erreur lors de la compilation du PDF.", status=500)
+
+    return response
 def bordeaux_sortie(request):
     return render(request, 'webpages/borderaux.html')
 
@@ -973,40 +1066,70 @@ def verification_code(request, code):
     return render(request, 'webpages/echantillonages/verification-code.html', context)
 
 
+def formater_date(valeur_date):
+    """Convertit en toute sécurité une date en chaîne YYYY-MM-DD"""
+    if not valeur_date:
+        return None
+    if hasattr(valeur_date, 'strftime'):
+        return valeur_date.strftime('%Y-%m-%d')
+    return str(valeur_date)
 
 def rechercher_patient(request):
     code = request.GET.get('code', '').strip().upper()
-    patient = Patient.objects.filter(code=code).first()
     
-    if patient:
-        # Construction sécurisée du dictionnaire de la mère
+    if not code:
+        return JsonResponse({'exists': False, 'erreur': 'Code manquant'}, status=400)
+
+    try:
+        patient = Patient.objects.filter(code=code).first()
+        
+        if not patient:
+            return JsonResponse({'exists': False})
+
+        # --- Construction sécurisée du dictionnaire de la mère ---
         mere_data = None
-        if patient.mere:
+        mere_obj = getattr(patient, 'mere', None)
+        if mere_obj:
+            # Récupération sécurisée du contact (gère le cas où contact est déjà un ID int)
+            contact_id = None
+            if hasattr(mere_obj, 'contact_id') and mere_obj.contact_id is not None:
+                contact_id = mere_obj.contact_id
+            elif hasattr(mere_obj, 'contact') and mere_obj.contact is not None:
+                contact_id = mere_obj.contact if isinstance(mere_obj.contact, int) else getattr(mere_obj.contact, 'id', None)
+
             mere_data = {
-                'id': patient.mere.id,
-                'nom': patient.mere.nom,
-                'prenom': patient.mere.prenom if hasattr(patient.mere, 'prenom') else '',
-                'contact': patient.mere.contact.id if patient.mere.contact else None,
-                'age': patient.mere.age if hasattr(patient.mere, 'age') else None,
-                'date_naissance': patient.mere.date_naissance.strftime('%Y-%m-%d') if patient.mere.date_naissance else None,
+                'id': mere_obj.id,
+                'nom': getattr(mere_obj, 'nom', ''),
+                'prenom': getattr(mere_obj, 'prenom', ''),
+                'contact': contact_id,
+                'age': getattr(mere_obj, 'age', None),
+                'date_naissance': formater_date(getattr(mere_obj, 'date_naissance', None)),
             }
 
+        # --- Construction sécurisée de la porte d'entrée ---
+        porte_entree_id = None
+        if hasattr(patient, 'porte_entree_id') and patient.porte_entree_id is not None:
+            porte_entree_id = patient.porte_entree_id
+        elif hasattr(patient, 'porte_entree') and patient.porte_entree is not None:
+            porte_entree_id = patient.porte_entree if isinstance(patient.porte_entree, int) else getattr(patient.porte_entree, 'id', None)
+
         return JsonResponse({
-            'exists': True, # Unifié en 'exists'
+            'exists': True,
             'patient': {
                 'id': patient.id,
-                'code':patient.code,
+                'code': patient.code,
                 'nom': patient.nom,
                 'prenom': patient.prenom,
-                'sexe': patient.sexe,
-                'porte_entree': patient.porte_entree.id if patient.porte_entree else None,
-                'date_naissance': patient.date_naissance.strftime('%Y-%m-%d') if patient.date_naissance else None,
+                'sexe': getattr(patient, 'sexe', None),
+                'porte_entree': porte_entree_id,
+                'date_naissance': formater_date(getattr(patient, 'date_naissance', None)),
                 'mere': mere_data,
             }
         })
-    else:
-        # Correction ici : utilisez 'exists' aussi
-        return JsonResponse({'exists': False})
+
+    except Exception as e:
+        logger.error(f"Erreur recherche patient {code} : {str(e)}", exc_info=True)
+        return JsonResponse({'exists': False, 'erreur': f"Erreur serveur : {str(e)}"}, status=500)
 
 
 
@@ -1199,14 +1322,13 @@ def save_code_patient(request):
             'message': 'Aucun code valide n\'a été fourni.'
         }, status=400)
 
-    # 3. Réponse JSON avec la distinction des deux listes
+    # 3. Réponse JSON alignée avec le modal JS
     return JsonResponse({
         'status': 'success',
         'message': 'Traitement effectué.',
-        'codes_enregistres': codes_enregistres,
-        'codes_existants': codes_existants
+        'codes_initialises': codes_enregistres,  # 👈 Aligné avec le JS
+        'codes_refuses': codes_existants        # 👈 Aligné avec le JS
     }, status=200)
-
 
 
 from django.contrib import messages
@@ -1422,3 +1544,7 @@ def save_plage(request):
     }
     messages.success(request, 'Resultats Valides avec succes')
     return render(request, 'webpages/resultats/plages.html', context)
+
+
+
+

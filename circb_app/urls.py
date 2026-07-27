@@ -95,9 +95,14 @@ urlpatterns = [
     path('filter-stats/', views.statistic_echantillon, name='filter-stats'),
     
     
-    path('save-plage/', views.save_plage, name='save-plage')
+    path('save-plage/', views.save_plage, name='save-plage'),
     
-   
+    path('resultats-individuel/<int:id>/', views.resultats_individuel, name='resultats-individuel'),
+    
+    path('resultats-collectifs/', views.resultats_collectifs, name='resultats-collectifs'),
+    
+    
+
    
 ]
     

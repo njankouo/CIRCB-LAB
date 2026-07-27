@@ -958,4 +958,55 @@ function alimenterChampsPrincipaux(patientData) {
     }
 });
 </script>
+
+
+
+
+<script>
+    const ageInput = document.getElementById('main_mere_age');
+    const dobInput = document.getElementById('main_mere_date_naissance');
+
+    // 1. ÂGE -> DATE DE NAISSANCE
+    ageInput.addEventListener('input', function() {
+        const age = parseInt(this.value);
+
+        if (!isNaN(age) && age >= 0) {
+            const today = new Date();
+            const birthDate = new Date(today.getFullYear() - age, today.getMonth(), today.getDate());
+            
+            const year = birthDate.getFullYear();
+            const month = String(birthDate.getMonth() + 1).padStart(2, '0');
+            const day = String(birthDate.getDate()).padStart(2, '0');
+            
+            dobInput.value = `${year}-${month}-${day}`;
+        } else {
+            dobInput.value = '';
+        }
+    });
+
+    // 2. DATE DE NAISSANCE -> ÂGE
+    dobInput.addEventListener('change', function() {
+        if (this.value) {
+            const birthDate = new Date(this.value);
+            const today = new Date();
+
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            const dayDiff = today.getDate() - birthDate.getDate();
+
+            // Si l'anniversaire n'est pas encore passé cette année, on retire 1 an
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                age--;
+            }
+
+            if (age >= 0) {
+                ageInput.value = age;
+            } else {
+                ageInput.value = ''; // Réinitialise si la date est dans le futur
+            }
+        } else {
+            ageInput.value = '';
+        }
+    });
+</script>
 {% endblock %}

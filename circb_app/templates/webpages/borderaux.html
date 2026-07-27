@@ -1,4 +1,199 @@
 {% extends './dashbord_hosp.html' %}
-{% block main %}
 
+{% block main %}
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 sm:p-6 flex flex-col gap-6 bg-slate-100 dark:bg-slate-950 w-full max-w-[100vw] custom-scrollbar">
+    
+<div class="min-h-screen bg-slate-100 text-slate-800 -m-4 p-4 md:p-6 font-sans">
+
+    <!-- 1. BARRE DE COMMANDE TYPE ERP (CONTROL PANEL) -->
+    <div class="bg-white border border-slate-300 rounded shadow-xs px-4 py-3 mb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        
+        <!-- BREADCRUMB & TITRE -->
+        <div>
+            <nav class="flex text-[11px] text-slate-500 mb-0.5" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1">
+                    <li><a href="#" class="hover:text-slate-800">Laboratoire</a></li>
+                    <li><span class="text-slate-400">/</span></li>
+                    <li><a href="#" class="hover:text-slate-800">Rendu des Analyses</a></li>
+                    <li><span class="text-slate-400">/</span></li>
+                    <li class="font-semibold text-slate-700">Édition des Fiches de Résultats</li>
+                </ol>
+            </nav>
+            <div class="flex items-center gap-2">
+                <h1 class="text-base font-bold text-slate-900 tracking-tight">Impression des Résultats</h1>
+                <span class="bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-200 uppercase tracking-wider">Virologie - CIRCB</span>
+            </div>
+        </div>
+
+        <!-- BOUTONS D'ACTIONS ERP (HAUT) -->
+        <div class="flex items-center gap-2">
+            <button type="reset" form="erp-results-form" class="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-300 rounded transition shadow-2xs">
+                Réinitialiser
+            </button>
+            <button type="submit" form="erp-results-form" name="format" value="excel" class="px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded transition flex items-center gap-1.5 shadow-2xs">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Exporter Excel
+            </button>
+            <button type="submit" form="erp-results-form" name="format" value="pdf" class="px-4 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 border border-blue-700 rounded shadow-xs transition flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                Générer la Fiche (PDF)
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. FEUILLE DE PARAMÉTRAGE (WORKSHEET) -->
+    <form id="erp-results-form" method="GET" action="" target="_blank">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            
+            <!-- PANNEAU DE FILTRAGE PRINCIPAL (2/3) -->
+            <div class="lg:col-span-2 bg-white border border-slate-300 rounded shadow-xs p-5 space-y-5">
+                
+                <!-- Métadonnées du formulaire -->
+                <div class="border-b border-slate-200 pb-2.5 flex justify-between items-center">
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Critères d'Édition #FICHE-LAB</span>
+                    <span class="text-xs text-slate-500 font-mono">CIRCB / UNITE-VIROLOGIE</span>
+                </div>
+
+                <!-- SECTION 1: FORMATION SANITAIRE -->
+                <div>
+                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wide border-l-2 border-blue-600 pl-2 mb-2.5">
+                        1. Site d'Origine / Formation Sanitaire
+                    </h2>
+                    <div class="bg-slate-50/80 p-3.5 rounded border border-slate-200">
+                        <label for="fosa" class="block text-[11px] font-bold text-slate-600 uppercase mb-1">
+                            Formation Sanitaire (FOSA) <span class="text-rose-600">*</span>
+                        </label>
+                        <select id="fosa" name="fosa_id" required class="w-full text-xs bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" selected disabled>-- Sélectionner la formation sanitaire --</option>
+                            <option value="ALL">Toutes les FOSA (Rapport Global)</option>
+                            {% for fosa in liste_fosa %}
+                                <option value="{{ fosa.id }}">{{ fosa.nom }} ({% if fosa.district %}{{ fosa.district.nom }}{% else %}District N/A{% endif %})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: PERIODE TEMPORELLE -->
+                <div>
+                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wide border-l-2 border-blue-600 pl-2 mb-2.5">
+                        2. Période de Prélèvement / Réception
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50/80 p-3.5 rounded border border-slate-200">
+                        <div>
+                            <label for="date_debut" class="block text-[11px] font-bold text-slate-600 uppercase mb-1">
+                                Date de Début <span class="text-rose-600">*</span>
+                            </label>
+                            <input type="date" id="date_debut" name="date_debut" required class="w-full text-xs bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="date_fin" class="block text-[11px] font-bold text-slate-600 uppercase mb-1">
+                                Date de Fin <span class="text-rose-600">*</span>
+                            </label>
+                            <input type="date" id="date_fin" name="date_fin" required class="w-full text-xs bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: TYPE DE FICHE -->
+                <div>
+                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wide border-l-2 border-blue-600 pl-2 mb-2.5">
+                        3. Type de Fiche de Résultats
+                    </h2>
+                    <div class="bg-slate-50/80 p-3.5 rounded border border-slate-200">
+                        <label for="type_fiche" class="block text-[11px] font-bold text-slate-600 uppercase mb-1">
+                            Format du Rapport <span class="text-rose-600">*</span>
+                        </label>
+                        <select id="type_fiche" name="type_fiche" required class="w-full text-xs bg-white border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="synthese" selected>Fiche Synthétique (Récapitulatif global par FOSA / Période)</option>
+                            <option value="collectif">Fiche Collective (Listing détaillé des résultats individuels)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- SECTION 4: OPTIONS D'ÉDITION ET CONFIDENTIALITÉ (AJOUTÉE) -->
+                <div>
+                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wide border-l-2 border-blue-600 pl-2 mb-2.5">
+                        4. Options d'Affichage & Sécurité
+                    </h2>
+                    <div class="bg-slate-50/80 p-3.5 rounded border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="inclure_signature" value="1" checked class="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <span class="text-xs text-slate-700">Inclure le bloc de signature biologiste</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="masquer_anonyme" value="1" class="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <span class="text-xs text-slate-700">Anonymiser les noms des patients</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- BAS DE PAGE DU FORMULAIRE (BOUTONS DE RAPPEL) -->
+                <div class="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
+                    <button type="submit" name="format" value="pdf" class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded shadow-xs transition flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                        Générer la Fiche au format PDF
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- PANNEAU LATÉRAL ERP (1/3) -->
+            <div class="space-y-4">
+                
+                <!-- Widget Métadonnées Laboratoire -->
+                <div class="bg-white border border-slate-300 rounded shadow-xs p-4">
+                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3 pb-2 border-b border-slate-200 flex items-center justify-between">
+                        <span>Informations Paillasse</span>
+                        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                    </h3>
+                    <dl class="space-y-2 text-xs">
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <dt class="text-slate-500">Modèle de Fiche :</dt>
+                            <dd class="font-medium text-slate-800">CIRCB Officiel v2.0</dd>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <dt class="text-slate-500">Orientation PDF :</dt>
+                            <dd class="font-semibold text-slate-800">Paysage (A4 Landscape)</dd>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <dt class="text-slate-500">Opérateur :</dt>
+                            <dd class="font-medium text-slate-800">{{ request.user.username|default:"Biologiste" }}</dd>
+                        </div>
+                        <div class="flex justify-between py-1">
+                            <dt class="text-slate-500">Date Impression :</dt>
+                            <dd class="font-mono text-[11px] text-slate-700">{% now "d/m/Y H:i" %}</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <!-- Widget Note Biologique (RESTAURÉ ET COMPLÉTÉ) -->
+                <div class="bg-blue-50/80 border border-blue-200 rounded p-3 text-xs text-blue-900 space-y-2">
+                    <div class="font-bold flex items-center gap-1.5 text-blue-800 text-[11px] uppercase tracking-wide">
+                        <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Validation Biologique
+                    </div>
+                    <p class="text-[11px] leading-relaxed text-blue-800/90">
+                        Selon le format sélectionné (Synthétique ou Collectif), le document générera automatiquement l'en-tête officiel du MINSANTE / CIRCB avec le tableau sécurisé.
+                    </p>
+                </div>
+
+                <!-- Widget Statut du Système LIS (AJOUTÉ) -->
+                <div class="bg-white border border-slate-300 rounded shadow-xs p-3">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-500">Base de données LIS :</span>
+                        <span class="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[10px]">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Connecté
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </form>
+
+</div>
+</main>
 {% endblock %}

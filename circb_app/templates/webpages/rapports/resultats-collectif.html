@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Listing des Résultats Collectifs - CIRCB</title>
+    <style>
+        /* CONFIGURATION LANDSCAPE STRICTE POUR XHTML2PDF */
+        @page {
+            size: a4 landscape;
+            margin: 6mm 8mm;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 7.5pt;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* GRAND CADRE NOIR DE LA PAGE */
+        .outer-frame {
+            border: 1px solid #000000;
+            padding: 6px 8px;
+            width: 100%;
+        }
+
+        /* TABLES DE STRUCTURE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        /* EN-TÊTE INSTITUTIONNEL */
+        .header-table td {
+            vertical-align: top;
+            text-align: center;
+        }
+
+        .dotted-line {
+            border-bottom: 1px dotted #000000;
+            width: 60%;
+            margin: 2px auto;
+        }
+
+        .title-box {
+            border: 1px solid #000000;
+            padding: 3px 8px;
+            font-size: 9pt;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 3px;
+        }
+
+        /* BLOC INCLUS / EXCLUS */
+        .info-box {
+            border: 1px solid #000000;
+            padding: 4px 6px;
+            margin-top: 6px;
+            margin-bottom: 6px;
+            font-size: 7.5pt;
+            background-color: #fafafa;
+        }
+
+        /* TABLEAU PRINCIPAL DU LISTING */
+        .listing-table {
+            border: 1px solid #000000;
+            margin-top: 4px;
+        }
+
+        .listing-table th, 
+        .listing-table td {
+            border: 1px solid #000000;
+            padding: 4px 2px;
+            font-size: 6.5pt;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .listing-table th {
+            font-weight: bold;
+            background-color: #e6e6e6; /* Gris clair pour détacher les entêtes */
+        }
+
+        .align-left {
+            text-align: left !important;
+            padding-left: 3px !important;
+        }
+
+        .text-bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CADRE NOIR GLOBAL -->
+    <div class="outer-frame">
+
+        <!-- 1. EN-TÊTE INSTITUTIONNEL AVEC LOGO -->
+        <table class="header-table" style="margin-bottom: 4px;">
+            <tr>
+                <!-- GAUCHE : MINISTÈRE -->
+                <td style="width: 32%; font-weight: bold; font-size: 7.5pt;">
+                    MINISTERE DE LA SANTE PUBLIQUE
+                    <div class="dotted-line"></div>
+                    <span style="font-weight: normal; font-size: 6.5pt;">DIRECTION DE LA LUTTE CONTRE LA MALADIE</span>
+                </td>
+                
+                <!-- CENTRE : LOGO ET TITRE -->
+                <td style="width: 36%;">
+                    {% if logo_base64 %}
+                        <img src="data:image/png;base64,{{ logo_base64 }}" style="height: 26px; width: auto;" alt="Logo CIRCB"><br>
+                    {% endif %}
+                    <div style="font-size: 6pt; font-weight: bold;">CENTRE INTERNATIONAL DE REFERENCE "CHANTAL BIYA"</div>
+                    <div style="font-size: 5pt; margin-bottom: 2px;">POUR LA RECHERCHE SUR LA PREVENTION ET LA PRISE EN CHARGE DU VIH/SIDA</div>
+                    
+                    <div class="title-box">
+                        RAPPORT COLLECTIF DES RESULTATS<br>
+                        <span style="font-size: 6.5pt; font-weight: normal;">(Diagnostic précoce du VIH-1)</span>
+                    </div>
+                </td>
+                
+                <!-- DROITE : RÉPUBLIQUE -->
+                <td style="width: 32%; font-weight: bold; font-size: 7.5pt;">
+                    REPUBLIQUE DU CAMEROUN<br>
+                    <span style="font-weight: normal; font-size: 6.5pt;">Paix - Travail - Patrie</span>
+                </td>
+            </tr>
+        </table>
+
+        <!-- 2. BLOC INCLUS / EXCLUS -->
+        <div class="info-box">
+            <strong>Liste des inclus :</strong> {{ inclus|default:"67565, 67604" }}<br>
+            <strong>Liste des exclus :</strong> {{ exclus|default:"Aucun" }}
+        </div>
+
+        <!-- 3. TABLEAU DES RÉSULTATS COLLECTIFS -->
+        <table class="listing-table">
+            <thead>
+                <tr>
+                    <th style="width: 4%;">N°</th>
+                    <th style="width: 10%;">Code CIRCB</th>
+                    <th style="width: 18%;">PC Code Site</th>
+                    <th style="width: 14%;">Nom enfant</th>
+                    <th style="width: 8%;">Date naiss.</th>
+                    <th style="width: 14%;">Nom mère</th>
+                    <th style="width: 8%;">Téléphone</th>
+                    <th style="width: 8%;">Date prél.</th>
+                    <th style="width: 8%;">Date rendu</th>
+                    <th style="width: 8%;">Statut Virologique</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in resultats %}
+                <tr>
+                    <td>{{ item.numero|default:forloop.counter }}</td>
+                    <td>{{ item.code_circb|default:"&nbsp;" }}</td>
+                    <td class="align-left">{{ item.code_site|default:"&nbsp;" }}</td>
+                    <td class="align-left">{% if item.nom_enfant %}{{ item.nom_enfant }}{% else %}&nbsp;{% endif %}</td>
+                    <td>{% if item.date_naissance %}{{ item.date_naissance|date:"d/m/Y" }}{% else %}&nbsp;{% endif %}</td>
+                    <td class="align-left">{% if item.nom_mere %}{{ item.nom_mere }}{% else %}&nbsp;{% endif %}</td>
+                    <td>{% if item.telephone %}{{ item.telephone }}{% else %}&nbsp;{% endif %}</td>
+                    <td>{% if item.date_prelevement %}{{ item.date_prelevement|date:"d/m/Y" }}{% else %}&nbsp;{% endif %}</td>
+                    <td>{% if item.date_rendu %}{{ item.date_rendu|date:"d/m/Y" }}{% else %}&nbsp;{% endif %}</td>
+                    <td class="text-bold">{% if item.statut_virologique %}{{ item.statut_virologique }}{% else %}&nbsp;{% endif %}</td>
+                </tr>
+                {% empty %}
+                <!-- DONNÉES DE TEST AVEC GESTION DES ESPACES SANS CHEVAUCHEMENT -->
+                <tr>
+                    <td>74</td>
+                    <td>08DP67718</td>
+                    <td class="align-left">2 CEN-NKO-CNK-PT-2014</td>
+                    <td class="align-left">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="align-left">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>21/04/2026</td>
+                    <td>29/05/2026</td>
+                    <td class="text-bold">NON DETECTE</td>
+                </tr>
+                <tr>
+                    <td>78</td>
+                    <td>08DP67720</td>
+                    <td class="align-left">1 CEN-NKO-CNK-PT-2048</td>
+                    <td class="align-left">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="align-left">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>21/04/2026</td>
+                    <td>29/05/2026</td>
+                    <td class="text-bold">NON DETECTE</td>
+                </tr>
+                <tr>
+                    <td>79</td>
+                    <td>08DP67721</td>
+                    <td class="align-left">1 CEN-BIY-ACA-PT-0051</td>
+                    <td class="align-left">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="align-left">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>25/03/2026</td>
+                    <td>29/05/2026</td>
+                    <td class="text-bold">NON DETECTE</td>
+                </tr>
+                <tr>
+                    <td>80</td>
+                    <td>08DP67722</td>
+                    <td class="align-left">1 CEN-BIY-ACA-PT-0052</td>
+                    <td class="align-left">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="align-left">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>06/04/2026</td>
+                    <td>29/05/2026</td>
+                    <td class="text-bold">NON DETECTE</td>
+                </tr>
+                <tr>
+                    <td>94</td>
+                    <td>08DP67736</td>
+                    <td class="align-left">1 CEN-BIY-EBH-PT-0870</td>
+                    <td class="align-left">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="align-left">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>08/05/2026</td>
+                    <td>29/05/2026</td>
+                    <td class="text-bold">NON DETECTE</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- 4. SIGNATURES ET BAS DE PAGE -->
+        <table style="margin-top: 15px; margin-bottom: 6px; font-size: 7.5pt; font-weight: bold;">
+            <tr>
+                <td style="width: 50%; text-align: left;">
+                    Nom du responsable du laboratoire
+                </td>
+                <td style="width: 50%; text-align: right;">
+                    Signature du responsable du laboratoire
+                </td>
+            </tr>
+        </table>
+
+        <div style="font-size: 6.5pt;">
+            Date d'impression : {{ date_impression|date:"d/m/Y"|default:"26/07/2026" }}
+        </div>
+
+    </div>
+
+</body>
+</html>

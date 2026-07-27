@@ -34,26 +34,36 @@
   
 <!-- CONTENEUR DU FORMULAIRE VERROUILLÉ -->
 
-     <div class="space-y-3 pt-2">
+   <!-- CONTENEUR EN GRILLE DYNAMIQUE -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 pt-2">
+    
+    <!-- CODE ÉCHANTILLON -->
+    <div class="space-y-2">
         <div class="border-b border-slate-200 pb-1.5">
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">CODE ECHANTILLON<span class="text-rose-500">*</span></h4>
+            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+                CODE ECHANTILLON <span class="text-rose-500">*</span>
+            </h4>
         </div>
-        <div class="max-w-md text-xs">
-            <input  type="number" name="code_echantillon" required placeholder="Ex: +237 6XX XXX XXX" id="main_contact_familial"
+        <div class="w-full text-xs">
+            <input type="number" name="code_echantillon" required placeholder="Ex: 90001"
                    class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 font-medium cursor-not-allowed focus:outline-none">
         </div>
     </div>
 
     <!-- 4. CONTACT FAMILIAL / FAMILY CONTACT -->
-    <div class="space-y-3 pt-2">
+    <div class="space-y-2">
         <div class="border-b border-slate-200 pb-1.5">
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">4. Contact familial / Family Contact <span class="text-rose-500">*</span></h4>
+            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+                4. Contact familial / Family Contact <span class="text-rose-500">*</span>
+            </h4>
         </div>
-        <div class="max-w-md text-xs">
-            <input  type="tel" name="contact_familial" required placeholder="Ex: +237 6XX XXX XXX" id="main_contact_familial"
+        <div class="w-full text-xs">
+            <input type="tel" name="contact_familial" required placeholder="Ex: +237 6XX XXX XXX" id="main_contact_familial"
                    class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 font-medium cursor-not-allowed focus:outline-none">
         </div>
     </div>
+
+</div>
 
     <!-- 5. IDENTITÉ DE L'ENFANT / CHILD'S IDENTITY -->
     <div class="space-y-3 pt-2">
