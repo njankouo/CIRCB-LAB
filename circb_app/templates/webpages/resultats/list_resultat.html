@@ -1,216 +1,223 @@
 {% extends '../dashbord_hosp.html' %}
 {% block main %}
 
-<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 sm:p-6 flex flex-col gap-6 bg-slate-100 dark:bg-slate-950 w-full max-w-[100vw] custom-scrollbar">
+<main class="flex-1 h-full min-h-0 overflow-y-auto bg-slate-100 w-full max-w-[100vw] custom-scrollbar font-sans text-slate-800">
     
-    <!-- BARRE D'ACTION & EN-TÊTE DU REGISTRE -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 border-2 border-slate-900 dark:border-slate-800 border-b-[4px] rounded-2xl p-5 shadow-sm">
+    <!-- EN-TÊTE DU REGISTRE (Style DHIS2 avec bande bleue d'action) -->
+    <div class="bg-white border-b border-slate-200 border-t-4 border-t-[#1478c1] px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
         <div>
             <div class="flex items-center gap-2.5">
-                <span class="w-3 h-3 bg-teal-500 rounded-full border border-teal-900 animate-pulse"></span>
-                <h1 class="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase font-mono">
+                <span class="w-3 h-3 bg-[#1478c1] rounded-full animate-pulse"></span>
+                <h1 class="text-xl font-bold text-[#1d5288] tracking-tight">
                     Registre des Résultats Biologiques
                 </h1>
             </div>
-            <p class="text-xs font-bold text-slate-500 dark:text-slate-400 mt-0.5 uppercase tracking-wider">
+            <p class="text-xs font-semibold text-slate-500 mt-0.5 uppercase tracking-wider">
                 Archives & Validation des Analyses Moléculaires · CIRCB LIMS
             </p>
         </div>
         
-        <!-- Bouton Nouveau Résultat -->
+        <!-- Bouton Nouveau Résultat (Bleu Primordial DHIS2) -->
         <div>
-            <a href="/plages/" class="px-5 py-2.5 rounded-xl border-2 border-slate-950 dark:border-slate-700 bg-slate-900 hover:bg-slate-800 text-white text-xs font-black border-b-[4px] active:border-b-0 active:translate-y-[4px] shadow transition-all inline-flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                <span class="font-mono uppercase tracking-wide">Nouvel Enregistrement</span>
+            <a href="/plages/" class="px-4 py-2.5 rounded bg-[#1478c1] hover:bg-[#11629e] text-white text-xs font-bold shadow-sm transition-all inline-flex items-center gap-2 focus:ring-2 focus:ring-blue-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span class="uppercase tracking-wide">Nouvel Enregistrement</span>
             </a>
         </div>
     </div>
 
-    <!-- MODULE DE FILTRES ET RECHERCHE AVANCÉE -->
-    <div class="bg-white dark:bg-slate-900 border-2 border-slate-800 dark:border-slate-800 border-b-[4px] p-4 rounded-2xl shadow-sm">
-        <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 items-end">
-            
-            <!-- Recherche par code / Patient -->
-            <div class="flex flex-col gap-1 sm:col-span-2 lg:col-span-1">
-                <label class="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase font-mono">Recherche Code / Patient</label>
-                <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Ex: ECH-2026..." class="w-full bg-slate-50 dark:bg-slate-800/80 border-2 border-slate-800 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none transition-all font-mono">
-            </div>
+    <div class="p-4 sm:p-6 flex flex-col gap-5">
+        <!-- MODULE DE FILTRES ET RECHERCHE AVANCÉE -->
+        <div class="bg-white border border-slate-200 border-t-2 border-t-[#1478c1] p-4 rounded-md shadow-sm">
+            <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 items-end">
+                
+                <!-- Recherche par code / Patient -->
+                <div class="flex flex-col gap-1 sm:col-span-2 lg:col-span-1">
+                    <label class="text-[11px] font-bold text-[#1d5288] uppercase tracking-wide">Recherche Code / Patient</label>
+                    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Ex: ECH-2026..." class="w-full bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs font-semibold text-slate-800 focus:bg-white focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1] focus:outline-none transition-all font-mono">
+                </div>
 
-            <!-- Filtrer par Verdict PCR -->
-            <div class="flex flex-col gap-1">
-                <label class="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase font-mono">Verdict Biologique</label>
-                <div class="relative">
-                    <select name="verdict" class="w-full bg-slate-50 dark:bg-slate-800/80 border-2 border-slate-800 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none appearance-none pr-8">
-                        <option value="">-- Tous les verdicts --</option>
-                        <option value="negatif" {% if request.GET.verdict == 'negatif' %}selected{% endif %}>NÉGATIF / NON DÉTECTÉ</option>
-                        <option value="positif" {% if request.GET.verdict == 'positif' %}selected{% endif %}>POSITIF / DÉTECTÉ</option>
-                        <option value="indetermine" {% if request.GET.verdict == 'indetermine' %}selected{% endif %}>INDÉTERMINÉ</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-slate-500">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <!-- Filtrer par Verdict PCR -->
+                <div class="flex flex-col gap-1">
+                    <label class="text-[11px] font-bold text-[#1d5288] uppercase tracking-wide">Verdict Biologique</label>
+                    <div class="relative">
+                        <select name="verdict" class="w-full bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs font-semibold text-slate-800 focus:bg-white focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1] focus:outline-none appearance-none pr-8">
+                            <option value="">-- Tous les verdicts --</option>
+                            <option value="negatif" {% if request.GET.verdict == 'negatif' %}selected{% endif %}>NÉGATIF / NON DÉTECTÉ</option>
+                            <option value="positif" {% if request.GET.verdict == 'positif' %}selected{% endif %}>POSITIF / DÉTECTÉ</option>
+                            <option value="indetermine" {% if request.GET.verdict == 'indetermine' %}selected{% endif %}>INDÉTERMINÉ</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-slate-500">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Filtrer par Test/Kit -->
-            <div class="flex flex-col gap-1">
-                <label class="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase font-mono">Kit d'analyse</label>
-                <div class="relative">
-                    <select name="test" class="w-full bg-slate-50 dark:bg-slate-800/80 border-2 border-slate-800 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none appearance-none pr-8">
-                        <option value="">-- Tous les kits --</option>
-                        {% for t in tests %}
-                            <option value="{{ t.id }}" {% if request.GET.test == t.id|stringformat:"i" %}selected{% endif %}>{{ t.nom|default:t }}</option>
-                        {% endfor %}
-                    </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-slate-500">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <!-- Filtrer par Test/Kit -->
+                <div class="flex flex-col gap-1">
+                    <label class="text-[11px] font-bold text-[#1d5288] uppercase tracking-wide">Kit d'analyse</label>
+                    <div class="relative">
+                        <select name="test" class="w-full bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs font-semibold text-slate-800 focus:bg-white focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1] focus:outline-none appearance-none pr-8">
+                            <option value="">-- Tous les kits --</option>
+                            {% for t in tests %}
+                                <option value="{{ t.id }}" {% if request.GET.test == t.id|stringformat:"i" %}selected{% endif %}>{{ t.nom|default:t }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-slate-500">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Boutons Actions Filtres -->
-            <div class="flex items-center gap-2 sm:col-span-2 lg:col-span-2">
-                <button type="submit" class="flex-1 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-black uppercase font-mono border-2 border-slate-900 border-b-[3px] active:border-b-0 active:translate-y-[3px] transition-all flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <span>Filtrer</span>
-                </button>
+                <!-- Boutons Actions Filtres -->
+                <div class="flex items-center gap-2 sm:col-span-2 lg:col-span-2">
+                    <button type="submit" class="flex-1 py-1.5 rounded bg-[#1d5288] hover:bg-[#153f6a] text-white text-xs font-bold uppercase transition-all flex items-center justify-center gap-2 shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <span>Filtrer</span>
+                    </button>
 
-                {% if request.GET.q or request.GET.verdict or request.GET.test %}
-                <a href="?" class="px-3 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-black uppercase font-mono border-2 border-slate-400 dark:border-slate-600 border-b-[3px] active:border-b-0 active:translate-y-[3px] transition-all" title="Réinitialiser">
-                    ✕
-                </a>
-                {% endif %}
-            </div>
-        </form>
-    </div>
-
-    <!-- TABLEAU TECHNIQUE DES RÉSULTATS -->
-    <div class="bg-white dark:bg-slate-900 border-2 border-slate-950 dark:border-slate-800 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-none overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-slate-900 border-b-2 border-slate-950 text-[11px] font-mono font-black uppercase text-slate-200 tracking-wider">
-                    <tr>
-                        <th class="p-3.5 border-r border-slate-800 w-16 text-center">ID</th>
-                        <th class="p-3.5 border-r border-slate-800">Échantillon & Patient</th>
-                        <th class="p-3.5 border-r border-slate-800">Kit de Test</th>
-                        <th class="p-3.5 border-r border-slate-800 text-center">Verdict Biologique</th>
-                        <th class="p-3.5 border-r border-slate-800">Dates (Prélèv. / Saisie)</th>
-                        <th class="p-3.5 border-r border-slate-800">Responsable / Commentaire</th>
-                        <th class="p-3.5 text-center w-20">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y-2 divide-slate-100 dark:divide-slate-800 text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
-                    
-                    {% for resultat in resultats %}
-                    {% with verdict_str=resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code|default:""|upper %}
-                    <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors {% if 'POSITIF' in verdict_str or 'DETECT' in verdict_str %}bg-rose-50/20 dark:bg-rose-950/10{% endif %}">
-                        
-                        <!-- ID -->
-                        <td class="p-3.5 border-r border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 font-black text-center">
-                            #{{ resultat.id }}
-                        </td>
-
-                       <!-- Code Échantillon & Nom Patient -->
-<td class="p-3.5 border-r border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 font-black tracking-tight">
-    <span class="block text-blue-600 dark:text-blue-400 font-mono text-xs">
-        {{ resultat.echantillon.code|default:resultat.echantillon }}
-    </span>
-    {% if resultat.echantillon.enfant %}
-        <span class="block text-[10px] font-sans font-bold text-slate-500 dark:text-slate-400 truncate max-w-[160px]">
-            👤 {{ resultat.echantillon.enfant.nom }} {{ resultat.echantillon.enfant.prenom }}
-        </span>
-    {% endif %}
-</td>
-                        <!-- Kit de Test -->
-                        <td class="p-3.5 border-r border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300">
-                            <span class="block text-slate-900 dark:text-white font-bold">
-                                {{ resultat.test.nom|default:resultat.test|default:"Non spécifié" }}
-                            </span>
-                            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-tight">Analyse Moléculaire</span>
-                        </td>
-
-                        <!-- Verdict Biologique -->
-                        <td class="p-3.5 border-r border-slate-200 dark:border-slate-800 text-center whitespace-nowrap">
-                            {% if 'NÉGATIF' in verdict_str or 'NEGATIF' in verdict_str or 'NON DETECT' in verdict_str or 'NON DÉTECT' in verdict_str %}
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border-2 border-emerald-800 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-950 dark:text-emerald-300 font-black text-[10px] tracking-wide uppercase">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                    {{ resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code }}
-                                </span>
-                            {% elif 'POSITIF' in verdict_str or 'DETECT' in verdict_str or 'DÉTECT' in verdict_str %}
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border-2 border-rose-800 bg-rose-50 dark:bg-rose-950/60 text-rose-950 dark:text-rose-300 font-black text-[10px] tracking-wide uppercase">
-                                    <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-                                    {{ resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code }}
-                                </span>
-                            {% else %}
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border-2 border-amber-800 bg-amber-50 dark:bg-amber-950/60 text-amber-950 dark:text-amber-300 font-black text-[10px] tracking-wide uppercase">
-                                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                                    {{ resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code|default:"En attente" }}
-                                </span>
-                            {% endif %}
-                        </td>
-
-                        <!-- Dates (Prélèvement + Saisie) -->
-                        <td class="p-3.5 border-r border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 whitespace-nowrap">
-                            <div class="flex flex-col">
-                                <span class="text-slate-900 dark:text-slate-200 font-bold">
-                                    📅 {{ resultat.echantillon.date_prelevement|date:"d/m/Y"|default:"Non renseignée" }}
-                                </span>
-                                <span class="text-[10px] text-slate-400 font-semibold mt-0.5">
-                                    Saisie : {{ resultat.created_at|date:"d/m/Y à H:i" }}
-                                </span>
-                            </div>
-                        </td>
-
-                        <!-- Responsable & Commentaire -->
-                        <td class="p-3.5 border-r border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-sans max-w-xs">
-                            {% if resultat.responsable %}
-                                <span class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase font-mono">
-                                    👨‍🔬 {{ resultat.responsable.get_full_name|default:resultat.responsable.username }}
-                                </span>
-                            {% endif %}
-                            <span class="block truncate text-xs text-slate-500 dark:text-slate-400" title="{{ resultat.commentaire }}">
-                                {{ resultat.commentaire|default:"Aucun commentaire" }}
-                            </span>
-                        </td>
-
-                        <!-- Actions -->
-                        <td class="p-3.5 text-center">
-                            {% comment %} <a href="/imprimer_resultat_pdf/{{ resultat.id }}/" target="_blank" title="Imprimer le bulletin PDF" class="inline-flex items-center justify-center p-2 rounded-xl border-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                            </a> {% endcomment %}
-
-                             <a href="/resultats-individuel/{{ resultat.id }}/" target="_blank" title="Imprimer le bulletin PDF" class="inline-flex items-center justify-center p-2 rounded-xl border-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                            </a>
-
-                          
-
-{% comment %} 
-                             <a href="/resultats-collectifs/" target="_blank" title="Imprimer le bulletin PDF" class="inline-flex items-center justify-center p-2 rounded-xl border-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                            </a> {% endcomment %}
-
-                        </td>
-                    </tr>
-                    {% endwith %}
-                    {% empty %}
-                    <tr>
-                        <td colspan="7" class="p-12 text-center text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wide bg-slate-50 dark:bg-slate-900/50">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-slate-300 dark:text-slate-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                            Aucun résultat ne correspond aux critères de recherche.
-                        </td>
-                    </tr>
-                    {% endfor %}
-
-                </tbody>
-            </table>
+                    {% if request.GET.q or request.GET.verdict or request.GET.test %}
+                    <a href="?" class="px-3 py-1.5 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold uppercase transition-all" title="Réinitialiser">
+                        ✕
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
         </div>
 
-        <!-- COMPTEUR GLOBAL -->
-        <div class="bg-slate-50 dark:bg-slate-800/50 border-t-2 border-slate-950 dark:border-slate-800 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono">
-            <span class="font-black text-slate-700 dark:text-slate-300">
-                Total : <span class="text-blue-600 dark:text-blue-400">{{ resultats.count }}</span> enregistrement(s) trouvé(s)
-            </span>
+        <!-- TABLEAU TECHNIQUE DES RÉSULTATS (Bleu Nuit DHIS2 #1d5288) -->
+        <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-[#1d5288] text-white text-[11px] font-bold uppercase tracking-wider">
+                        <tr>
+                      
+                            <th class="p-3 border-r border-blue-900/40">Échantillon & Patient</th>
+                            <th class="p-3 border-r border-blue-900/40">Kit de Test</th>
+                            <th class="p-3 border-r border-blue-900/40 text-center">Verdict Biologique</th>
+                            <th class="p-3 border-r border-blue-900/40">Dates (Prélèv. / Saisie)</th>
+                            <th class="p-3 border-r border-blue-900/40">Responsable / Commentaire</th>
+                            <th class="p-3 text-center w-20">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-xs text-slate-700">
+                        
+                        {% for resultat in resultats %}
+                        {% with verdict_str=resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code|default:""|upper %}
+                        <tr class="hover:bg-blue-50/50 transition-colors {% if 'POSITIF' in verdict_str or 'DETECT' in verdict_str %}bg-rose-50/40{% endif %}">
+                            
+                            <!-- ID -->
+                         
+
+                            <!-- Code Échantillon & Nom Patient -->
+                            <td class="p-3 border-r border-slate-200">
+                                {% comment %} <span class="block text-[#1478c1] font-bold font-mono text-xs hover:underline">
+                                    {{ resultat.echantillon.code|default:resultat.echantillon }}
+                                </span> {% endcomment %}
+                                {% if resultat.echantillon.enfant %}
+                                    <span class="block text-[11px] font-semibold text-slate-600 truncate max-w-[180px] mt-0.5">
+                                        👤 {{ resultat.echantillon.enfant.nom }} {{ resultat.echantillon.enfant.prenom }}
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Kit de Test -->
+                            <td class="p-3 border-r border-slate-200">
+                                <span class="block text-slate-900 font-bold">
+                                    {{ resultat.test.nom|default:resultat.test|default:"Non spécifié" }}
+                                </span>
+                                <span class="text-[10px] font-semibold text-blue-600 uppercase tracking-tight">Analyse Moléculaire</span>
+                            </td>
+
+                            <!-- Verdict Biologique -->
+                            <td class="p-3 border-r border-slate-200 text-center whitespace-nowrap">
+                                {% if 'NÉGATIF' in verdict_str or 'NEGATIF' in verdict_str or 'NON DETECT' in verdict_str or 'NON DÉTECT' in verdict_str %}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-emerald-300 bg-emerald-50 text-emerald-800 font-bold text-[10px] tracking-wide uppercase">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                        {{ resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code }}
+                                    </span>
+                                {% elif 'POSITIF' in verdict_str or 'DETECT' in verdict_str or 'DÉTECT' in verdict_str %}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-rose-300 bg-rose-50 text-rose-800 font-bold text-[10px] tracking-wide uppercase">
+                                        <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                                        {{ resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code }}
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-amber-300 bg-amber-50 text-amber-800 font-bold text-[10px] tracking-wide uppercase">
+                                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                        {{ resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code|default:"En attente" }}
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Dates (Prélèvement + Saisie) -->
+                           <td class="p-3 border-r border-slate-200 text-slate-600 whitespace-nowrap">
+    <div class="flex flex-col space-y-1">
+        <!-- Date de prélèvement -->
+        <div class="flex items-center gap-1.5 text-slate-900 font-bold text-xs">
+            <span>📅</span>
+            <span>{{ resultat.echantillon.date_prelevement|date:"d/m/Y"|default:"Non renseignée" }}</span>
+        </div>
+
+        <!-- Badge du numéro de PCR -->
+        <div>
+            {% if resultat.echantillon.ordre == 1 %}
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-sky-50 text-[#1478c1] border border-sky-200">PCR I</span>
+            {% elif resultat.echantillon.ordre == 2 %}
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-sky-50 text-[#1478c1] border border-sky-200">PCR II</span>
+            {% elif resultat.echantillon.ordre == 3 %}
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-sky-50 text-[#1478c1] border border-sky-200">PCR III</span>
+            {% endif %}
+        </div>
+
+        <!-- Date de saisie système -->
+        <span class="text-[10px] text-slate-400 font-medium">
+            Saisie : {{ resultat.created_at|date:"d/m/Y à H:i"|default:"-" }}
+        </span>
+    </div>
+</td>
+
+                            <!-- Responsable & Commentaire -->
+                            <td class="p-3 border-r border-slate-200 text-slate-600 max-w-xs">
+                                {% if resultat.responsable %}
+                                    <span class="block text-[11px] font-bold text-[#1d5288] uppercase">
+                                        👨‍🔬 {{ resultat.responsable.get_full_name|default:resultat.responsable.username }}
+                                    </span>
+                                {% endif %}
+                                <span class="block truncate text-xs text-slate-500" title="{{ resultat.commentaire }}">
+                                    {{ resultat.commentaire|default:"Aucun commentaire" }}
+                                </span>
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="p-3 text-center">
+                                 <a href="/resultats-individuel/{{ resultat.id }}/" target="_blank" title="Imprimer le bulletin PDF" class="inline-flex items-center justify-center p-1.5 rounded border border-blue-200 bg-blue-50 hover:bg-[#1478c1] text-[#1478c1] hover:text-white transition-all shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endwith %}
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="p-10 text-center text-slate-500 font-semibold uppercase tracking-wide bg-slate-50">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 mx-auto text-slate-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                                Aucun résultat ne correspond aux critères de recherche.
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- COMPTEUR GLOBAL (Surbrillance Bleu DHIS2) -->
+            <div class="bg-blue-50/60 border-t border-slate-200 p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-[#1d5288]">
+                <span>
+                    Total : <span class="bg-[#1478c1] text-white px-2 py-0.5 rounded-full font-bold text-[11px]">{{ resultats.count }}</span> enregistrement(s) trouvé(s)
+                </span>
+            </div>
         </div>
     </div>
 

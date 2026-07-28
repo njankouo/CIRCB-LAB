@@ -62,7 +62,7 @@ urlpatterns = [
     
     path('resultats/', views.resultats, name='resultats'),
     
-    path('imprimer_resultat_pdf/<int:resultat_id>/', views.imprimer_resultat_pdf,name='imprimer_resultat_pdf'),
+    path('imprimer_resultat_pdf/', views.imprimer_resultat_pdf,name='imprimer_resultat_pdf'),
     
     path('bordeaux-sortie/', views.bordeaux_sortie, name='bordeaux-sortie'),
     
@@ -100,6 +100,27 @@ urlpatterns = [
     path('resultats-individuel/<int:id>/', views.resultats_individuel, name='resultats-individuel'),
     
     path('resultats-collectifs/', views.resultats_collectifs, name='resultats-collectifs'),
+    
+    path('historique-fiches-echantillons/', views.historique_echantillon, name='historique-fiches-echantillons'),
+    
+    path('line_delete_structure/<int:id>/', views.line_delete_structure, name='line_delete_structure'),
+    
+    path('delete_hierachie/<int:id>/',views.delete_hierachie, name='delete_hierachie'),
+    
+    path('api/search/', views.api_rechercher_fosa, name='api-search'),
+    
+    path('previsualisation_fiche_synthetique/', views.previsualisation_fiche_synthetique, name='previsualisation_fiche_synthetique'),
+    
+    path('modify-hierachy/<int:id>/', views.ModifyHierachy, name='modify-hierachy'),
+    
+    path('modifier-structure/<int:id>/', views.UpdateStructure, name='modifier-structure'),
+    
+    
+    path('update-structure-data/<int:id>/', views.UpdateDataStructure, name='update-structure-data'),
+    
+    path('modifier-fiche/<int:id>/', views.modifier_fiche, name='modifier-fiche'),
+    
+    path('modifier_fiche_echantillon/<int:id>/', views.modifier_fiche_echantillon, name='modifier_fiche_echantillon')
     
     
 

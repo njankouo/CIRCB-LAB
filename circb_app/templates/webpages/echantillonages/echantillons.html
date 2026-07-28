@@ -2,41 +2,45 @@
 {% block main %}
 <main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white">
 <div class="max-w-5xl mx-auto my-1 p-1">
-<div class="mb-6 bg-slate-900 text-white p-6 border-4 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(99,102,241,1)]">
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-        
-        <!-- Section Titre et Icône -->
-        <div class="flex items-center gap-3 flex-1">
-            <!-- Icône SVG Laboratoire / ADN -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 text-indigo-400 shrink-0">
+<div class="bg-white border border-[#e0e0e0] rounded-[3px] p-3.5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+    
+    <!-- Section Titre et Icône style DHIS2 -->
+    <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-[2px] bg-[#f8f9fa] border border-slate-200 flex items-center justify-center text-[#2c6693] shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M3.104 9.75h17.792M3.104 14.25h17.792M6.417 6.417l11.166 11.166M6.417 17.583L17.583 6.417" />
             </svg>
-            <div>
-                <h2 class="text-xl font-black uppercase tracking-tight">
-                    Nouvel Échantillon de Laboratoire
-                </h2>
-                <p class="text-xs text-indigo-200 font-medium mt-0.5">
-                    Enregistrement des spécifications cliniques, du suivi PCR et des données patient de l'enfant.
-                </p>
-            </div>
         </div>
-        
-        <!-- Section Métrique & Données Fiche -->
-        <div class="flex items-center gap-4 shrink-0 bg-slate-800 border-2 border-slate-700 p-3 rounded-xl">
-            
-           
+        <div>
+            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                Nouvel Échantillon de Laboratoire
+            </h2>
+            <p class="text-[11px] text-slate-500 font-normal mt-0.5">
+                Enregistrement des spécifications cliniques, du suivi PCR et des données patient de l'enfant.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Section Métrique, Code en Rouge & Action Scan -->
+    <div class="flex items-center gap-3 bg-[#f8f9fa] border border-slate-200 p-2.5 rounded-[2px]">
+        <div>
+            <span class="block text-[9px] font-bold uppercase tracking-wider text-slate-500">Fiche Référence</span>
+            <span class="text-xs font-bold text-red-600 tracking-tight block font-mono">
+                {{ fiches_echantillon.code }}
+            </span>
+            <span class="text-[10px] text-slate-600 block mt-0.5">
+                Quota : <strong class="text-slate-800">{{ fiches_echantillon.nombre_echantillon|default:"0" }} attendu(s)</strong>
+            </span>
+        </div>
 
-            <!-- Textes de raccordement -->
-            <div class="font-mono">
-                <span class="block text-[9px] font-black uppercase tracking-widest text-slate-400">Fiche Référence</span>
-                <span class="text-sm font-black text-indigo-400 tracking-tight underline decoration-2 underline-offset-4 block">
-                    {{ fiches_echantillon.code }}
-                </span>
-                <span class="text-[10px] text-slate-300 block mt-0.5">
-                    Quota : <strong class="text-white">{{ fiches_echantillon.nombre_echantillon|default:"0" }} attendu(s)</strong>
-                </span>
-            </div>
-
+        <!-- Bouton / Fonction de Scan Code-barres -->
+        <div class="border-l border-slate-300 pl-3">
+            <button type="button" class="px-3 py-1.5 bg-[#2c6693] hover:bg-[#235275] text-white font-semibold rounded-[2px] text-[11px] flex items-center gap-1.5 transition shadow-2xs uppercase tracking-wider">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                </svg>
+                Scanner
+            </button>
         </div>
     </div>
 </div>

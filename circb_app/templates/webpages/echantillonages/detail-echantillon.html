@@ -1,293 +1,267 @@
 {% extends '../dashbord_hosp.html' %}
 
 {% block main %}
-<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 bg-slate-100 flex flex-col gap-4 w-full">
-    
-<div class="p-6 max-w-7xl mx-auto space-y-6 font-sans bg-slate-50 min-h-screen text-slate-800">
+<main class="flex-1 h-full min-h-0 overflow-y-auto bg-[#f4f6f8] text-slate-800 w-full font-sans antialiased selection:bg-[#1478c1] selection:text-white">
+    <div class="max-w-[1400px] mx-auto p-3 sm:p-5 space-y-4">
 
-    <!-- ACTION BAR & IDENTITY -->
-    <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-            <div class="flex items-center gap-2 mb-1">
-                <span class="text-[10px] font-mono tracking-wider bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold uppercase">ID Échantillon</span>
-                <span class="text-xs font-mono text-slate-400">Fiche racine: {{ echantillon.fiche.code|default:"Non spécifiée" }}</span>
+        <!-- ================================================================= -->
+        <!-- 1. EN-TÊTE INSTITUTIONNEL DHIS2 & STATUT VIROLOGIQUE               -->
+        <!-- ================================================================= -->
+        <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+            <div class="bg-[#1d5288] text-white px-4 py-2 flex items-center justify-between text-xs font-medium">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-sky-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                    </svg>
+                    <span class="font-bold tracking-wide uppercase font-mono text-[11px]">MEDYSIS LAB</span>
+                    <span class="text-sky-200/40">|</span>
+                    <span class="text-sky-100">Dossier Échantillon & Analyse</span>
+                </div>
+                <div class="flex items-center gap-2 font-mono text-[11px]">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Système Actif</span>
+                </div>
             </div>
-            <h1 class="text-2xl font-mono font-bold tracking-tight text-slate-950">
-                ECHANTILLON_{{ echantillon.slug|upper }}
-            </h1>
-        </div>
-        
-        <!-- PCR STATUS HUD -->
-        <div class="flex items-center gap-4 bg-slate-50 border border-slate-200 p-2.5 rounded-lg w-full md:w-auto">
-            <div class="text-right">
-                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wide">Statut Virologique (PCR)</span>
-                <span class="text-sm font-mono font-bold text-slate-900">
-                    {{ echantillon.resultat_pcr.nom|default:"[ ANALYSE EN COURS ]" }}
-                </span>
-            </div>
-            <div class="w-2.5 h-10 rounded {% if echantillon.resultat_pcr %}bg-indigo-600 shadow-[0_0_8px_rgba(79,70,229,0.4)]{% else %}bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.4)] animate-pulse{% endif %}"></div>
-        </div>
-    </div>
 
-    <!-- MAIN CONTROL PANEL (3 COLUMNS GRID) -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- SECTION 1: DOSSIER ENFANT -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col justify-between">
-            <div>
-                <div class="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-3.5 bg-blue-600 rounded"></div>
-                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Dossier Patient (Enfant)</h2>
+            <div class="p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-[10px] font-mono tracking-wider bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold uppercase border border-slate-200">ID Échantillon</span>
+                        <span class="text-xs font-mono font-semibold text-slate-500">Fiche racine: {{ echantillon.fiche.code|default:"Non spécifiée" }}</span>
                     </div>
-                    <span class="text-[11px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.2 rounded">PÉDIATRIE</span>
+                    <h1 class="text-xl sm:text-2xl font-mono font-black tracking-tight text-slate-900">
+                        ECHANTILLON_{{ echantillon.slug|upper }}
+                    </h1>
                 </div>
                 
-                <div class="divide-y divide-slate-100 text-xs">
-                    <div class="p-3.5 flex justify-between items-center">
-                        <span class="font-medium text-slate-500">Nom & Prénom</span>
-                        <span class="font-bold text-slate-900">{{ echantillon.enfant.nom|default:"Non renseigné" }} {{ echantillon.enfant.prenom|default:"" }}</span>
-                    </div>
-                    <div class="p-3.5 flex justify-between items-center">
-                        <span class="font-medium text-slate-500">Poids Clinique</span>
-                        <span class="font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded">
-                            {% if echantillon.poids %}{{ echantillon.poids }} kg{% else %}-{% endif %}
+                <!-- PCR STATUS HUD -->
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 px-3 py-2 rounded-md w-full md:w-auto shadow-xs">
+                    <div class="text-right">
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wide font-mono">Statut Virologique (PCR)</span>
+                        <span class="text-xs sm:text-sm font-mono font-bold text-slate-900">
+                            {{ echantillon.resultat_pcr.nom|default:"[ ANALYSE EN COURS ]" }}
                         </span>
                     </div>
-                    <div class="p-3.5 flex justify-between items-center">
-                        <span class="font-medium text-slate-500">Rang de Naissance</span>
-                        <span class="font-mono font-bold text-slate-800">{{ echantillon.rang_naissance|default:"1" }}</span>
+                    <div class="w-2 h-8 rounded-full {% if echantillon.resultat_pcr %}bg-emerald-600 shadow-xs{% else %}bg-amber-500 shadow-xs animate-pulse{% endif %}"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- 2. GRILLE PRINCIPALE (2 COLONNES ÉQUILIBRÉES)                      -->
+        <!-- ================================================================= -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            
+            <!-- SECTION 1 : DOSSIER PATIENT (ENFANT) & PARAMÈTRES CLINIQUES -->
+            <div class="space-y-4">
+                
+                <!-- Carte Enfant -->
+                <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+                    <div class="bg-slate-50 border-b border-slate-200 px-3.5 py-2.5 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-[#1478c1] rounded-full"></span>
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 font-mono">01. Dossier Patient (Enfant)</h2>
+                        </div>
+                        <span class="text-[10px] font-mono font-bold text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded uppercase">Pédiatrie</span>
+                    </div>
+                    
+                    <div class="divide-y divide-slate-100 text-xs">
+                        <div class="p-3 flex justify-between items-center">
+                            <span class="font-medium text-slate-500">Nom & Prénom</span>
+                            <span class="font-bold text-slate-900">{{ echantillon.enfant.nom|default:"Non renseigné" }} {{ echantillon.enfant.prenom|default:"" }}</span>
+                        </div>
+                        <div class="p-3 flex justify-between items-center">
+                            <span class="font-medium text-slate-500">Poids Clinique</span>
+                            <span class="font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                                {% if echantillon.poids %}{{ echantillon.poids }} kg{% else %}-{% endif %}
+                            </span>
+                        </div>
+                        <div class="p-3 flex justify-between items-center">
+                            <span class="font-medium text-slate-500">Rang de Naissance</span>
+                            <span class="font-mono font-bold text-slate-800">{{ echantillon.rang_naissance|default:"1" }}</span>
+                        </div>
+                        <div class="p-3 bg-slate-50/50">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase mb-1 font-mono">Prophylaxie ARV Enfant</span>
+                            <div class="p-2 bg-white border border-slate-200 rounded font-semibold text-slate-700">
+                                {{ echantillon.profilaxie_arv.nom|default:"Absence de prophylaxie consignée" }}
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Carte Paramètres Cliniques & Thérapeutiques -->
+                <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+                    <div class="bg-slate-50 border-b border-slate-200 px-3.5 py-2.5 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-amber-500 rounded-full"></span>
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 font-mono">02. Paramètres Cliniques Actuels</h2>
+                        </div>
+                        <span class="text-[10px] font-mono font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded uppercase">Statut Vital</span>
+                    </div>
+
+                    <div class="p-3.5 space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <div class="p-2.5 border rounded-md text-xs {% if echantillon.present_symptome %}bg-rose-50/60 border-rose-200 text-rose-900{% else %}bg-slate-50 border-slate-200 text-slate-500{% endif %}">
+                                <span class="block text-[9px] font-bold uppercase text-slate-400 font-mono mb-1">Symptomatologie</span>
+                                <span class="font-bold font-mono text-[11px]">{% if echantillon.present_symptome %}● SYMPTÔMATIQUE{% else %}○ ASYMPTOMATIQUE{% endif %}</span>
+                            </div>
+                            <div class="p-2.5 border rounded-md text-xs {% if echantillon.present_allaitement %}bg-blue-50/60 border-blue-200 text-blue-900{% else %}bg-slate-50 border-slate-200 text-slate-500{% endif %}">
+                                <span class="block text-[9px] font-bold uppercase text-slate-400 font-mono mb-1">Allaitement</span>
+                                <span class="font-bold font-mono text-[11px]">{% if echantillon.present_allaitement %}● EN COURS{% else %}○ NON / EXCLUSIF{% endif %}</span>
+                                {% if echantillon.present_allaitement and echantillon.mode_allaitement %}
+                                    <span class="block text-[10px] text-slate-600 font-sans mt-1 bg-white px-1.5 py-0.5 rounded border border-slate-200">{{ echantillon.mode_allaitement.nom }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="p-2.5 border rounded-md text-xs {% if echantillon.present_sevrage %}bg-purple-50/60 border-purple-200 text-purple-900{% else %}bg-slate-50 border-slate-200 text-slate-500{% endif %}">
+                                <span class="block text-[9px] font-bold uppercase text-slate-400 font-mono mb-1">Sevrage</span>
+                                <span class="font-bold font-mono text-[11px]">{% if echantillon.present_sevrage %}● EFFECTUÉ{% else %}○ NON SEVRÉ{% endif %}</span>
+                                {% if echantillon.present_sevrage and echantillon.date_sevrage %}
+                                    <span class="block text-[10px] text-purple-700 font-mono mt-1">Le: {{ echantillon.date_sevrage|date:"d/m/Y" }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Traitements -->
+                        <div class="border border-slate-200 rounded-md overflow-hidden bg-slate-50 text-xs font-mono">
+                            <div class="bg-slate-100 border-b border-slate-200 px-3 py-1.5 font-sans font-bold text-slate-500 text-[10px] uppercase">
+                                Couverture Thérapeutique Enregistrée
+                            </div>
+                            <div class="divide-y divide-slate-200">
+                                <div class="p-2.5 flex justify-between items-center bg-white">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full {% if echantillon.present_cotrimoxazole %}bg-emerald-500{% else %}bg-slate-300{% endif %}"></span>
+                                        <span class="font-sans font-semibold text-slate-700">Cotrimoxazole</span>
+                                    </div>
+                                    <span class="font-bold text-[11px]">
+                                        {% if echantillon.present_cotrimoxazole and echantillon.date_cotrimoxazole %}ACTIF (Init: {{ echantillon.date_cotrimoxazole|date:"d/m/Y" }}){% else %}NON ADMINISTRÉ{% endif %}
+                                    </span>
+                                </div>
+                                <div class="p-2.5 flex justify-between items-center bg-white">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full {% if echantillon.present_tarv %}bg-emerald-500{% else %}bg-slate-300{% endif %}"></span>
+                                        <span class="font-sans font-semibold text-slate-700">Traitement Antirétroviral (TARV)</span>
+                                    </div>
+                                    <span class="font-bold text-[11px]">
+                                        {% if echantillon.present_tarv and echantillon.date_tarv %}ACTIF (Init: {{ echantillon.date_tarv|date:"d/m/Y" }}){% else %}NON ADMINISTRÉ{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SECTION 2 : DOSSIER OBSTÉTRIQUE & PTME (MÈRE) -->
+            <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden flex flex-col justify-between">
+                <div>
+                    <div class="bg-slate-50 border-b border-slate-200 px-3.5 py-2.5 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-rose-600 rounded-full"></span>
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 font-mono">03. Dossier Obstétrique & PTME (Mère)</h2>
+                        </div>
+                        <span class="text-[10px] font-mono font-bold text-rose-700 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded uppercase">Maternité</span>
+                    </div>
+
+                    <div class="divide-y divide-slate-100 text-xs">
+                        <div class="p-3 flex justify-between items-center">
+                            <span class="font-medium text-slate-500">Identité Mère</span>
+                            <span class="font-bold text-slate-900">{{ echantillon.mere.nom|default:"Inconnue / Non liée" }}</span>
+                        </div>
+                        <div class="p-3 flex justify-between items-center">
+                            <span class="font-medium text-slate-500">Protocole PTME</span>
+                            <span class="font-semibold text-slate-800">{{ echantillon.protocole_ptme.nom|default:"N/A" }}</span>
+                        </div>
+                        <div class="p-3 flex justify-between items-center">
+                            <span class="font-medium text-slate-500">Mode d'Accouchement</span>
+                            <span class="font-semibold text-slate-800">{{ echantillon.mode_accouchement.nom|default:"N/A" }}</span>
+                        </div>
+                        <div class="p-3 flex justify-between items-center">
+                            <span class="font-medium text-slate-500">N° de Grossesse</span>
+                            <span class="font-mono font-bold text-slate-800">{{ echantillon.numero_grossesse|default:"-" }}</span>
+                        </div>
+                        <div class="p-3 flex justify-between items-center bg-slate-50/50">
+                            <span class="font-medium text-slate-500">Enfants Exposés</span>
+                            <span class="font-mono font-bold text-slate-900 bg-white border border-slate-200 px-2 py-0.5 rounded">{{ echantillon.nb_enfant_expose|default:"0" }}</span>
+                        </div>
+                        <div class="p-3 flex justify-between items-center bg-slate-50/50">
+                            <span class="font-medium text-slate-500">Enfants Infectés</span>
+                            <span class="font-mono font-bold {% if echantillon.nb_enfant_infecte > 0 %}text-rose-600 bg-rose-50 border border-rose-200{% else %}text-slate-600 bg-white border border-slate-200{% endif %} px-2 py-0.5 rounded">
+                                {{ echantillon.nb_enfant_infecte|default:"0" }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dates clés PTME -->
+                <div class="p-3 bg-slate-100 border-t border-slate-200 grid grid-cols-3 gap-2 text-center font-mono">
+                    <div class="bg-white p-2 rounded border border-slate-200">
+                        <span class="block text-[9px] text-slate-400 font-sans font-bold uppercase">Diag. VIH</span>
+                        <span class="text-slate-800 font-bold text-xs">{{ echantillon.date_diagnostic_vih|date:"d/m/Y"|default:"-" }}</span>
+                    </div>
+                    <div class="bg-white p-2 rounded border border-slate-200">
+                        <span class="block text-[9px] text-slate-400 font-sans font-bold uppercase">Init. PTME</span>
+                        <span class="text-slate-800 font-bold text-xs">{{ echantillon.date_initiation_ptme|date:"d/m/Y"|default:"-" }}</span>
+                    </div>
+                    <div class="bg-white p-2 rounded border border-slate-200">
+                        <span class="block text-[9px] text-slate-400 font-sans font-bold uppercase">Diag. LAV</span>
+                        <span class="text-slate-800 font-bold text-xs">{{ echantillon.date_diagnostic_lav|date:"d/m/Y"|default:"-" }}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- 3. TRAÇABILITÉ & LOGISTIQUE DE PRÉLÈVEMENT TERRAIN                -->
+        <!-- ================================================================= -->
+        <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+            <div class="bg-slate-50 border-b border-slate-200 px-3.5 py-2.5 flex items-center gap-2">
+                <span class="w-2 h-2 bg-slate-600 rounded-full"></span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 font-mono">04. Traçabilité & Logistique de Prélèvement Terrain</h2>
             </div>
             
-            <div class="p-3.5 bg-slate-50 border-t border-slate-100 text-xs">
-                <span class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">Prophylaxie ARV Enfant</span>
-                <div class="p-2 bg-white border border-slate-200 rounded font-semibold text-slate-700 shadow-inner">
-                    {{ echantillon.profilaxie_arv.nom|default:"Absence de prophylaxie consignée" }}
-                </div>
-            </div>
-        </div>
-
-        <!-- SECTION 2: ANAMNÈSE MATERNELLE & PTME -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden lg:col-span-2">
-            <div class="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <div class="w-1.5 h-3.5 bg-rose-600 rounded"></div>
-                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Dossier Obstétrique & PTME (Mère)</h2>
-                </div>
-                <span class="text-[11px] font-mono font-bold text-rose-600 bg-rose-50 px-1.5 py-0.2 rounded">MATERNITÉ</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 text-xs divide-y md:divide-y-0 md:divide-x divide-slate-100">
-                <!-- Sous-colonne A -->
-                <div class="divide-y divide-slate-100">
-                    <div class="p-3.5 flex justify-between items-center">
-                        <span class="font-medium text-slate-500">Identité Mère</span>
-                        <span class="font-bold text-slate-900">{{ echantillon.mere.nom|default:"Inconnue / Non liée" }}</span>
-                    </div>
-                    <div class="p-3.5 flex justify-between items-center">
-                        <span class="font-medium text-slate-500">Protocole PTME</span>
-                        <span class="font-semibold text-slate-800">{{ echantillon.protocole_ptme.nom|default:"N/A" }}</span>
-                    </div>
-                    <div class="p-3.5 flex justify-between items-center">
-                        <span class="font-medium text-slate-500">Mode d'Accouchement</span>
-                        <span class="font-semibold text-slate-800">{{ echantillon.mode_accouchement.nom|default:"N/A" }}</span>
-                    </div>
-                    <div class="p-3.5 flex justify-between items-center">
-                        <span class="font-medium text-slate-500">N° de Grossesse</span>
-                        <span class="font-mono font-bold text-slate-800">{{ echantillon.numero_grossesse|default:"-" }}</span>
-                    </div>
-                </div>
-                <!-- Sous-colonne B (Compteurs & Évaluations) -->
-                <div class="divide-y divide-slate-100 bg-slate-50/40">
-                    <div class="p-3.5 flex justify-between items-center">
-                        <span class="font-medium text-slate-500">Enfants Exposés</span>
-                        <span class="font-mono font-bold text-slate-900 bg-white border border-slate-200 px-2 py-0.5 rounded">{{ echantillon.nb_enfant_expose|default:"0" }}</span>
-                    </div>
-                    <div class="p-3.5 flex justify-between items-center">
-                        <span class="font-medium text-slate-500">Enfants Infectés</span>
-                        <span class="font-mono font-bold {% if echantillon.nb_enfant_infecte > 0 %}text-rose-600 bg-rose-50 border border-rose-200{% else %}text-slate-600 bg-white border border-slate-200{% endif %} px-2 py-0.5 rounded">
-                            {{ echantillon.nb_enfant_infecte|default:"0" }}
-                        </span>
-                    </div>
-                    <div class="p-3.5 col-span-2 grid grid-cols-3 gap-2 bg-slate-50 text-[10px] font-mono pt-4 pb-4">
-                        <div class="text-center border-r border-slate-200/80">
-                            <span class="block text-slate-400 font-sans font-bold uppercase tracking-tight">Diag. VIH</span>
-                            <span class="text-slate-800 font-bold text-xs">{{ echantillon.date_diagnostic_vih|date:"d/m/Y"|default:"-" }}</span>
-                        </div>
-                        <div class="text-center border-r border-slate-200/80">
-                            <span class="block text-slate-400 font-sans font-bold uppercase tracking-tight">Init. PTME</span>
-                            <span class="text-slate-800 font-bold text-xs">{{ echantillon.date_initiation_ptme|date:"d/m/Y"|default:"-" }}</span>
-                        </div>
-                        <div class="text-center">
-                            <span class="block text-slate-400 font-sans font-bold uppercase tracking-tight">Diag. LAV</span>
-                            <span class="text-slate-800 font-bold text-xs">{{ echantillon.date_diagnostic_lav|date:"d/m/Y"|default:"-" }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ROW 2: CLINICAL STATUS & ANALYSIS SPECIFICATIONS -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- SECTION 3: STATUTS THERAPEUTIQUES & ALLAITEMENT -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden lg:col-span-2">
-            <div class="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <div class="w-1.5 h-3.5 bg-amber-500 rounded"></div>
-                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Paramètres Cliniques Actuels (Enfant)</h2>
-                </div>
-                <span class="text-[11px] font-mono font-bold text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded">STATUT VITAL</span>
-            </div>
-
-            <!-- ERP GRID MATRIX (4 BLOCS INDÉPENDANTS) -->
-            <div class="p-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div class="p-3 border rounded-lg {% if echantillon.present_symptome %}bg-rose-50/50 border-rose-200 text-rose-900{% else %}bg-slate-50/50 border-slate-200 text-slate-500{% endif %}">
-                    <span class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Symptomatologie</span>
-                    <span class="text-xs font-bold font-mono">{% if echantillon.present_symptome %}● SENS_SYMPTÔMES{% else %}○ ASYMPTOMATIQUE{% endif %}</span>
-                </div>
-                <div class="p-3 border rounded-lg {% if echantillon.present_allaitement %}bg-blue-50/50 border-blue-200 text-blue-900{% else %}bg-slate-50/50 border-slate-200 text-slate-500{% endif %}">
-                    <span class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Allaitement</span>
-                    <span class="text-xs font-bold font-mono">{% if echantillon.present_allaitement %}● EN_COURS{% else %}○ EXCLUSIF / NON{% endif %}</span>
-                    {% if echantillon.present_allaitement and echantillon.mode_allaitement %}
-                        <span class="block text-[10px] text-slate-600 font-sans mt-1 bg-white/80 px-1 py-0.5 rounded border border-slate-200">{{ echantillon.mode_allaitement.nom }}</span>
-                    {% endif %}
-                </div>
-                <div class="p-3 border rounded-lg {% if echantillon.present_sevrage %}bg-purple-50/50 border-purple-200 text-purple-900{% else %}bg-slate-50/50 border-slate-200 text-slate-500{% endif %}">
-                    <span class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Sevrage</span>
-                    <span class="text-xs font-bold font-mono">{% if echantillon.present_sevrage %}● EFFUCTUÉ{% else %}○ NON SEVRÉ{% endif %}</span>
-                    {% if echantillon.present_sevrage and echantillon.date_sevrage %}
-                        <span class="block text-[10px] text-purple-700 font-mono mt-1">Le: {{ echantillon.date_sevrage|date:"d/m/Y" }}</span>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- BLOC PHARMACOLOGIQUE (SUIVI DES TRAITEMENTS) -->
-            <div class="mx-4 mb-4 border border-slate-200 rounded-lg overflow-hidden bg-slate-50 text-xs font-mono">
-                <div class="bg-slate-100 border-b border-slate-200 px-3 py-1.5 font-sans font-bold text-slate-500 text-[10px] uppercase">
-                    Couverture Thérapeutique Enregistrée
-                </div>
-                <div class="divide-y divide-slate-200">
-                    <div class="p-3 flex justify-between items-center bg-white">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full {% if echantillon.present_cotrimoxazole %}bg-emerald-500{% else %}bg-slate-300{% endif %}"></span>
-                            <span class="font-sans font-semibold text-slate-700">Cotrimoxazole</span>
-                        </div>
-                        <span class="font-bold">
-                            {% if echantillon.present_cotrimoxazole and echantillon.date_cotrimoxazole %}ACTIF (Init: {{ echantillon.date_cotrimoxazole|date:"d/m/Y" }}){% else %}NON ADMINISTRÉ{% endif %}
-                        </span>
-                    </div>
-                    <div class="p-3 flex justify-between items-center bg-white">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full {% if echantillon.present_tarv %}bg-emerald-500{% else %}bg-slate-300{% endif %}"></span>
-                            <span class="font-sans font-semibold text-slate-700">Traitement Antirétroviral (TARV)</span>
-                        </div>
-                        <span class="font-bold">
-                            {% if echantillon.present_tarv and echantillon.date_tarv %}ACTIF (Init: {{ echantillon.date_tarv|date:"d/m/Y" }}){% else %}NON ADMINISTRÉ{% endif %}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SECTION 4: LAB PROTOCOL (TARGET LABORATORY) -->
-        <div class="bg-slate-900 text-slate-100 rounded-xl shadow-md overflow-hidden flex flex-col justify-between">
-            <div>
-                <div class="bg-slate-950 border-b border-slate-800 px-4 py-3 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-3.5 bg-indigo-500 rounded"></div>
-                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Target Protocol Lab</h2>
-                    </div>
-                    <span class="text-[9px] font-mono font-bold text-indigo-400 bg-indigo-950/80 px-2 py-0.5 rounded border border-indigo-900/50">TECHNIQUE</span>
-                </div>
-
-                <div class="p-4 space-y-4 text-xs font-mono">
+            <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <!-- Chronologie -->
+                <div class="space-y-3">
                     <div>
-                        <span class="block text-[10px] font-sans font-bold text-slate-500 uppercase mb-1.5">Matrice de ciblage biologique</span>
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between p-2 rounded bg-slate-850 border border-slate-800">
-                                <span class="text-slate-400">PCR 1ère Intention</span>
-                                <span class="font-bold {% if echantillon.pcr_1 %}text-emerald-400{% else %}text-slate-600{% endif %}">{% if echantillon.pcr_1 %}SELECTED{% else %}VOID{% endif %}</span>
-                            </div>
-                            <div class="flex items-center justify-between p-2 rounded bg-slate-850 border border-slate-800">
-                                <span class="text-slate-400">PCR Confirmation</span>
-                                <span class="font-bold {% if echantillon.pcr_2 %}text-emerald-400{% else %}text-slate-600{% endif %}">{% if echantillon.pcr_2 %}SELECTED{% else %}VOID{% endif %}</span>
-                            </div>
-                            <div class="flex items-center justify-between p-2 rounded bg-slate-850 border border-slate-800">
-                                <span class="text-slate-400">Autre PCR Clinique</span>
-                                <span class="font-bold {% if echantillon.autre_pcr %}text-emerald-400{% else %}text-slate-600{% endif %}">{% if echantillon.autre_pcr %}SELECTED{% else %}VOID{% endif %}</span>
-                            </div>
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase mb-1 font-mono">Date Effectivité Prélèvement</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-base font-mono font-bold text-slate-900">{{ echantillon.date_prelevement|date:"d F Y" }}</span>
+                            {% if echantillon.duplicate_prelevement %}
+                                <span class="bg-amber-100 border border-amber-300 text-amber-800 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">DUPLICATA</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if echantillon.date_rdv %}
+                    <div>
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase mb-1 font-mono">Échéance Prochain RDV</span>
+                        <span class="font-mono font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded text-xs">{{ echantillon.date_rdv|date:"d/m/Y" }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Opérateur (Préleveur) -->
+                <div class="bg-slate-50 border border-slate-200 rounded-md p-3 space-y-2">
+                    <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-tight font-mono">Opérateur Médico-Sanitaire</span>
+                    <div>
+                        <div class="font-bold text-slate-900 uppercase text-xs">{{ echantillon.nom_preleveur }} {{ echantillon.prenom_preleveur }}</div>
+                        <div class="text-slate-500 font-mono text-[11px] mt-0.5 flex items-center gap-1">
+                            <span class="text-slate-400 font-sans font-normal">Contact :</span> {{ echantillon.contact_preleveur }}
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="p-4 bg-slate-950 border-t border-slate-850 text-xs space-y-2">
+                <!-- Observations techniques -->
                 <div>
-                    <span class="block text-[9px] font-sans font-bold text-slate-500 uppercase">Raison Médico-Clinique</span>
-                    <span class="text-slate-300 font-sans font-medium">{{ echantillon.raison_prelevement.nom|default:"Non spécifiée" }}</span>
-                </div>
-                <div class="pt-1.5 border-t border-slate-900">
-                    <span class="block text-[9px] font-sans font-bold text-slate-500 uppercase">Porte d'Entrée Sanitaire</span>
-                    <span class="text-indigo-400 font-sans font-semibold">{{ echantillon.porte_entree.nom|default:"Non renseignée" }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ROW 3: LOGISTICS, COLLECTOR & FIELD METRICS -->
-    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-        <div class="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center gap-2">
-            <div class="w-1.5 h-3.5 bg-slate-600 rounded"></div>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Traçabilité & Logistique de Prélèvement Terrain</h2>
-        </div>
-        
-        <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
-            <!-- Chronologie -->
-            <div class="space-y-3">
-                <div>
-                    <span class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Date Effectivité Prélèvement</span>
-                    <div class="flex items-center gap-2">
-                        <span class="text-lg font-mono font-bold text-slate-900">{{ echantillon.date_prelevement|date:"d F Y" }}</span>
-                        {% if echantillon.duplicate_prelevement %}
-                            <span class="bg-amber-100 border border-amber-300 text-amber-800 text-[9px] font-mono font-bold px-1 rounded">DUPLICATA</span>
-                        {% endif %}
-                    </div>
-                </div>
-                {% if echantillon.date_rdv %}
-                <div>
-                    <span class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Échéance Prochain RDV</span>
-                    <span class="font-mono font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded text-xs">{{ echantillon.date_rdv|date:"d/m/Y" }}</span>
-                </div>
-                {% endif %}
-            </div>
-
-            <!-- Opérateur (Préleveur) -->
-            <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-2">
-                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-tight">Opérateur Médico-Sanitaire</span>
-                <div>
-                    <div class="font-bold text-slate-900 uppercase text-xs">{{ echantillon.nom_preleveur }} {{ echantillon.prenom_preleveur }}</div>
-                    <div class="text-slate-500 font-mono text-[11px] mt-0.5 flex items-center gap-1">
-                        <span class="text-slate-400 font-sans font-normal">Contact :</span> {{ echantillon.contact_preleveur }}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Notes techniques -->
-            <div class="flex flex-col justify-between">
-                <div>
-                    <span class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Observations Laboratoire</span>
+                    <span class="block text-[10px] font-bold text-slate-400 uppercase mb-1 font-mono">Observations & Notes Terrain</span>
                     <p class="text-slate-600 font-medium italic leading-relaxed bg-slate-50 border border-dashed border-slate-200 p-2.5 rounded text-[11px] max-h-24 overflow-y-auto">
                         {{ echantillon.observation|default:"Aucune note technique ou observation particulière consignée pour cet échantillon." }}
                     </p>
                 </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
 </main>
 {% endblock %}

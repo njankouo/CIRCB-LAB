@@ -2,242 +2,247 @@
 {% load static %}
 
 {% block main %}
-<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50/60 text-slate-800 w-full custom-scrollbar selection:bg-indigo-600 selection:text-white">
-    <div class="max-w-7xl mx-auto space-y-6 font-sans antialiased">
+<main class="flex-1 h-full min-h-0 overflow-y-auto bg-[#f4f6f8] text-slate-800 w-full selection:bg-[#1478c1] selection:text-white font-sans antialiased">
+    <div class="max-w-[1600px] mx-auto p-3 sm:p-5 space-y-4">
         
-        <!-- ----------------------------------------------------------------- -->
-        <!-- EN-TÊTE PRINCIPAL : COCKPIT MEDICAL LUMINEUX                      -->
-        <!-- ----------------------------------------------------------------- -->
-        <div class="relative overflow-hidden rounded-3xl bg-white border border-slate-200/80 p-6 sm:p-8 shadow-sm">
-            <!-- Touche décorative lumineuse en arrière-plan -->
-            <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-indigo-50 via-slate-50 to-transparent rounded-full blur-3xl pointer-events-none -z-10"></div>
+        <!-- ================================================================= -->
+        <!-- EN-TÊTE DHIS2 : CONSOLE DU PROGRAMME & UNITE D'ORGANISATION       -->
+        <!-- ================================================================= -->
+        <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+            <!-- Barre de titre institutionnelle DHIS2 -->
+            <div class="bg-[#1d5288] text-white px-4 py-2 flex items-center justify-between text-xs font-medium">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-sky-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                    </svg>
+                    <span class="font-bold tracking-wide uppercase">MEDYSIS LAB</span>
+                    <span class="text-sky-200/50">|</span>
+                    <span class="text-sky-100">Console de Suivi des Échantillons & Résultats PCR</span>
+                </div>
+                <div class="flex items-center gap-2 font-mono text-[11px]">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Console V2 · Actif</span>
+                </div>
+            </div>
 
-            <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <!-- Contenu de l'en-tête (Intégration du composant style DHIS2 avec bouton d'ouverture de modale) -->
+            <div class="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white">
                 <div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-mono font-bold tracking-wide uppercase mb-3">
-                        <span class="w-2 h-2 rounded-full bg-indigo-600 animate-ping"></span>
-                        Console LIMS V2.4 · Mode Actif
-                    </div>
-                    <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sans">
-                        Console de Suivi des Échantillons
+                    <h1 class="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                        Registre Central des Échantillons
                     </h1>
-                    <p class="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl font-medium">
-                        Registre centralisé des prélèvements, traçabilité des dossiers pédiatriques et suivi du pipeline PCR.
+                    <p class="text-xs text-slate-500 mt-1">
+                        Traçabilité des dossiers pédiatriques, état des prélèvements et validation des diagnostics biologiques.
                     </p>
                 </div>
 
-                <!-- KPI Quick Stats Panel -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full lg:w-auto">
-                    <div class="bg-slate-50 border border-slate-200/70 rounded-2xl p-3.5 flex flex-col shadow-inner/5">
-                        <span class="text-[10px] font-mono font-bold text-slate-500 uppercase">Fiches Chargées</span>
-                        <span class="text-xl font-mono font-black text-slate-900 mt-1">{{ fiches.count }}</span>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-200/70 rounded-2xl p-3.5 flex flex-col">
-                        <span class="text-[10px] font-mono font-bold text-slate-500 uppercase">Mode Registre</span>
-                        <span class="text-xl font-mono font-black text-indigo-600 mt-1">Temps Réel</span>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1 bg-slate-50 border border-slate-200/70 rounded-2xl p-3.5 flex flex-col">
-                        <span class="text-[10px] font-mono font-bold text-slate-500 uppercase">Statut Réseau</span>
-                        <span class="text-xs font-mono font-bold text-emerald-600 mt-2 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Synchro OK
-                        </span>
+                <div class="flex items-center gap-3">
+                    <!-- BOUTON DÉCLENCHEUR DE LA MODALE STYLE DHIS2 -->
+                    <button type="button" onclick="document.getElementById('fiches-modal').showModal()" class="px-3.5 py-2 bg-[#2c6693] hover:bg-[#235275] text-white font-semibold rounded-[2px] text-xs flex items-center gap-2 transition shadow-2xs uppercase tracking-wider">
+                        <svg class="w-4 h-4 text-sky-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        Saisir échantillon
+                    </button>
+
+                    <!-- Widgets Métriques DHIS2 Quick Stats -->
+                    <div class="grid grid-cols-3 gap-2 w-full md:w-auto">
+                        <div class="bg-slate-50 border border-slate-200 rounded px-3 py-2 text-center min-w-[90px]">
+                            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Fiches</div>
+                            <div class="text-base font-bold text-slate-900 font-mono mt-0.5">{{ fiches.count }}</div>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 rounded px-3 py-2 text-center min-w-[90px]">
+                            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Mode</div>
+                            <div class="text-xs font-bold text-[#1478c1] uppercase mt-1">Temps Réel</div>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 rounded px-3 py-2 text-center min-w-[90px]">
+                            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Réseau</div>
+                            <div class="text-xs font-bold text-emerald-700 mt-1 flex items-center justify-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Synchro
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ----------------------------------------------------------------- -->
-        <!-- BARRE DE FILTRES AVANCÉE                                         -->
-        <!-- ----------------------------------------------------------------- -->
-        <form method="GET" action="." class="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                <div class="flex items-center gap-2">
-                    <div class="p-1.5 bg-indigo-50 rounded-lg border border-indigo-100 text-indigo-600">
+        <!-- ================================================================= -->
+        <!-- BARRE DE FILTRES DHIS2 (TRACKER CAPTURE TOOLBAR)                  -->
+        <!-- ================================================================= -->
+        <form method="GET" action="." class="bg-white border border-slate-200 rounded-md p-4 shadow-sm space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                <div class="flex items-center gap-2 text-slate-800">
+                    <div class="p-1 bg-blue-50 rounded text-[#1478c1]">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-mono font-black uppercase text-slate-900 tracking-wider">
-                        Moteur de recherche & filtres LIMS
-                    </span>
+                    <span class="text-xs font-bold uppercase tracking-wider">Filtres de recherche d'événements</span>
                 </div>
                 
                 {% if request.GET.date or request.GET.user or request.GET.region or request.GET.district or request.GET.fosa %}
-                    <a href="." class="text-xs font-mono font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1.5 transition-colors bg-rose-50 px-3 py-1 rounded-lg border border-rose-200/60">
-                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <a href="." class="text-xs font-semibold text-rose-600 hover:text-rose-800 flex items-center gap-1 transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
-                        Effacer les filtres
+                        Réinitialiser les filtres
                     </a>
                 {% endif %}
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+            <!-- Grille de recherche compacte -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                 <!-- Date Réception -->
-                <div class="space-y-1">
-                    <label class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block">Date Réception</label>
-                    <input type="date" name="date" value="{{ request.GET.date }}" class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all">
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600 uppercase mb-1 block">Date Réception</label>
+                    <input type="date" name="date" value="{{ request.GET.date }}" class="w-full text-xs bg-slate-50 border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 focus:bg-white focus:outline-none focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1]">
                 </div>
 
                 <!-- Réceptionniste -->
-                <div class="space-y-1">
-                    <label class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block">Réceptionniste</label>
-                    <input type="text" name="user" value="{{ request.GET.user }}" placeholder="ID ou nom..." class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all">
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600 uppercase mb-1 block">Réceptionniste</label>
+                    <input type="text" name="user" value="{{ request.GET.user }}" placeholder="Nom / ID agent..." class="w-full text-xs bg-slate-50 border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 focus:bg-white focus:outline-none focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1]">
                 </div>
 
-                <!-- Région -->
-                <div class="space-y-1">
-                    <label class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block">Région</label>
-                    <input type="text" name="region" value="{{ request.GET.region }}" placeholder="Toutes régions..." class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all">
+                <!-- Unité d'Org : Région -->
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600 uppercase mb-1 block">Région</label>
+                    <input type="text" name="region" value="{{ request.GET.region }}" placeholder="Toutes..." class="w-full text-xs bg-slate-50 border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 focus:bg-white focus:outline-none focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1]">
                 </div>
 
-                <!-- District -->
-                <div class="space-y-1">
-                    <label class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block">District</label>
-                    <input type="text" name="district" value="{{ request.GET.district }}" placeholder="Tous districts..." class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all">
+                <!-- Unité d'Org : District -->
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600 uppercase mb-1 block">District Sanitaire</label>
+                    <input type="text" name="district" value="{{ request.GET.district }}" placeholder="Tous..." class="w-full text-xs bg-slate-50 border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 focus:bg-white focus:outline-none focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1]">
                 </div>
 
-                <!-- Fosa -->
-                <div class="space-y-1">
-                    <label class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block">Structure (FOSA)</label>
-                    <input type="text" name="fosa" value="{{ request.GET.fosa }}" placeholder="Centre de santé..." class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all">
+                <!-- Unité d'Org : FOSA -->
+                <div>
+                    <label class="text-[11px] font-bold text-slate-600 uppercase mb-1 block">Structure (FOSA)</label>
+                    <input type="text" name="fosa" value="{{ request.GET.fosa }}" placeholder="Formation sanitaire..." class="w-full text-xs bg-slate-50 border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 focus:bg-white focus:outline-none focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1]">
                 </div>
             </div>
 
             <div class="flex justify-end pt-1">
-                <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-mono font-black text-xs uppercase tracking-wider rounded-xl shadow-md shadow-indigo-600/15 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <button type="submit" class="px-4 py-1.5 bg-[#1478c1] hover:bg-[#1164a2] text-white font-semibold text-xs rounded shadow-sm transition-all flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z"/>
                     </svg>
-                    Appliquer le filtre
+                    Appliquer les filtres
                 </button>
             </div>
         </form>
 
-        <!-- ----------------------------------------------------------------- -->
-        <!-- TABLEAU ERP DES ÉCHANTILLONS                                      -->
-        <!-- ----------------------------------------------------------------- -->
-        <div class="bg-white border border-slate-200/80 rounded-3xl shadow-sm overflow-hidden">
+        <!-- ================================================================= -->
+        <!-- TABLEAU DE DONNÉES HAUTE DENSITÉ (DHIS2 LINE LISTING GRID)        -->
+        <!-- ================================================================= -->
+        <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-50/80 border-b border-slate-200 font-mono text-[10px] uppercase text-slate-500 tracking-wider">
-                            <th class="py-4 px-5 font-bold">Code Fiche</th>
-                            <th class="py-4 px-5 font-bold">Patient & Mère</th>
-                            <th class="py-4 px-5 font-bold">Formation Sanitaire</th>
-                            <th class="py-4 px-5 font-bold">Date Prélèvement</th>
-                            <th class="py-4 px-5 font-bold">Tests Initiés</th>
-                            <th class="py-4 px-5 font-bold">Résultat / Diagnostic</th>
-                            <th class="py-4 px-5 font-bold text-right">Action</th>
+                        <tr class="bg-slate-100 border-b border-slate-200 text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                            <th class="py-3 px-4 border-r border-slate-200/60">ID / Code Fiche</th>
+                            <th class="py-3 px-4 border-r border-slate-200/60">Patient & Mère</th>
+                            <th class="py-3 px-4 border-r border-slate-200/60">Formation Sanitaire (FOSA)</th>
+                            <th class="py-3 px-4 border-r border-slate-200/60">Date Prélèvement</th>
+                            <th class="py-3 px-4 border-r border-slate-200/60">Tests Initiés</th>
+                            <th class="py-3 px-4 border-r border-slate-200/60">Résultat PCR</th>
+                            <th class="py-3 px-4 text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100 text-xs font-medium">
+                    <tbody class="divide-y divide-slate-200 text-xs text-slate-800">
                         {% for fiche in fiches %}
                             {% for echantillon in fiche.echantillons.all %}
-                            <tr class="hover:bg-indigo-50/30 transition-colors group">
+                            <tr class="hover:bg-sky-50/50 transition-colors">
                                 
                                 <!-- Code Fiche -->
-                                <td class="py-4 px-5 font-mono">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 font-bold text-[11px] group-hover:border-indigo-300 transition-colors">
-                                        {{ fiche.code }}
-                                    </span>
+                                <td class="py-2.5 px-4 font-mono border-r border-slate-100 font-bold text-[#1d5288]">
+                                    {{ fiche.code }}
+                                 
                                 </td>
-
-                                <!-- Patient / Enfant / Mère -->
-                                <td class="py-4 px-5">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-indigo-600 shrink-0">
-                                            {{ echantillon.enfant.nom|slice:":1"|default:"E" }}
-                                        </div>
-                                        <div>
-                                            <div class="font-bold text-slate-900 uppercase tracking-tight">
-                                                {{ echantillon.enfant.nom|default:"Patient Anonyme" }} {{ echantillon.enfant.prenom }}
-                                            </div>
-                                            <div class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1 font-mono">
-                                                <span>Mère:</span>
-                                                <span class="text-slate-700 font-medium">{{ echantillon.mere.nom|default:"Non renseigné" }}</span>
-                                            </div>
-                                        </div>
+                                
+                                <!-- Patient / Mère -->
+                                <td class="py-2.5 px-4 border-r border-slate-100">
+                                    <div class="font-bold text-slate-900 uppercase">
+                                        {{ echantillon.enfant.nom|default:"Patient Anonyme" }} {{ echantillon.enfant.prenom }}
+                                    </div>
+                                    <div class="text-[11px] text-slate-500 mt-0.5">
+                                        Mère : <span class="text-slate-700 font-medium">{{ echantillon.mere.nom|default:"N/A" }}</span>
                                     </div>
                                 </td>
 
-                                <!-- Structure (FOSA) -->
-                                <td class="py-4 px-5">
-                                    <div class="flex items-center gap-1.5 text-slate-700 font-medium">
-                                        <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-                                        </svg>
-                                        <span class="line-clamp-1 uppercase text-[11px]" title="{{ echantillon.enfant.fosa.nom|default:'Non spécifiée' }}">
-                                            {{ echantillon.enfant.fosa.nom|default:"Non spécifiée" }}
-                                        </span>
+                                <!-- Formation Sanitaire -->
+                                <td class="py-2.5 px-4 border-r border-slate-100">
+                                    <div class="text-slate-800 font-medium line-clamp-1" title="{{ echantillon.enfant.fosa.nom }}">
+                                        {{ echantillon.fiche.fosa.nom|default:"Non spécifiée" }}
                                     </div>
                                 </td>
 
                                 <!-- Date Prélèvement -->
-                                <td class="py-4 px-5 font-mono text-slate-700 whitespace-nowrap">
-                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 text-[11px]">
-                                        <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
-                                        </svg>
-                                        {{ echantillon.date_prelevement|date:"d/m/Y" }}
-                                    </div>
-                                </td>
-
-                                <!-- Pipeline des tests PCR -->
-                                <td class="py-4 px-5 font-mono">
-                                    <div class="flex flex-col gap-1.5">
+                             <td class="py-2.5 px-4 border-r border-slate-100 font-mono text-slate-700 whitespace-nowrap">
+                                <div>{{ echantillon.date_prelevement|date:"d/m/Y" }}</div>
+                                
+                                {% if echantillon.ordre == 1 %}
+                                    <span class="inline-block mt-1 text-[11px] font-bold text-[#1478c1]">PCR I</span>
+                                {% elif echantillon.ordre == 2 %}
+                                    <span class="inline-block mt-1 text-[11px] font-bold text-[#1478c1]">PCR II</span>
+                                {% elif echantillon.ordre == 3 %}
+                                    <span class="inline-block mt-1 text-[11px] font-bold text-[#1478c1]">PCR III</span>
+                                {% endif %}
+                            </td>
+                                <!-- Tests Initiés -->
+                                <td class="py-2.5 px-4 border-r border-slate-100">
+                                    <div class="flex flex-wrap gap-1">
                                         {% for res in echantillon.resultats.all %}
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 border border-slate-200 text-slate-700 w-fit">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
-                                                {{ res.test.nom|default:"Test PCR" }}
+                                            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 border border-slate-300 text-slate-700">
+                                                {{ res.test.nom|default:"PCR" }}
                                             </span>
                                         {% empty %}
-                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80 w-fit">
-                                                En attente de validation
+                                            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 border border-amber-200 text-amber-800">
+                                                En attente
                                             </span>
                                         {% endfor %}
                                     </div>
                                 </td>
 
-                                <!-- Statut / Résultat -->
-                                <td class="py-4 px-5 font-mono">
-                                    <div class="flex flex-col gap-1.5">
+                                <!-- Statut & Résultat DHIS2 -->
+                                <td class="py-2.5 px-4 border-r border-slate-100">
+                                    <div class="flex flex-col gap-1">
                                         {% for res in echantillon.resultats.all %}
                                             {% if res.resultat_pcr %}
                                                 {% if "POSITIF" in res.resultat_pcr.nom|upper %}
-                                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black bg-rose-50 text-rose-700 border border-rose-200 shadow-sm w-fit">
-                                                        <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
+                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 border border-red-300 w-fit">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>
                                                         {{ res.resultat_pcr.nom }}
                                                     </span>
                                                 {% elif "NEGATIF" in res.resultat_pcr.nom|upper or "NÉGATIF" in res.resultat_pcr.nom|upper %}
-                                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm w-fit">
-                                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 w-fit">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
                                                         {{ res.resultat_pcr.nom }}
                                                     </span>
                                                 {% else %}
-                                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black bg-amber-50 text-amber-700 border border-amber-200 shadow-sm w-fit">
-                                                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 w-fit">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
                                                         {{ res.resultat_pcr.nom }}
                                                     </span>
                                                 {% endif %}
                                             {% else %}
-                                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-200 w-fit">
+                                                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200 w-fit">
                                                     Analyse en cours...
                                                 </span>
                                             {% endif %}
                                         {% empty %}
-                                            <span class="text-[11px] font-bold text-slate-400 italic">Non analysé</span>
+                                            <span class="text-[11px] text-slate-400 italic">Non analysé</span>
                                         {% endfor %}
                                     </div>
                                 </td>
 
                                 <!-- Action -->
-                                <td class="py-4 px-5 text-right whitespace-nowrap">
-                                    <a href="/fiche-echantillon/{{echantillon.slug}}/" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-slate-900 hover:bg-indigo-600 text-white font-mono font-bold text-[11px] rounded-xl transition-all shadow-sm active:scale-95 group-hover:translate-x-0.5">
-                                        <span>Dossier</span>
-                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                                <td class="py-2.5 px-4 text-center whitespace-nowrap">
+                                    <a href="/fiche-echantillon/{{echantillon.slug}}/" class="inline-flex items-center gap-1 px-3 py-1 bg-[#1478c1] hover:bg-[#1164a2] text-white font-semibold text-[11px] rounded transition-colors">
+                                        <span>Consulter</span>
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
                                         </svg>
                                     </a>
                                 </td>
@@ -245,15 +250,13 @@
                             {% endfor %}
                         {% empty %}
                             <tr>
-                                <td colspan="7" class="py-20 text-center">
-                                    <div class="max-w-xs mx-auto space-y-3">
-                                        <div class="w-14 h-14 mx-auto rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
-                                            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
-                                            </svg>
-                                        </div>
-                                        <p class="text-xs font-bold font-mono text-slate-600 uppercase tracking-wider">Aucune fiche enregistrée</p>
-                                        <p class="text-[11px] text-slate-400">Ajustez vos filtres ci-dessus pour afficher d'autres enregistrements.</p>
+                                <td colspan="7" class="py-12 text-center bg-slate-50/50">
+                                    <div class="max-w-sm mx-auto space-y-2">
+                                        <svg class="w-8 h-8 mx-auto text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+                                        </svg>
+                                        <p class="text-xs font-bold text-slate-700 uppercase">Aucun événement / fiche trouvé</p>
+                                        <p class="text-[11px] text-slate-500">Modifiez vos critères de recherche ci-dessus pour afficher des données.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -261,8 +264,123 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pied de tableau / Stats de pagination -->
+            <div class="bg-slate-50 border-t border-slate-200 px-4 py-2 flex items-center justify-between text-[11px] text-slate-600">
+                <div>Registre LIMS - Événements d'analyse</div>
+                <div class="font-mono font-bold">Total : {{ fiches.count }} fiche(s)</div>
+            </div>
         </div>
 
     </div>
 </main>
+
+<!-- ================================================================= -->
+<!-- MODALE DHIS2 : LISTE DES FICHES D'ÉCHANTILLON                     -->
+<!-- ================================================================= -->
+<dialog id="fiches-modal" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-xs bg-white border border-[#e0e0e0] rounded-[3px] p-0 max-w-3xl w-full shadow-lg open:animate-in open:fade-in open:zoom-in-95 duration-150">
+    
+    <!-- En-tête Modale Style DHIS2 -->
+    <div class="bg-[#1d5288] text-white px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-sky-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+            <h3 class="text-xs font-bold uppercase tracking-wider">Répertoire des Fiches d'Échantillons</h3>
+        </div>
+        <button onclick="document.getElementById('fiches-modal').close()" class="text-white hover:text-slate-200 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Corps de la Modale -->
+    <div class="p-4 space-y-3">
+        <!-- Barre de recherche rapide dans la modale -->
+        <div class="relative">
+            <input type="text" id="search-fiches-input" placeholder="Filtrer par code fiche, structure..." class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-300 rounded-[2px] text-xs font-medium text-slate-800 focus:outline-none focus:border-[#1478c1]">
+            <div class="absolute left-2.5 top-2 text-slate-400">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z"/></svg>
+            </div>
+        </div>
+
+        <!-- Tableau compact des fiches -->
+        <div class="max-h-[60vh] overflow-y-auto border border-slate-200 rounded-[2px]">
+            <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-slate-100 text-[11px] font-bold text-slate-700 uppercase sticky top-0 border-b border-slate-200">
+                    <tr>
+                        <th class="py-2.5 px-3 border-r border-slate-200">Code Fiche</th>
+                        <th class="py-2.5 px-3 border-r border-slate-200">Formation Sanitaire (FOSA)</th>
+                        <th class="py-2.5 px-3 border-r border-slate-200 text-center">Échantillons</th>
+                        <th class="py-2.5 px-3 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 text-xs">
+                    {% for fiche in fiches %}
+                    <tr class="hover:bg-sky-50/50 transition-colors">
+                        <td class="py-2 px-3 font-mono font-bold text-[#1d5288] border-r border-slate-100">
+                            {{ fiche.code }}
+                        </td>
+                        <td class="py-2 px-3 border-r border-slate-100 text-slate-700">
+                            {{ fiche.fosa.nom|default:"Non spécifiée" }}
+                        </td>
+                        <td class="py-2 px-3 text-center font-mono border-r border-slate-100 text-slate-600">
+                            {{ fiche.echantillons.count|default:"0" }}
+                        </td>
+                        <td class="py-2 px-3 text-center">
+                            <a href="/saisir-echantillon/{{ fiche.id }}/" class="px-2.5 py-1 bg-[#1478c1] hover:bg-[#1164a2] text-white font-semibold rounded-[2px] text-[10px] uppercase tracking-wider transition-colors inline-block">
+                                Sélectionner
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="py-8 text-center text-slate-400 text-xs italic">
+                            Aucune fiche d'échantillon enregistrée.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pied de modale -->
+        <div class="flex items-center justify-between pt-2 border-t border-slate-200">
+            <span class="text-[11px] text-slate-500 font-mono">Total répertorié : {{ fiches.count }} fiche(s)</span>
+            <button type="button" onclick="document.getElementById('fiches-modal').close()" class="px-3.5 py-1.5 border border-slate-300 rounded-[2px] bg-white hover:bg-slate-50 font-semibold text-xs text-slate-700 transition-colors">
+                Fermer
+            </button>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Gestion de la fermeture de la modale en cliquant en dehors
+    const modalFiches = document.getElementById('fiches-modal');
+    if (modalFiches) {
+        modalFiches.addEventListener('click', (e) => {
+            const dims = modalFiches.getBoundingClientRect();
+            if (e.clientX < dims.left || e.clientX > dims.right || e.clientY < dims.top || e.clientY > dims.bottom) {
+                modalFiches.close();
+            }
+        });
+    }
+
+    // Filtrage dynamique simple dans la modale
+    const searchInput = document.getElementById('search-fiches-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#fiches-modal tbody tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+    }
+</script>
 {% endblock %}

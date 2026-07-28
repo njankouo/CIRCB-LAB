@@ -83,277 +83,256 @@ main {
   
         <div class="flex flex-col h-full w-full overflow-hidden">
         <!-- Header avec bordure sombre affirmée -->
-    <header class="sticky top-0 z-40 bg-white/75 backdrop-blur-md border-b border-slate-100 px-6 py-2.5 flex items-center justify-between transition-all duration-300">
+ <!-- ================================================================= -->
+<!-- HEADER AU DESIGN INSTITUTIONNEL DHIS2 (TEXTE ENTRÉE BLANC)        -->
+<!-- ================================================================= -->
+<header class="sticky top-0 z-40 bg-[#1d5288] text-white border-b border-[#145a96] px-4 sm:px-6 py-2 flex items-center justify-between shadow-md">
     
+    <!-- BRANDING / LOGO STYLE DHIS2 TOP-BAR -->
     <div class="flex items-center gap-3 shrink-0">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-slate-900 to-indigo-950 flex items-center justify-center text-white font-black text-base shadow-sm ring-1 ring-slate-900/10">
+        <div class="w-8 h-8 rounded bg-white/15 border border-white/20 flex items-center justify-center font-mono font-black text-sm text-sky-200 shadow-inner">
             M
         </div>
         <div class="leading-tight">
-            <div class="text-xs font-black uppercase tracking-wider text-slate-900">MEDISYS LAB</div>
-            <div class="text-[10px] text-slate-400 font-bold tracking-tight">CIRCB • TERMINAL DE PRODUCTION</div>
+            <div class="text-xs font-bold uppercase tracking-wider text-white font-mono flex items-center gap-1.5">
+                MEDISYS LAB
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </div>
+            <div class="text-[10px] text-sky-200 font-mono tracking-tight opacity-90">CIRCB • DASHBOARD</div>
         </div>
     </div>
-<!-- Wrapper parent : doit être relative pour que le overlay se positionne par rapport à lui -->
-<div class="relative hidden md:block flex-1 max-w-md mx-8" id="search-wrapper">
-    <div class="relative w-full max-w-lg group">
-    <!-- Icône : On ajoute une transition de couleur -->
-    <div class="absolute left-3 top-2.5 text-slate-400 group-focus-within:text-indigo-600 transition-colors duration-300">
-        <i data-lucide="search" id="search-icon" class="w-4 h-4"></i>
-        <i data-lucide="loader-2" id="search-loader" class="w-4 h-4 hidden animate-spin text-indigo-600"></i>
-    </div>
-    
-    <!-- Champ Input : Style Premium -->
-    <input id="search" type="text" 
-           placeholder="Rechercher un patient..." 
-           class="w-full pl-10 pr-4 py-2.5 bg-white border-2 border-slate-900 rounded-xl text-sm font-bold 
-                  shadow-[4px_4px_0px_0px_#0f172a] 
-                  focus:shadow-[2px_2px_0px_0px_#0f172a] 
-                  focus:translate-x-[2px] focus:translate-y-[2px]
-                  focus:border-indigo-600 outline-none transition-all duration-200" />
-</div>
-    <!-- Le Overlay -->
-    <div id="search-results-overlay" 
-         class="absolute top-full left-0 w-full mt-2 bg-white border-2 border-slate-900 rounded-xl shadow-2xl z-[9999] hidden max-h-[70vh] overflow-y-auto custom-scrollbar">
-        <div id="results-content" class="p-2">
-            <!-- Résultats injectés ici -->
+
+    <!-- BARRE DE RECHERCHE DYNAMIQUE AVEC FILTRE PATIENT (TEXTE BLANC) -->
+    <div class="relative hidden md:block flex-1 max-w-lg mx-6" id="search-wrapper">
+        <div class="relative flex items-center w-full bg-black/25 hover:bg-black/35 focus-within:bg-black/40 border border-white/20 focus-within:border-sky-300 rounded transition-all duration-200">
+            
+            <!-- SELECTEUR DE FILTRE PATIENT -->
+            <div class="relative shrink-0 border-r border-white/20">
+                <select id="patient-filter" 
+                        class="bg-transparent text-white text-[11px] font-bold py-1.5 pl-2.5 pr-6 appearance-none outline-none cursor-pointer focus:text-white transition-colors">
+                    <option value="all" class="bg-[#1d5288] text-white">Tous les critères</option>
+                    <option value="patient" class="bg-[#1d5288] text-white">Nom / ID Patient</option>
+                    <option value="code_echantillon" class="bg-[#1d5288] text-white">Code Échantillon</option>
+                    <option value="structure" class="bg-[#1d5288] text-white">District / Formation</option>
+                </select>
+                <i data-lucide="chevron-down" class="w-3 h-3 text-sky-200 absolute right-1.5 top-2.5 pointer-events-none"></i>
+            </div>
+
+            <!-- CHAMP DE RECHERCHE (TEXTE BLANC GARANTI) -->
+            <div class="relative flex-1 flex items-center">
+                <div class="absolute left-2.5 text-sky-200">
+                    <i data-lucide="search" id="search-icon" class="w-3.5 h-3.5"></i>
+                    <i data-lucide="loader-2" id="search-loader" class="w-3.5 h-3.5 hidden animate-spin text-sky-300"></i>
+                </div>
+                
+                <input id="search" type="text" 
+                       placeholder="Rechercher..." 
+                       autocomplete="off"
+                       class="w-full pl-8 pr-3 py-1.5 bg-transparent text-white focus:text-white caret-white text-xs font-medium outline-none placeholder:text-sky-200/70" />
+            </div>
+        </div>
+
+        <!-- Overlay de Résultats -->
+        <div id="search-results-overlay" 
+             class="absolute top-full left-0 w-full mt-1.5 bg-white border border-slate-300 rounded-md shadow-2xl z-[9999] hidden max-h-[70vh] overflow-y-auto text-slate-800">
+            <div id="results-content" class="p-2 divide-y divide-slate-100">
+                <!-- Résultats dynamiques AJAX injectés ici -->
+            </div>
         </div>
     </div>
-</div>
 
-<style>
-    /* Contrôle de la visibilité */
-    #search-results-overlay.active { display: block; }
-    
-    /* Animation du loader */
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .animate-spin { animation: spin 1s linear infinite; }
-</style>
-
-<script>
-const searchInput = document.getElementById('search');
-const overlay = document.getElementById('search-results-overlay');
-const resultsContent = document.getElementById('results-content');
-const icon = document.getElementById('search-icon');
-const loader = document.getElementById('search-loader');
-
-searchInput.addEventListener('input', async function(e) {
-    const query = e.target.value.trim();
-    
-    if (query.length < 2) {
-        overlay.classList.remove('active');
-        return;
-    }
-
-    // État chargement
-    overlay.classList.add('active');
-    icon.classList.add('hidden');
-    loader.classList.remove('hidden');
-
-    try {
-        const response = await fetch(`/recherche-patient/?q=${encodeURIComponent(query)}`);
-        const html = await response.text();
-        resultsContent.innerHTML = html;
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-    } catch (err) {
-        resultsContent.innerHTML = '<p class="p-4 text-xs text-red-500">Erreur de connexion.</p>';
-    } finally {
-        icon.classList.remove('hidden');
-        loader.classList.add('hidden');
-    }
-});
-
-// Fermer si clic extérieur
-document.addEventListener('click', (e) => {
-    if (!document.getElementById('search-wrapper').contains(e.target)) {
-        overlay.classList.remove('active');
-    }
-});
-</script>
-    <div class="flex items-center gap-3 shrink-0">
+    <!-- ACTIONS / MENU APPS & PROFIL DHIS2 -->
+    <div class="flex items-center gap-2 shrink-0">
         
+        <!-- Bouton Grille d'Applications -->
         <button id="btnOpenMenuModal" onclick="document.getElementById('menu-modal').showModal()" 
-                class="p-2 text-slate-600 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50/50 border border-slate-200 hover:border-indigo-200 rounded-xl transition-all duration-200 active:scale-95 relative group">
-            <i data-lucide="menu" class="w-4 h-4"></i>
-            <span class="absolute top-1 right-1 w-1.5 h-1.5 bg-indigo-600 rounded-full animate-pulse"></span>
+                title="Applications DHIS2 / LIMS"
+                class="p-2 text-sky-100 hover:text-white bg-white/10 hover:bg-white/20 border border-white/10 rounded transition-colors active:scale-95 relative cursor-pointer">
+            <i data-lucide="grid" class="w-4 h-4"></i>
+            <span class="absolute top-1 right-1 w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
         </button>
         
-        <div class="w-px h-5 bg-slate-200"></div>
+        <div class="w-px h-5 bg-white/20 my-auto"></div>
 
+        <!-- Profil Utilisateur DHIS2 -->
         <div class="relative">
             <button id="profile-menu-button" onclick="toggleProfileMenu(event)" 
-                    class="flex items-center gap-2 p-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl hover:border-slate-300 transition-all duration-200 focus:outline-none">
-                <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=0f172a&color=fff" 
-                     class="w-6 h-6 rounded-lg object-cover" alt="Avatar" />
-                <span class="text-xs font-bold text-slate-700 pr-1 hidden lg:block">
+                    class="flex items-center gap-2 p-1 bg-white/10 hover:bg-white/20 border border-white/10 rounded transition-colors focus:outline-none cursor-pointer">
+                <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=1478c1&color=fff" 
+                     class="w-6 h-6 rounded object-cover" alt="Avatar" />
+                <span class="text-xs font-bold text-white pr-1 hidden lg:block">
                     {% if request.user.first_name %}
                         {{ request.user.first_name }}
                     {% else %}
                         {{ request.user.username }}
                     {% endif %}
                 </span>
-                <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 pr-1 hidden lg:block"></i>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-sky-200 pr-1 hidden lg:block"></i>
             </button>
             
-            <div id="profile-menu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-slate-200/80 rounded-xl shadow-xl shadow-slate-100/50 p-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                <a href="/profile/" class="flex items-center gap-2 px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg text-xs font-bold transition-colors">
-                    <i data-lucide="user" class="w-3.5 h-3.5"></i> Mon Profil
+            <div id="profile-menu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-slate-300 rounded shadow-lg p-1 z-50 text-slate-800">
+                <a href="/profile/" class="flex items-center gap-2 px-3 py-2 text-slate-700 hover:bg-slate-100 rounded text-xs font-bold transition-colors">
+                    <i data-lucide="user" class="w-3.5 h-3.5 text-[#1478c1]"></i> Mon Profil
                 </a>
-                <div class="h-px bg-slate-100 my-1"></div>
-                <a href="/logout/" class="flex items-center gap-2 px-3 py-2 w-full text-left text-rose-600 hover:bg-rose-50/70 rounded-lg text-xs font-bold transition-colors">
+                <div class="h-px bg-slate-200 my-1"></div>
+                <a href="/logout/" class="flex items-center gap-2 px-3 py-2 w-full text-left text-rose-600 hover:bg-rose-50 rounded text-xs font-bold transition-colors">
                     <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Déconnexion
                 </a>
             </div>
         </div>
     </div>
 </header>
-<dialog id="menu-modal" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm bg-slate-50 border-t border-l border-white border-b-4 border-r-4 border-slate-300 rounded-2xl p-0 max-w-6xl w-full shadow-2xl shadow-indigo-950/10 open:animate-in open:fade-in open:zoom-in-95 duration-150 overflow-hidden max-h-[90vh] select-none outline-none">
+
+
+<!-- ================================================================= -->
+<!-- MODAL CONSOLE DE DISPATCHING DHIS2 LIMS                           -->
+<!-- ================================================================= -->
+<dialog id="menu-modal" class="backdrop:bg-slate-900/60 backdrop:backdrop-blur-xs bg-[#f4f6f8] border border-slate-300 rounded-md p-0 max-w-5xl w-full shadow-2xl overflow-hidden max-h-[90vh] select-none outline-none">
     
-    <!-- HEADER CLINIQUE / LABO — ANCRAGE TECHNIQUE HAUTE DÉFINITION -->
-    <div class="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4 shadow-sm">
-        <div class="flex items-center gap-3.5">
-            <div class="relative flex h-2.5 w-2.5">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-600"></span>
-            </div>
+    <!-- EN-TÊTE BLEU DHIS2 -->
+    <div class="flex items-center justify-between bg-[#1d5288] text-white px-5 py-3 border-b border-[#145a96]">
+        <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-sky-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+            </svg>
             <div>
                 <div class="flex items-center gap-2">
-                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-800 font-mono">CIRCB INTEGRATED LIMS</h3>
-                    <span class="text-[9px] bg-gradient-to-r from-cyan-600 to-indigo-600 text-white px-1.5 py-0.5 rounded-md font-mono font-bold tracking-tight shadow-sm">CORE_V3</span>
+                    <h3 class="text-xs font-bold uppercase tracking-wide font-mono text-white">MEDYSIS LAB</h3>
+                    <span class="text-[9px] bg-[#1478c1] text-white px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider">V3</span>
                 </div>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight mt-0.5">Centre International de Référence Chantal Biya — Console de Dispatching Biomédical</p>
+                <p class="text-[10px] text-sky-200 font-mono tracking-tight mt-0.5">CIRCB • Terminal de Gestion et Traçabilité Biologique</p>
             </div>
         </div>
         
-        <!-- BOUTON FERMER STYLE RACK MATÉRIEL -->
-        <button onclick="document.getElementById('menu-modal').close()" class="p-2 border-t border-l border-slate-200 border-b-2 border-r-2 border-slate-400 bg-white text-slate-500 hover:text-rose-600 hover:bg-rose-50/50 rounded-xl transition-all active:border-b active:border-r active:mt-0.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <!-- BOUTON FERMER DHIS2 -->
+        <button onclick="document.getElementById('menu-modal').close()" 
+                class="p-1.5 bg-white/10 hover:bg-white/20 text-white rounded transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
         </button>
     </div>
 
-    <!-- CONTENEUR BI-PANEL HAUTE FIDÉLITÉ -->
-    <div class="grid grid-cols-1 md:grid-cols-4 min-h-[480px] max-h-[calc(90vh-70px)] overflow-hidden bg-slate-50 text-slate-700">
+    <!-- PANNEAU PRINCIPAL DHIS2 TRACKER -->
+    <div class="grid grid-cols-1 md:grid-cols-4 min-h-[440px] max-h-[calc(90vh-60px)] overflow-hidden bg-[#f4f6f8] text-slate-800">
         
-        <!-- SIDEBAR GAUCHE : COMMUTATEURS LAB CORE -->
-        <div class="md:col-span-1 bg-slate-100/70 border-r border-slate-200 p-4 space-y-2 overflow-y-auto">
-            <span class="block text-[9px] font-black text-slate-400 uppercase tracking-widest px-2.5 mb-3 font-mono">Unités Fonctionnelles</span>
+        <!-- SIDEBAR GAUCHE : NAVIGATION UNITÉS DHIS2 -->
+        <div class="md:col-span-1 bg-white border-r border-slate-200 p-3 space-y-1.5 overflow-y-auto">
+            <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider px-2 mb-2 font-mono">Modules DHIS2</span>
             
-            <a href='/dashboard/' class="tab-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-bold text-slate-600 border border-transparent hover:bg-white/60 hover:border-slate-200 transition-all">
+            <a href='/dashboard/' class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded text-left text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-[#1478c1] transition-all">
                 <span class="w-2 h-2 rounded-full bg-blue-500"></span>
                 <span>Dashboard</span>
             </a>
             
-            <!-- ONGLET ACTIF INITIALISÉ EN 3D ENCASTRÉ (CYAN/TEAL) -->
-            <button onclick="switchTab('bio-segment')" class="tab-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-black bg-white text-cyan-950 border-t border-l border-cyan-200 border-b-4 border-r-4 border-cyan-600/30 shadow-md shadow-cyan-600/5 transition-all">
-                <span class="w-2 h-2 rounded-full bg-cyan-600 animate-pulse"></span>
-                <span>Echantillonages</span>
+            <button onclick="switchTab('bio-segment')" class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded text-left text-xs font-bold bg-[#1478c1] text-white shadow-xs transition-all cursor-pointer">
+                <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                <span>Échantillons</span>
             </button>
             
-            <a href='/dossiers/patients/' class="tab-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-bold text-slate-600 border border-transparent hover:bg-white/60 hover:border-slate-200 transition-all">
+            <a href='/dossiers/patients/' class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded text-left text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-[#1478c1] transition-all">
                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                 <span>Dossiers Patients</span>
             </a>
-            <a href='{% url "personnel" %}' class="tab-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-bold text-slate-600 border border-transparent hover:bg-white/60 hover:border-slate-200 transition-all">
+
+            <a href='{% url "personnel" %}' class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded text-left text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-[#1478c1] transition-all">
                 <span class="w-2 h-2 rounded-full bg-purple-500"></span>
                 <span>Ressources Humaines</span>
             </a>
-            <button onclick="switchTab('config-segment')" class="tab-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-bold text-slate-600 border border-transparent hover:bg-white/60 hover:border-slate-200 transition-all">
+
+            <button onclick="switchTab('config-segment')" class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded text-left text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-[#1478c1] transition-all cursor-pointer">
                 <span class="w-2 h-2 rounded-full bg-slate-400"></span>
                 <span>Configurations</span>
             </button>
         </div>
 
-        <!-- ZONE DE TRAVAIL DROITE (PANNEAUX TECHNIQUES) -->
-        <div class="md:col-span-3 p-6 overflow-y-auto bg-white">
+        <!-- CONTENU PANNEAUX DHIS2 -->
+        <div class="md:col-span-3 p-5 overflow-y-auto bg-[#f4f6f8]">
             
-            <!-- FLUX BIOLOGIQUES & AUTOMATES LIMS (AFFICHÉ PAR DÉFAUT) -->
-            <div id="bio-segment" class="tab-content space-y-5 animate-in fade-in duration-100">
-                <div class="border-b border-slate-100 pb-3 mb-2">
-                    <h4 class="text-xs font-black text-cyan-950 uppercase font-mono tracking-wider">Gestion LIMS & Paillasses</h4>
-                    <p class="text-[11px] font-semibold text-slate-400 mt-0.5 uppercase tracking-tight">Flux d'ordonnancement biologique, enregistrement et validation</p>
+            <!-- FLUX BIOLOGIQUES ET PAILLASSES -->
+            <div id="bio-segment" class="tab-content space-y-4">
+                <div class="border-b border-slate-200 pb-2 mb-2 flex items-center justify-between">
+                    <div>
+                        <h4 class="text-xs font-bold text-[#1d5288] uppercase font-mono tracking-wide">01. Paillasses & Enregistrement</h4>
+                        <p class="text-[11px] font-medium text-slate-500 mt-0.5">Saisie événements LIMS et suivi des réceptions</p>
+                    </div>
+                    <span class="text-[10px] bg-sky-100 text-[#1d5288] border border-sky-200 font-bold px-2 py-0.5 rounded font-mono">TRACKER</span>
                 </div>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Fiches Échantillons (Touches Encastrées Cyan) -->
-                    <a href="/fiches-echantillons/" class="group p-4 bg-gradient-to-b from-slate-50/50 to-white border-t border-l border-slate-200 border-b-4 border-r-4 border-cyan-500/30 rounded-xl transition-all active:border-b active:border-r active:mt-0.5 flex items-start gap-3.5 shadow-sm">
-                        <div class="p-2 rounded-lg bg-cyan-50 text-cyan-600 border border-cyan-100 shrink-0">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <a href="/fiches-echantillons/" class="group p-3.5 bg-white border border-slate-200 hover:border-[#1478c1] rounded shadow-xs transition-all flex items-start gap-3">
+                        <div class="p-2 rounded bg-sky-50 text-[#1478c1] border border-sky-100 shrink-0 group-hover:bg-[#1478c1] group-hover:text-white transition-colors">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                         </div>
                         <div>
-                            <span class="block text-xs font-black text-slate-800 uppercase font-mono tracking-tight group-hover:text-cyan-600 transition-colors">Fiches Échantillons</span>
-                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Saisie des fiches épidémiologiques et liaison mère-enfant.</span>
+                            <span class="block text-xs font-bold text-slate-800 uppercase font-mono group-hover:text-[#1478c1] transition-colors">Fiches d'expédition</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-0.5 leading-tight">Formulaires d'expédition d'échantillons (Fiche Form 4).</span>
                         </div>
                     </a>
                     
-                    <!-- Registre Technique -->
-                    <a href="/echantillonages/" class="group p-4 bg-gradient-to-b from-slate-50/50 to-white border-t border-l border-slate-200 border-b-4 border-r-4 border-cyan-500/30 rounded-xl transition-all active:border-b active:border-r active:mt-0.5 flex items-start gap-3.5 shadow-sm">
-                        <div class="p-2 rounded-lg bg-cyan-50 text-cyan-600 border border-cyan-100 shrink-0">
+                    <a href="/echantillonages/" class="group p-3.5 bg-white border border-slate-200 hover:border-[#1478c1] rounded shadow-xs transition-all flex items-start gap-3">
+                        <div class="p-2 rounded bg-sky-50 text-[#1478c1] border border-sky-100 shrink-0 group-hover:bg-[#1478c1] group-hover:text-white transition-colors">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4.5 16.5c-1.5 1.26-2.5 3.19-2.5 5.5h20c0-2.31-1-4.24-2.5-5.5"></path><path d="M12 2a5 5 0 00-5 5v3.5a5 5 0 0010 0V7a5 5 0 00-5-5z"></path></svg>
                         </div>
                         <div>
-                            <span class="block text-xs font-black text-slate-800 uppercase font-mono tracking-tight group-hover:text-cyan-600 transition-colors">Echantillons</span>
-                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Logs de traçabilité des tubes de prélèvement arrivés au laboratoire.</span>
+                            <span class="block text-xs font-bold text-slate-800 uppercase font-mono group-hover:text-[#1478c1] transition-colors">Échantillons</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-0.5 leading-tight">Registre central des prélèvements biomédicaux.</span>
                         </div>
                     </a>
                 </div>
 
-                <!-- SÉPARATEUR INTERMÉDIAIRE LOGIQUE -->
-                <div class="pt-4 pb-1 border-t border-dashed border-slate-200 my-4">
-                    <h5 class="text-[10px] font-black text-indigo-950 uppercase font-mono tracking-wider">Livrables & Post-Analyse</h5>
-                    <p class="text-[10px] font-bold text-slate-400 mt-0.5 uppercase tracking-tight">Validation finale et édition des rapports réglementaires</p>
+                <div class="pt-3 pb-1 border-t border-slate-200 my-2">
+                    <h5 class="text-[11px] font-bold text-[#1d5288] uppercase font-mono tracking-wide">02. Livrables & Résultats</h5>
+                    <p class="text-[10px] text-slate-500 mt-0.5">Validation technique, éditions et sorties</p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Résultats -->
-                    <a href="{% url 'resultats' %}" class="group p-4 bg-gradient-to-b from-slate-50/50 to-white border-t border-l border-slate-200 border-b-4 border-r-4 border-indigo-500/30 rounded-xl transition-all active:border-b active:border-r active:mt-0.5 flex items-start gap-3.5 shadow-sm">
-                        <div class="p-2 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100 shrink-0">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <a href="{% url 'resultats' %}" class="group p-3.5 bg-white border border-slate-200 hover:border-[#1478c1] rounded shadow-xs transition-all flex items-start gap-3">
+                        <div class="p-2 rounded bg-sky-50 text-[#1478c1] border border-sky-100 shrink-0 group-hover:bg-[#1478c1] group-hover:text-white transition-colors">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                         </div>
                         <div>
-                            <span class="block text-xs font-black text-slate-800 uppercase font-mono tracking-tight group-hover:text-indigo-600 transition-colors">Résultats</span>
-                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Dossiers finalisés en attente de signature biologique et d’archivage.</span>
+                            <span class="block text-xs font-bold text-slate-800 uppercase font-mono group-hover:text-[#1478c1] transition-colors">Résultats</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-0.5 leading-tight">Validation des résultats d'analyses d'échantillons.</span>
                         </div>
                     </a>
               
-                    <!-- Bordereaux de sortie -->
-                    <a href="{% url 'bordeaux-sortie' %}" class="group p-4 bg-gradient-to-b from-slate-50/50 to-white border-t border-l border-slate-200 border-b-4 border-r-4 border-indigo-500/30 rounded-xl transition-all active:border-b active:border-r active:mt-0.5 flex items-start gap-3.5 shadow-sm">
-                        <div class="p-2 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100 shrink-0">
+                    <a href="{% url 'bordeaux-sortie' %}" class="group p-3.5 bg-white border border-slate-200 hover:border-[#1478c1] rounded shadow-xs transition-all flex items-start gap-3">
+                        <div class="p-2 rounded bg-sky-50 text-[#1478c1] border border-sky-100 shrink-0 group-hover:bg-[#1478c1] group-hover:text-white transition-colors">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                         </div>
                         <div>
-                            <span class="block text-xs font-black text-slate-800 uppercase font-mono tracking-tight group-hover:text-indigo-600 transition-colors">Bordereaux de sortie</span>
-                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Suivi logistique et expédition des validations vers les districts.</span>
+                            <span class="block text-xs font-bold text-slate-800 uppercase font-mono group-hover:text-[#1478c1] transition-colors">Bordereaux de sortie</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-0.5 leading-tight">Acheminement et livraison des résultats validés.</span>
                         </div>
                     </a>
                 </div>
             </div>
 
-            <!-- CONFIGURATIONS (MASQUÉ INITIALEMENT) -->
-            <div id="config-segment" class="tab-content hidden space-y-5 animate-in fade-in duration-100">
-                <div class="border-b border-slate-100 pb-3 mb-2">
-                    <h4 class="text-xs font-black text-slate-800 uppercase font-mono tracking-wider">Configurations Système</h4>
-                    <p class="text-[11px] font-semibold text-slate-400 mt-0.5 uppercase tracking-tight">Tables de référence médicales et gestion cartographique</p>
+            <!-- CONFIGURATIONS -->
+            <div id="config-segment" class="tab-content hidden space-y-4">
+                <div class="border-b border-slate-200 pb-2 mb-2">
+                    <h4 class="text-xs font-bold text-[#1d5288] uppercase font-mono tracking-wide">03. Paramétrage DHIS2</h4>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Métadonnées et structures d'organisation</p>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <a href="{% url 'configurations' %}" class="group p-4 bg-gradient-to-b from-slate-50/50 to-white border-t border-l border-slate-200 border-b-4 border-r-4 border-slate-500/20 rounded-xl transition-all active:border-b active:border-r active:mt-0.5 flex items-start gap-3.5 shadow-sm">
-                        <div class="p-2 rounded-lg bg-slate-50 text-slate-600 border border-slate-200 shrink-0">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <a href="{% url 'configurations' %}" class="group p-3.5 bg-white border border-slate-200 hover:border-[#1478c1] rounded shadow-xs transition-all flex items-start gap-3">
+                        <div class="p-2 rounded bg-slate-100 text-slate-600 border border-slate-200 shrink-0 group-hover:bg-[#1478c1] group-hover:text-white transition-colors">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 items-1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
                         </div>
                         <div>
-                            <span class="block text-xs font-black text-slate-800 uppercase font-mono tracking-tight group-hover:text-slate-600 transition-colors">Variables & Nomenclatures</span>
-                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Protocoles PTME, types de PCR, motifs de rejet.</span>
+                            <span class="block text-xs font-bold text-slate-800 uppercase font-mono group-hover:text-[#1478c1] transition-colors">Variables & Nomenclatures</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-0.5 leading-tight">Éléments de données, protocoles et nomenclatures.</span>
                         </div>
                     </a>
-                    <a href="{% url 'structures' %}" class="group p-4 bg-gradient-to-b from-slate-50/50 to-white border-t border-l border-slate-200 border-b-4 border-r-4 border-slate-500/20 rounded-xl transition-all active:border-b active:border-r active:mt-0.5 flex items-start gap-3.5 shadow-sm">
-                        <div class="p-2 rounded-lg bg-slate-50 text-slate-600 border border-slate-200 shrink-0">
+                    <a href="{% url 'structures' %}" class="group p-3.5 bg-white border border-slate-200 hover:border-[#1478c1] rounded shadow-xs transition-all flex items-start gap-3">
+                        <div class="p-2 rounded bg-slate-100 text-slate-600 border border-slate-200 shrink-0 group-hover:bg-[#1478c1] group-hover:text-white transition-colors">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
                         </div>
                         <div>
-                            <span class="block text-xs font-black text-slate-800 uppercase font-mono tracking-tight group-hover:text-slate-600 transition-colors">Réseau d'Hôpitaux</span>
-                            <span class="block text-[11px] text-slate-500 font-medium mt-1 leading-normal">Gestion des districts de santé et des formations sanitaires.</span>
+                            <span class="block text-xs font-bold text-slate-800 uppercase font-mono group-hover:text-[#1478c1] transition-colors">Unités d'Organisation</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-0.5 leading-tight">Arborescence des Régions, Districts et Formations Sanitaires.</span>
                         </div>
                     </a>
                 </div>
@@ -363,49 +342,119 @@ document.addEventListener('click', (e) => {
     </div>
 </dialog>
 
-<!-- SCRIPT DE COMMUTATION RETRAVAILLÉ SANS NOIR BRUT -->
+<!-- ================================================================= -->
+<!-- SCRIPTS JS                                                        -->
+<!-- ================================================================= -->
+<style>
+    #search-results-overlay.active { display: block; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .animate-spin { animation: spin 0.8s linear infinite; }
+</style>
+
 <script>
-function switchTab(segmentId) {
-    document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-    document.getElementById(segmentId).classList.remove('hidden');
-    
-    const eventBtn = event.currentTarget;
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.className = "tab-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-bold text-slate-600 border border-transparent hover:bg-white/60 hover:border-slate-200 transition-all";
-        // Recréer la puce par défaut
-        const dot = btn.querySelector('span');
-        if(dot) dot.className = "w-2 h-2 rounded-full bg-slate-400";
+    // 1. MENU PROFIL
+    function toggleProfileMenu(e) {
+        e.stopPropagation();
+        const menu = document.getElementById('profile-menu');
+        menu.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', (e) => {
+        const profileMenu = document.getElementById('profile-menu');
+        const profileBtn = document.getElementById('profile-menu-button');
+        if (profileMenu && !profileMenu.contains(e.target) && !profileBtn.contains(e.target)) {
+            profileMenu.classList.add('hidden');
+        }
     });
-    
-    // Assigner le style 3D actif coloré (Cyan par défaut pour correspondre au LIMS)
-    eventBtn.className = "tab-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-black bg-white text-cyan-950 border-t border-l border-cyan-200 border-b-4 border-r-4 border-cyan-600/30 shadow-md shadow-cyan-600/5 transition-all";
-    const activeDot = eventBtn.querySelector('span');
-    if(activeDot) activeDot.className = "w-2 h-2 rounded-full bg-cyan-600 animate-pulse";
-}
+
+    // 2. RECHERCHE PATIENT DYNAMIQUE
+    const searchInput = document.getElementById('search');
+    const filterSelect = document.getElementById('patient-filter');
+    const overlay = document.getElementById('search-results-overlay');
+    const resultsContent = document.getElementById('results-content');
+    const icon = document.getElementById('search-icon');
+    const loader = document.getElementById('search-loader');
+
+    async function executeSearch() {
+        if (!searchInput) return;
+        const query = searchInput.value.trim();
+        const filter = filterSelect ? filterSelect.value : 'all';
+        
+        if (query.length < 2) {
+            overlay.classList.remove('active');
+            return;
+        }
+
+        overlay.classList.add('active');
+        if (icon) icon.classList.add('hidden');
+        if (loader) loader.classList.remove('hidden');
+
+        try {
+            const response = await fetch(`/recherche-patient/?q=${encodeURIComponent(query)}&filter=${encodeURIComponent(filter)}`);
+            const html = await response.text();
+            resultsContent.innerHTML = html;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        } catch (err) {
+            resultsContent.innerHTML = '<p class="p-3 text-xs text-rose-600 font-bold">Erreur de connexion au serveur DHIS2.</p>';
+        } finally {
+            if (icon) icon.classList.remove('hidden');
+            if (loader) loader.classList.add('hidden');
+        }
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', executeSearch);
+        if (filterSelect) {
+            filterSelect.addEventListener('change', executeSearch);
+        }
+
+        document.addEventListener('click', (e) => {
+            const wrapper = document.getElementById('search-wrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                overlay.classList.remove('active');
+            }
+        });
+    }
+
+    // 3. SWITCHER ONGLET DHIS2
+    function switchTab(segmentId) {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+        document.getElementById(segmentId).classList.remove('hidden');
+        
+        const eventBtn = event.currentTarget;
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.className = "tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded text-left text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-[#1478c1] transition-all cursor-pointer";
+            const dot = btn.querySelector('span');
+            if (dot) dot.className = "w-2 h-2 rounded-full bg-slate-400";
+        });
+        
+        eventBtn.className = "tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded text-left text-xs font-bold bg-[#1478c1] text-white shadow-xs transition-all cursor-pointer";
+        const activeDot = eventBtn.querySelector('span');
+        if (activeDot) activeDot.className = "w-2 h-2 rounded-full bg-white animate-pulse";
+    }
 </script>
   {%block main%}
 <main class="flex-1 h-full min-h-0 overflow-y-auto p-6 flex flex-col gap-6 bg-slate-50 w-full max-w-[100vw] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full relative">
     
-<div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-t border-l border-cyan-200 border-b-4 border-r-4 border-indigo-500/30 rounded-2xl p-6 shadow-lg shadow-indigo-500/5">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-300 rounded-md p-4 shadow-xs">
     <div class="flex items-center gap-4">
         
         <!-- LOGO CIRCB (Intégration directe) -->
-        <img src="{% static 'images/Logo-CIRCB.png' %}" 
-             alt="Logo CIRCB" 
-             class="h-14 sm:h-16 w-auto object-contain shrink-0">
+        <div class="p-1.5 bg-slate-50 border border-slate-200 rounded shrink-0">
+            <img src="{% static 'images/Logo-CIRCB.png' %}" 
+                 alt="Logo CIRCB" 
+                 class="h-12 sm:h-14 w-auto object-contain">
+        </div>
 
         <div>
-            <div class="flex items-center gap-2 mb-1">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-600"></span>
-                </span>
-                <span class="text-[10px] font-black tracking-widest text-cyan-600 uppercase font-mono">CIRCB LIMS • LAB MONITORING</span>
+            <div class="flex items-center gap-2 mb-0.5">
+                <span class="w-2 h-2 rounded-full bg-[#1478c1]"></span>
+                <span class="text-[10px] font-bold tracking-wider text-[#1478c1] uppercase font-mono">CIRCB LIMS • LAB MONITORING</span>
             </div>
-            <h1 class="text-xl font-extrabold text-slate-900 tracking-tight font-mono uppercase">
+            <h1 class="text-lg sm:text-xl font-bold text-[#1d5288] tracking-tight font-mono uppercase">
                 Console de Suivi des Échantillons & Résultats
             </h1>
-            <p class="text-xs font-semibold text-slate-500 mt-0.5">Réception, niveau de validation & répartition par formation sanitaire (FOSA)</p>
+            <p class="text-xs font-medium text-slate-500 mt-0.5">Réception, niveau de validation & répartition par formation sanitaire (FOSA)</p>
         </div>
 
     </div>
@@ -1083,80 +1132,133 @@ document.addEventListener('DOMContentLoaded', () => {
         const isError = msg.type.includes('error') || msg.type.includes('danger');
         const isWarning = msg.type.includes('warning');
         
-        // Configuration du thème selon l'état du laboratoire
+        // Configuration aux standards UI/UX modernes & Doux (Identité CIRCB)
         let config = {
             icon: 'success',
-            statusTag: 'ANALYSE_OK',
-            title: 'OPÉRATION RÉUSSIE',
-            badgeBg: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+            statusText: 'Succès',
+            themeBg: 'bg-emerald-50 text-emerald-700 border-emerald-100',
             dotBg: 'bg-emerald-500',
             topBorder: 'border-t-emerald-500',
-            btnBg: 'bg-emerald-700 hover:bg-emerald-800 focus:ring-emerald-500'
+            btnBg: 'bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-400'
         };
 
         if (isError) {
             config = {
                 icon: 'error',
-                statusTag: 'ANOMALIE_DETECTEE',
-                title: 'ERREUR SYSTEME',
-                badgeBg: 'bg-rose-100 text-rose-800 border-rose-300',
+                statusText: 'Erreur',
+                themeBg: 'bg-rose-50 text-rose-700 border-rose-100',
                 dotBg: 'bg-rose-500',
                 topBorder: 'border-t-rose-500',
-                btnBg: 'bg-rose-700 hover:bg-rose-800 focus:ring-rose-500'
+                btnBg: 'bg-rose-600 hover:bg-rose-700 focus:ring-rose-400'
             };
         } else if (isWarning) {
             config = {
                 icon: 'warning',
-                statusTag: 'AVERTISSEMENT_LABO',
-                title: 'ATTENTION REQUIS',
-                badgeBg: 'bg-amber-100 text-amber-800 border-amber-300',
+                statusText: 'Attention',
+                themeBg: 'bg-amber-50 text-amber-700 border-amber-100',
                 dotBg: 'bg-amber-500',
                 topBorder: 'border-t-amber-500',
-                btnBg: 'bg-amber-700 hover:bg-amber-800 focus:ring-amber-500'
+                btnBg: 'bg-amber-600 hover:bg-amber-700 focus:ring-amber-400'
             };
         }
 
         Swal.fire({
             html: `
-                <div class="text-center pt-2">
-                    <!-- Badge technique de laboratoire -->
-                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[10px] font-mono font-semibold tracking-wider ${config.badgeBg} mb-3">
-                        <span class="w-1.5 h-1.5 rounded-full ${config.dotBg} animate-pulse"></span>
-                        <span>[ ${config.statusTag} ]</span>
+                <div class="text-center font-sans space-y-3 pt-2">
+                    <!-- En-tête institutionnel avec le véritable logo du CIRCB -->
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center overflow-hidden shadow-2xs border border-slate-200/80 p-0.5">
+                                <img src="{% static 'images/Logo-CIRCB.png' %}" alt="Logo CIRCB" class="w-full h-full object-contain">
+                            </div>
+                            <div class="text-left">
+                                <span class="block text-[10px] font-bold tracking-wider text-slate-400 uppercase">CIRCB · Plateforme LIMS</span>
+                                <span class="block text-xs font-bold text-slate-800">Notification Patient</span>
+                            </div>
+                        </div>
+                        <!-- Badge de statut doux -->
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border ${config.themeBg}">
+                            <span class="w-1.5 h-1.5 rounded-full ${config.dotBg}"></span>
+                            ${config.statusText}
+                        </span>
                     </div>
 
-                    <!-- Titre clinique -->
-                    <h3 class="text-base font-bold font-mono text-slate-900 uppercase tracking-tight">
-                        ${config.title}
-                    </h3>
-
-                    <!-- Message encapsulé dans un bloc 'résultat d'analyse' -->
-                    <div class="mt-3 p-3.5 bg-slate-50 rounded-lg border border-slate-200/80 text-xs font-sans text-slate-600 leading-relaxed text-left">
+                    <!-- Corps du message dans une carte douce et lisible -->
+                    <div class="p-3.5 bg-slate-50/70 rounded-xl border border-slate-100 text-xs text-slate-600 leading-relaxed text-left font-sans">
                         ${msg.text}
                     </div>
                 </div>
             `,
-            icon: config.icon,
-            confirmButtonText: "ACQUITTER",
+            icon: false,
+            confirmButtonText: "Compris",
             buttonsStyling: false,
             customClass: {
-                popup: `rounded-xl border border-slate-200 border-t-4 ${config.topBorder} shadow-xl p-5 bg-white max-w-md`,
-                icon: 'scale-75 my-0',
-                confirmButton: `w-full mt-4 px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-widest text-white ${config.btnBg} rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer shadow-sm`
+                popup: `rounded-2xl border border-slate-200/85 border-t-4 ${config.topBorder} shadow-xl p-5 bg-white max-w-sm`,
+                confirmButton: `w-full mt-2 px-4 py-2.5 text-xs font-semibold text-white ${config.btnBg} rounded-xl shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer`
             }
         });
     });
 });
-</script>
-<script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/serviceworker.js')
-                    .then(function(reg) { console.log('PWA Service Worker enregistré avec succès !'); })
-                    .catch(function(err) { console.error('Échec de l\'enregistrement du Service Worker PWA :', err); });
+
+// ==========================================
+// GESTIONNAIRE PWA AVANCÉ (Style DHIS2)
+// ==========================================
+
+let deferredPrompt;
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/serviceworker.js')
+            .then(function(reg) { 
+                console.log('%c[DHIS2 PWA]%c Service Worker actif & enregistré.', 'color: #1478c1; font-weight: bold;', 'color: inherit;'); 
+                
+                // Détecter si une mise à jour du Service Worker est disponible
+                reg.addEventListener('updatefound', () => {
+                    const newWorker = reg.installing;
+                    newWorker.addEventListener('change', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            showUpdateNotification(); // Notification pour rafraîchir l'app
+                        }
+                    });
+                });
+            })
+            .catch(function(err) { 
+                console.error('[DHIS2 PWA] Échec enregistrement Service Worker :', err); 
             });
-        }
-    </script>
+    });
+}
+
+// 1. Gestion dynamique de l'état Réseau (En ligne / Hors-ligne)
+window.addEventListener('online', updateNetworkStatus);
+window.addEventListener('offline', updateNetworkStatus);
+
+function updateNetworkStatus() {
+    const isOnline = navigator.onLine;
+    // Vous pouvez cibler un élément UI dédié pour afficher un badge "Hors-ligne"
+    console.log(isOnline ? '%c[PWA] Connexion rétablie' : '%c[PWA] Mode Hors-ligne activé', 'color: ' + (isOnline ? 'green' : 'orange'));
+}
+
+// 2. Interception de l'événement d'installation de la PWA
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // Rendre visible un bouton d'installation personnalisé dans votre interface si besoin
+    const installBtn = document.getElementById('pwa-install-btn');
+    if (installBtn) {
+        installBtn.classList.remove('hidden');
+        installBtn.addEventListener('click', () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('[PWA] Utilisateur a accepté l\'installation');
+                }
+                deferredPrompt = null;
+            });
+        });
+    }
+});
+</script>
     {%endblock%}
     
 </body>

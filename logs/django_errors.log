@@ -5454,3 +5454,909 @@ django.core.exceptions.FieldError: Cannot resolve keyword 'fosa' into field. Cho
 "GET /filter-stats/?fosa=HRE&periode_type=journalier&date_jour=2026-07-26 HTTP/1.1" 500 120271
 Internal Server Error: /ajouter_echantillon/
 "POST /ajouter_echantillon/ HTTP/1.1" 500 73
+Internal Server Error: /historique-fiches-echantillons/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 965, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/context.py", line 91, in __getitem__
+    raise KeyError(key)
+KeyError: 'fiches_historique'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 972, in _resolve_lookup
+    if isinstance(current, BaseContext) and getattr(
+                                            ~~~~~~~^
+        type(current), bit
+        ^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+AttributeError: type object 'RequestContext' has no attribute 'fiches_historique'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'fiches_historique'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1552, in historique_echantillon
+    return render(request, 'webpages/echantillonages/historique.html')
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [fiches_historique] in [{'True': True, 'False': False, 'None': None}, {}, {}]
+"GET /historique-fiches-echantillons/ HTTP/1.1" 500 212075
+Internal Server Error: /bordeaux-sortie/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1023, in bordeaux_sortie
+    fosas_niveau_3 = Structure.objects.filter(niv__rang=3)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1556, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1363, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1842, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'niv' into field. Choices are: children, date_creation, designation, fiches_districtuales, fiches_fosa, fiches_regionales, hierachy, hierachy_id, id, nom, parent, parent_id, patients_fosa
+"GET /bordeaux-sortie/ HTTP/1.1" 500 121332
+Internal Server Error: /historique-fiches-echantillons/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1588, in historique_echantillon
+    return render(request, 'webpages/echantillonages/historique.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 815, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaultfilters.py", line 789, in date
+    return formats.date_format(value, arg)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/utils/formats.py", line 155, in date_format
+    return dateformat.format(
+           ~~~~~~~~~~~~~~~~~^
+        value, get_format(format or "DATE_FORMAT", use_l10n=use_l10n)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/utils/dateformat.py", line 329, in format
+    return df.format(format_string)
+           ~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/utils/dateformat.py", line 45, in format
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: The format for date objects may not contain time-related format specifiers (found 'H').
+"GET /historique-fiches-echantillons/ HTTP/1.1" 500 213429
+Internal Server Error: /fiches-echantillons/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 108, in fiches_echantillons
+    return render(request, 'webpages/echantillonages/fiche_echantillons.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 815, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaultfilters.py", line 789, in date
+    return formats.date_format(value, arg)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/utils/formats.py", line 155, in date_format
+    return dateformat.format(
+           ~~~~~~~~~~~~~~~~~^
+        value, get_format(format or "DATE_FORMAT", use_l10n=use_l10n)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/utils/dateformat.py", line 329, in format
+    return df.format(format_string)
+           ~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/utils/dateformat.py", line 45, in format
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: The format for date objects may not contain time-related format specifiers (found 'H').
+"GET /fiches-echantillons/ HTTP/1.1" 500 237848
+Internal Server Error: /previsualisation_fiche_synthetique/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 135, in render
+    compiled_parent = self.get_parent(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 132, in get_parent
+    return self.find_template(parent, context)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 110, in find_template
+    template, origin = context.template.engine.find_template(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        template_name,
+        ^^^^^^^^^^^^^^
+        skip=history,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 163, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: dashbord_hosp.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1723, in previsualisation_fiche_synthetique
+    return render(request, 'webpages/previsualisation_fiche.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: dashbord_hosp.html
+"GET /previsualisation_fiche_synthetique/?csrfmiddlewaretoken=6vOTF86bfJLzxIK7uQ6yi10WYR1ZpW2HmKcuKjbPkYaBB3QVS5lnLqvfN4suqqxa&fosa_id=18&fosa=HD+FOUMBOT+%28NOUN%29&date_debut=2026-07-27&date_fin=2026-07-27&type_fiche=synthese&inclure_signature=1&format=pdf HTTP/1.1" 500 141559
+Internal Server Error: /previsualisation_fiche_synthetique/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 135, in render
+    compiled_parent = self.get_parent(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 132, in get_parent
+    return self.find_template(parent, context)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 110, in find_template
+    template, origin = context.template.engine.find_template(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        template_name,
+        ^^^^^^^^^^^^^^
+        skip=history,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 163, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: dashbord_hosp.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1723, in previsualisation_fiche_synthetique
+    return render(request, 'webpages/previsualisation_fiche.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: dashbord_hosp.html
+"GET /previsualisation_fiche_synthetique/?csrfmiddlewaretoken=6vOTF86bfJLzxIK7uQ6yi10WYR1ZpW2HmKcuKjbPkYaBB3QVS5lnLqvfN4suqqxa&fosa_id=18&fosa=HD+FOUMBOT+%28NOUN%29&date_debut=2026-07-27&date_fin=2026-07-27&type_fiche=synthese&inclure_signature=1&format=pdf HTTP/1.1" 500 141690
+Internal Server Error: /previsualisation_fiche_synthetique/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1735, in previsualisation_fiche_synthetique
+    return render(request, 'previsualisation_fiche.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: previsualisation_fiche.html
+"GET /previsualisation_fiche_synthetique/?csrfmiddlewaretoken=ct2AA45jZy4YpKKvo9gb3qVzzpXdybIEsIqbFfaX4Nt0t5QjMov0wPqSoCoIzFd7&fosa_id=3&fosa=CMA+AHALA+%28DS+EFOULAN%29&date_debut=2026-06-28&date_fin=2026-07-27&type_fiche=synthese&inclure_signature=1&format=pdf HTTP/1.1" 500 93244
+Internal Server Error: /modify-hierachy/2/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 135, in render
+    compiled_parent = self.get_parent(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 132, in get_parent
+    return self.find_template(parent, context)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 110, in find_template
+    template, origin = context.template.engine.find_template(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        template_name,
+        ^^^^^^^^^^^^^^
+        skip=history,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 163, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: webpages/config/details-periode.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1786, in ModifyHierachy
+    return render(request, template, context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: webpages/config/details-periode.html
+"GET /modify-hierachy/2/ HTTP/1.1" 500 136762
+Internal Server Error: /modify-hierachy/2/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 135, in render
+    compiled_parent = self.get_parent(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 132, in get_parent
+    return self.find_template(parent, context)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 110, in find_template
+    template, origin = context.template.engine.find_template(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        template_name,
+        ^^^^^^^^^^^^^^
+        skip=history,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 163, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: webpages/config/details-periode.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1786, in ModifyHierachy
+    return render(request, template, context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: webpages/config/details-periode.html
+"GET /modify-hierachy/2/ HTTP/1.1" 500 136762
+Internal Server Error: /modify-hierachy/2/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 135, in render
+    compiled_parent = self.get_parent(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 132, in get_parent
+    return self.find_template(parent, context)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 110, in find_template
+    template, origin = context.template.engine.find_template(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        template_name,
+        ^^^^^^^^^^^^^^
+        skip=history,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 163, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: webpages/dashboard_hosp.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1786, in ModifyHierachy
+    return render(request, template, context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: webpages/dashboard_hosp.html
+"GET /modify-hierachy/2/ HTTP/1.1" 500 135794
+Internal Server Error: /modify-hierachy/2/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 135, in render
+    compiled_parent = self.get_parent(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 132, in get_parent
+    return self.find_template(parent, context)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 110, in find_template
+    template, origin = context.template.engine.find_template(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        template_name,
+        ^^^^^^^^^^^^^^
+        skip=history,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 163, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: webpages/dashboard_hosp.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1786, in ModifyHierachy
+    return render(request, template, context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: webpages/dashboard_hosp.html
+"GET /modify-hierachy/2/ HTTP/1.1" 500 135794
+Internal Server Error: /modify-hierachy/2/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 135, in render
+    compiled_parent = self.get_parent(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 132, in get_parent
+    return self.find_template(parent, context)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 110, in find_template
+    template, origin = context.template.engine.find_template(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        template_name,
+        ^^^^^^^^^^^^^^
+        skip=history,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 163, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: webpages/dashboard_hosp.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1786, in ModifyHierachy
+    return render(request, template, context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: webpages/dashboard_hosp.html
+"GET /modify-hierachy/2/ HTTP/1.1" 500 135794
+Internal Server Error: /modifier-structure/4/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 135, in render
+    compiled_parent = self.get_parent(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 132, in get_parent
+    return self.find_template(parent, context)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 110, in find_template
+    template, origin = context.template.engine.find_template(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        template_name,
+        ^^^^^^^^^^^^^^
+        skip=history,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 163, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: webpages/dashbod_hosp.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1811, in UpdateStructure
+    return render(request, template, context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: webpages/dashbod_hosp.html
+"GET /modifier-structure/4/ HTTP/1.1" 500 145810
+Internal Server Error: /modifier-structure/4/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1811, in UpdateStructure
+    return render(request, template, context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 511, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/urls/base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/urls/resolvers.py", line 842, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'update-structure-data' not found. 'update-structure-data' is not a valid view function or pattern name.
+"GET /modifier-structure/4/ HTTP/1.1" 500 202083
+Internal Server Error: /imprimer_resultat_pdf/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1932, in imprimer_resultat_pdf
+    html_content = render_to_string("webpages/resultats/rapports/resultat_pdf.html", context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: webpages/resultats/rapports/resultat_pdf.html
+"GET /imprimer_resultat_pdf/ HTTP/1.1" 500 104830
+Internal Server Error: /modifier-fiche/66/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1951, in modifier_fiche
+    return render(request, 'webpages/echantillonages/edit-fiche.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 511, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/urls/base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/urls/resolvers.py", line 842, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'modifier_fiche_echantillon' not found. 'modifier_fiche_echantillon' is not a valid view function or pattern name.
+"GET /modifier-fiche/66/ HTTP/1.1" 500 191277
+Internal Server Error: /modifier-fiche/66/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1992, in modifier_fiche
+    'regions': Region.objects.all(),
+               ^^^^^^
+NameError: name 'Region' is not defined
+"GET /modifier-fiche/66/ HTTP/1.1" 500 72922
+Internal Server Error: /previsualisation_fiche_synthetique/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/GenesisLab/circb_projet/circb_app/views.py", line 1639, in previsualisation_fiche_synthetique
+    request.SESSION['fosa'] = fosa_id
+    ^^^^^^^^^^^^^^^
+AttributeError: 'WSGIRequest' object has no attribute 'SESSION'
+"GET /previsualisation_fiche_synthetique/?csrfmiddlewaretoken=X0yMbhqkOPBTF2e0KKT3a6PBe7fbPYraGZ1jvUWZZ06juTm8wPofmCpO91An6sNQ&fosa_id=10&fosa=HD+MEIGANGA+%28Meiganga%29&date_debut=2026-07-28&date_fin=2026-07-28&type_fiche=synthese&format=pdf HTTP/1.1" 500 76218

@@ -13,16 +13,18 @@
         body {
             font-family: Helvetica, Arial, sans-serif;
             font-size: 7.5pt;
-            color: #000000;
+            color: #111111;
             margin: 0;
             padding: 0;
+            background-color: #ffffff;
         }
 
-        /* GRAND CADRE NOIR GLOBAL */
+        /* GRAND CADRE NOIR GLOBAL (Épuré en épaisseur) */
         .outer-frame {
-            border: 1px solid #000000;
+            border: 1.5px solid #222222;
             padding: 6px 8px;
             width: 100%;
+            box-sizing: border-box;
         }
 
         /* TABLES ET CELLULES */
@@ -37,13 +39,15 @@
         }
 
         .dotted-line {
-            border-bottom: 1px dotted #000000;
+            border-bottom: 1px dotted #555555;
             width: 60%;
             margin: 2px auto;
         }
 
+        /* BOÎTE TITRE CENTRAL (Suppression du double cadre redondant) */
         .title-box {
-            border: 1px solid #000000;
+            border: 1px solid #333333;
+            background-color: #fcfcfc;
             padding: 3px 8px;
             font-size: 9pt;
             font-weight: bold;
@@ -51,35 +55,39 @@
             margin-top: 3px;
         }
 
-        /* CELLULES D'INFORMATIONS */
+        /* CELLULES D'INFORMATIONS (Harmonisées et plus aérées) */
         .box-cell {
-            border: 1px solid #000000;
-            padding: 3px 5px;
+            border: 1px solid #b0b0b0;
+            background-color: #fafafa;
+            padding: 4px 6px;
             font-size: 7.5pt;
             vertical-align: top;
         }
 
         .box-cell strong {
             font-weight: bold;
+            color: #222222;
         }
 
-        /* TABLEAU DES RÉSULTATS */
+        /* TABLEAU DES RÉSULTATS (Épuré des doubles bordures internes) */
         .results-table {
-            border: 1px solid #000000;
+            border: 1px solid #333333;
             margin-top: 6px;
             margin-bottom: 8px;
         }
 
         .results-table th, .results-table td {
-            border: 1px solid #000000;
-            padding: 4px;
+            border: 1px solid #cccccc;
+            padding: 4.5px;
             text-align: center;
             vertical-align: middle;
             font-size: 7.5pt;
         }
 
         .results-table th {
+            background-color: #f2f2f2;
             font-weight: bold;
+            color: #111111;
         }
     </style>
 </head>
@@ -92,20 +100,17 @@
         <table class="header-table" style="margin-bottom: 6px;">
             <tr>
                 <!-- GAUCHE : MINISTÈRE -->
-                <td style="width: 32%; font-weight: bold; font-size: 7.5pt;">
+                <td style="width: 32%; font-weight: bold; font-size: 7.5pt; text-align: left;">
                     MINISTERE DE LA SANTE PUBLIQUE
-                    <div class="dotted-line"></div>
+                    <div class="dotted-line" style="margin: 2px 0 2px 0;"></div>
                     <span style="font-weight: normal; font-size: 7pt;">DIRECTION DE LA LUTTE CONTRE LA MALADIE</span>
                 </td>
                 
                 <!-- CENTRE : LOGO ET TITRE -->
                 <td style="width: 36%;">
                     {% if logo_base64 %}
-                        <img src="data:image/png;base64,{{ logo_base64 }}" style="height: 26px; width: auto;" alt="Logo CIRCB"><br>
+                        <img src="data:image/png;base64,{{ logo_base64 }}" style="height: 34px; width: auto;" alt="Logo CIRCB"><br>
                     {% endif %}
-                    <div style="font-size: 6pt; font-weight: bold;">CENTRE INTERNATIONAL DE REFERENCE "CHANTAL BIYA"</div>
-                    <div style="font-size: 5pt; margin-bottom: 2px;">POUR LA RECHERCHE SUR LA PREVENTION ET LA PRISE EN CHARGE DU VIH/SIDA</div>
-                    
                     <div class="title-box">
                         FICHE DE RESULTAT<br>
                         <span style="font-size: 7pt; font-weight: normal;">(Diagnostic précoce du VIH-1)</span>
@@ -113,7 +118,7 @@
                 </td>
                 
                 <!-- DROITE : RÉPUBLIQUE -->
-                <td style="width: 32%; font-weight: bold; font-size: 7.5pt;">
+                <td style="width: 32%; font-weight: bold; font-size: 7.5pt; text-align: right;">
                     REPUBLIQUE DU CAMEROUN<br>
                     <span style="font-weight: normal; font-size: 7pt;">Paix - Travail - Patrie</span>
                 </td>
@@ -179,14 +184,14 @@
                 <td style="padding-bottom: 4px;">
                     <div class="box-cell">
                         <strong>Code de l'enfant :</strong><br>
-                        {{ resultat.echantillon.enfant.code}}
+                        {{ resultat.echantillon.enfant.code }}
                     </div>
                 </td>
                 <td></td>
                 <td style="padding-bottom: 4px;">
                     <div class="box-cell">
                         <strong>Formation sanitaire :</strong><br>
-                       {{ resultat.echantillon.fiche.fosa.nom|default:"NON DEFINI" }}
+                        {{ resultat.echantillon.fiche.fosa.nom|default:"NON DEFINI" }}
                     </div>
                 </td>
             </tr>
@@ -201,7 +206,7 @@
         <table class="results-table">
             <thead>
                 <tr>
-                    <th colspan="4" style="font-size: 8.5pt; padding: 4px;">
+                    <th colspan="4" style="font-size: 8.5pt; padding: 4px; background-color: #eaeaea;">
                         RESULTATS
                     </th>
                 </tr>
@@ -243,7 +248,7 @@
         </table>
 
         <!-- DATE D'IMPRESSION -->
-        <div style="font-size: 6.5pt;">
+        <div style="font-size: 6.5pt; color: #555555;">
             Date impression {{ date_impression|date:"d/m/Y"|default:"29/05/2026" }}
         </div>
 

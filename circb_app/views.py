@@ -65,6 +65,7 @@ def authentification(request):
 def logout_view(request):
    
     logout(request)
+    request.session.flush()
     messages.info(request, "Vous avez été déconnecté avec succès.")
     return redirect('/')  
 
@@ -98,14 +99,18 @@ def fiches_echantillons(request):
         'regions':Structure.objects.filter(parent__isnull=True).order_by('nom'),
         'transporteurs':Transporteur.objects.all().order_by('nom'),
         'moyens_transport':MoyenTransport.objects.all().order_by('nom'),
-        'fiches':FicheEchantillon.objects.order_by('-id'),
+        'fiches':FicheEchantillon.objects.filter(status=True).order_by('-id'),
         'dernier_numero':dernier_numero,
-        'prochain_numero': prochain_numero
+        'prochain_numero': prochain_numero,
+        'fichescount':FicheEchantillon.objects.filter(status=False).count(),
+        'fiche_enable':FicheEchantillon.objects.filter(status=False)[:8],
         
     }
     return render(request, 'webpages/echantillonages/fiche_echantillons.html', context)
 @login_required(login_url='/')
 def echantillons(request, id):
+    dernier_numero= Echantillon.objects.order_by('-id').first()
+    prochain_numero= (dernier_numero.id + 1) if dernier_numero else 1
     context={
         'fiches_echantillon':FicheEchantillon.objects.get(id=id),
         'tests':Test.objects.all().order_by('nom'),
@@ -116,7 +121,8 @@ def echantillons(request, id):
         'portes_entree':PorteEntree.objects.all().order_by('nom'),
         'protocole_ptme':ProtocolePTME.objects.all().order_by('nom'),
         'profilaxie_arv':ProfilaxieArv.objects.all(),
-        'mode_accouchement': ModeAccouchement.objects.all()
+        'mode_accouchement': ModeAccouchement.objects.all(),
+        'prochain_numero':prochain_numero
     }
     return render(request, 'webpages/echantillonages/echantillons.html', context)
 @login_required(login_url='/')
@@ -127,10 +133,11 @@ def echantillonages(request):
         'echantillons__mere',
         'echantillons__resultats__test',
         'echantillons__resultats__resultat_pcr'
-    ).order_by('-id')[:2]
+    ).order_by('-id')
 
     context = {
         'fiches': fiches,
+        
     }
     return render(request, 'webpages/echantillonages/echantillonages.html', context)
 
@@ -291,6 +298,8 @@ def enregistrer_fiche_echantillon(request):
         if not all(required_fields):
             return JsonResponse({'success': False, 'errors': 'Champs obligatoires manquants.'}, status=400)
 
+        
+
         try:
             # 4. Création de la fiche
             # Note: On passe l'objet User (receptioniste) directement si c'est une ForeignKey
@@ -445,6 +454,10 @@ def ajouter_echantillon(request):
                     # -------------------------------------------------------------
                     # 4. ENREGISTREMENT DE L'ÉCHANTILLON
                     # -------------------------------------------------------------
+                    ech = Echantillon.objects.all()
+                    for echs in ech:
+                        if echs.fiche.nombre_echantillon == fiche.nombre_echantillon:
+                            fiche.status = False
                     echantillon = Echantillon.objects.create(
                         code = request.POST.get('code_echantillon'),
                         fiche=fiche,
@@ -490,6 +503,12 @@ def ajouter_echantillon(request):
                         observation=request.POST.get('observation', '').strip(),
                         date_enregistrement = datetime.now()
                     )
+                    nombre_actuel = Echantillon.objects.filter(fiche=fiche).count()
+
+                    # Si le nombre d'échantillons atteint ou dépasse la limite de la fiche
+                    if fiche.nombre_echantillon and nombre_actuel >= fiche.nombre_echantillon:
+                        fiche.status = False
+                        fiche.save()
                 
                 return JsonResponse({
                     'success': True, 
@@ -886,43 +905,6 @@ from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 
 
-def imprimer_resultat_pdf(request, resultat_id):
-    resultat = get_object_or_404(Resultat, id=resultat_id)
-
-    # 1. Récupération et conversion du logo en Base64
-    logo_base64 = ""
-    # Mettez le nom exact de votre fichier (vérifiez la casse : Logo-CIRCB.png ou logo_circb.png)
-    logo_path = finders.find("images/Logo-CIRCB.png") or finders.find(
-        "images/logo_circb.png"
-    )
-
-    if logo_path and os.path.exists(logo_path):
-        with open(logo_path, "rb") as image_file:
-            logo_base64 = base64.b64encode(image_file.read()).decode("utf-8")
-
-    # 2. Transmission au template
-    context = {
-        "resultat": resultat,
-        "logo_base64": logo_base64,
-    }
-
-    html_content = render_to_string(
-        "webpages/resultats/resultat_pdf.html", context
-    )
-
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = (
-        f'inline; filename="Resultat_{resultat.id}.pdf"'
-    )
-
-    pisa_status = pisa.pisaDocument(
-        io.BytesIO(html_content.encode("utf-8")), response, encoding="utf-8"
-    )
-
-    if pisa_status.err:
-        return HttpResponse("Erreur lors de la compilation du PDF.", status=500)
-
-    return response
 
 
 def resultats_individuel(request, id):
@@ -1008,9 +990,29 @@ def resultats_collectifs(request):
 
     return response
 def bordeaux_sortie(request):
-    return render(request, 'webpages/borderaux.html')
+    fosas_niveau_3 = Structure.objects.filter(hierachy__rang=2)
+    context={
+        'fosas_niveau_3':fosas_niveau_3
+    }
+    return render(request, 'webpages/borderaux.html', context)
 
-
+def api_rechercher_fosa(request):
+    query = request.GET.get('q', '').strip()
+    results = []
+    
+    # Lancement de la recherche à partir de 2 caractères minimum
+    if len(query) >= 2:
+        # Filtrage par rang 3 et correspondance sur le nom (limité à 20 résultats max pour la performance)
+        fosas = Structure.objects.filter(hierachy__rang=2, nom__icontains=query)[:20]
+        
+        for f in fosas:
+            parent_nom = f.parent.nom if f.parent else "District N/A"
+            results.append({
+                'id': f.id,
+                'text': f"{f.nom} ({parent_nom})"
+            })
+            
+    return JsonResponse({'results': results})
 
 def supprimer_fiche(request, id):
     # 1. Récupère la fiche ou renvoie une erreur 404 proprement si l'ID n'existe pas
@@ -1493,7 +1495,8 @@ def save_plage(request):
                             'test_id': test_id,
                             'resultat_pcr_id': resultat_pcr_id,
                             'responsable': request.user,
-                            'date_resultat': datetime.now()
+                            'date_resultat': datetime.now(),
+                            
                         }
                     )
                     
@@ -1543,8 +1546,464 @@ def save_plage(request):
         'exclure': exclure_raw,
     }
     messages.success(request, 'Resultats Valides avec succes')
-    return render(request, 'webpages/resultats/plages.html', context)
+    return redirect('/resultats/')
+
+
+
+def historique_echantillon(request):
+    fiche_expedition= FicheEchantillon.objects.filter(status=False)
+    context={
+        'fiche_expedition':fiche_expedition
+    }
+    return render(request, 'webpages/echantillonages/historique.html', context)
 
 
 
 
+
+def line_delete_structure(request, id):
+    # 1. Récupération de l'objet
+    structure = get_object_or_404(Structure, id=int(id))
+    
+    # 2. Vérification des relations avec les autres entités métiers
+    # On exclut Structure d'ici pour traiter son arborescence proprement après
+    models_to_check = [Echantillon]
+    can_delete = True
+
+    for model in models_to_check:
+        if model.objects.filter(fosa=structure).exists():
+            can_delete = False
+            break
+
+    # 3. Vérification de l'arborescence (Si la structure est le PARENT d'autres sous-structures)
+ 
+    if can_delete:
+        has_children = Structure.objects.filter(parent=structure).exists()
+        if has_children:
+            can_delete = False
+            messages.error(
+                request, 
+                f"'{structure.nom}' ne peut pas être supprimée car elle est le parent d'autres sous-structures."
+            )
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+
+    # 4. Action de suppression ou message d'erreur général
+    if can_delete:
+        nom_structure = structure.nom  # Sauvegarde du nom avant suppression
+        structure.delete()
+        messages.success(request, f"La structure '{nom_structure}' a été supprimée avec succès.")
+    else:
+        messages.error(
+            request, 
+            f"Impossible de supprimer '{structure.nom}' : elle est liée à des opérations ou des valeurs d'indicateurs."
+        )
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+
+
+def delete_hierachie(request, id):
+    # 1. Récupération sécurisée de l'objet (renvoie une erreur 404 si l'ID n'existe pas)
+    hierachie = get_object_or_404(Structure_Hierachy, id=int(id))
+
+    # 2. Vérification s'il existe des structures (FOSAS, districts, etc.) liées à cette hiérarchie
+    if Structure.objects.filter(hierachy=hierachie).exists():
+        # Si oui, on refuse la suppression pour éviter les données orphelines
+        messages.error(
+            request, 
+            f'Impossible de supprimer "{hierachie.nom}" car elle est actuellement liée à des structures existantes.'
+        )
+    else:
+        # Si aucune structure n'est liée, on supprime proprement
+        hierachie.delete()
+        messages.success(request, f'La hiérarchie "{hierachie.nom}" a été supprimée avec succès.')
+
+    # 3. Redirection vers la page précédente ou la liste des hiérarchies
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+
+
+
+from django.shortcuts import render
+from datetime import date
+from .models import Echantillon
+
+def previsualisation_fiche_synthetique(request):
+    
+    fosa_id = request.GET.get('fosa_id')
+    date_debut = request.GET.get('date_debut')
+    date_fin = request.GET.get('date_fin')
+    
+    request.session['fosa'] = fosa_id
+    request.session['date_debut'] = date_debut
+    request.session['date_fin'] = date_fin
+  
+    
+     
+
+    # ÉTAPE 1 : Filtrer pour trouver les enfants concernés par la période/FOSA
+    base_queryset = Echantillon.objects.all()
+
+    if fosa_id and fosa_id != 'ALL':
+        base_queryset = base_queryset.filter(fiche__fosa_id=fosa_id)
+
+    # Filtrage flexible par date (optionnel : gère début seul, fin seule, ou les deux)
+    if date_debut:
+        base_queryset = base_queryset.filter(date_prelevement__gte=date_debut)
+    if date_fin:
+        base_queryset = base_queryset.filter(date_prelevement__lte=date_fin)
+
+    enfants_ids = base_queryset.exclude(enfant__isnull=True).values_list('enfant_id', flat=True).distinct()
+    echantillons_sans_enfant = base_queryset.filter(enfant__isnull=True).values_list('id', flat=True)
+
+    # ÉTAPE 2 : Récupérer TOUS les échantillons de ces enfants
+    queryset = Echantillon.objects.select_related(
+        'enfant', 'mere', 'fiche__fosa', 'test', 'resultat_pcr'
+    ).prefetch_related('resultats__test', 'resultats__resultat_pcr').filter(
+        enfant_id__in=enfants_ids
+    ) | Echantillon.objects.select_related(
+        'enfant', 'mere', 'fiche__fosa', 'test', 'resultat_pcr'
+    ).prefetch_related('resultats__test', 'resultats__resultat_pcr').filter(
+        id__in=echantillons_sans_enfant
+    )
+
+    fosa_nom_affiche = "Toutes les Formations Sanitaires"
+    if fosa_id and fosa_id != 'ALL':
+        premier_ech = base_queryset.first()
+        if premier_ech and premier_ech.fiche and premier_ech.fiche.fosa:
+            fosa_nom_affiche = premier_ech.fiche.fosa.nom
+
+    # ÉTAPE 3 : Grouper les échantillons par Enfant
+    patients_samples = {}
+    patients_info = {}
+
+    for ech in queryset:
+        cle_pivot = ech.enfant.id if ech.enfant else f"ech_{ech.id}"
+        
+        if cle_pivot not in patients_info:
+            patients_info[cle_pivot] = {
+                'code': ech.enfant.code if (ech.enfant and hasattr(ech.enfant, 'code')) else ech.code,
+                'patient_nom': f"{getattr(ech.enfant, 'nom', '')} {getattr(ech.enfant, 'prenom', '')}".strip() if ech.enfant else "Non renseigné",
+                'date_naissance': getattr(ech.enfant, 'date_naissance', 'N/A'),
+                'mere_nom': f"{getattr(ech.mere, 'nom', '')} {getattr(ech.mere, 'prenom', '')}".strip() if ech.mere else "N/A",
+                'mere_contact': getattr(ech.mere, 'contact', 'N/A'),
+            }
+        
+        if cle_pivot not in patients_samples:
+            patients_samples[cle_pivot] = []
+        
+        patients_samples[cle_pivot].append(ech)
+
+    # ÉTAPE 4 : Pour chaque enfant, mapper les prélèvements selon leur attribut 'ordre' (PCR I, II, III)
+    lignes_collectives = []
+
+    for cle_pivot, echos in patients_samples.items():
+        row_data = patients_info[cle_pivot].copy()
+        row_data.update({
+            'pcr1': {'date_prel': '-', 'statut': '-', 'code_statut': '', 'date_res': '-'},
+            'pcr2': {'date_prel': '-', 'statut': '-', 'code_statut': '', 'date_res': '-'},
+            'pcr3': {'date_prel': '-', 'statut': '-', 'code_statut': '', 'date_res': '-'},
+        })
+
+        # Affectation directe basée sur le champ 'ordre' de l'échantillon
+        for ech in echos:
+            statut_nom = ech.resultat_pcr.nom if ech.resultat_pcr else "EN ATTENTE"
+            statut_code = ech.resultat_pcr.code if ech.resultat_pcr else ""
+            date_res = "-"
+
+            # Vérification table secondaire si besoin
+            res_associe = ech.resultats.first()
+            if res_associe:
+                if res_associe.resultat_pcr:
+                    statut_nom = res_associe.resultat_pcr.nom
+                    statut_code = res_associe.resultat_pcr.code
+                date_res = res_associe.date_resultat
+
+            donnees_pcr = {
+                'date_prel': ech.date_prelevement,
+                'statut': statut_nom,
+                'code_statut': statut_code,
+                'date_res': date_res
+            }
+
+            # On répartit selon la valeur explicite de 'ordre' (1, 2 ou 3)
+            if ech.ordre == 1:
+                row_data['pcr1'] = donnees_pcr
+            elif ech.ordre == 2:
+                row_data['pcr2'] = donnees_pcr
+            elif ech.ordre == 3:
+                row_data['pcr3'] = donnees_pcr
+
+        lignes_collectives.append(row_data)
+
+    context = {
+        'lignes_collectives': lignes_collectives,
+        'date_debut': date_debut or '',
+        'date_fin': date_fin or '',
+        'fosa_nom_affiche': fosa_nom_affiche,
+    }
+    
+    return render(request, 'webpages/previsualisation_fiche.html', context)
+def ModifyHierachy(request, id):
+    template = 'webpages/config/modify-hierachy.html'
+    hierachie = Structure_Hierachy.objects.get(id=int(id))
+    context ={
+    'hierachie':hierachie
+
+    }
+    return render(request, template, context)
+
+
+
+
+
+
+def UpdateStructure(request, id):
+    # 1. Récupération du contexte de base (contient 'actual_institution')
+    
+    template = 'webpages/config/update-structure.html'
+    
+    # 2. Récupération sécurisée de la structure à modifier
+    structure = get_object_or_404(Structure, id=int(id))
+ 
+    
+    # 3. Enrichissement du contexte sans écraser le contenu de basis(request)
+    context={
+        'structure': structure,
+        # Récupère tous les niveaux hiérarchiques de l'institution actuelle
+        'hierachie': Structure_Hierachy.objects.order_by('rang'),
+        # REQUIS PAR LE TEMPLATE : Toutes les structures pour la liste des parents potentiels
+        'all_structures': Structure.objects.all()
+    }
+    
+    return render(request, template, context)
+
+
+
+
+def UpdateDataStructure(request, id):
+    if request.method == 'POST':
+        # 1. Récupération sécurisée de la structure à modifier
+        structure = get_object_or_404(Structure, id=int(id))
+        
+        # 2. Récupération des données du formulaire POST
+        parent_id = request.POST.get('parent_id')
+        level_id = request.POST.get('level_id')
+        nom = request.POST.get('nom')
+        designation = request.POST.get('designation')
+        
+        try:
+            # 3. Mise à jour du Niveau (Hierarchy) - Obligatoire
+            if level_id:
+                structure.hierachy = get_object_or_404(Structure_Hierachy, id=int(level_id))
+            
+            # 4. Mise à jour du Parent - Optionnel (vide = unité racine)
+            if parent_id and int(parent_id) != structure.id:
+                structure.parent = get_object_or_404(Structure, id=int(parent_id))
+            else:
+                structure.parent = None  # Devient une unité racine
+            
+            # 5. Mise à jour des champs textuels
+            structure.nom = nom
+            structure.designation = designation
+            
+            # 6. Enregistrement en base de données
+            structure.save()
+            
+            # 7. Message de succès et redirection
+            messages.success(request, f"L'unité '{nom}' a été modifiée avec succès.")
+            return redirect('/structures/') # Ajustez l'URL de redirection selon vos besoins
+            
+        except Exception as e:
+            # Gestion des erreurs imprévues
+            messages.error(request, f"Une erreur est survenue lors de la modification : {str(e)}")
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+            
+    # Si la méthode n'est pas POST, on redirige vers la page précédente
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+def imprimer_resultat_pdf(request):
+    # 1. Récupération des paramètres de filtrage GET
+    fosa_id = request.session.get('fosa')
+    date_debut =  request.session.get('date_debut')
+    date_fin =  request.session.get('date_fin')
+      
+    # 2. Récupération et conversion du logo en Base64
+    logo_base64 = ""
+    logo_path = finders.find("images/Logo-CIRCB.png") or finders.find("images/logo_circb.png")
+
+    if logo_path and os.path.exists(logo_path):
+        with open(logo_path, "rb") as image_file:
+            logo_base64 = base64.b64encode(image_file.read()).decode("utf-8")
+
+    # 3. ÉTAPE 1 : Filtrer pour trouver les enfants concernés par la période/FOSA
+    base_queryset = Echantillon.objects.all()
+
+    if fosa_id and fosa_id != 'ALL':
+        base_queryset = base_queryset.filter(fiche__fosa_id=fosa_id)
+
+    if date_debut:
+        base_queryset = base_queryset.filter(date_prelevement__gte=date_debut)
+    if date_fin:
+        base_queryset = base_queryset.filter(date_prelevement__lte=date_fin)
+
+    enfants_ids = base_queryset.exclude(enfant__isnull=True).values_list('enfant_id', flat=True).distinct()
+    echantillons_sans_enfant = base_queryset.filter(enfant__isnull=True).values_list('id', flat=True)
+
+    # 4. ÉTAPE 2 : Récupérer TOUS les échantillons de ces enfants
+    queryset = Echantillon.objects.select_related(
+        'enfant', 'mere', 'fiche__fosa', 'test', 'resultat_pcr'
+    ).prefetch_related('resultats__test', 'resultats__resultat_pcr').filter(
+        enfant_id__in=enfants_ids
+    ) | Echantillon.objects.select_related(
+        'enfant', 'mere', 'fiche__fosa', 'test', 'resultat_pcr'
+    ).prefetch_related('resultats__test', 'resultats__resultat_pcr').filter(
+        id__in=echantillons_sans_enfant
+    )
+
+    fosa_nom_affiche = "Toutes les Formations Sanitaires"
+    if fosa_id and fosa_id != 'ALL':
+        premier_ech = base_queryset.first()
+        if premier_ech and premier_ech.fiche and premier_ech.fiche.fosa:
+            fosa_nom_affiche = premier_ech.fiche.fosa.nom
+
+    # 5. ÉTAPE 3 : Grouper les échantillons par Enfant
+    patients_samples = {}
+    patients_info = {}
+
+    for ech in queryset:
+        cle_pivot = ech.enfant.id if ech.enfant else f"ech_{ech.id}"
+        
+        if cle_pivot not in patients_info:
+            patients_info[cle_pivot] = {
+                'code': ech.enfant.code if (ech.enfant and hasattr(ech.enfant, 'code')) else ech.code,
+                'patient_nom': f"{getattr(ech.enfant, 'nom', '')} {getattr(ech.enfant, 'prenom', '')}".strip() if ech.enfant else "Non renseigné",
+                'date_naissance': getattr(ech.enfant, 'date_naissance', 'N/A'),
+                'mere_nom': f"{getattr(ech.mere, 'nom', '')} {getattr(ech.mere, 'prenom', '')}".strip() if ech.mere else "N/A",
+                'mere_contact': getattr(ech.mere, 'contact', 'N/A'),
+            }
+        
+        if cle_pivot not in patients_samples:
+            patients_samples[cle_pivot] = []
+        
+        patients_samples[cle_pivot].append(ech)
+
+    # 6. ÉTAPE 4 : Mapper les prélèvements selon leur attribut 'ordre' (PCR I, II, III)
+    lignes_collectives = []
+
+    for cle_pivot, echos in patients_samples.items():
+        row_data = patients_info[cle_pivot].copy()
+        row_data.update({
+            'pcr1': {'date_prel': '-', 'statut': '-', 'code_statut': '', 'date_res': '-'},
+            'pcr2': {'date_prel': '-', 'statut': '-', 'code_statut': '', 'date_res': '-'},
+            'pcr3': {'date_prel': '-', 'statut': '-', 'code_statut': '', 'date_res': '-'},
+        })
+
+        for ech in echos:
+            statut_nom = ech.resultat_pcr.nom if ech.resultat_pcr else "EN ATTENTE"
+            statut_code = ech.resultat_pcr.code if ech.resultat_pcr else ""
+            date_res = "-"
+
+            res_associe = ech.resultats.first()
+            if res_associe:
+                if res_associe.resultat_pcr:
+                    statut_nom = res_associe.resultat_pcr.nom
+                    statut_code = res_associe.resultat_pcr.code
+                date_res = res_associe.date_resultat
+
+            donnees_pcr = {
+                'date_prel': ech.date_prelevement,
+                'statut': statut_nom,
+                'code_statut': statut_code,
+                'date_res': date_res
+            }
+
+            if ech.ordre == 1:
+                row_data['pcr1'] = donnees_pcr
+            elif ech.ordre == 2:
+                row_data['pcr2'] = donnees_pcr
+            elif ech.ordre == 3:
+                row_data['pcr3'] = donnees_pcr
+
+        lignes_collectives.append(row_data)
+
+    # 7. Transmission au contexte complet du PDF
+    context = {
+        'lignes_collectives': lignes_collectives,
+        'date_debut': date_debut or '',
+        'date_fin': date_fin or '',
+        'fosa_nom_affiche': fosa_nom_affiche,
+        'logo_base64': logo_base64,
+    }
+
+    html_content = render_to_string("webpages/rapports/resultat_pdf.html", context)
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'inline; filename="Resultat.pdf"'
+
+    pisa_status = pisa.pisaDocument(
+        io.BytesIO(html_content.encode("utf-8")), response, encoding="utf-8"
+    )
+
+    if pisa_status.err:
+        return HttpResponse("Erreur lors de la compilation du PDF.", status=500)
+
+    return response
+
+
+def modifier_fiche_echantillon(request, id):
+    fiche = get_object_or_404(FicheEchantillon, id=id)
+    
+    if request.method == 'POST':
+        try:
+            # Récupération et mise à jour des champs de la fiche
+            fiche.date_enregistrement = request.POST.get('date_enregistrement')
+            
+            # Localisation (Assurez-vous que les foreignkeys s'attachent par ID)
+            fosa_id = request.POST.get('fosa')
+            if fosa_id:
+                fiche.fosa_id = fosa_id
+                
+            fiche.expediteur = request.POST.get('expediteur')
+            fiche.date_expedition = request.POST.get('date_expedition')
+            fiche.nombre_echantillon = request.POST.get('nombre_echantillon')
+            
+            transporteur_id = request.POST.get('transporteur')
+            if transporteur_id:
+                fiche.transporteur_id = transporteur_id
+                
+            moyen_id = request.POST.get('moyen_transport')
+            if moyen_id:
+                fiche.moyen_transport_id = moyen_id
+                
+            fiche.date_reception = request.POST.get('date_reception')
+            fiche.date_entree_labo = request.POST.get('date_entree_labo')
+            fiche.observation = request.POST.get('observation')
+            
+            fiche.save()
+            
+            messages.success(request, f"La fiche d'expédition {fiche.code} a été mise à jour avec succès.")
+            return redirect('nom_de_votre_liste_fiches') # Remplacez par le nom de votre route de redirection
+            
+        except Exception as e:
+            messages.error(request, f"Erreur lors de la modification : {stratif(e) if 'stratif' in globals() else e}")
+            
+    return redirect('modifier_fiche', id=fiche.id)
+
+
+def modifier_fiche(request, id):
+    fiche = get_object_or_404(FicheEchantillon, id=id)
+    
+    context = {
+        'fiche': fiche,
+        'regions': Structure.objects.filter(parent__isnull=True),
+        'transporteurs': Transporteur.objects.all(), # Adaptez selon vos modèles réels
+        'moyens_transport': MoyenTransport.objects.all(), # Adaptez selon vos modèles réels
+    }
+    return render(request, 'webpages/echantillonages/edit-fiche.html', context)

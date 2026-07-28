@@ -1,0 +1,248 @@
+{% extends '../dashbord_hosp.html' %}
+
+{% block main %}
+<!-- Conteneur des notifications Toast -->
+<div id="toast-container" class="fixed top-20 right-6 z-[9999] flex flex-col gap-2 pointer-events-none"></div>
+
+<main class="flex-1 h-full min-h-0 overflow-y-auto bg-[#f4f6f8] text-slate-800 w-full font-sans antialiased selection:bg-[#1478c1] selection:text-white">
+    <div class="max-w-[1200px] mx-auto p-3 sm:p-5 space-y-4">
+        
+        <!-- ================================================================= -->
+        <!-- 1. EN-TÊTE INSTITUTIONNEL DHIS2                                   -->
+        <!-- ================================================================= -->
+        <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+            <div class="bg-[#1d5288] text-white px-4 py-2 flex items-center justify-between text-xs font-medium">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-sky-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                    </svg>
+                    <span class="font-bold tracking-wide uppercase font-mono text-[11px]">DHIS2 LIMS Tracker</span>
+                    <span class="text-sky-200/40">|</span>
+                    <span class="text-sky-100">Modification Fiche N° 4 · Formulaire d'Expédition</span>
+                </div>
+                <div class="flex items-center gap-2 font-mono text-[11px]">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                    <span>Mode Édition</span>
+                </div>
+            </div>
+
+            <div class="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white">
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                        Modification de la Fiche d'Expédition
+                    </h1>
+                    <p class="text-xs text-slate-500 mt-0.5 font-mono">Edit sample delivery record (Form 4)</p>
+                </div>
+                <button type="button" onclick="window.history.back()" class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1.5 rounded border border-slate-300 transition-colors cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+                    Retour
+                </button>
+            </div>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- 2. FORMULAIRE PRINCIPAL (ACTION POINTE VERS LA VUE DE MODIFICATION)-->
+        <!-- ================================================================= -->
+        <form method="POST" action="{% url 'modifier_fiche_echantillon' fiche.id %}" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- SECTEUR A : HEADER METADATA -->
+            <div class="bg-white border border-slate-200 rounded-md p-4 shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    
+                    <div class="md:col-span-7 relative bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 border border-amber-800 rounded-md p-3.5 text-white overflow-hidden shadow-md flex items-center justify-between gap-3">
+                        <div class="space-y-1.5 z-10 w-full">
+                            <label for="code" class="text-[10px] font-black text-amber-100 uppercase tracking-widest font-mono">
+                                Code Fiche Échantillon (Non modifiable)
+                            </label>
+                            <div class="flex items-center gap-3">
+                                <input type="text" id="code" name="code" readonly 
+                                       value="{{ fiche.code }}"
+                                       class="font-mono text-xl sm:text-2xl font-black text-white bg-transparent border-none p-0 tracking-widest focus:outline-none w-full cursor-default">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date d'enregistrement -->
+                    <div class="md:col-span-5 space-y-1">
+                        <label for="date_enregistrement" class="block text-xs font-bold text-slate-700">
+                            Date d'enregistrement <span class="text-rose-600">*</span>
+                        </label>
+                        <input type="date" id="date_enregistrement" name="date_enregistrement" required 
+                               value="{{ fiche.date_enregistrement|date:'Y-m-d' }}"
+                               class="w-full font-mono text-xs font-bold text-slate-800 bg-slate-50 border border-slate-300 rounded px-3 py-2.5 focus:bg-white focus:outline-none focus:border-[#1478c1]">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- SECTION 1 : LOCALISATION SANITAIRE -->
+            <div class="bg-white border border-slate-200 rounded-md p-4 shadow-sm space-y-3">
+                <div class="flex items-center gap-2 pb-2 border-b border-slate-200 text-[#1d5288]">
+                    <span class="w-2.5 h-2.5 bg-[#1478c1] rounded-full"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider font-mono">01. Unité d'Organisation / Localisation Sanitaire</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Région <span class="text-rose-600">*</span></label>
+                        <select name="region" id="select-region" required class="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded px-2.5 py-2 cursor-pointer">
+                            <option value="">-- Sélectionner Région --</option>
+                            {% for r in regions %} 
+                                <option value="{{ r.id }}" {% if fiche.fosa.district.region.id == r.id %}selected{% endif %}>{{ r.nom }}</option> 
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">District de Santé <span class="text-rose-600">*</span></label>
+                        <select name="district" id="select-district" required class="w-full text-xs font-medium bg-slate-50 border border-slate-300 text-slate-700 rounded px-2.5 py-2">
+                            <option value="{{ fiche.fosa.district.id }}">{{ fiche.fosa.district.nom }}</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Formation Sanitaire <span class="text-rose-600">*</span></label>
+                        <select name="fosa" id="select-fosa" required class="w-full text-xs font-medium bg-slate-50 border border-slate-300 text-slate-700 rounded px-2.5 py-2">
+                            <option value="{{ fiche.fosa.id }}">{{ fiche.fosa.nom }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2 : LOGISTIQUE D'EXPÉDITION -->
+            <div class="bg-white border border-slate-200 rounded-md p-4 shadow-sm space-y-3">
+                <div class="flex items-center gap-2 pb-2 border-b border-slate-200 text-[#1d5288]">
+                    <span class="w-2.5 h-2.5 bg-[#1478c1] rounded-full"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider font-mono">02. Logistique d'Expédition</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Expéditeur & Contact <span class="text-rose-600">*</span></label>
+                        <input type="text" name="expediteur" required value="{{ fiche.expediteur }}" class="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded px-2.5 py-2">
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Date d'expédition <span class="text-rose-600">*</span></label>
+                        <input type="date" name="date_expedition" required value="{{ fiche.date_expedition|date:'Y-m-d' }}" class="w-full text-xs font-mono font-medium bg-slate-50 border border-slate-300 rounded px-2.5 py-2">
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Nombre d'Échantillons <span class="text-rose-600">*</span></label>
+                        <input type="number" name="nombre_echantillon" required value="{{ fiche.nombre_echantillon }}" class="w-full text-xs font-mono font-medium bg-slate-50 border border-slate-300 rounded px-2.5 py-2">
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Transporteur <span class="text-rose-600">*</span></label>
+                        <select name="transporteur" id="transporteur" class="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded px-2.5 py-2 cursor-pointer">
+                            {% for t in transporteurs %} 
+                                <option value="{{ t.id }}" {% if fiche.transporteur_id == t.id %}selected{% endif %}>{{ t.nom }}</option> 
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="space-y-1 md:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-700">Moyen de transport <span class="text-rose-600">*</span></label>
+                        <select name="moyen_transport" class="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded px-2.5 py-2 cursor-pointer">
+                            {% for m in moyens_transport %} 
+                                <option value="{{ m.id }}" {% if fiche.moyen_transport_id == m.id %}selected{% endif %}>{{ m.nom }}</option> 
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3 : RÉCEPTION & ENTRÉE LABORATOIRE -->
+            <div class="bg-white border border-slate-200 rounded-md p-4 shadow-sm space-y-3">
+                <div class="flex items-center gap-2 pb-2 border-b border-slate-200 text-[#1d5288]">
+                    <span class="w-2.5 h-2.5 bg-emerald-600 rounded-full"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider font-mono">03. Réception & Entrée Laboratoire</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Destinataire</label>
+                        <input type="text" readonly value="CIRCB" class="w-full text-xs font-mono font-bold bg-slate-100 border border-slate-200 text-slate-600 rounded px-2.5 py-2">
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Date de réception <span class="text-rose-600">*</span></label>
+                        <input type="date" name="date_reception" required value="{{ fiche.date_reception|date:'Y-m-d' }}" class="w-full text-xs font-mono font-medium bg-slate-50 border border-slate-300 rounded px-2.5 py-2">
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Réceptionniste</label>
+                        <input type="text" readonly value="{{ request.user.username }}" class="w-full text-xs font-mono font-bold bg-slate-100 border border-slate-200 text-slate-600 rounded px-2.5 py-2">
+                    </div>
+
+                    <div class="space-y-1 md:col-span-3">
+                        <label class="block text-xs font-semibold text-slate-700">Date d'entrée au Labo <span class="text-rose-600">*</span></label>
+                        <input type="date" name="date_entree_labo" required value="{{ fiche.date_entree_labo|date:'Y-m-d' }}" class="w-full md:w-1/3 text-xs font-mono font-medium bg-slate-50 border border-slate-300 rounded px-2.5 py-2">
+                    </div>
+
+                    <div class="space-y-1 md:col-span-3">
+                        <label class="block text-xs font-semibold text-slate-700">Observations / Remarques</label>
+                        <textarea name="observation" class="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded p-2.5" rows="2">{{ fiche.observation }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BARRE D'ACTIONS -->
+            <div class="bg-white border border-slate-200 rounded-md p-3 shadow-sm flex items-center justify-end gap-2">
+                <button type="button" onclick="window.history.back()" class="px-4 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded uppercase tracking-wider">
+                    Annuler
+                </button>
+                <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded shadow-xs uppercase tracking-wider flex items-center gap-1.5 cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    Mettre à jour la fiche
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Script AJAX pour mettre à jour les listes déroulantes de région/district si modifiées
+    const updateSelect = (url, target, id, key) => {
+        if (!id) return;
+        fetch(url + id + '/')
+            .then(r => r.json())
+            .then(data => {
+                target.innerHTML = '<option value="">-- Choisir --</option>';
+                data[key].forEach(item => target.innerHTML += `<option value="${item.id}">${item.nom}</option>`);
+                target.disabled = false;
+            });
+    };
+
+    document.getElementById('select-region')?.addEventListener('change', (e) => updateSelect('/search_district/', document.getElementById('select-district'), e.target.value, 'results'));
+    document.getElementById('select-district')?.addEventListener('change', (e) => updateSelect('/search_fosa/', document.getElementById('select-fosa'), e.target.value, 'fosas'));
+
+    // Gestion des messages Django via SweetAlert2
+    document.addEventListener('DOMContentLoaded', () => {
+        const messages = [
+            {% if messages %}
+                {% for message in messages %}
+                { text: "{{ message|escapejs }}", type: "{{ message.tags|default:'info' }}" },
+                {% endfor %}
+            {% endif %}
+        ];
+
+        messages.forEach((msg) => {
+            Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                background: "#1d5288",
+                color: "#ffffff"
+            }).fire({
+                icon: msg.type === 'error' ? 'error' : 'success',
+                title: msg.text
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -3,162 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {%load static%}
-    <script src={%static 'js/tailwind.js'%}></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    {% load static %}
+    <script src="{% static 'js/tailwind.js' %}"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Connexion  / LIMS MEDISYS</title>
+    
     <style>
-        :root{--muted:#475569}
-        body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Arial;min-height:100vh;background:#ffffff;padding:24px;color:#0f172a}
-        
-        /* Design avec bordures sombres épaisses et ombres pleines */
-        .glass{background:#ffffff;border:2px solid #0f172a;box-shadow:4px 4px 0px 0px #0f172a}
-        .card{border-radius:16px}
-        
-        /* Bouton d'aide flottant stylisé */
-        .help-fab{position:fixed;right:20px;bottom:20px;background:#0f172a;color:white;border:2px solid #ffffff;border-radius:999px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(15,23,42,0.2);cursor:pointer;transition:transform 0.2s}
-        .help-fab:hover{transform:scale(1.05)}
-        
-        .modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:50}
-        .modal{max-width:520px;width:100%}
-        
-        label{font-weight:700;color:#0f172a;text-transform:uppercase;font-size:0.75rem;letter-spacing:0.05em}
-        .input{background:#ffffff;border:2px solid #0f172a;padding:12px;border-radius:10px;color:#0f172a;font-weight:500}
-        .input:focus{outline:none;ring:2px;border-color:#1e1b4b}
-        .muted{color:var(--muted)}
-    </style>
-     <style>
-        body { font-variant-numeric: tabular-nums; }
+        :root {
+            --dhis2-blue: #1d5288;
+            --dhis2-light-blue: #1478c1;
+            --dhis2-border: #cbd5e1;
+        }
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+            font-variant-numeric: tabular-nums;
+            /* Fond avec image de laboratoire moderne et filtre dégradé semi-transparent DHIS2 */
+            background: linear-gradient(135deg, rgba(29, 82, 136, 0.88), rgba(15, 23, 42, 0.92)), url("{%static 'images/fond.jpg'%}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #0f172a;
+        }
+        .dhis2-card {
+            background: #ffffff;
+            border: 1px solid var(--dhis2-border);
+            border-radius: 6px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        .dhis2-header-banner {
+            background-color: var(--dhis2-blue);
+            color: #ffffff;
+        }
+        .dhis2-input {
+            background-color: #ffffff;
+            border: 1px solid var(--dhis2-border);
+            border-radius: 4px;
+            padding: 8px 12px;
+            color: #1e293b;
+            font-size: 0.875rem;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .dhis2-input:focus {
+            outline: none;
+            border-color: var(--dhis2-light-blue);
+            box-shadow: 0 0 0 2px rgba(20, 120, 193, 0.2);
+        }
+        .dhis2-label {
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .help-fab {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: var(--dhis2-blue);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(29, 82, 136, 0.4);
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .help-fab:hover {
+            background: var(--dhis2-light-blue);
+            transform: scale(1.05);
+        }
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(3px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
-        
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
     </style>
-    <title>Connexion · MEDISYS</title>
 </head>
-<body class='custom-scrollbar'>
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 px-6">
+<body class="custom-scrollbar min-h-screen flex flex-col justify-between p-4 sm:p-6">
+
+    <!-- CONTENEUR PRINCIPAL DE CONNEXION -->
+    <div class="flex-1 flex items-center justify-center my-auto">
+        <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-12 gap-6">
             
-            <aside class="hidden md:flex flex-col justify-center items-start gap-6">
+            <!-- PANNEAU INFORMATIF GAUCHE (DHIS2 STYLE) -->
+            <aside class="hidden md:flex md:col-span-5 flex-col justify-between gap-4">
                 
-                <div class="glass p-8 card w-full text-slate-900">
-                    <div class="flex items-start gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center text-white border-2 border-slate-900 shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                <!-- Instructions de connexion -->
+                <div class="dhis2-card p-5 text-slate-800">
+                    <div class="flex items-center gap-3 mb-4 border-b border-slate-200 pb-3">
+                        <div class="w-9 h-9 rounded bg-[#1d5288] flex items-center justify-center text-white shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+                            </svg>
                         </div>
                         <div>
-                            <h2 class="text-lg font-black uppercase tracking-tight">Comment se connecter ?</h2>
-                            <p class="muted text-xs font-semibold">Suivez ces étapes pour accéder à votre espace</p>
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-[#1d5288] font-mono">Guide de Connexion</h2>
+                            <p class="text-[11px] text-slate-500 font-medium">Authentification Portail Santé / LIMS</p>
                         </div>
                     </div>
                     
-                    <ul class="space-y-3.5 text-sm font-medium text-slate-800">
-                        <li class="flex gap-3 items-start">
-                            <span class="w-5 h-5 rounded-full border border-slate-900 bg-slate-50 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
-                            <span>Utilisez votre **identifiant institutionnel** fourni par la direction ou votre chef de service (généralement `prenom.nom@hopital.tld`).</span>
+                    <ul class="space-y-3 text-xs font-medium text-slate-700">
+                        <li class="flex gap-2.5 items-start">
+                            <span class="w-4 h-4 rounded-full bg-slate-100 border border-slate-300 font-mono text-[10px] font-bold text-[#1d5288] flex items-center justify-center shrink-0 mt-0.5">1</span>
+                            <span>Saisissez votre <strong>identifiant institutionnel</strong> (<code class="font-mono text-[11px]">prenom.nom@hopital.tld</code>).</span>
                         </li>
-                        <li class="flex gap-3 items-start">
-                            <span class="w-5 h-5 rounded-full border border-slate-900 bg-slate-50 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
-                            <span>Saisissez votre mot de passe temporaire s'il s'agit de votre première connexion, puis configurez votre clé d'accès définitive.</span>
+                        <li class="flex gap-2.5 items-start">
+                            <span class="w-4 h-4 rounded-full bg-slate-100 border border-slate-300 font-mono text-[10px] font-bold text-[#1d5288] flex items-center justify-center shrink-0 mt-0.5">2</span>
+                            <span>Utilisez le mot de passe temporaire à la première connexion avant mise à jour.</span>
                         </li>
-                        <li class="flex gap-3 items-start">
-                            <span class="w-5 h-5 rounded-full border border-slate-900 bg-slate-50 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
-                            <span>Cochez la case **"Se souvenir de moi"** uniquement si vous êtes sur votre poste de travail dédié et sécurisé.</span>
+                        <li class="flex gap-2.5 items-start">
+                            <span class="w-4 h-4 rounded-full bg-slate-100 border border-slate-300 font-mono text-[10px] font-bold text-[#1d5288] flex items-center justify-center shrink-0 mt-0.5">3</span>
+                            <span>Vérifiez l'exactitude de vos frappes avant de soumettre le formulaire sécurisé.</span>
                         </li>
                     </ul>
                 </div>
                 
-                <div class="glass p-6 card w-full text-slate-900">
-                    <div class="flex items-start gap-4 mb-3">
-                        <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-white border-2 border-slate-900 shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <!-- Assistance Mot de passe -->
+                <div class="dhis2-card p-5 text-slate-800 bg-amber-50/80 border-amber-200">
+                    <div class="flex items-center gap-3 mb-2.5">
+                        <div class="w-8 h-8 rounded bg-amber-600 flex items-center justify-center text-white shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                         </div>
                         <div>
-                            <h4 class="font-bold text-sm uppercase tracking-wide">Identifiants perdus ou oubliés ?</h4>
-                            <p class="text-xs text-slate-600 font-medium">Pas de panique, voici la marche à suivre :</p>
+                            <h4 class="font-bold text-xs uppercase tracking-wide text-amber-900 font-mono">Assistance & Support</h4>
+                            <p class="text-[11px] text-amber-700">Procédure en cas de blocage d'accès</p>
                         </div>
                     </div>
                     
-                    <div class="text-xs font-medium space-y-2 text-slate-700 pl-2 border-l-2 border-amber-500">
-                        <p>1. Cliquez sur le lien **« Identifiants perdus ? »** sur l'écran de droite.</p>
-                        <p>2. Renseignez votre adresse e-mail professionnelle pour recevoir un **lien de réinitialisation sécurisé** valable 15 minutes.</p>
-                        <p>3. Si vous ne recevez rien ou si votre compte est bloqué suite à 3 essais infructueux, contactez immédiatement la DSI de l'Hôpital via le bouton d'assistance.</p>
+                    <div class="text-[11px] font-medium space-y-1.5 text-slate-700 pl-2 border-l-2 border-amber-500">
+                        <p>1. En cas de blocage de compte, contactez immédiatement la DSI.</p>
+                        <p>2. Utilisez l'icône d'aide flottante pour remonter une anomalie technique.</p>
                     </div>
                 </div>
             </aside>
 
-            <main class="glass p-10 card text-slate-900 flex flex-col justify-center">
-                <div class="mb-8">
-                    <h1 class="text-2xl font-black uppercase tracking-tight">Connexion</h1>
-                    <p class="muted text-sm font-semibold mt-0.5">Saisissez vos identifiants pour accéder à l'application</p>
+            <!-- FORMULAIRE DE CONNEXION PRINCIPAL -->
+            <main class="md:col-span-7 dhis2-card overflow-hidden flex flex-col justify-between">
+                
+                <!-- En-tête DHIS2 -->
+                <div class="dhis2-header-banner p-6 border-b border-[#145a96]">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="w-2 h-2 rounded-full bg-sky-300"></span>
+                        <span class="text-[10px] font-bold text-sky-200 uppercase tracking-widest font-mono">AUTHENTIFICATION  • MEDISYS LIMS</span>
+                    </div>
+                    <h1 class="text-xl font-bold font-mono tracking-tight text-white">Connexion Utilisateur</h1>
+                    <p class="text-xs text-sky-100/90 mt-0.5">Accès restreint au personnel médical et d'analyse habilité</p>
                 </div>
 
-                <form id="login-form" method="POST" action="{% url 'authentification' %}">
-                    {% csrf_token %}
-                    
-                    <div id="error-box" class="hidden mb-4 p-3 bg-red-50 border-2 border-red-600 text-red-700 text-xs font-bold rounded-lg"></div>
+                <!-- Formulaire -->
+                <div class="p-6 sm:p-8">
+                    <form id="login-form" method="POST" action="{% url 'authentification' %}" class="space-y-4">
+                        {% csrf_token %}
+                        
+                        <!-- Boîte d'erreur serveur AJAX -->
+                        <div id="error-box" class="hidden p-3 bg-rose-50 border border-rose-300 text-rose-800 text-xs font-mono font-medium rounded"></div>
 
-                    <div class="mb-4">
-                        <label class="block mb-1.5">Identifiant unique</label>
-                        <input id="username" name="username" type="text" placeholder="nom.prenom@hopital.tld" class="input w-full" aria-label="Identifiant" required>
-                    </div>
+                        <div>
+                            <label for="username" class="dhis2-label block mb-1">Identifiant unique</label>
+                            <input id="username" name="username" type="text" placeholder="prenom.nom@hopital.tld" class="dhis2-input w-full font-mono" aria-label="Identifiant" required>
+                        </div>
 
-                    <div class="mb-4">
-                        <label class="block mb-1.5">Mot de passe</label>
-                        <input id="password" name="password" type="password" placeholder="••••••••" class="input w-full" aria-label="Mot de passe" required>
-                    </div>
+                        <div>
+                            <label for="password" class="dhis2-label block mb-1">Mot de passe</label>
+                            <div class="relative">
+                                <input id="password" name="password" type="password" placeholder="••••••••" class="dhis2-input w-full font-mono pr-10" aria-label="Mot de passe" required>
+                                <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer focus:outline-none" aria-label="Afficher/Masquer le mot de passe">
+                                    <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
 
-                    <div class="flex items-center justify-between text-xs font-bold pt-1 mb-4">
-                        <label class="flex items-center gap-2 text-slate-900 cursor-pointer">
-                            <input id="remember" type="checkbox" class="w-4 h-4 accent-slate-900 border-2 border-slate-900 rounded"> Se souvenir de moi
-                        </label>
-                        <a href="#" class="text-slate-900 hover:underline">Identifiants perdus ?</a>
-                    </div>
+                        <div class="pt-3">
+                            <button type="submit" id="submit-btn" class="w-full py-2.5 bg-[#1478c1] hover:bg-[#1166a5] text-white font-mono font-bold rounded border border-[#105d98] text-xs uppercase tracking-wider shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-2">
+                                <span id="btn-text">Se connecter</span>
+                                <span id="btn-spinner" class="hidden">
+                                    <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
-                    <div class="pt-2">
-                        <button type="submit" id="submit-btn" class="w-full py-2.5 bg-slate-900 hover:bg-slate-950 text-white font-bold rounded-xl border-2 border-slate-900 text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-y-0.5 flex items-center justify-center gap-2">
-                            <span id="btn-text">Se connecter</span>
-                            <span id="btn-spinner" class="hidden">
-                                <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                            </span>
-                        </button>
-                        <div class="text-[10px] text-center font-medium muted mt-3">Usage restreint au personnel habilité. Les connexions font l'objet d'un audit de sécurité.</div>
-                    </div>
-                </form>
+                <!-- Footer de carte -->
+                <div class="bg-slate-50 border-t border-slate-200 p-3.5 text-center text-[11px] text-slate-500 font-sans">
+                    Usage strictement réservé au personnel autorisé. Toutes les connexions sont auditées.
+                </div>
             </main>
 
         </div>
     </div>
 
-    <div id="helpFab" class="help-fab" aria-label="Aide">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM9.09 9a3 3 0 115.82 0c0 2-3 1.75-3 4"/><path d="M12 17h.01"/></svg>
+    <!-- BOUTON D'AIDE FLOTTANT (FAB) -->
+    <div id="helpFab" class="help-fab" aria-label="Aide et Support" title="Assistance Technique">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 1 0 10 10 A10 10 0 0 0 12 2zM9.09 9a3 3 0 1 1 5.82 0c0 2-3 1.75-3 4"/><path d="M12 17h.01"/>
+        </svg>
     </div>
 
+    <!-- MODAL D'ASSISTANCE DHIS2 -->
     <div id="modal" class="modal-backdrop">
-        <div class="modal glass p-6 card text-slate-900 mx-4">
-            <div class="flex items-center justify-between border-b-2 border-slate-900 pb-3">
-                <h3 class="text-md font-black uppercase tracking-tight">Support technique</h3>
-                <button id="closeModal" class="px-2.5 py-1 border border-slate-900 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200">Fermer</button>
+        <div class="dhis2-card max-w-md w-full mx-4 overflow-hidden shadow-xl">
+            <div class="bg-[#1d5288] text-white p-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-sky-300"></span>
+                    <h3 class="text-xs font-bold font-mono uppercase tracking-wide">Support Technique & Assistance</h3>
+                </div>
+                <button id="closeModal" class="text-sky-200 hover:text-white font-mono text-sm font-bold cursor-pointer">✕</button>
             </div>
-            <p class="text-xs font-medium text-slate-700 mt-3">Pour toute anomalie d'accès ou demande d'ouverture de droits, veuillez contacter l'administrateur système.</p>
-            <div class="mt-4 grid grid-cols-1 gap-2.5 font-bold text-xs">
-                <a href="mailto:contact@medisys.example" class="inline-flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 border border-slate-900 text-slate-900">
-                    <span>Assistance par courriel</span>
-                    <span class="text-[11px] font-medium muted">contact@medisys.example</span>
-                </a>
-                <a href="#" id="dl-guide" class="inline-flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 border border-slate-900 text-slate-900">
-                    <span>Manuel opérateur ERP</span>
-                    <span class="text-[11px] text-indigo-950 font-bold">Télécharger (PDF)</span>
-                </a>
-                <a href="#" id="open-support" class="text-center px-4 py-3 rounded-xl bg-slate-900 border-2 border-slate-900 text-white uppercase tracking-wider text-[11px]">Déclarer un incident de connexion</a>
+            
+            <div class="p-5 space-y-4 text-xs font-sans text-slate-700">
+                <p class="text-slate-600">
+                    Pour toute anomalie d'accès ou demande d'ouverture de droits, veuillez contacter la Direction des Systèmes d'Information (DSI).
+                </p>
+                
+                <div class="space-y-2 font-mono">
+                    <a href="mailto:contact@medisys.example" class="flex items-center justify-between p-3 rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors">
+                        <span class="font-bold text-[#1d5288]">Assistance par courriel</span>
+                        <span class="text-[11px] text-slate-500">contact@medisys.example</span>
+                    </a>
+                    
+                    <a href="#" id="dl-guide" class="flex items-center justify-between p-3 rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors">
+                        <span class="font-bold text-[#1d5288]">Manuel Opérateur ERP</span>
+                        <span class="text-[11px] text-[#1478c1] font-bold">Télécharger (PDF)</span>
+                    </a>
+                    
+                    <a href="#" id="open-support" class="block text-center p-2.5 rounded bg-[#1d5288] hover:bg-[#145a96] text-white uppercase text-[11px] font-bold transition-colors">
+                        Déclarer un incident de connexion
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
-   <script>
+    <!-- LOGIQUE JS COMPATIBLE ET OPTIMISÉE -->
+    <script>
+    // Bascule de visibilité du mot de passe (Œil)
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eye-icon');
+
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        if (type === 'text') {
+            // Icône œil barré (masquer)
+            eyeIcon.innerHTML = `
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+            `;
+        } else {
+            // Icône œil normal (afficher)
+            eyeIcon.innerHTML = `
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            `;
+        }
+    });
+
     document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
      
@@ -199,54 +319,75 @@
             errorBox.classList.remove('hidden');
         }
     });
-   </script>
 
-   <script>
-       const modal = document.getElementById('modal');
-       const helpFab = document.getElementById('helpFab');
-       const closeModal = document.getElementById('closeModal');
+    // Gestion de la modale support
+    const modal = document.getElementById('modal');
+    const helpFab = document.getElementById('helpFab');
+    const closeModal = document.getElementById('closeModal');
 
-       helpFab.addEventListener('click', () => {
-           modal.style.display = 'flex';
-       });
+    helpFab.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    });
 
-       closeModal.addEventListener('click', () => {
-           modal.style.display = 'none';
-       });
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
 
-       window.addEventListener('click', (e) => {
-           if (e.target === modal) {
-               modal.style.display = 'none';
-           }
-       });
-   </script>
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+    </script>
 
-   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const messages = [
-        {% for message in messages %}
-        {
-            text: "{{ message|escapejs }}",
-            type: "{{ message.tags|default:'info' }}"
-        }{% if not forloop.last %},{% endif %}
-        {% endfor %}
-    ];
+    <!-- SWEETALERT2 AVEC STYLE DHIS2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const messages = [
+            {% for message in messages %}
+            {
+                text: "{{ message|escapejs }}",
+                type: "{{ message.tags|default:'info' }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
 
-    messages.forEach((msg) => {
-        Swal.fire({
-            toast: true,
-            position: "top-end",
-            icon: msg.type === 'success' || msg.type === 'error' || msg.type === 'warning' ? msg.type : 'info',
-            title: msg.text,
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            background: "#1f2937",
-            color: "#fff",
+        messages.forEach((msg) => {
+            const isError = msg.type.includes('error') || msg.type.includes('danger');
+            const isSuccess = msg.type.includes('success');
+            const isWarning = msg.type.includes('warning');
+
+            let iconType = 'info';
+            let borderClass = 'border-sky-500';
+
+            if (isSuccess) {
+                iconType = 'success';
+                borderClass = 'border-emerald-500';
+            } else if (isError) {
+                iconType = 'error';
+                borderClass = 'border-rose-500';
+            } else if (isWarning) {
+                iconType = 'warning';
+                borderClass = 'border-amber-500';
+            }
+
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: iconType,
+                title: `<span class="font-mono text-xs">${msg.text}</span>`,
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                background: "#1d5288",
+                color: "#ffffff",
+                customClass: {
+                    popup: `border-l-4 ${borderClass} shadow-md`
+                }
+            });
         });
     });
-});
-</script>
+    </script>
 </body>
 </html>

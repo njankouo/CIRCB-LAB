@@ -1,90 +1,137 @@
 {% extends './dashbord_hosp.html' %}
 
 {% block main %}
-<main class="flex-1 h-full min-h-0 overflow-y-auto p-8 bg-slate-50">
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-6 lg:p-8 bg-[#f4f6f8]">
 
-<div class="p-8 max-w-7xl mx-auto space-y-8">
+<div class="max-w-7xl mx-auto space-y-6">
     
-    <!-- Header de section ERP -->
-    <div class="flex items-center justify-between border-b-2 border-slate-900 pb-6">
+    <!-- Header de section ERP (Style DHIS2) -->
+    <div class="dhis2-card p-6 bg-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-slate-200">
         <div>
-            <h1 class="text-3xl font-black text-slate-900 uppercase">Configuration du compte</h1>
-            <p class="text-sm font-bold text-slate-400 mt-1">ID Utilisateur : <span class="font-mono text-indigo-600">{{ request.user.id }}</span></p>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="w-2 h-2 rounded-full bg-[#1478c1]"></span>
+                <span class="text-[10px] font-bold text-[#1d5288] uppercase tracking-widest font-mono">PARAMÈTRES SYSTÈME • SÉCURITÉ & PROFIL</span>
+            </div>
+            <h1 class="text-xl font-bold font-mono text-slate-900 tracking-tight">Configuration du Compte</h1>
+            <p class="text-xs text-slate-500 mt-0.5">ID Système : <span class="font-mono text-[#1d5288] font-semibold">{{ request.user.id }}</span></p>
         </div>
-        <div class="flex gap-3">
-            <button class="flex items-center gap-2 px-4 py-2 border-2 border-slate-900 rounded-xl font-black text-sm hover:bg-slate-900 hover:text-white transition-all">
-                <i data-lucide="download" class="w-4 h-4"></i> Exporter Logs
+        <div>
+            <button class="px-4 py-2 bg-[#1d5288] hover:bg-[#1478c1] text-white text-xs font-mono font-bold rounded transition-colors flex items-center gap-2 shadow-xs cursor-pointer">
+                <i data-lucide="download" class="w-4 h-4"></i> Exporter les Logs
             </button>
         </div>
     </div>
 
-    <div class="grid grid-cols-12 gap-8">
+    <div class="grid grid-cols-12 gap-6">
         
-        <!-- Sidebar Navigation (Type ERP) -->
-        <div class="col-span-12 lg:col-span-3 space-y-2">
-            <nav class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200">
-                <a href="#" class="flex items-center gap-3 p-3 bg-white border-2 border-slate-900 rounded-lg text-sm font-black text-slate-900 shadow-[2px_2px_0px_0px_#0f172a]">
-                    <i data-lucide="user-circle" class="w-4 h-4"></i> Informations
-                </a>
-                <a href="#" class="flex items-center gap-3 p-3 text-slate-500 hover:text-slate-900 font-bold text-sm transition-all">
-                    <i data-lucide="shield" class="w-4 h-4"></i> Sécurité & Accès
-                </a>
-                <a href="#" class="flex items-center gap-3 p-3 text-slate-500 hover:text-slate-900 font-bold text-sm transition-all">
-                    <i data-lucide="bell" class="w-4 h-4"></i> Notifications
-                </a>
-            </nav>
+        <!-- Sidebar Navigation (Style DHIS2) -->
+        <div class="col-span-12 lg:col-span-3">
+            <div class="dhis2-card p-3 bg-white border border-slate-200">
+                <nav class="space-y-1 text-xs font-medium">
+                    <a href="#infos" class="flex items-center gap-3 px-3 py-2.5 bg-[#1d5288] text-white rounded font-bold shadow-xs">
+                        <i data-lucide="user-circle" class="w-4 h-4"></i> Informations
+                    </a>
+                    <a href="#security" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded transition-colors">
+                        <i data-lucide="shield" class="w-4 h-4"></i> Sécurité & Accès
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded transition-colors">
+                        <i data-lucide="bell" class="w-4 h-4"></i> Notifications
+                    </a>
+                </nav>
+            </div>
         </div>
 
         <!-- Zone Principale de données -->
         <div class="col-span-12 lg:col-span-9 space-y-6">
             
             <!-- Card Profil -->
-            <div class="bg-white border-2 border-slate-900 rounded-2xl p-6 shadow-[8px_8px_0px_0px_#0f172a]">
-                <div class="flex items-start justify-between mb-8">
-                    <div class="flex items-center gap-5">
+            <div id="infos" class="dhis2-card p-6 bg-white border border-slate-200">
+                <div class="flex items-start justify-between mb-6 pb-6 border-b border-slate-200">
+                    <div class="flex items-center gap-4">
                         <div class="relative">
-                            <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=0f172a&color=fff&size=128" 
-                                 class="w-20 h-20 rounded-2xl border-4 border-slate-100" alt="Avatar">
-                            <div class="absolute -bottom-1 -right-1 bg-emerald-500 w-5 h-5 rounded-full border-4 border-white"></div>
+                            <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=1d5288&color=fff&size=128" 
+                                 class="w-16 h-16 rounded-full border border-slate-300 shadow-xs" alt="Avatar">
+                            <div class="absolute bottom-0 right-0 bg-emerald-500 w-4 h-4 rounded-full border-2 border-white"></div>
                         </div>
                         <div>
-                            <h2 class="text-xl font-black text-slate-900">{{ request.user.first_name }} {{ request.user.last_name }}</h2>
-                            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mt-1">Administrateur Système</p>
+                            <h2 class="text-lg font-bold text-slate-900 font-mono">{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+                            <p class="text-[11px] font-bold uppercase tracking-wider text-[#1478c1] mt-0.5">Administrateur Système / LIMS</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label class="text-[10px] font-black text-slate-400 uppercase">Adresse Email</label>
-                        <div class="p-3 bg-slate-50 rounded-xl border-2 border-slate-200 font-bold text-sm text-slate-700">{{ request.user.email }}</div>
+                        <label class="block font-semibold text-slate-500 text-[11px] uppercase tracking-wider font-mono">Adresse Email</label>
+                        <div class="px-3 py-2 bg-slate-50 border border-slate-200 rounded text-xs font-mono text-slate-800">{{ request.user.email }}</div>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] font-black text-slate-400 uppercase">Dernière session</label>
-                        <div class="p-3 bg-slate-50 rounded-xl border-2 border-slate-200 font-bold text-sm text-slate-700">{{ request.user.last_login|date:"d/m/Y H:i" }}</div>
+                        <label class="block font-semibold text-slate-500 text-[11px] uppercase tracking-wider font-mono">Dernière session</label>
+                        <div class="px-3 py-2 bg-slate-50 border border-slate-200 rounded text-xs font-mono text-slate-800">{{ request.user.last_login|date:"d/m/Y H:i" }}</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Card Activités récentes (Data Table style) -->
-            <div class="bg-white border-2 border-slate-900 rounded-2xl p-6 shadow-[8px_8px_0px_0px_#0f172a]">
-                <h3 class="text-lg font-black text-slate-900 mb-4">Activités récentes</h3>
+            <!-- Card Changement de Mot de Passe (Style DHIS2) -->
+            <div id="security" class="dhis2-card p-6 bg-white border border-slate-200">
+                <div class="flex items-center gap-2 mb-4 border-b border-slate-200 pb-3">
+                    <div class="w-7 h-7 rounded bg-[#1d5288] flex items-center justify-center text-white shrink-0">
+                        <i data-lucide="shield" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-[#1d5288] font-mono">Sécurité & Modification du Mot de Passe</h3>
+                        <p class="text-[11px] text-slate-500">Mettez à jour vos identifiants d'accès sécurisé</p>
+                    </div>
+                </div>
+
+                <form method="POST" action="" class="space-y-4">
+                    {% csrf_token %}
+                    
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="block font-semibold text-slate-700 text-[11px] uppercase tracking-wider font-mono mb-1">Ancien mot de passe</label>
+                            <input type="password" name="old_password" placeholder="••••••••" class="w-full px-3 py-2 bg-white border border-slate-300 rounded text-xs font-mono focus:outline-none focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1]" required>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block font-semibold text-slate-700 text-[11px] uppercase tracking-wider font-mono mb-1">Nouveau mot de passe</label>
+                                <input type="password" name="new_password1" placeholder="••••••••" class="w-full px-3 py-2 bg-white border border-slate-300 rounded text-xs font-mono focus:outline-none focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1]" required>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-700 text-[11px] uppercase tracking-wider font-mono mb-1">Confirmer le nouveau mot de passe</label>
+                                <input type="password" name="new_password2" placeholder="••••••••" class="w-full px-3 py-2 bg-white border border-slate-300 rounded text-xs font-mono focus:outline-none focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1]" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 flex justify-end">
+                        <button type="submit" class="px-4 py-2 bg-[#1d5288] hover:bg-[#1478c1] text-white text-xs font-mono font-bold rounded transition-colors shadow-xs cursor-pointer">
+                            Mettre à jour le mot de passe
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Card Activités récentes (Data Table style DHIS2) -->
+            <div class="dhis2-card p-6 bg-white border border-slate-200">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-[#1d5288] font-mono mb-4 border-b border-slate-200 pb-2">Activités récentes du système</h3>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs font-bold">
+                    <table class="w-full text-left text-xs">
                         <thead>
-                            <tr class="text-slate-400 border-b-2 border-slate-100 uppercase">
-                                <th class="pb-3">Action</th>
-                                <th class="pb-3">Module</th>
-                                <th class="pb-3">Date</th>
-                                <th class="pb-3">Statut</th>
+                            <tr class="text-slate-500 border-b border-slate-200 font-mono uppercase text-[10px] tracking-wider">
+                                <th class="pb-2 font-bold">Action</th>
+                                <th class="pb-2 font-bold">Module</th>
+                                <th class="pb-2 font-bold">Date</th>
+                                <th class="pb-2 font-bold">Statut</th>
                             </tr>
                         </thead>
-                        <tbody class="text-slate-700">
-                            <tr class="border-b border-slate-50">
-                                <td class="py-4">Connexion au système</td>
-                                <td class="py-4">Auth</td>
-                                <td class="py-4">18/07/2026 06:00</td>
-                                <td class="py-4"><span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded">Succès</span></td>
+                        <tbody class="divide-y divide-slate-100 font-mono text-slate-700">
+                            <tr>
+                                <td class="py-3">Connexion au système</td>
+                                <td class="py-3 text-slate-500">Auth</td>
+                                <td class="py-3 text-slate-500">18/07/2026 06:00</td>
+                                <td class="py-3"><span class="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-bold">Succès</span></td>
                             </tr>
                         </tbody>
                     </table>

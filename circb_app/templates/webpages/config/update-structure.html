@@ -1,0 +1,74 @@
+{% extends '../dashbord_hosp.html' %}
+
+
+
+{% block main %}
+<form action="{%url 'update-structure-data' structure.id %}" method="POST" class="p-6 space-y-4">
+    {% csrf_token %}
+    
+    <!-- Identifiant caché de la structure en cours de modification -->
+    <input type="hidden" name="structure_id" value="{{ structure.id }}">
+    
+    <div class="space-y-4">
+        <!-- SÉLECTION DU PARENT (UNITÉ DE RATTACHEMENT) -->
+        <div>
+            <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1">Unité de rattachement (Parent)</label>
+            <select name="parent_id" id="parentIdField" class="w-full border border-gray-300 p-2.5 text-sm outline-none focus:ring-1 ring-blue-500 rounded bg-white">
+                <option value="" {% if not structure.parent %}selected{% endif %}>-- Aucune (Unité Racine) --</option>
+                
+                {# Boucle sur les niveaux de hiérarchie pour créer les groupes #}
+                {% for level in hierachie %}
+                    <optgroup label="Niveau {{ level.rang }} : {{ level.nom }}" class="bg-gray-100 font-bold text-blue-700">
+                        {% for struct in all_structures %}
+                            {# On exclut la structure actuelle pour éviter qu'elle soit son propre parent #}
+                            {% if struct.hierachy.id == level.id and struct.id != structure.id %}
+                                <option value="{{ struct.id }}" class="bg-white text-gray-700 font-normal" {% if structure.parent.id == struct.id %}selected{% endif %}>
+                                    {{ struct.nom }} {% if struct.designation %}({{ struct.designation }}){% endif %}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                {% endfor %}
+            </select>
+            <p class="text-[10px] text-gray-400 mt-1">Laissez vide pour créer une unité au sommet de la hiérarchie.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <!-- CHOIX DU NIVEAU -->
+            <div class="col-span-2">
+                <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1">Niveau de cette unité *</label>
+                <select name="level_id" id="levelSelect" required class="w-full border border-gray-300 p-2.5 text-sm outline-none focus:ring-1 ring-blue-500 rounded bg-white">
+                    <option value="" disabled>Choisir le niveau...</option>
+                    {% for h in hierachie %}
+                        <option value="{{ h.id }}" {% if structure.hierachy.id == h.id %}selected{% endif %}>
+                            Niveau {{ h.rang }} : {{ h.nom }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- NOM -->
+            <div class="col-span-2">
+                <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1">Nom de l'unité *</label>
+                <input type="text" name="nom" required class="w-full border border-gray-300 p-2.5 text-sm outline-none focus:ring-1 ring-blue-500 rounded" value="{{ structure.nom }}">
+            </div>
+
+            <!-- CODE -->
+            <div class="col-span-2">
+                <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1">Code / Désignation</label>
+                <input type="text" name="designation" class="w-full border border-gray-300 p-2.5 text-sm outline-none focus:ring-1 ring-blue-500 rounded" placeholder="Ex: DS-MFO-01" value="{{ structure.designation }}">
+            </div>
+        </div>
+    </div>
+
+    <!-- BOUTONS D'ACTION -->
+    <div class="flex justify-end gap-3 pt-6 border-t mt-4">
+        <a href="javascript:history.back()" class="px-4 py-2 text-xs font-bold text-gray-500 hover:bg-gray-100 rounded flex items-center">
+            RETOUR
+        </a>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 text-xs font-bold rounded shadow-lg flex items-center gap-2 transition-all">
+            <i class="fa fa-save"></i> MODIFIER L'UNITÉ
+        </button>
+    </div>
+</form>
+{% endblock %}

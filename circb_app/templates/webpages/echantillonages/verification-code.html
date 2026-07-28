@@ -1,65 +1,94 @@
 {% extends '../dashbord_hosp.html' %}
 
 {% block main %}
-<main class="flex-1 h-full min-h-0 overflow-y-auto p-8 bg-slate-50">
-    <form method="POST" action="" class="max-w-7xl mx-auto w-full space-y-6" id="verificationForm">
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 sm:p-6 custom-scrollbar flex flex-col gap-5 bg-[#f4f6f8] text-slate-800">
+    <form method="POST" action="" class="max-w-[1600px] mx-auto w-full space-y-5" id="verificationForm">
         {% csrf_token %}
 
-        <!-- En-tête -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex items-center justify-between">
-            <div>
-                <h1 class="text-xl font-bold text-slate-800">Vérification des échantillons</h1>
-                <p class="text-slate-400 text-sm">Contrôle de validité des codes patients.</p>
+        <!-- 1. EN-TÊTE DU MODULE (STYLE DHIS2 HEADER BANNER) -->
+        <div class="bg-[#1d5288] text-white border border-[#145a96] p-5 rounded-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded bg-white/15 border border-white/20 flex items-center justify-center text-sky-200 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold text-sky-200 uppercase tracking-wider font-mono">CIRCB LIMS • VÉRIFICATION PATIENTS</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    </div>
+                    <h1 class="text-xl sm:text-2xl font-bold font-mono tracking-tight text-white mt-0.5">Vérification des Échantillons & Codes</h1>
+                    <p class="text-xs text-sky-100/90 font-sans mt-0.5">Contrôle de validité des identifiants et initialisation des dossiers patients.</p>
+                </div>
             </div>
-            <div class="px-5 py-2 bg-red-50 border border-red-100 rounded-xl text-center">
-                <span class="block text-[10px] font-bold text-red-400 uppercase">Code</span>
-                <span class="text-lg font-black text-red-600" id="total-samples">{{ fiche.code }}</span>
-            </div>
-            <div class="px-5 py-2 bg-red-50 border border-red-100 rounded-xl text-center">
-                <span class="block text-[10px] font-bold text-red-400 uppercase">Échantillons</span>
-                <span class="text-lg font-black text-red-600">{{ fiche.nombre_echantillon }}</span>
+            
+            <div class="flex items-center gap-2 self-stretch sm:self-auto">
+                <div class="bg-[#1478c1] border border-white/20 text-white px-3.5 py-2 rounded font-mono text-xs font-bold text-center flex-1 sm:flex-none">
+                    <span class="block text-[9px] text-sky-200 uppercase">Code Fiche</span>
+                    <span class="text-sm font-bold text-white" id="total-samples">{{ fiche.code }}</span>
+                </div>
+                <div class="bg-[#1478c1] border border-white/20 text-white px-3.5 py-2 rounded font-mono text-xs font-bold text-center flex-1 sm:flex-none">
+                    <span class="block text-[9px] text-sky-200 uppercase">Échantillons</span>
+                    <span class="text-sm font-bold text-white">{{ fiche.nombre_echantillon }}</span>
+                </div>
             </div>
         </div>
 
-        <!-- Tableau des codes -->
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-            <div class="grid grid-cols-12 gap-0 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                <div class="col-span-1 py-3 text-center">N°</div>
-                <div class="col-span-5 py-3 px-4">Code Structure</div>
-                <div class="col-span-2 py-3 px-4">Porte d'entrée</div>
-                <div class="col-span-4 py-3 px-6 bg-blue-50/50 text-blue-600">Code Patient (Saisie)</div>
+        <!-- 2. TABLEAU DE SAISIE ET DE VÉRIFICATION DHIS2 -->
+        <div class="bg-white border border-slate-300 rounded-md shadow-xs overflow-hidden">
+            <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                <h3 class="text-xs font-bold text-[#1d5288] uppercase tracking-wide font-mono flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#1478c1]"></span>
+                    Grille de Saisie par Lots
+                </h3>
+                <span class="text-[10px] font-mono text-slate-500">Saisie des 4 derniers chiffres du code patient</span>
             </div>
 
-            <div class="divide-y divide-slate-100" id="table-body">
+            <!-- En-tête du tableau -->
+            <div class="grid grid-cols-12 gap-0 border-b border-slate-200 bg-slate-100 text-[10px] font-bold text-slate-600 font-mono uppercase tracking-wider">
+                <div class="col-span-1 py-2.5 text-center border-r border-slate-200">N°</div>
+                <div class="col-span-5 py-2.5 px-4 border-r border-slate-200">Code Structure (Région / District / FOSA)</div>
+                <div class="col-span-2 py-2.5 px-4 border-r border-slate-200">Porte d'entrée</div>
+                <div class="col-span-4 py-2.5 px-4 bg-sky-50/80 text-[#1d5288]">Saisie Code Patient & Statut</div>
+            </div>
+
+            <!-- Corps du tableau -->
+            <div class="divide-y divide-slate-200" id="table-body">
                 {% for i in sample_range %}
-                <div class="grid grid-cols-12 gap-0 items-center hover:bg-slate-50 transition-colors" data-otp-group>
-                    <div class="col-span-1 py-4 flex justify-center">
-                        <span class="w-7 h-7 rounded bg-slate-100 text-slate-500 font-bold text-xs flex items-center justify-center">{{ forloop.counter|stringformat:"02d" }}</span>
+                <div class="grid grid-cols-12 gap-0 items-center hover:bg-slate-50/80 transition-colors" data-otp-group>
+                    <div class="col-span-1 py-3 flex justify-center border-r border-slate-200 font-mono text-xs text-slate-500 font-bold bg-slate-50/30">
+                        {{ forloop.counter|stringformat:"02d" }}
                     </div>
 
-                    <div class="col-span-5 py-4 px-4 flex items-center gap-1.5 text-slate-600 border-r border-slate-50">
-                        <div class="flex gap-0.5">{% for char in fiche.region.designation|slice:':3' %}<input type="text" readonly value="{{ char }}" class="w-7 h-7 text-center border border-slate-200 bg-slate-50 text-slate-500 rounded text-xs" title="Région">{% endfor %}</div>
-                        <span class="text-slate-200">/</span>
-                        <div class="flex gap-0.5">{% for char in fiche.district.designation|slice:':3' %}<input type="text" readonly value="{{ char }}" class="w-7 h-7 text-center border border-slate-200 bg-slate-50 text-slate-500 rounded text-xs" title="District">{% endfor %}</div>
-                        <span class="text-slate-200">/</span>
-                        <div class="flex gap-0.5">{% for char in fiche.fosa.designation|slice:':3' %}<input type="text" readonly value="{{ char }}" class="w-7 h-7 text-center border border-slate-200 bg-slate-50 text-slate-500 rounded text-xs" title="FOSA">{% endfor %}</div>
+                    <!-- Code Structure Fixe -->
+                    <div class="col-span-5 py-3 px-4 flex items-center gap-1.5 text-slate-700 border-r border-slate-200 font-mono text-xs">
+                        <div class="flex gap-0.5">{% for char in fiche.region.designation|slice:':3' %}<input type="text" readonly value="{{ char }}" class="w-6 h-6 text-center border border-slate-300 bg-slate-100 text-slate-700 rounded-xs font-bold text-xs" title="Région">{% endfor %}</div>
+                        <span class="text-slate-400 font-bold">/</span>
+                        <div class="flex gap-0.5">{% for char in fiche.district.designation|slice:':3' %}<input type="text" readonly value="{{ char }}" class="w-6 h-6 text-center border border-slate-300 bg-slate-100 text-slate-700 rounded-xs font-bold text-xs" title="District">{% endfor %}</div>
+                        <span class="text-slate-400 font-bold">/</span>
+                        <div class="flex gap-0.5">{% for char in fiche.fosa.designation|slice:':3' %}<input type="text" readonly value="{{ char }}" class="w-6 h-6 text-center border border-slate-300 bg-slate-100 text-slate-700 rounded-xs font-bold text-xs" title="FOSA">{% endfor %}</div>
                     </div>
                     
-                    <div class="col-span-2 py-4 px-4">
-                        <select name="porte_entree_{{ i }}" class="w-full text-xs font-semibold border-slate-200 rounded-lg py-2 px-2 text-slate-600 outline-none focus:border-blue-300 pt_code">
+                    <!-- Sélection Porte d'entrée -->
+                    <div class="col-span-2 py-3 px-4 border-r border-slate-200">
+                        <select name="porte_entree_{{ i }}" class="w-full text-xs font-mono font-medium border border-slate-300 rounded px-2 py-1 bg-white text-slate-800 focus:border-[#1478c1] focus:outline-none pt_code">
                             {% for pt in porte_entree %}
                             <option value="{{ pt.code }}">{{ pt.code }} ({{ pt.nom }})</option>
                             {% endfor %}
                         </select>
                     </div>
 
-                    <div class="col-span-4 py-4 px-6 bg-blue-50/50 border-l border-blue-100 flex gap-1.5 items-center">
-                        {% for j in "1234" %}
-                        <input type="text" maxlength="1" class="otp-input w-7 h-7 text-center border border-blue-200 bg-white rounded shadow-sm font-bold text-blue-600 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none uppercase text-xs transition-all">
-                        {% endfor %}
+                    <!-- Champ OTP & Résultat de vérification -->
+                    <div class="col-span-4 py-3 px-4 bg-sky-50/30 flex gap-2 items-center">
+                        <div class="flex gap-1 font-mono">
+                            {% for j in "1234" %}
+                            <input type="text" maxlength="1" class="otp-input w-7 h-7 text-center border border-slate-300 bg-white rounded shadow-2xs font-bold text-[#1d5288] focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1] outline-none uppercase text-xs">
+                            {% endfor %}
+                        </div>
                         <input type="hidden" name="code_patient_{{ i }}" class="hidden-code">
-                        <div class="status-icon ml-3 text-slate-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2" /></svg>
+                        <div class="status-icon ml-2 text-slate-400 font-mono">
+                            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2" /></svg>
                         </div>
                     </div>
                 </div>
@@ -67,53 +96,57 @@
             </div>
         </div>
 
-        <div class="flex justify-end">
-            <button type="submit" id="submitBtn" class="px-8 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-md shadow-blue-200 active:scale-[0.98] transition-all cursor-pointer">
-                Valider la liste
+        <!-- Bouton de soumission DHIS2 -->
+        <div class="flex justify-end pt-2">
+            <button type="submit" id="submitBtn" class="px-6 py-2.5 bg-[#1478c1] hover:bg-[#1166a5] text-white font-mono font-bold text-xs uppercase tracking-wider rounded border border-[#105d98] shadow-xs transition-colors cursor-pointer flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                Valider la liste des échantillons
             </button>
         </div>
     </form>
 
-    <!-- MODAL 1 : RAPPORT DE BILAN DES CODES -->
-    <div id="resultModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+    <!-- MODAL 1 : RAPPORT DE BILAN DES CODES DHIS2 -->
+    <div id="resultModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-md max-w-md w-full border border-slate-300 shadow-lg overflow-hidden">
             
-            <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
-                <div>
-                    <h3 class="text-base font-bold text-slate-800">Rapport d'enregistrement</h3>
-                    <p class="text-xs text-slate-400">Résultat du traitement par lots</p>
+            <div class="bg-[#1d5288] text-white px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                    <h3 class="text-xs font-bold font-mono uppercase tracking-wide">Rapport d'Enregistrement LIMS</h3>
                 </div>
-                <button type="button" onclick="closeResultModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-600 flex items-center justify-center font-bold text-sm transition-colors cursor-pointer">
+                <button type="button" onclick="closeResultModal()" class="text-sky-200 hover:text-white font-mono text-sm font-bold cursor-pointer">
                     ✕
                 </button>
             </div>
 
-            <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+            <div class="p-4 space-y-4 max-h-[60vh] overflow-y-auto font-mono text-xs">
                 <!-- Section Initialisés -->
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[10px] uppercase font-bold text-slate-400">Codes Initialisés</span>
-                        <span id="countInitialises" class="text-xs font-bold px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full">0</span>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between pb-1 border-b border-slate-200">
+                        <span class="text-[10px] uppercase font-bold text-slate-500">Codes Initialisés avec succès</span>
+                        <span id="countInitialises" class="text-[10px] font-bold px-2 py-0.5 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded">0</span>
                     </div>
-                    <div id="listInitialises" class="space-y-2">
-                        <!-- Injécté dynamiquement -->
+                    <div id="listInitialises" class="space-y-1.5">
+                        <!-- Injecté dynamiquement -->
                     </div>
                 </div>
 
                 <!-- Section Refusés -->
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[10px] uppercase font-bold text-slate-400">Codes Refusés / Ignorés</span>
-                        <span id="countRefuses" class="text-xs font-bold px-2 py-0.5 bg-rose-100 text-rose-700 rounded-full">0</span>
+                <div class="space-y-2 pt-2">
+                    <div class="flex items-center justify-between pb-1 border-b border-slate-200">
+                        <span class="text-[10px] uppercase font-bold text-slate-500">Codes Refusés / Non Traités</span>
+                        <span id="countRefuses" class="text-[10px] font-bold px-2 py-0.5 bg-rose-100 text-rose-800 border border-rose-300 rounded">0</span>
                     </div>
-                    <div id="listRefuses" class="space-y-2">
+                    <div id="listRefuses" class="space-y-1.5">
                         <!-- Injecté dynamiquement -->
                     </div>
                 </div>
             </div>
 
-            <div class="pt-4 border-t border-slate-100 mt-4">
-                <button type="button" onclick="closeResultModal()" class="w-full py-2.5 bg-slate-800 text-white font-semibold text-xs rounded-xl hover:bg-slate-900 transition-colors shadow-lg shadow-slate-200 cursor-pointer">
+            <div class="p-3 bg-slate-50 border-t border-slate-200 flex justify-end">
+                <button type="button" onclick="closeResultModal()" class="px-4 py-1.5 bg-slate-700 hover:bg-slate-800 text-white font-mono font-bold text-xs uppercase rounded border border-slate-800 transition-colors cursor-pointer">
                     Fermer le rapport
                 </button>
             </div>
@@ -121,43 +154,36 @@
         </div>
     </div>
 
-    <!-- MODAL 2 : DETAILS D'UN PATIENT -->
-    <div id="patientModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl transform transition-all">
-            <div class="flex flex-col items-center mb-6">
-                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-3">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+    <!-- MODAL 2 : DÉTAILS D'UN PATIENT DHIS2 -->
+    <div id="patientModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-md max-w-sm w-full border border-slate-300 shadow-lg overflow-hidden">
+            
+            <div class="bg-[#1d5288] text-white px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <h3 class="text-xs font-bold font-mono uppercase tracking-wide">Fiche Dossier Patient</h3>
                 </div>
-                <h2 class="text-xl font-black text-slate-800">Dossier Patient</h2>
-                <p class="text-slate-400 text-xs uppercase tracking-widest font-bold mt-1">Informations vérifiées</p>
+                <button type="button" onclick="closeModal()" class="text-sky-200 hover:text-white font-mono text-sm font-bold cursor-pointer">
+                    ✕
+                </button>
             </div>
 
-            <div id="modalContent" class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-100">
+            <div id="modalContent" class="p-4 space-y-3 font-sans text-xs">
                 <!-- Contenu JS -->
             </div>
 
-            <button type="button" onclick="closeModal()" class="mt-8 w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all active:scale-[0.98] cursor-pointer">
-                Compris, fermer
-            </button>
+            <div class="p-3 bg-slate-50 border-t border-slate-200 flex justify-end">
+                <button type="button" onclick="closeModal()" class="px-4 py-1.5 bg-[#1478c1] hover:bg-[#1166a5] text-white font-mono font-bold text-xs uppercase rounded border border-[#105d98] transition-colors cursor-pointer">
+                    Fermer
+                </button>
+            </div>
         </div>
     </div>
-
-    <style>
-    @keyframes appleFall {
-        0% { opacity: 0; transform: translateY(-100vh) rotate(-10deg); }
-        60% { opacity: 1; transform: translateY(0) rotate(2deg); }
-        80% { transform: translateY(-15px) rotate(-1deg); }
-        100% { transform: translateY(0) rotate(0deg); }
-    }
-    .apple-fall-animation {
-        animation: appleFall 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    </style>
 </main>
 
 <script>
 // ==========================================
-// 1. GESTION DES MODALES
+// 1. GESTION DES MODALES (DHIS2 STYLE)
 // ==========================================
 
 // --- Modal Rapport Bilan (Initialisés / Refusés) ---
@@ -172,7 +198,6 @@ function showResultModal(initialises = [], refuses = []) {
     const countRef = document.getElementById('countRefuses');
     const listInit = document.getElementById('listInitialises');
     const listRef = document.getElementById('listRefuses');
-    const modalBox = modal.querySelector('.bg-white');
 
     // Mettre à jour les compteurs
     if (countInit) countInit.innerText = listInitData.length;
@@ -184,13 +209,13 @@ function showResultModal(initialises = [], refuses = []) {
             listInit.innerHTML = listInitData.map(item => {
                 const codeTxt = typeof item === 'object' ? (item.code || JSON.stringify(item)) : item;
                 return `
-                    <div class="flex items-center gap-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-semibold">
-                        <span class="text-emerald-600 font-bold">✓</span>
-                        <span class="font-mono tracking-wide">${codeTxt}</span>
+                    <div class="flex items-center gap-2 p-2 bg-emerald-50 border border-emerald-200 rounded text-emerald-900 font-mono text-xs font-medium">
+                        <span class="text-emerald-700 font-bold">✓</span>
+                        <span>${codeTxt}</span>
                     </div>`;
             }).join('');
         } else {
-            listInit.innerHTML = `<div class="p-2 text-xs text-slate-400 italic text-center bg-slate-50 rounded-lg">Aucun code initialisé</div>`;
+            listInit.innerHTML = `<div class="p-2 text-xs text-slate-400 italic text-center bg-slate-50 rounded border border-slate-200">Aucun code initialisé</div>`;
         }
     }
 
@@ -201,27 +226,17 @@ function showResultModal(initialises = [], refuses = []) {
                 const codeTxt = typeof item === 'object' ? (item.code || JSON.stringify(item)) : item;
                 const motifTxt = (typeof item === 'object' && item.motif) ? item.motif : '';
                 return `
-                    <div class="flex items-center justify-between p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-semibold">
+                    <div class="flex items-center justify-between p-2 bg-rose-50 border border-rose-200 rounded text-rose-900 font-mono text-xs font-medium">
                         <div class="flex items-center gap-2">
-                            <span class="text-rose-600 font-bold">✕</span>
-                            <span class="font-mono tracking-wide">${codeTxt}</span>
+                            <span class="text-rose-700 font-bold">✕</span>
+                            <span>${codeTxt}</span>
                         </div>
-                        ${motifTxt ? `<span class="text-[10px] text-rose-500 italic font-normal">${motifTxt}</span>` : ''}
+                        ${motifTxt ? `<span class="text-[10px] text-rose-600 font-sans italic">${motifTxt}</span>` : ''}
                     </div>`;
             }).join('');
         } else {
-            listRef.innerHTML = `<div class="p-2 text-xs text-slate-400 italic text-center bg-slate-50 rounded-lg">Aucun code refusé</div>`;
+            listRef.innerHTML = `<div class="p-2 text-xs text-slate-400 italic text-center bg-slate-50 rounded border border-slate-200">Aucun code refusé</div>`;
         }
-    }
-
-    // Réinitialisation CSS & Animation
-    if (modalBox) {
-        modalBox.style.transition = '';
-        modalBox.style.transform = '';
-        modalBox.style.opacity = '';
-        modalBox.classList.remove('apple-fall-animation');
-        void modalBox.offsetWidth;
-        modalBox.classList.add('apple-fall-animation');
     }
 
     modal.classList.remove('hidden');
@@ -231,27 +246,11 @@ function showResultModal(initialises = [], refuses = []) {
 function closeResultModal() {
     const modal = document.getElementById('resultModal');
     if (!modal) return;
-    const modalBox = modal.querySelector('.bg-white');
-
-    if (modalBox) {
-        modalBox.style.transition = 'all 0.3s ease-in';
-        modalBox.style.transform = 'translateY(100vh) rotate(10deg)';
-        modalBox.style.opacity = '0';
-    }
-
-    setTimeout(() => {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        if (modalBox) {
-            modalBox.style.transition = '';
-            modalBox.style.transform = '';
-            modalBox.style.opacity = '';
-            modalBox.classList.remove('apple-fall-animation');
-        }
-    }, 300);
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
 }
 
-// --- Modal Consultation Patient ---
+// --- Modal Consultation Patient DHIS2 ---
 function showModal(data) {
     const p = data.patient;
     const m = p ? p.mere : null;
@@ -259,32 +258,31 @@ function showModal(data) {
     const modal = document.getElementById('patientModal');
     if (!modal || !content) return;
 
-    const modalBox = modal.querySelector('.bg-white');
     const mereDateNaissance = (m && m.date_naissance) ? m.date_naissance : 'N/A';
     
     content.innerHTML = `
-        <div class="bg-blue-600 rounded-xl p-4 mb-4 text-center shadow-lg shadow-blue-200">
-            <span class="block text-blue-100 text-[10px] uppercase tracking-widest font-bold mb-1">Code Patient</span>
-            <span class="text-2xl font-black text-white tracking-tighter">${p ? p.code : 'N/A'}</span>
+        <div class="bg-sky-50 border border-sky-200 p-3 rounded font-mono text-center">
+            <span class="block text-slate-500 text-[10px] uppercase font-bold">CODE PATIENT LIMS</span>
+            <span class="text-lg font-bold text-[#1d5288]">${p ? p.code : 'N/A'}</span>
         </div>
-        <div class="space-y-3">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                <span class="text-[10px] uppercase font-bold text-slate-400">Nom Complet</span>
-                <span class="text-sm font-semibold text-slate-700">${p ? p.nom + ' ' + (p.prenom || '') : 'N/A'}</span>
+        <div class="space-y-2 font-mono text-xs pt-1">
+            <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                <span class="text-slate-500">Nom Complet :</span>
+                <span class="font-bold text-slate-800">${p ? p.nom + ' ' + (p.prenom || '') : 'N/A'}</span>
             </div>
-            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                <span class="text-[10px] uppercase font-bold text-slate-400">Sexe</span>
-                <span class="text-sm font-semibold text-slate-700">${p && p.sexe === 'M' ? 'Masculin' : 'Féminin'}</span>
+            <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                <span class="text-slate-500">Sexe :</span>
+                <span class="font-bold text-slate-800">${p && p.sexe === 'M' ? 'Masculin' : 'Féminin'}</span>
             </div>
-            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                <span class="text-[10px] uppercase font-bold text-slate-400">Date Naiss.</span>
-                <span class="text-sm font-semibold text-slate-700">${(p && p.date_naissance) || 'Non renseignée'}</span>
+            <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                <span class="text-slate-500">Date de Naissance :</span>
+                <span class="font-bold text-slate-800">${(p && p.date_naissance) || 'Non renseignée'}</span>
             </div>
             <div class="pt-2">
-                <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Informations Mère</span>
-                <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg">
-                    <span class="text-xs font-medium text-slate-600">${m ? m.nom + ' ' + (m.prenom || '') : 'Non renseignée'}</span>
-                    <span class="text-[10px] text-slate-400 italic">Née le : ${mereDateNaissance}</span>
+                <span class="text-[10px] uppercase font-bold text-[#1d5288] block mb-1">Informations Mère</span>
+                <div class="bg-slate-50 border border-slate-200 p-2 rounded text-[11px] space-y-1">
+                    <div class="flex justify-between"><span class="text-slate-500">Nom :</span> <strong class="text-slate-800">${m ? m.nom + ' ' + (m.prenom || '') : 'Non renseignée'}</strong></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Née le :</span> <strong class="text-slate-800">${mereDateNaissance}</strong></div>
                 </div>
             </div>
         </div>
@@ -292,35 +290,13 @@ function showModal(data) {
 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
-    
-    if (modalBox) {
-        modalBox.classList.remove('apple-fall-animation');
-        void modalBox.offsetWidth;
-        modalBox.classList.add('apple-fall-animation');
-    }
 }
 
 function closeModal() {
     const modal = document.getElementById('patientModal');
     if (!modal) return;
-    const modalBox = modal.querySelector('.bg-white');
-    
-    if (modalBox) {
-        modalBox.style.transition = 'all 0.3s ease-in';
-        modalBox.style.transform = 'translateY(100vh) rotate(10deg)';
-        modalBox.style.opacity = '0';
-    }
-    
-    setTimeout(() => {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        if (modalBox) {
-            modalBox.style.transition = '';
-            modalBox.style.transform = '';
-            modalBox.style.opacity = '';
-            modalBox.classList.remove('apple-fall-animation');
-        }
-    }, 300);
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
 }
 
 
@@ -332,12 +308,12 @@ async function searchPatient(codeComplet, groupElement) {
     if (!iconContainer) return;
 
     iconContainer.innerHTML = `
-        <div class="flex items-center text-blue-600 animate-pulse">
-            <svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24">
+        <div class="flex items-center text-[#1478c1] font-mono text-xs">
+            <svg class="w-4 h-4 animate-spin mr-1" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
             </svg>
-            <span class="ml-1.5 text-xs font-semibold uppercase tracking-wider">Recherche...</span>
+            <span>Vérification...</span>
         </div>
     `;
 
@@ -348,16 +324,15 @@ async function searchPatient(codeComplet, groupElement) {
         const data = await response.json();
         const patientExiste = data.exists === true || data.existe === true;
 
-        iconContainer.style.opacity = "0";
-        iconContainer.className = "status-icon flex items-center gap-2 transition-opacity duration-300";
+        iconContainer.className = "status-icon flex items-center gap-1.5 font-mono text-xs";
 
         if (patientExiste) {
             iconContainer.innerHTML = `
-                <button type="button" class="view-btn flex items-center gap-1 px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-full transition-all text-xs font-bold uppercase cursor-pointer">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                    <span>Consulter</span>
+                <button type="button" class="view-btn flex items-center gap-1 px-2 py-0.5 bg-sky-100 text-[#1d5288] hover:bg-sky-200 border border-sky-300 rounded font-bold text-[10px] uppercase cursor-pointer">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    <span>Existe (Consulter)</span>
                 </button>
-                <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all cursor-pointer">
+                <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 rounded cursor-pointer" title="Effacer la ligne">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 </button>
             `;
@@ -367,11 +342,10 @@ async function searchPatient(codeComplet, groupElement) {
 
         } else {
             iconContainer.innerHTML = `
-                <span class="flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 text-xs font-bold">
-                    <svg class="w-3 h-3 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-                    <span>Nouveau</span>
+                <span class="flex items-center gap-1 text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300 text-[10px] font-bold uppercase">
+                    ✓ Nouveau
                 </span>
-                <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all cursor-pointer">
+                <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 rounded cursor-pointer" title="Effacer la ligne">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 </button>
             `;
@@ -380,19 +354,15 @@ async function searchPatient(codeComplet, groupElement) {
         const deleteBtn = iconContainer.querySelector('.delete-btn');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', () => {
-                groupElement.classList.add('opacity-0', 'transition-opacity', 'duration-300');
-                setTimeout(() => groupElement.remove(), 300);
+                groupElement.remove();
             });
         }
 
-        requestAnimationFrame(() => { iconContainer.style.opacity = "1"; });
-
     } catch (err) {
         console.error("Erreur searchPatient :", err);
-        iconContainer.style.opacity = "1";
         iconContainer.innerHTML = `
-            <span class="text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">⚠️ Erreur</span>
-            <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 rounded-lg cursor-pointer">
+            <span class="text-[10px] font-bold text-rose-700 bg-rose-100 border border-rose-300 px-2 py-0.5 rounded">⚠️ Erreur</span>
+            <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 cursor-pointer">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
             </button>
         `;
@@ -427,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (fullCode.length === REQUIRED_LENGTH) {
                 searchPatient(fullCode, group);
             } else if (iconContainer) {
-                iconContainer.innerHTML = `<svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/></svg>`;
+                iconContainer.innerHTML = `<svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/></svg>`;
             }
         }
 
@@ -479,13 +449,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const initialises = data.codes_initialises || data.initialises || data.saved || data.codes_valides || [];
                 const refuses = data.codes_refuses || data.refuses || data.exists || data.codes_invalides || [];
 
-                // 🚀 Affichage dynamique dans le modal
+                // Affichage dynamique dans le modal DHIS2
                 showResultModal(initialises, refuses);
 
                 if (submitBtn) {
-                    submitBtn.innerText = 'Validé avec succès !';
-                    if (submitBtn.classList.contains('bg-blue-600')) {
-                        submitBtn.classList.replace('bg-blue-600', 'bg-emerald-600');
+                    submitBtn.innerText = 'Validé avec succès';
+                    if (submitBtn.classList.contains('bg-[#1478c1]')) {
+                        submitBtn.classList.replace('bg-[#1478c1]', 'bg-emerald-700');
                     }
                 }
 

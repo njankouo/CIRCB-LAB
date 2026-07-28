@@ -1,0 +1,187 @@
+{% extends './dashbord_hosp.html' %}
+{% load static %}
+
+{% block main %}
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 sm:p-6 flex flex-col gap-4 bg-[#f4f6f8] dark:bg-slate-950 w-full max-w-[100vw] custom-scrollbar font-sans text-slate-800">
+    
+    <!-- EN-TÊTE OFFICIEL INSTITUTIONNEL (Cameroun & CIRCB) -->
+    <div class="bg-white border border-[#e0e0e0] rounded-[3px] p-4 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-4 border-t-4 border-t-[#2c6693]">
+        <!-- Bloc Gauche : République & Devise -->
+        <div class="text-center md:text-left text-[11px] font-bold text-slate-700 uppercase tracking-wider space-y-0.5">
+            <p>République du Cameroun</p>
+            <p class="text-[10px] text-slate-500 font-normal normal-case">Paix – Travail – Patrie</p>
+            <div class="pt-1 border-t border-slate-200 mt-1">
+                <p class="text-[10px] text-[#2c6693]">Ministère de la Santé Publique</p>
+            </div>
+        </div>
+
+     <!-- Bloc Centre : Logo CIRCB & Titre de l'Institution -->
+<div class="flex flex-col items-center text-center space-y-2">
+    <!-- Logo sans cadre, libre et proportionné -->
+    <img src="{% static 'images/Logo-CIRCB.png' %}" alt="Logo CIRCB" class="h-14 w-auto object-contain drop-shadow-2xs">
+    
+    <div class="space-y-0.5">
+        <h2 class="text-xs font-bold text-slate-900 uppercase tracking-tight">Centre International de Recherche sur les VIH/sida</h2>
+        <p class="text-[10px] text-slate-500 font-mono tracking-wide">et les maladies associées (CIRCB)</p>
+    </div>
+</div>
+
+        <!-- Bloc Droit : Infos LIMS / Date -->
+        <div class="text-center md:text-right text-[11px] text-slate-600 font-mono space-y-0.5">
+            <p class="font-bold text-[#2c6693] uppercase text-[10px]">Plateforme LIMS EID</p>
+            <p class="text-[10px]">Édition officielle</p>
+        </div>
+    </div>
+
+    <!-- 1. EN-TÊTE DE APPLICATION / BARRE D'ACTIONS STYLE DHIS2 -->
+    <div class="bg-white border border-[#e0e0e0] rounded-[3px] shadow-2xs px-4 py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div>
+            <nav class="flex text-[11px] text-slate-500 mb-1 font-sans" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1.5">
+                    <li><a href="#" class="hover:text-[#2c6693] font-medium">Laboratoire Virologie</a></li>
+                    <li><span class="text-slate-400">/</span></li>
+                    <li><span class="font-medium text-slate-700">Rapports et Analyses</span></li>
+                    <li><span class="text-slate-400">/</span></li>
+                    <li class="text-[#2c6693] font-semibold">Tableau Croisé Dynamique EID</li>
+                </ol>
+            </nav>
+            <div class="flex items-center gap-2.5">
+                <h1 class="text-base font-bold text-slate-900 tracking-tight">Suivi Chronologique des PCR (EID)</h1>
+            </div>
+        </div>
+
+        <!-- BOUTONS D'ACTIONS -->
+        <div class="flex items-center gap-2">
+            <a type="button" href='/imprimer_resultat_pdf/' target="_blank" class="px-3.5 py-1.5 text-xs font-semibold text-white bg-[#2c6693] hover:bg-[#235275] border border-[#1e496a] rounded-[2px] shadow-2xs transition flex items-center gap-1.5 uppercase tracking-wider">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                Imprimer
+            </a>
+            <a href="javascript:history.back()" class="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-[2px] transition shadow-2xs">
+                ← Retour
+            </a>
+        </div>
+    </div>
+
+    <!-- 2. PANNEAU DE FILTRAGE / MÉTADONNÉES (FOSA HORS DU TABLEAU) -->
+    <div class="bg-white border border-[#e0e0e0] rounded-[3px] p-3.5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2.5">
+            <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Formation Sanitaire :</span>
+            <span class="text-xs font-bold text-[#2c6693] bg-[#f8f9fa] px-2.5 py-1 rounded border border-slate-200 uppercase">{{ fosa_nom_affiche }}</span>
+        </div>
+        <div class="flex items-center gap-2 text-slate-600">
+            <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Période :</span>
+            <span class="font-medium text-slate-700 bg-[#f8f9fa] px-2.5 py-1 rounded border border-slate-200">
+                {{ date_debut|default:"Début non spécifié" }} au {{ date_fin|default:"Fin non spécifiée" }}
+            </span>
+        </div>
+    </div>
+
+    <!-- 3. TABLEAU CROISÉ DYNAMIQUE (STYLE DHIS2 DATA TABLE) -->
+    <div class="bg-white border border-[#e0e0e0] rounded-[3px] shadow-2xs overflow-hidden flex flex-col">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse whitespace-nowrap">
+                <thead>
+                    <!-- Ligne 1 des En-têtes -->
+                    <tr class="bg-[#2c6693] text-white uppercase tracking-wider border-b border-[#1e496a] text-center text-[10px] font-semibold">
+                        <th rowspan="2" class="px-3 py-3 border-r border-[#1e496a] text-left align-middle">Code Patient</th>
+                        <th rowspan="2" class="px-3 py-3 border-r border-[#1e496a] text-left align-middle">Enfant</th>
+                        <th rowspan="2" class="px-2.5 py-3 border-r border-[#1e496a] align-middle">Né(e) le</th>
+                        <th rowspan="2" class="px-3 py-3 border-r border-[#1e496a] text-left align-middle">Mère</th>
+                        <th rowspan="2" class="px-2.5 py-3 border-r border-[#1e496a] align-middle">Contact Mère</th>
+                        
+                        <!-- Blocs PCR -->
+                        <th colspan="3" class="px-2 py-2 border-r border-[#1e496a] bg-[#235275] font-bold">1ère PCR (PCR 1)</th>
+                        <th colspan="3" class="px-2 py-2 border-r border-[#1e496a] bg-[#2c6693] font-bold">2ème PCR (PCR 2)</th>
+                        <th colspan="3" class="px-2 py-2 bg-[#1b435d] font-bold">3ème PCR (PCR 3)</th>
+                    </tr>
+                    <!-- Ligne 2 des En-têtes (Sous-colonnes) -->
+                    <tr class="bg-[#1f4e71] text-white text-[9px] border-b border-[#1e496a] text-center font-medium">
+                        <!-- PCR 1 -->
+                        <th class="px-2 py-1.5 border-r border-[#1e496a]">Prélèvement</th>
+                        <th class="px-2.5 py-1.5 border-r border-[#1e496a] text-amber-200">Statut Résultat</th>
+                        <th class="px-2 py-1.5 border-r border-[#1e496a]">Date Résultat</th>
+                        
+                        <!-- PCR 2 -->
+                        <th class="px-2 py-1.5 border-r border-[#1e496a]">Prélèvement</th>
+                        <th class="px-2.5 py-1.5 border-r border-[#1e496a] text-amber-200">Statut Résultat</th>
+                        <th class="px-2 py-1.5 border-r border-[#1e496a]">Date Résultat</th>
+                        
+                        <!-- PCR 3 -->
+                        <th class="px-2 py-1.5 border-r border-[#1e496a]">Prélèvement</th>
+                        <th class="px-2.5 py-1.5 border-r border-[#1e496a] text-amber-200">Statut Résultat</th>
+                        <th class="px-2 py-1.5">Date Résultat</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 text-slate-700 text-[11px]">
+                    {% for row in lignes_collectives %}
+                    <tr class="hover:bg-[#f8f9fa] transition-colors">
+                        <!-- Infos Patient -->
+                        <td class="px-3 py-2.5 font-bold text-slate-900 border-r border-slate-200">{{ row.code }}</td>
+                        <td class="px-3 py-2.5 font-semibold text-slate-900 border-r border-slate-200">{{ row.patient_nom }}</td>
+                        <td class="px-2.5 py-2.5 text-center border-r border-slate-200 text-slate-600">{{ row.date_naissance|date:"d/m/Y"|default:row.date_naissance }}</td>
+                        <td class="px-3 py-2.5 border-r border-slate-200 text-slate-600">{{ row.mere_nom }}</td>
+                        <td class="px-2.5 py-2.5 text-center border-r border-slate-200 text-slate-600">{{ row.mere_contact }}</td>
+                        
+                        <!-- PCR 1 -->
+                        <td class="px-2 py-2.5 text-center border-r border-slate-200 text-slate-500">{{ row.pcr1.date_prel|date:"d/m/Y"|default:"-" }}</td>
+                        <td class="px-2.5 py-2.5 text-center border-r border-slate-200">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-[2px] text-[10px] font-bold uppercase tracking-wide
+                                {% if row.pcr1.statut == 'DETECTE' or row.pcr1.code_statut == 'DET' %}bg-red-50 text-red-700 border border-red-200
+                                {% elif row.pcr1.statut == 'NON DETECTE' or row.pcr1.code_statut == 'NDET' %}bg-emerald-50 text-emerald-700 border border-emerald-200
+                                {% elif row.pcr1.statut == 'INVALIDE' or row.pcr1.code_statut == 'INV' %}bg-amber-50 text-amber-700 border border-amber-200
+                                {% else %}text-slate-400 bg-slate-50 border border-slate-200{% endif %}">
+                                {{ row.pcr1.statut }}
+                            </span>
+                        </td>
+                        <td class="px-2 py-2.5 text-center border-r border-slate-200 text-slate-500">{{ row.pcr1.date_res|date:"d/m/Y"|default:"-" }}</td>
+
+                        <!-- PCR 2 -->
+                        <td class="px-2 py-2.5 text-center border-r border-slate-200 text-slate-500">{{ row.pcr2.date_prel|date:"d/m/Y"|default:"-" }}</td>
+                        <td class="px-2.5 py-2.5 text-center border-r border-slate-200">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-[2px] text-[10px] font-bold uppercase tracking-wide
+                                {% if row.pcr2.statut == 'DETECTE' or row.pcr2.code_statut == 'DET' %}bg-red-50 text-red-700 border border-red-200
+                                {% elif row.pcr2.statut == 'NON DETECTE' or row.pcr2.code_statut == 'NDET' %}bg-emerald-50 text-emerald-700 border border-emerald-200
+                                {% elif row.pcr2.statut == 'INVALIDE' or row.pcr2.code_statut == 'INV' %}bg-amber-50 text-amber-700 border border-amber-200
+                                {% else %}text-slate-400 bg-slate-50 border border-slate-200{% endif %}">
+                                {{ row.pcr2.statut }}
+                            </span>
+                        </td>
+                        <td class="px-2 py-2.5 text-center border-r border-slate-200 text-slate-500">{{ row.pcr2.date_res|date:"d/m/Y"|default:"-" }}</td>
+
+                        <!-- PCR 3 -->
+                        <td class="px-2 py-2.5 text-center border-r border-slate-200 text-slate-500">{{ row.pcr3.date_prel|date:"d/m/Y"|default:"-" }}</td>
+                        <td class="px-2.5 py-2.5 text-center border-r border-slate-200">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-[2px] text-[10px] font-bold uppercase tracking-wide
+                                {% if row.pcr3.statut == 'DETECTE' or row.pcr3.code_statut == 'DET' %}bg-red-50 text-red-700 border border-red-200
+                                {% elif row.pcr3.statut == 'NON DETECTE' or row.pcr3.code_statut == 'NDET' %}bg-emerald-50 text-emerald-700 border border-emerald-200
+                                {% elif row.pcr3.statut == 'INVALIDE' or row.pcr3.code_statut == 'INV' %}bg-amber-50 text-amber-700 border border-amber-200
+                                {% else %}text-slate-400 bg-slate-50 border border-slate-200{% endif %}">
+                                {{ row.pcr3.statut }}
+                            </span>
+                        </td>
+                        <td class="px-2 py-2.5 text-center text-slate-500">{{ row.pcr3.date_res|date:"d/m/Y"|default:"-" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="14" class="px-4 py-16 text-center text-slate-400">
+                            <div class="flex flex-col items-center justify-center space-y-1.5">
+                                <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+                                <span class="text-xs font-semibold text-slate-600">Aucun enregistrement disponible</span>
+                                <span class="text-[11px] text-slate-400">Modifiez les critères de sélection pour afficher les données.</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- FOOTER DU TABLEAU -->
+        <div class="bg-[#f8f9fa] border-t border-[#e0e0e0] px-4 py-2.5 flex items-center justify-between text-[11px] text-slate-500">
+            <span>Total patients enregistrés : <strong class="text-slate-700">{{ lignes_collectives|length }}</strong></span>
+            <span>Module d'Analyse EID — MEDYSIS LIS Standard</span>
+        </div>
+    </div>
+
+</main>
+{% endblock %}

@@ -6,15 +6,21 @@
     <!-- ========================================== -->
     <!-- 1. OVERLAY DE CHARGEMENT GLOBAL          -->
     <!-- ========================================== -->
-    <div id="global-loader" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-slate-900/50 dark:bg-slate-950/80 backdrop-blur-sm transition-all duration-200">
-        <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 p-6 rounded-xl shadow-xl flex flex-col items-center gap-3 max-w-xs text-center">
-            <div class="w-10 h-10 rounded-full border-3 border-blue-600 border-t-transparent animate-spin"></div>
-            <div>
-                <h3 class="text-sm font-bold text-slate-900 dark:text-white" id="loader-title">Traitement ERP...</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" id="loader-subtitle">Analyse et mise à jour des registres.</p>
-            </div>
+ <!-- Loader Moderne UI/UX - Style LIMS / CIRCB -->
+<div id="global-loader" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/45 backdrop-blur-xs transition-all duration-300">
+    <div class="bg-white border border-slate-200/90 p-5 rounded-2xl shadow-2xl flex items-center gap-4 max-w-xs text-left animate-in fade-in zoom-in-95 duration-150">
+        <!-- Spinner épuré et fluide -->
+        <div class="relative flex items-center justify-center shrink-0">
+            <div class="w-9 h-9 rounded-full border-2 border-slate-100"></div>
+            <div class="absolute w-9 h-9 rounded-full border-2 border-[#1478c1] border-t-transparent animate-spin"></div>
+        </div>
+        <!-- Texte contextuel institutionnel -->
+        <div>
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Traitement en cours</h3>
+            <p class="text-[11px] text-slate-500 font-sans mt-0.5">Synchronisation des registres LIMS...</p>
         </div>
     </div>
+</div>
 
     <div class="max-w-[1600px] w-full mx-auto space-y-3 flex flex-col h-full">
 
@@ -393,17 +399,30 @@
     }
 
     // Gestion de l'overlay de chargement
-    document.addEventListener('DOMContentLoaded', function() {
-        const globalLoader = document.getElementById('global-loader');
-        const filterForm = document.getElementById('filter-form');
-        const saveForm = document.getElementById('save-form');
+  document.addEventListener('DOMContentLoaded', function() {
+    const globalLoader = document.getElementById('global-loader');
+    const filterForm = document.getElementById('filter-form');
+    const saveForm = document.getElementById('save-form');
 
-        if (filterForm) {
-            filterForm.addEventListener('submit', () => globalLoader.classList.remove('hidden'));
-        }
-        if (saveForm) {
-            saveForm.addEventListener('submit', () => globalLoader.classList.remove('hidden'));
-        }
-    });
+    if (filterForm) {
+        filterForm.addEventListener('submit', () => {
+            globalLoader.classList.remove('hidden');
+        });
+    }
+    
+    if (saveForm) {
+        saveForm.addEventListener('submit', () => {
+            globalLoader.classList.remove('hidden');
+        });
+    }
+});
+
+// Sécurité : masque le loader si la page est rechargée ou restaurée depuis le cache (bouton retour)
+window.addEventListener('pageshow', function(event) {
+    const globalLoader = document.getElementById('global-loader');
+    if (globalLoader) {
+        globalLoader.classList.add('hidden');
+    }
+});
 </script>
 {% endblock %}

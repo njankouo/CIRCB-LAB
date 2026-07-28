@@ -2,42 +2,54 @@
 
 {% block main %}
 <style>
-    /* Permet d'avoir une transition fluide entre caché et visible */
-#success-confirmation.hidden {
-    display: none !important;
-}
-#success-confirmation:not(.hidden) {
-    display: block; /* Ou flex, selon votre besoin */
-}
+    /* Transition fluide pour le conteneur de succès */
+    #success-confirmation.hidden {
+        display: none !important;
+    }
+    #success-confirmation:not(.hidden) {
+        display: block;
+    }
 </style>
-<main class="flex-1 h-full min-h-0 overflow-y-auto p-8 bg-slate-50">
 
-<div class="pl-4 sm:pl-6 lg:pl-10 pr-4 sm:pr-6 py-6 max-w-7xl mx-auto w-full space-y-8">
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 sm:p-6 flex flex-col gap-4 bg-[#f4f6f8] dark:bg-slate-950 w-full max-w-[100vw] custom-scrollbar font-sans text-slate-800">
     
-    <!-- En-tête de la page -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b-2 border-slate-900 pb-6">
+    <!-- 1. EN-TÊTE DE APPLICATION / BARRE D'ACTIONS STYLE DHIS2 -->
+    <div class="bg-white border border-[#e0e0e0] rounded-[3px] shadow-2xs px-4 py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
-            <h1 class="text-2xl font-black uppercase tracking-tight text-slate-900">Annuaire du personnel</h1>
-            <p class="text-sm font-semibold text-slate-500 mt-0.5">Gestion et liste des équipes médicales, administratives et techniques</p>
+            <nav class="flex text-[11px] text-slate-500 mb-1 font-sans" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1.5">
+                    <li><a href="#" class="hover:text-[#2c6693] font-medium">Administration</a></li>
+                    <li><span class="text-slate-400">/</span></li>
+                    <li><span class="font-medium text-slate-700">Ressources Humaines</span></li>
+                    <li><span class="text-slate-400">/</span></li>
+                    <li class="text-[#2c6693] font-semibold">Annuaire du Personnel</li>
+                </ol>
+            </nav>
+            <div class="flex items-center gap-2.5">
+                <h1 class="text-base font-bold text-slate-900 tracking-tight">Annuaire du Personnel Médical et Administratif</h1>
+            </div>
         </div>
-        <div>
-          <button onclick="document.getElementById('personnel-modal').showModal()" class="w-full sm:w-auto px-4 py-2.5 bg-slate-900 hover:bg-slate-950 text-white font-bold rounded-xl border-2 border-slate-900 text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-y-0.5">
-    + Ajouter un Personnel
-</button>
+
+        <!-- BOUTON D'ACTION PRINCIPAL -->
+        <div class="flex items-center gap-2">
+            <button onclick="document.getElementById('personnel-modal').showModal()" class="px-3.5 py-1.5 text-xs font-semibold text-white bg-[#2c6693] hover:bg-[#235275] border border-[#1e496a] rounded-[2px] shadow-2xs transition flex items-center gap-1.5 uppercase tracking-wider">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                Ajouter un Personnel
+            </button>
         </div>
     </div>
 
-    <!-- Filtres & Outils de recherche -->
-    <div class="p-4 bg-white border-2 border-slate-900 rounded-xl shadow-[4px_4px_0px_0px_#0f172a] grid grid-cols-1 md:grid-cols-3 gap-4">
+    <!-- 2. PANNEAU DE FILTRAGE STYLE DHIS2 -->
+    <div class="bg-white border border-[#e0e0e0] rounded-[3px] p-3.5 shadow-2xs grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
         <div class="relative">
-            <input type="text" placeholder="Rechercher un nom, un matricule..." class="w-full pl-10 pr-4 py-2.5 bg-white border-2 border-slate-900 rounded-lg text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-800">
-            <div class="absolute left-3 top-3.5 text-slate-400">
-                <i data-lucide="search" class="w-4 h-4"></i>
+            <input type="text" placeholder="Rechercher un nom, un matricule..." class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-300 rounded-[2px] text-xs font-medium text-slate-800 focus:outline-none focus:border-[#2c6693]">
+            <div class="absolute left-2.5 top-2 text-slate-400">
+                <i data-lucide="search" class="w-3.5 h-3.5"></i>
             </div>
         </div>
         
         <div>
-            <select class="w-full px-3 py-2.5 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
+            <select class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-[2px] text-xs font-medium text-slate-800 focus:outline-none focus:border-[#2c6693]">
                 <option value="">Tous les départements</option>
                 <option value="clinique">Corps Médical / Clinique</option>
                 <option value="labo">Laboratoire d'analyses</option>
@@ -47,7 +59,7 @@
         </div>
 
         <div>
-            <select class="w-full px-3 py-2.5 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
+            <select class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-[2px] text-xs font-medium text-slate-800 focus:outline-none focus:border-[#2c6693]">
                 <option value="">Tous les statuts</option>
                 <option value="dispo">Disponible</option>
                 <option value="garde">En Garde</option>
@@ -56,200 +68,204 @@
         </div>
     </div>
 
-    <!-- Grille du Personnel : Ajustement des colonnes selon la largeur -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        
-        <!-- Dans votre grille -->
-{% for p in personnels %}
-<div class="bg-white border-2 border-slate-900 rounded-xl p-6 shadow-[4px_4px_0px_0px_#0f172a] flex flex-col justify-between">
-    <div>
-        <div class="flex items-start justify-between mb-4">
-            <!-- Initiales dynamiques -->
-            <div class="w-12 h-12 rounded-xl bg-slate-100 border-2 border-slate-900 flex items-center justify-center font-black text-slate-900 text-lg">
-                {{ p.prenom|slice:":1"|upper }}{{ p.nom|slice:":1"|upper }}
+    <!-- 3. GRILLE DU PERSONNEL (Cartes épurées au format DHIS2 App Grid) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        {% for p in personnels %}
+        <div class="bg-white border border-[#e0e0e0] rounded-[3px] p-4 shadow-2xs flex flex-col justify-between hover:border-[#2c6693] transition-colors">
+            <div>
+                <div class="flex items-start justify-between mb-3">
+                    <!-- Initiales type badge DHIS2 -->
+                    <div class="w-10 h-10 rounded-[2px] bg-[#f8f9fa] border border-slate-200 flex items-center justify-center font-bold text-[#2c6693] text-sm">
+                        {{ p.prenom|slice:":1"|upper }}{{ p.nom|slice:":1"|upper }}
+                    </div>
+                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-[2px]">
+                        Actif
+                    </span>
+                </div>
+                
+                <h3 class="font-bold text-sm text-slate-900 tracking-tight">{{ p.nom }} {{ p.prenom }}</h3>
+                <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mt-0.5">{{ p.service }}</p>
+                
+                <div class="mt-3 pt-3 border-t border-slate-100 space-y-1.5 text-xs text-slate-600">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400"></i>
+                        <span class="truncate">{{ p.mail }}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400"></i>
+                        <span>{{ p.tel|default:"Non renseigné" }}</span>
+                    </div>
+                </div>
             </div>
-            <span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wide bg-emerald-50 text-emerald-700 border border-emerald-600 rounded-md">
-                Actif
-            </span>
         </div>
-        
-        <h3 class="font-black text-lg text-slate-900 uppercase tracking-tight">{{ p.nom }} {{ p.prenom }}</h3>
-        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">{{ p.service }}</p>
-        
-        <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-sm font-medium text-slate-700">
-            <div class="flex items-center gap-2">
-                <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
-                <span class="truncate">{{ p.mail }}</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
-                <span>{{ p.tel|default:"Non renseigné" }}</span>
-            </div>
-        </div>
+        {% endfor %}
     </div>
-    <!-- ... rest of card ... -->
-</div>
-{% endfor %}
 
-      
+</main>
 
-    </div>
-</div>
-<dialog id="personnel-modal" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm bg-white border-2 border-slate-900 rounded-2xl p-6 max-w-lg w-full shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] open:animate-in open:fade-in open:zoom-in-95 duration-200">
+<!-- 4. MODALE DE CRÉATION (STYLE FORMULAIRE INSTITUTIONNEL DHIS2) -->
+<dialog id="personnel-modal" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-xs bg-white border border-[#e0e0e0] rounded-[3px] p-0 max-w-lg w-full shadow-lg open:animate-in open:fade-in open:zoom-in-95 duration-150">
     
-    <div class="flex items-center justify-between border-b-2 border-slate-900 pb-4 mb-4">
-        <h3 class="text-lg font-black uppercase tracking-tight text-slate-900">Nouvel Agent Personnel</h3>
-        <button onclick="document.getElementById('personnel-modal').close()" class="p-1.5 border border-slate-900 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-900 transition-colors">
+    <!-- En-tête Modale -->
+    <div id="modal-header" class="bg-[#2c6693] text-white px-4 py-3 flex items-center justify-between">
+        <h3 class="text-xs font-bold uppercase tracking-wider">Nouvel Agent / Personnel</h3>
+        <button onclick="document.getElementById('personnel-modal').close()" class="text-white hover:text-slate-200 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
     </div>
 
-    <form method="POST" action="#" class="space-y-4" id='form-personnel'>
-        {% csrf_token %}
-        
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Nom</label>
-                <input type="text" name="last_name" required class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-            </div>
-            <div>
-                <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Prénom</label>
-                <input type="text" name="first_name" required class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-            </div>
-        </div>
-
-        <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Adresse Email</label>
-            <input type="email" name="email" required class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none">
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Service</label>
-                <select name="service" required class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
-                    <option value="urgences">Urgences</option>
-                    <option value="cardiologie">Cardiologie</option>
-                    <option value="laboratoire">Laboratoire</option>
-                    <option value="administration">Administration</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1">Rôle / Grade</label>
-                <select name="role" required class="w-full px-3 py-2 bg-white border-2 border-slate-900 rounded-lg text-sm font-bold text-slate-900 focus:outline-none">
-                    {%for roles in role%}
-                    <option value="{{roles.id}}">{{roles.nom}}</option>
-                   {%endfor%}
-                </select>
-            </div>
-        </div>
-
-        <div class="flex items-center justify-end gap-3 pt-4 border-t-2 border-slate-900 mt-6">
-            <button type="button" onclick="document.getElementById('personnel-modal').close()" class="px-4 py-2 border border-slate-900 rounded-xl bg-slate-50 hover:bg-slate-100 font-bold text-xs uppercase tracking-wider text-slate-900 transition-colors">
-                Annuler
-            </button>
-            <button type="submit" class="px-4 py-2 bg-slate-900 hover:bg-slate-950 border-2 border-slate-900 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-y-0.5">
-                Enregistrer l'agent
-            </button>
-        </div>
-    </form>
-    <div id="success-confirmation" class="hidden opacity-0 transition-opacity duration-500 space-y-4 text-center">
-    <div class="p-4 bg-green-50 border border-green-200 rounded-xl">
-        <h3 class="text-green-800 font-black uppercase text-sm mb-2">Agent créé avec succès !</h3>
-        <p class="text-xs text-green-600 mb-4">Voici ses identifiants temporaires :</p>
-        
-        <div class="bg-white p-3 rounded-lg border border-green-200 mb-2">
-            <span class="block text-[10px] text-slate-400 font-bold uppercase">Identifiant (Email)</span>
-            <span id="display-email" class="font-bold text-slate-900"></span>
-        </div>
-        
-        <div class="bg-white p-3 rounded-lg border border-green-200 relative">
-            <span class="block text-[10px] text-slate-400 font-bold uppercase">Mot de passe</span>
-            <span id="display-password" class="font-bold text-indigo-600 text-lg tracking-widest"></span>
+    <div class="p-5">
+        <form method="POST" action="#" class="space-y-4 text-xs" id="form-personnel">
+            {% csrf_token %>
             
-            <button onclick="copyToClipboard()" class="absolute right-2 top-2 p-1.5 hover:bg-slate-100 rounded">
-                <i data-lucide="copy" class="w-4 h-4 text-slate-400"></i>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nom <span class="text-red-500">*</span></label>
+                    <input type="text" name="last_name" required class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-[2px] text-xs font-medium text-slate-800 focus:outline-none focus:border-[#2c6693]">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Prénom <span class="text-red-500">*</span></label>
+                    <input type="text" name="first_name" required class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-[2px] text-xs font-medium text-slate-800 focus:outline-none focus:border-[#2c6693]">
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-semibold text-slate-700 mb-1">Adresse Email <span class="text-red-500">*</span></label>
+                <input type="email" name="email" required class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-[2px] text-xs font-medium text-slate-800 focus:outline-none focus:border-[#2c6693]">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Service <span class="text-red-500">*</span></label>
+                    <select name="service" required class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-[2px] text-xs font-medium text-slate-800 focus:outline-none focus:border-[#2c6693]">
+                        <option value="urgences">Urgences</option>
+                        <option value="cardiologie">Cardiologie</option>
+                        <option value="laboratoire">Laboratoire</option>
+                        <option value="administration">Administration</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Rôle / Grade <span class="text-red-500">*</span></label>
+                    <select name="role" required class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-[2px] text-xs font-medium text-slate-800 focus:outline-none focus:border-[#2c6693]">
+                        {% for roles in role %}
+                        <option value="{{ roles.id }}">{{ roles.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-200 mt-5">
+                <button type="button" onclick="document.getElementById('personnel-modal').close()" class="px-3 py-1.5 border border-slate-300 rounded-[2px] bg-white hover:bg-slate-50 font-semibold text-xs text-slate-700 transition-colors">
+                    Annuler
+                </button>
+                <button type="submit" class="px-3.5 py-1.5 bg-[#2c6693] hover:bg-[#235275] border border-[#1e496a] text-white font-semibold rounded-[2px] text-xs uppercase tracking-wider shadow-2xs transition">
+                    Enregistrer l'agent
+                </button>
+            </div>
+        </form>
+
+        <!-- Bloc de confirmation de succès -->
+        <div id="success-confirmation" class="hidden opacity-0 transition-opacity duration-300 space-y-3 text-center">
+            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-[2px]">
+                <h3 class="text-emerald-800 font-bold text-xs uppercase mb-1">Agent créé avec succès !</h3>
+                <p class="text-[11px] text-emerald-600 mb-3">Voici ses identifiants temporaires :</p>
+                
+                <div class="bg-white p-2.5 rounded-[2px] border border-emerald-200 mb-2 text-left">
+                    <span class="block text-[9px] text-slate-400 font-bold uppercase">Identifiant (Email)</span>
+                    <span id="display-email" class="font-semibold text-xs text-slate-900"></span>
+                </div>
+                
+                <div class="bg-white p-2.5 rounded-[2px] border border-emerald-200 relative text-left">
+                    <span class="block text-[9px] text-slate-400 font-bold uppercase">Mot de passe</span>
+                    <span id="display-password" class="font-bold text-[#2c6693] text-sm tracking-wider"></span>
+                    
+                    <button onclick="copyToClipboard()" class="absolute right-2 top-2 p-1 hover:bg-slate-100 rounded-[2px]">
+                        <i data-lucide="copy" class="w-3.5 h-3.5 text-slate-400"></i>
+                    </button>
+                </div>
+            </div>
+            <button onclick="window.location.reload()" class="w-full py-1.5 bg-[#2c6693] hover:bg-[#235275] text-white font-semibold rounded-[2px] text-xs uppercase tracking-wider">
+                Fermer et recharger
             </button>
         </div>
     </div>
-    <button onclick="window.location.reload()" class="w-full py-2 bg-slate-900 text-white font-bold rounded-lg text-xs uppercase">
-        Fermer et recharger
-    </button>
-</div>
 </dialog>
-<!-- À placer dans votre <dialog>, après le </form> -->
-
-</main>
 {% endblock %}
 
 {% block scripts %}
 <script>
-     lucide.createIcons();
-     const modal = document.getElementById('personnel-modal');
-modal.addEventListener('click', (e) => {
-    const dialogDimensions = modal.getBoundingClientRect();
-    if (
-        e.clientX < dialogDimensions.left ||
-        e.clientX > dialogDimensions.right ||
-        e.clientY < dialogDimensions.top ||
-        e.clientY > dialogDimensions.bottom
-    ) {
-        modal.close();
-    }
-});
-</script>
-<script>
- // Fonction de copie avec retour visuel
-async function copyToClipboard() {
-    const password = document.getElementById('display-password').innerText;
-    try {
-        await navigator.clipboard.writeText(password);
-        const btn = event.currentTarget;
-        btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-green-600"></i>';
-        lucide.createIcons();
-        setTimeout(() => {
-            btn.innerHTML = '<i data-lucide="copy" class="w-4 h-4 text-slate-400"></i>';
-            lucide.createIcons();
-        }, 2000);
-    } catch (err) {
-        alert("Erreur lors de la copie.");
-    }
-}
+    lucide.createIcons();
 
-// Votre gestionnaire de submit (mise à jour)
-document.querySelector('#form-personnel').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const headerTitle = document.querySelector('#modal-header h3');
-    const successBlock = document.getElementById('success-confirmation');
-
-    // Désactiver le bouton pendant le fetch
-    const submitBtn = form.querySelector('button[type="submit"]');
-    submitBtn.disabled = true;
-    submitBtn.innerText = "Enregistrement en cours...";
-
-    const response = await fetch('/save-personnel/', {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value }
+    // Fermeture de la modale en cliquant en dehors
+    const modal = document.getElementById('personnel-modal');
+    modal.addEventListener('click', (e) => {
+        const dialogDimensions = modal.getBoundingClientRect();
+        if (
+            e.clientX < dialogDimensions.left ||
+            e.clientX > dialogDimensions.right ||
+            e.clientY < dialogDimensions.top ||
+            e.clientY > dialogDimensions.bottom
+        ) {
+            modal.close();
+        }
     });
-    const result = await response.json();
 
-    if (result.success) {
-        form.classList.add('hidden'); // Cache le formulaire
-        headerTitle.innerText = "Enregistrement Réussi";
-        
-        successBlock.classList.remove('hidden');
-        // Déclencher l'apparition en fondu
-        setTimeout(() => successBlock.classList.remove('opacity-0'), 10);
-
-        document.getElementById('display-email').innerText = form.querySelector('[name="email"]').value;
-        document.getElementById('display-password').innerText = result.generated_password;
-        lucide.createIcons();
-    } else {
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Enregistrer l'agent";
-        alert('Erreur: ' + result.message);
+    // Fonction de copie avec retour visuel
+    async function copyToClipboard() {
+        const password = document.getElementById('display-password').innerText;
+        try {
+            await navigator.clipboard.writeText(password);
+            const btn = event.currentTarget;
+            btn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i>';
+            lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = '<i data-lucide="copy" class="w-3.5 h-3.5 text-slate-400"></i>';
+                lucide.createIcons();
+            }, 2000);
+        } catch (err) {
+            alert("Erreur lors de la copie.");
+        }
     }
-});
+
+    // Gestionnaire de soumission Ajax du formulaire
+    document.querySelector('#form-personnel').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const headerTitle = document.querySelector('#modal-header h3');
+        const successBlock = document.getElementById('success-confirmation');
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Enregistrement...";
+
+        try {
+            const response = await fetch('/save-personnel/', {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value }
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                form.classList.add('hidden');
+                headerTitle.innerText = "Enregistrement Réussi";
+                
+                successBlock.classList.remove('hidden');
+                setTimeout(() => successBlock.classList.remove('opacity-0'), 10);
+
+                document.getElementById('display-email').innerText = form.querySelector('[name="email"]').value;
+                document.getElementById('display-password').innerText = result.generated_password;
+                lucide.createIcons();
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Enregistrer l'agent";
+                alert('Erreur: ' + result.message);
+            }
+        } catch (error) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Enregistrer l'agent";
+            alert('Une erreur réseau est survenue.');
+        }
+    });
 </script>
 {% endblock %}

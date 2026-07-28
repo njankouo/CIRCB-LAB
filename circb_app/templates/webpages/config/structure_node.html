@@ -1,6 +1,8 @@
 <!-- structure_node.html -->
 
-<tr class="transition border-b border-gray-100 group
+<tr data-id="{{ node.id }}" 
+    data-parent-id="{{ node.parent.id|default:'' }}" 
+    class="node-row transition border-b border-gray-100 group
     {% if node.hierachy.rang == 1 %} bg-white 
     {% elif node.hierachy.rang == 2 %} bg-slate-50/80 
     {% elif node.hierachy.rang == 3 %} bg-gray-50/40 
@@ -14,7 +16,18 @@
         style="padding-left: {{ padding }}px;">
         
         <div class="flex items-center gap-3">
-            {% if padding > 24 %}
+            <!-- Bouton chevron de dépliage/repliage si l'unité a des enfants -->
+            {% if node.children.all %}
+                <button type="button" 
+                        onclick="toggleNode('{{ node.id }}')" 
+                        id="btn-{{ node.id }}" 
+                        title="Masquer/Afficher les sous-unités"
+                        class="w-5 h-5 flex items-center justify-center rounded hover:bg-gray-200/70 text-gray-500 transition-transform duration-200">
+                    <i class="fa fa-chevron-down text-[10px] transition-transform duration-200"></i>
+                </button>
+            {% endif %}
+
+            {% if padding > 24 and not node.children.all %}
                 <i class="fa fa-level-up-alt rotate-90 text-gray-300 group-hover:text-blue-400 transition-colors"></i>
             {% endif %}
             
@@ -30,7 +43,6 @@
                 {% elif node.hierachy.rang == 3 %} font-medium text-gray-600 text-[13px] 
                 {% else %} text-gray-500 text-[12px] {% endif %}" href="/upload-sub-structure/{{node.id}}/">
                 {{ node.nom }}
-
             </a>
         </div>
     </td>
@@ -50,18 +62,18 @@
 
     <td class="px-6 py-4 text-right">
         <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-             <button onclick="openAddModal('{{ node.id }}', '{{ node.nom }}', {{ node.hierachy.rang|add:1 }})" 
-                class="bg-white text-[10px] font-bold text-emerald-600 border border-emerald-200 px-2 py-1 rounded shadow-sm hover:bg-emerald-600 hover:text-white transition">
+            <button onclick="openAddModal('{{ node.id }}', '{{ node.nom|escapejs }}', {{ node.hierachy.rang|add:1 }})" 
+                    class="bg-white text-[10px] font-bold text-emerald-600 border border-emerald-200 px-2 py-1 rounded shadow-sm hover:bg-emerald-600 hover:text-white transition">
                 <i class="fa fa-plus"></i>
             </button>
             <a href="/modifier-structure/{{node.id}}/" class="bg-white text-[10px] font-bold text-blue-600 border border-blue-200 px-2 py-1 rounded shadow-sm hover:bg-blue-600 hover:text-white transition">
                 <i class="fa fa-edit"></i>
             </a>
-          <button type="button" 
-        onclick="openDeleteModal('/line_delete_structure/{{node.id}}/')"  
-        class="bg-white text-[10px] font-bold text-red-600 border border-red-200 px-2 py-1 rounded shadow-sm hover:bg-red-600 hover:text-white transition">            
-    <i class="fa fa-trash"></i>            
-</button>
+            <button type="button" 
+                    onclick="openDeleteModal('/line_delete_structure/{{node.id}}/')"  
+                    class="bg-white text-[10px] font-bold text-red-600 border border-red-200 px-2 py-1 rounded shadow-sm hover:bg-red-600 hover:text-white transition">            
+                <i class="fa fa-trash"></i>            
+            </button>
         </div>
     </td>
 </tr>

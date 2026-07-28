@@ -3,91 +3,171 @@
 {% block main %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<div class="flex flex-col lg:flex-row flex-1 overflow-hidden max-w-full gap-6 p-6 bg-[#f8fafc] min-h-screen text-slate-800 antialiased font-sans">
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 bg-slate-100 flex flex-col gap-4 w-full">
     
-    <aside class="w-full lg:w-80 flex flex-col shrink-0 bg-white border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] overflow-hidden">
-        <div class="p-4 border-b-2 border-slate-900 bg-slate-50">
-            <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
-                <i class="fa-solid fa-layer-group text-slate-700"></i> Niveaux de hiérarchie
-            </h3>
-            <form action="/add_level/" method="POST" class="space-y-3">
+<!-- CONTENEUR PRINCIPAL STYLE DHIS2 COMPLET -->
+<div class="flex flex-col lg:flex-row flex-1 overflow-hidden max-w-full gap-5 p-5 bg-slate-100/80 min-h-screen text-slate-800 antialiased">
+    
+    <!-- VOLET GAUCHE : NIVEAUX DE HIÉRARCHIE -->
+    <aside class="w-full lg:w-80 flex flex-col shrink-0 bg-white border border-slate-200 rounded-lg shadow-xs overflow-hidden">
+        
+        <!-- En-tête Volet -->
+        <div class="p-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded bg-[#145388]/10 text-[#145388] flex items-center justify-center font-bold text-xs">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider font-mono">Niveaux d'organisation</h3>
+                    <p class="text-[10px] text-slate-500">Pyramide administrative</p>
+                </div>
+            </div>
+            <span class="text-[10px] bg-[#145388] text-white px-2 py-0.5 rounded font-mono font-bold">{{ hierachie|length }} Niveaux</span>
+        </div>
+
+        <!-- Formulaire d'ajout rapide de niveau -->
+        <div class="p-3.5 border-b border-slate-200 bg-white">
+            <form action="/add_level/" method="POST" class="space-y-2.5">
                 {% csrf_token %}
-                <input type="text" name="nom" placeholder="Ex: Région, District..." required
-                       class="w-full text-xs border-2 border-slate-900 p-2.5 outline-none focus:bg-slate-50 font-medium rounded-xl text-slate-800 transition-all">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 font-mono">Intitulé du niveau</label>
+                    <input type="text" name="nom" placeholder="Ex: Région, District, Aire..." required
+                           class="w-full text-xs border border-slate-300 p-2 outline-none focus:border-[#145388] focus:ring-1 focus:ring-[#145388] rounded bg-white text-slate-800 transition-all">
+                </div>
                 <div class="flex gap-2">
-                    <input type="number" name="rang" placeholder="Rang" required
-                           class="w-20 text-xs border-2 border-slate-900 p-2.5 outline-none font-mono font-bold rounded-xl text-slate-800 transition-all">
-                    <button type="submit" class="flex-1 bg-slate-900 text-white text-[11px] font-black tracking-wide py-2.5 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(99,102,241,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all uppercase">
-                        AJOUTER NIVEAU
-                    </button>
+                    <div class="w-24">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 font-mono">Rang</label>
+                        <input type="number" name="rang" placeholder="1, 2..." required
+                               class="w-full text-xs border border-slate-300 p-2 outline-none focus:border-[#145388] focus:ring-1 focus:ring-[#145388] font-mono font-bold rounded text-slate-800 transition-all">
+                    </div>
+                    <div class="flex-1 flex items-end">
+                        <button type="submit" class="w-full bg-[#145388] hover:bg-[#0e3b61] text-white text-[11px] font-bold py-2 rounded transition-all shadow-xs flex items-center justify-center gap-1.5 uppercase font-mono">
+                            <i class="fa-solid fa-plus text-[10px]"></i> Ajouter
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-4 space-y-3 max-h-[60vh] lg:max-h-none [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar-track]:bg-slate-50 [&::-webkit-scrollbar-thumb]:bg-slate-900 [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-white [&::-webkit-scrollbar-thumb]:rounded-full">
+        <!-- Liste des niveaux configurés -->
+        <div class="flex-1 overflow-y-auto p-3 space-y-2 max-h-[50vh] lg:max-h-none [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded">
             {% for h in hierachie %}
-            <div class="bg-white p-3 border-2 border-slate-900 rounded-xl shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] flex justify-between items-center group transition-all hover:bg-slate-50">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[9px] font-black px-2 py-0.5 rounded border border-slate-900 uppercase font-mono
-                            {% if h.rang == 1 %} bg-blue-500 text-white
-                            {% elif h.rang == 2 %} bg-emerald-400 text-slate-900
-                            {% elif h.rang == 3 %} bg-amber-400 text-slate-900
-                            {% else %} bg-slate-200 text-slate-700 {% endif %}">
-                            Rang {{ h.rang }}
-                        </span>
-                    </div>
-                    <div class="text-xs font-black text-slate-900 mt-1.5 tracking-tight">{{ h.nom }}</div>
+            <div class="bg-white p-2.5 border border-slate-200 rounded hover:border-[#145388]/40 transition-all flex justify-between items-center group shadow-2xs">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded border uppercase font-mono shrink-0
+                        {% if h.rang == 1 %} bg-sky-50 text-sky-800 border-sky-200
+                        {% elif h.rang == 2 %} bg-teal-50 text-teal-800 border-teal-200
+                        {% elif h.rang == 3 %} bg-indigo-50 text-indigo-800 border-indigo-200
+                        {% elif h.rang == 4 %} bg-amber-50 text-amber-800 border-amber-200
+                        {% else %} bg-slate-100 text-slate-700 border-slate-200 {% endif %}">
+                        Rang {{ h.rang }}
+                    </span>
+                    <span class="text-xs font-semibold text-slate-800 tracking-tight">{{ h.nom }}</span>
                 </div>
 
-                <div class="flex justify-end gap-1.5 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                <div class="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                     <button onclick="openAddModal('{{ h.id }}', '{{ h.nom }}', {{ h.rang|add:1 }})" 
-                        class="bg-white text-emerald-600 border-2 border-slate-900 p-1.5 rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] hover:bg-emerald-50 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all">
-                        <i class="fa-solid fa-plus text-[10px]"></i>
+                        title="Ajouter une sous-unité"
+                        class="p-1.5 text-teal-700 hover:bg-teal-50 rounded transition-colors">
+                        <i class="fa-solid fa-plus text-xs"></i>
                     </button>
                     
                     <a href="/modify-hierachy/{{h.id}}/"
-                        class="bg-white text-blue-600 border-2 border-slate-900 p-1.5 rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] hover:bg-blue-50 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all flex items-center justify-center">
-                        <i class="fa-solid fa-pen-to-square text-[10px]"></i>
+                        title="Modifier ce niveau"
+                        class="p-1.5 text-sky-700 hover:bg-sky-50 rounded transition-colors flex items-center justify-center">
+                        <i class="fa-solid fa-pen text-xs"></i>
                     </a>
 
                     <button onclick="confirmDelete('{{ h.id }}', '{{ h.nom }}', 0)" 
-                        class="bg-white text-red-500 border-2 border-slate-900 p-1.5 rounded-lg shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)] hover:bg-red-50 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all">
-                        <i class="fa-solid fa-trash text-[10px]"></i> 
+                        title="Supprimer"
+                        class="p-1.5 text-rose-600 hover:bg-rose-50 rounded transition-colors">
+                        <i class="fa-solid fa-trash-can text-xs"></i> 
                     </button>
                 </div>
             </div>
             {% empty %}
-            <div class="text-center py-10 border-2 border-dashed border-slate-300 rounded-xl">
-                <i class="fa-solid fa-layer-group text-slate-300 text-2xl mb-2"></i>
-                <p class="text-[11px] text-slate-400 font-medium italic">Aucun niveau configuré</p>
+            <div class="text-center py-8 border border-dashed border-slate-200 rounded bg-slate-50/50">
+                <i class="fa-solid fa-sitemap text-slate-300 text-xl mb-1.5"></i>
+                <p class="text-[11px] text-slate-500 font-mono">Aucun niveau configuré</p>
             </div>
             {% endfor %}
         </div>
     </aside>
 
-    <main class="flex-1 bg-white border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] flex flex-col overflow-hidden">
-        <div class="h-14 border-b-2 border-slate-900 flex items-center justify-between px-6 bg-slate-50/80">
-            <h2 class="text-xs font-black uppercase tracking-wider text-slate-900">Unités Organisationnelles</h2>
-            <button onclick="openAddModal(null, 'Racine', 1)" 
-                    class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 border-2 border-slate-900 px-4 py-1.5 text-xs font-black rounded-xl flex items-center gap-2 transition shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
-                <i class="fa-solid fa-circle-plus text-xs"></i> AJOUTER UNE UNITE RACINE
-            </button>
+    <!-- ZONE PRINCIPALE : GESTION DES UNITÉS ORGANISATIONNELLES -->
+    <main class="flex-1 bg-white border border-slate-200 rounded-lg shadow-xs flex flex-col overflow-hidden">
+        
+        <!-- En-tête Principal & Actions Globale -->
+        <div class="p-4 border-b border-slate-200 bg-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-[#145388] text-white rounded">
+                    <i class="fa-solid fa-hospital text-sm"></i>
+                </div>
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-800 font-mono">Unités Organisationnelles (DHIS2)</h2>
+                    <p class="text-[10px] text-slate-500">Arborescence sanitaire et formations rattachées</p>
+                </div>
+            </div>
+
+            <!-- Boutons d'action (Import/Export/Création) -->
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="/export_structures_csv/" title="Exporter au format CSV" 
+                   class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-3 py-1.5 text-xs font-bold rounded flex items-center gap-1.5 transition font-mono">
+                    <i class="fa-solid fa-file-export text-emerald-600"></i> Export CSV
+                </a>
+                
+                <button onclick="openImportModal()" title="Importer un fichier CSV" 
+                        class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-3 py-1.5 text-xs font-bold rounded flex items-center gap-1.5 transition font-mono">
+                    <i class="fa-solid fa-file-import text-sky-600"></i> Import CSV
+                </button>
+
+                <button onclick="openAddModal(null, 'Racine', 1)" 
+                        class="bg-[#145388] hover:bg-[#0e3b61] text-white px-3.5 py-1.5 text-xs font-bold rounded flex items-center gap-2 transition shadow-xs uppercase font-mono">
+                    <i class="fa-solid fa-circle-plus text-xs"></i> Unité Racine
+                </button>
+            </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-6 [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar-track]:bg-slate-50 [&::-webkit-scrollbar-thumb]:bg-slate-900 [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-white [&::-webkit-scrollbar-thumb]:rounded-full">
-            <div class="border-2 border-slate-900 rounded-xl overflow-hidden shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] bg-white">
-                <table class="w-full border-collapse text-xs text-left text-slate-700">
-                    <thead class="bg-slate-900 text-[10px] font-black text-white uppercase border-b-2 border-slate-900 tracking-wider">
+        <!-- BARRE DE RECHERCHE ET FILTRES DYNAMIQUES -->
+        <div class="p-3 border-b border-slate-200 bg-white flex flex-wrap items-center gap-3">
+            <!-- Recherche textuelle -->
+            <div class="flex-1 min-w-[200px] relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" id="searchInput" onkeyup="filterTreeTable()" placeholder="Rechercher une unité par nom, code..." 
+                       class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded text-xs outline-none focus:border-[#145388] focus:ring-1 focus:ring-[#145388]">
+            </div>
+
+            <!-- Filtre par Niveau -->
+            <select id="filterLevel" onchange="filterTreeTable()" class="border border-slate-300 p-1.5 rounded text-xs outline-none focus:border-[#145388] bg-white text-slate-700">
+                <option value="">-- Tous les niveaux --</option>
+                {% for h in hierachie %}
+                <option value="Niveau {{ h.rang }}">Niveau {{ h.rang }} : {{ h.nom }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Filtre par Statut -->
+            <select id="filterStatus" onchange="filterTreeTable()" class="border border-slate-300 p-1.5 rounded text-xs outline-none focus:border-[#145388] bg-white text-slate-700">
+                <option value="">-- Tous les statuts --</option>
+                <option value="actif">Actif uniquement</option>
+                <option value="inactif">Inactif uniquement</option>
+            </select>
+        </div>
+
+        <!-- Tableau d'Arbre des Structures -->
+        <div class="flex-1 overflow-y-auto p-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded">
+            <div class="border border-slate-200 rounded overflow-hidden bg-white shadow-2xs">
+                <table id="orgTreeTable" class="w-full border-collapse text-xs text-left text-slate-700">
+                    <thead class="bg-[#145388] text-[11px] font-bold text-white uppercase tracking-wider font-mono">
                         <tr>
-                            <th class="px-6 py-3.5 border-r border-slate-800">Unité d'organisation</th>
-                            <th class="px-6 py-3.5 border-r border-slate-800">Niveau / Rang</th>
-                            <th class="px-6 py-3.5 border-r border-slate-800">Code</th>
-                            <th class="px-6 py-3.5 text-right">Action</th>
+                            <th class="px-4 py-2.5 border-r border-[#1d629d]">Unité organisationnelle</th>
+                            <th class="px-4 py-2.5 border-r border-[#1d629d] w-36">Niveau / Rang</th>
+                            <th class="px-4 py-2.5 border-r border-[#1d629d] w-32">Code DHIS2</th>
+                            <th class="px-4 py-2.5 border-r border-[#1d629d] w-40">GPS / Type FOSA</th>
+                            <th class="px-4 py-2.5 border-r border-[#1d629d] w-24 text-center">Statut</th>
+                            <th class="px-4 py-2.5 text-right w-28">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y-2 divide-slate-900">
+                    <tbody class="divide-y divide-slate-200">
                         {% for line in lines %}
                             {% with node=line padding=24 %}
                                 {% include "webpages/config/structure_node.html" %}
@@ -99,120 +179,247 @@
         </div>
     </main>
 </div>
-
-<div id="modalAdd" class="fixed inset-0 z-[100] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 transition-all duration-200">
-    <div id="modalAddContent" class="bg-white w-full max-w-lg border-2 border-slate-900 rounded-2xl shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] overflow-hidden transform scale-95 opacity-0 transition-all duration-200">
-        <div class="bg-slate-900 text-white p-4 flex justify-between items-center border-b-2 border-slate-900">
-            <h3 id="modalTitle" class="text-xs font-black uppercase tracking-wide">Configuration de l'unité organisationnelle</h3>
-            <button type="button" onclick="closeModals()" class="text-xl hover:text-red-400 font-black transition-colors">&times;</button>
+</main>
+<!-- MODAL : AJOUT / MODIFICATION D'UNE UNITÉ ORGANISATIONNELLE -->
+<div id="modalAdd" class="fixed inset-0 z-[100] hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 transition-all duration-200">
+    <div id="modalAddContent" class="bg-white w-full max-w-2xl border border-slate-200 rounded-lg shadow-xl overflow-hidden transform scale-95 opacity-0 transition-all duration-200 max-h-[90vh] flex flex-col">
+        
+        <!-- En-tête Modal DHIS2 -->
+        <div class="bg-[#145388] text-white p-3.5 flex justify-between items-center border-b border-[#0e3b61] shrink-0">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                <h3 id="modalTitle" class="text-xs font-bold uppercase tracking-wider font-mono">Configuration de l'unité organisationnelle</h3>
+            </div>
+            <button type="button" onclick="closeModals()" class="text-white/80 hover:text-white font-bold text-lg leading-none transition-colors">&times;</button>
         </div>
-        <form id="modalAddForm" action="/add_sub_structure/" method="POST" class="p-6 space-y-4 text-xs">
-            {% csrf_token %}
-            <div class="space-y-4">
-                <div>
-                    <label class="block font-black text-slate-900 uppercase tracking-wide mb-1">Unité de rattachement (Parent)</label>
-                    <select name="parent_id" id="parentIdField" 
-                            class="w-full border-2 border-slate-900 p-2.5 font-medium outline-none rounded-xl bg-white focus:bg-slate-50 transition-all text-slate-800">
-                        <option value="">-- Aucune (Unité Racine) --</option>
-                        {% for level in hierachie %}
-                            <optgroup label="Niveau {{ level.rang }} : {{ level.nom }}" class="bg-slate-100 font-black text-slate-900 border-y border-slate-300">
-                                {% for struct in all_structures %}
-                                    {% if struct.hierachy.id == level.id %}
-                                        <option value="{{ struct.id }}" class="bg-white text-slate-700 font-medium">
-                                            {{ struct.nom }} {% if struct.designation %}({{ struct.designation }}){% endif %}
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-                            </optgroup>
-                        {% endfor %}
-                    </select>
-                    <p class="text-[10px] font-mono text-slate-400 mt-1">Laissez vide pour créer au sommet de la hiérarchie.</p>
-                </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2">
-                        <label class="block font-black text-slate-900 uppercase tracking-wide mb-1">Niveau de cette unité *</label>
+        <form id="modalAddForm" action="/add_sub_structure/" method="POST" class="p-5 space-y-4 text-xs overflow-y-auto flex-1">
+            {% csrf_token %}
+            
+            <!-- SECTION 1 : RATTACHEMENT HIÉRARCHIQUE -->
+            <div class="bg-slate-50 p-3 rounded border border-slate-200 space-y-3">
+                <div class="text-[10px] font-bold text-[#145388] uppercase tracking-wider font-mono flex items-center gap-1.5">
+                    <i class="fa-solid fa-sitemap"></i> 1. Rattachement Hiérarchique
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1 font-mono text-[10px]">Unité Parent *</label>
+                        <select name="parent_id" id="parentIdField" 
+                                class="w-full border border-slate-300 p-2 font-medium outline-none rounded bg-white focus:border-[#145388] focus:ring-1 focus:ring-[#145388] transition-all text-slate-800">
+                            <option value="">-- Aucune (Unité Racine) --</option>
+                            {% for level in hierachie %}
+                                <optgroup label="Niveau {{ level.rang }} : {{ level.nom }}" class="bg-slate-100 font-bold text-slate-900">
+                                    {% for struct in all_structures %}
+                                        {% if struct.hierachy.id == level.id %}
+                                            <option value="{{ struct.id }}" class="bg-white text-slate-700 font-medium">
+                                                {{ struct.nom }} {% if struct.designation %}({{ struct.designation }}){% endif %}
+                                            </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1 font-mono text-[10px]">Niveau / Rang de cette Unité *</label>
                         <select name="level_id" id="levelSelect" required 
-                                class="w-full border-2 border-slate-900 p-2.5 font-medium outline-none rounded-xl bg-white focus:bg-slate-50 transition-all text-slate-800">
+                                class="w-full border border-slate-300 p-2 font-medium outline-none rounded bg-white focus:border-[#145388] focus:ring-1 focus:ring-[#145388] transition-all text-slate-800">
                             <option value="" disabled selected>Choisir le niveau...</option>
                             {% for h in hierachie %}
                                 <option value="{{ h.id }}">Niveau {{ h.rang }} : {{ h.nom }}</option>
                             {% endfor %}
                         </select>
                     </div>
+                </div>
+            </div>
 
-                    <div class="col-span-2">
-                        <label class="block font-black text-slate-900 uppercase tracking-wide mb-1">Nom de l'unité *</label>
-                        <input type="text" name="nom" id="inputNom" required 
-                               class="w-full border-2 border-slate-900 p-2.5 font-medium outline-none rounded-xl focus:bg-slate-50 transition-all">
+            <!-- SECTION 2 : INFORMATIONS GÉNÉRALES -->
+            <div class="bg-slate-50 p-3 rounded border border-slate-200 space-y-3">
+                <div class="text-[10px] font-bold text-[#145388] uppercase tracking-wider font-mono flex items-center gap-1.5">
+                    <i class="fa-solid fa-hospital-user"></i> 2. Identification Sanitaire
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1 font-mono text-[10px]">Nom officiel de l'unité *</label>
+                        <input type="text" name="nom" id="inputNom" required placeholder="Ex: Hôpital Régional de Yaoundé"
+                               class="w-full border border-slate-300 p-2 font-medium outline-none rounded focus:border-[#145388] focus:ring-1 focus:ring-[#145388] transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1 font-mono text-[10px]">Code DHIS2 / Désignation</label>
+                        <input type="text" name="designation" id="inputDesignation" placeholder="Ex: HRY-01-LAB"
+                               class="w-full border border-slate-300 p-2 font-mono font-bold outline-none rounded focus:border-[#145388] focus:ring-1 focus:ring-[#145388] transition-all">
                     </div>
 
                     <div class="col-span-2">
-                        <label class="block font-black text-slate-900 uppercase tracking-wide mb-1">Code / Désignation</label>
-                        <input type="text" name="designation" id="inputDesignation" 
-                               class="w-full border-2 border-slate-900 p-2.5 font-mono font-bold outline-none rounded-xl focus:bg-slate-50 transition-all"
-                               placeholder="Ex: DS-MFO-01">
+                        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1 font-mono text-[10px]">Type / Catégorie de FOSA</label>
+                        <select name="type_fosa" id="inputTypeFosa" class="w-full border border-slate-300 p-2 font-medium outline-none rounded bg-white focus:border-[#145388]">
+                            <option value="">-- Non spécifié --</option>
+                            <option value="Laboratoire de Référence">Laboratoire de Référence (CIRCB / CPC...)</option>
+                            <option value="Hôpital Général / Régional">Hôpital Général / Régional</option>
+                            <option value="Hôpital de District">Hôpital de District</option>
+                            <option value="Centre de Santé Intégré">Centre de Santé Intégré (CSI)</option>
+                            <option value="Clinique Privée / Confessionnelle">Clinique Privée / Confessionnelle</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
-            <div class="flex justify-end gap-3 pt-4 border-t-2 border-slate-900 mt-6">
-                <button type="button" onclick="closeModals()" class="px-4 py-2 border-2 border-slate-900 font-black bg-white text-slate-900 rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all uppercase">ANNULER</button>
-                <button type="submit" class="bg-slate-900 text-white border-2 border-slate-900 px-5 py-2 font-black rounded-xl shadow-[2px_2px_0px_0px_rgba(16,185,129,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all uppercase flex items-center gap-2">
-                    <i class="fa-solid fa-floppy-disk text-xs"></i> ENREGISTRER L'UNITE
+            <!-- SECTION 3 : GÉOLOCALISATION & STATUT -->
+            <div class="bg-slate-50 p-3 rounded border border-slate-200 space-y-3">
+                <div class="text-[10px] font-bold text-[#145388] uppercase tracking-wider font-mono flex items-center gap-1.5">
+                    <i class="fa-solid fa-location-dot"></i> 3. Géolocalisation & État
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1 font-mono text-[10px]">Latitude (GPS)</label>
+                        <input type="text" name="latitude" id="inputLatitude" placeholder="Ex: 3.8480"
+                               class="w-full border border-slate-300 p-2 font-mono outline-none rounded focus:border-[#145388]">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1 font-mono text-[10px]">Longitude (GPS)</label>
+                        <input type="text" name="longitude" id="inputLongitude" placeholder="Ex: 11.5021"
+                               class="w-full border border-slate-300 p-2 font-mono outline-none rounded focus:border-[#145388]">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1 font-mono text-[10px]">Statut Opérationnel</label>
+                        <label class="relative inline-flex items-center cursor-pointer mt-1">
+                            <input type="checkbox" name="is_active" id="inputIsActive" value="true" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                            <span id="statusLabel" class="ml-2 text-xs font-bold text-emerald-700 font-mono">Actif</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-200 mt-4">
+                <button type="button" onclick="closeModals()" class="px-3.5 py-2 border border-slate-300 font-bold bg-white text-slate-700 rounded hover:bg-slate-50 transition-all uppercase font-mono text-xs">Annuler</button>
+                <button type="submit" class="bg-[#145388] hover:bg-[#0e3b61] text-white px-4 py-2 font-bold rounded shadow-xs transition-all uppercase font-mono text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-floppy-disk text-xs"></i> Enregistrer
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="modaldelete" class="fixed inset-0 z-[100] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
-    <div id="modalDeleteContent" class="bg-white w-full max-w-md border-2 border-slate-900 rounded-2xl shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] overflow-hidden transform transition-all scale-95 opacity-0 duration-200">
-        <div class="bg-red-500 text-slate-900 p-4 flex justify-between items-center border-b-2 border-slate-900">
-            <div class="flex items-center gap-2 font-black uppercase tracking-wide">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <h3 class="text-xs">Confirmation de suppression</h3>
+<!-- MODAL : IMPORTATION CSV -->
+<div id="modalImport" class="fixed inset-0 z-[100] hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 transition-all duration-200">
+    <div class="bg-white w-full max-w-md border border-slate-200 rounded-lg shadow-xl overflow-hidden">
+        <div class="bg-[#145388] text-white p-3.5 flex justify-between items-center border-b border-[#0e3b61]">
+            <div class="flex items-center gap-2 font-bold uppercase tracking-wider font-mono text-xs">
+                <i class="fa-solid fa-file-csv"></i>
+                <h3>Importation Massive d'Unités</h3>
             </div>
-            <button type="button" onclick="closeDeleteModal()" class="text-slate-900 hover:text-white font-black text-xl transition-colors">
-                &times;
-            </button>
+            <button type="button" onclick="closeImportModal()" class="text-white hover:text-slate-200 font-bold text-lg leading-none">&times;</button>
         </div>
-        <div class="p-6 space-y-3 text-xs">
-            <p class="text-slate-900 font-bold text-sm">Êtes-vous sûr de vouloir supprimer cette unité organisationnelle ?</p>
-            <p class="text-red-700 bg-red-50 p-3 rounded-xl border-2 border-red-200 flex items-start gap-2 font-medium">
-                <i class="fa-solid fa-circle-info mt-0.5 shrink-0"></i> 
-                <span><strong>Attention :</strong> Cette unité ne pourra pas être supprimée si elle contient encore des opérations ou des valeurs d'indicateurs liées.</span>
+        <form action="/import_structures_csv/" method="POST" enctype="multipart/form-data" class="p-5 space-y-4 text-xs">
+            {% csrf_token %}
+            <p class="text-slate-600">Sélectionnez un fichier CSV structuré avec les en-têtes : <code class="bg-slate-100 p-1 rounded font-mono text-[10px]">nom, code, parent_code, level_rang</code></p>
+            <div>
+                <input type="file" name="file_csv" accept=".csv" required class="w-full border border-slate-300 p-2 rounded text-xs bg-slate-50">
+            </div>
+            <div class="flex justify-end gap-2 pt-2 border-t border-slate-200">
+                <button type="button" onclick="closeImportModal()" class="px-3 py-1.5 border border-slate-300 font-bold bg-white text-slate-700 rounded font-mono text-xs uppercase">Annuler</button>
+                <button type="submit" class="bg-sky-700 hover:bg-sky-800 text-white px-4 py-1.5 font-bold rounded font-mono text-xs uppercase flex items-center gap-1">
+                    <i class="fa-solid fa-[#145388]"></i> Importer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL : SUPPRESSION DE STRUCTURE -->
+<div id="modaldelete" class="fixed inset-0 z-[100] hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+    <div id="modalDeleteContent" class="bg-white w-full max-w-md border border-slate-200 rounded-lg shadow-xl overflow-hidden transform transition-all scale-95 opacity-0 duration-200">
+        <div class="bg-rose-600 text-white p-3.5 flex justify-between items-center border-b border-rose-700">
+            <div class="flex items-center gap-2 font-bold uppercase tracking-wider font-mono text-xs">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <h3>Confirmation de suppression</h3>
+            </div>
+            <button type="button" onclick="closeDeleteModal()" class="text-white hover:text-slate-200 font-bold text-lg leading-none transition-colors">&times;</button>
+        </div>
+        <div class="p-5 space-y-3 text-xs">
+            <p class="text-slate-800 font-semibold text-xs">Êtes-vous sûr de vouloir supprimer cette unité organisationnelle ?</p>
+            <p class="text-rose-800 bg-rose-50 p-3 rounded border border-rose-200 flex items-start gap-2 font-medium">
+                <i class="fa-solid fa-circle-info mt-0.5 shrink-0 text-rose-600"></i> 
+                <span><strong>Avertissement LIMS :</strong> Cette action échouera si l'unité est liée à des échantillons PCR, des patients ou des rapports.</span>
             </p>
         </div>
-        <div class="bg-slate-50 px-6 py-4 flex justify-end gap-3 border-t-2 border-slate-900">
-            <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 border-2 border-slate-900 font-black bg-white text-slate-900 rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all uppercase">Annuler</button>
+        <div class="bg-slate-50 px-5 py-3 flex justify-end gap-2 border-t border-slate-200">
+            <button type="button" onclick="closeDeleteModal()" class="px-3.5 py-1.5 border border-slate-300 font-bold bg-white text-slate-700 rounded hover:bg-slate-100 transition-all uppercase font-mono text-xs">Annuler</button>
             <form id="deleteForm" method="POST" class="inline">
                 {% csrf_token %}
-                <button type="submit" class="bg-red-500 hover:bg-red-600 text-slate-900 border-2 border-slate-900 px-5 py-2 font-black rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex items-center gap-2 transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none uppercase">
-                    <i class="fa-solid fa-trash-can"></i> SUPPRIMER DEFINITIVEMENT
+                <button type="submit" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-1.5 font-bold rounded shadow-xs flex items-center gap-1.5 transition-all uppercase font-mono text-xs">
+                    <i class="fa-solid fa-trash-can text-xs"></i> Supprimer
                 </button>
             </form>
         </div>
     </div>
 </div>
 
+<!-- SCRIPTS JAVASCRIPT COMPLETS ET AMÉLIORÉS -->
 <script>
+    // --- GESTION DU STATUT ACTIF/INACTIF ---
+    const activeCheckbox = document.getElementById('inputIsActive');
+    const statusLabel = document.getElementById('statusLabel');
+    if (activeCheckbox) {
+        activeCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                statusLabel.innerText = "Actif";
+                statusLabel.className = "ml-2 text-xs font-bold text-emerald-700 font-mono";
+            } else {
+                statusLabel.innerText = "Inactif";
+                statusLabel.className = "ml-2 text-xs font-bold text-rose-600 font-mono";
+            }
+        });
+    }
+
+    // --- RECHERCHE ET FILTRAGE DYNAMIQUE EN TEMPS RÉEL ---
+    function filterTreeTable() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const levelFilter = document.getElementById('filterLevel').value.toLowerCase();
+        const statusFilter = document.getElementById('filterStatus').value.toLowerCase();
+        
+        const rows = document.querySelectorAll('#orgTreeTable tbody tr');
+
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            const matchesQuery = text.includes(query);
+            const matchesLevel = !levelFilter || text.includes(levelFilter);
+            const matchesStatus = !statusFilter || text.includes(statusFilter);
+
+            if (matchesQuery && matchesLevel && matchesStatus) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    // --- MODALES ADD / EDIT ---
     function openAddModal(parentId, parentName, nextRank) {
         const modal = document.getElementById('modalAdd');
         const content = document.getElementById('modalAddContent');
         
-        // Reset du titre et de la cible du formulaire pour le mode création
         document.getElementById('modalTitle').innerText = "Configuration de l'unité organisationnelle";
         document.getElementById('modalAddForm').setAttribute('action', '/add_sub_structure/');
         
         document.getElementById('inputNom').value = "";
         document.getElementById('inputDesignation').value = "";
+        document.getElementById('inputLatitude').value = "";
+        document.getElementById('inputLongitude').value = "";
+        document.getElementById('inputTypeFosa').value = "";
+        document.getElementById('inputIsActive').checked = true;
+        statusLabel.innerText = "Actif";
 
-        if (parentId) {
-            document.getElementById('parentIdField').value = parentId;
-        } else {
-            document.getElementById('parentIdField').value = "";
-        }
+        document.getElementById('parentIdField').value = parentId ? parentId : "";
         
         if (nextRank) {
             const select = document.getElementById('levelSelect');
@@ -223,6 +430,33 @@
                 }
             }
         }
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 20);
+    }
+
+    function openEditModal(id, nom, designation, levelId, parentId, lat, lng, typeFosa, isActive) {
+        const modal = document.getElementById('modalAdd');
+        const content = document.getElementById('modalAddContent');
+        
+        document.getElementById('modalTitle').innerText = "Modifier l'unité : " + nom;
+        document.getElementById('modalAddForm').setAttribute('action', '/update_structure/' + id + '/');
+        
+        document.getElementById('inputNom').value = nom;
+        document.getElementById('inputDesignation').value = designation || "";
+        document.getElementById('levelSelect').value = levelId;
+        document.getElementById('parentIdField').value = parentId ? parentId : "";
+        document.getElementById('inputLatitude').value = lat || "";
+        document.getElementById('inputLongitude').value = lng || "";
+        document.getElementById('inputTypeFosa').value = typeFosa || "";
+        
+        const activeState = (isActive === true || isActive === 'True' || isActive === 'true');
+        document.getElementById('inputIsActive').checked = activeState;
+        statusLabel.innerText = activeState ? "Actif" : "Inactif";
         
         modal.classList.remove('hidden');
         modal.classList.add('flex');
@@ -243,26 +477,17 @@
         }, 200);
     }
 
-    function openEditModal(id, nom, designation, levelId, parentId) {
-        const modal = document.getElementById('modalAdd');
-        const content = document.getElementById('modalAddContent');
-        
-        document.getElementById('modalTitle').innerText = "Modifier l'unite : " + nom;
-        document.getElementById('modalAddForm').setAttribute('action', '/update_structure/' + id + '/');
-        
-        document.getElementById('inputNom').value = nom;
-        document.getElementById('inputDesignation').value = designation;
-        document.getElementById('levelSelect').value = levelId;
-        document.getElementById('parentIdField').value = parentId ? parentId : "";
-        
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        setTimeout(() => {
-            content.classList.remove('scale-95', 'opacity-0');
-            content.classList.add('scale-100', 'opacity-100');
-        }, 20);
+    // --- IMPORT CSV MODAL ---
+    function openImportModal() {
+        document.getElementById('modalImport').classList.remove('hidden');
+        document.getElementById('modalImport').classList.add('flex');
+    }
+    function closeImportModal() {
+        document.getElementById('modalImport').classList.add('hidden');
+        document.getElementById('modalImport').classList.remove('flex');
     }
 
+    // --- DELETE MODAL ---
     function openDeleteModal(urlAction) {
         const modal = document.getElementById('modaldelete');
         const content = document.getElementById('modalDeleteContent');
@@ -310,7 +535,7 @@
         background: "#ffffff",
         color: "#0f172a",
         customClass: {
-            popup: 'border-2 border-slate-900 rounded-xl shadow-[3px_3px_0px_0px_rgba(15,23,42,1)]'
+            popup: 'border border-slate-200 rounded-lg shadow-lg font-sans text-xs'
         }
     });
 </script>
@@ -318,38 +543,38 @@
 
 <script>
     function confirmDelete(id, nom, childCount) {
-        let messageHtml = `Voulez-vous vraiment supprimer la hiérarchie <strong class="text-slate-900">"${nom}"</strong> ?`;
+        let messageHtml = `Voulez-vous vraiment supprimer le niveau hiérarchique <strong class="text-slate-900">"${nom}"</strong> ?`;
         
         if (childCount > 0) {
             messageHtml += `
-                <div class="mt-4 p-3 bg-red-50 border-2 border-red-200 rounded-xl text-left">
-                    <p class="text-xs text-red-700 font-medium flex items-start gap-2">
-                        <i class="fa-solid fa-triangle-exclamation text-red-500 mt-0.5"></i>
-                        <span><strong>ATTENTION :</strong> Cette unité possède <strong>${childCount}</strong> sous-unité(s) qui seront également impactées.</span>
+                <div class="mt-3 p-2.5 bg-rose-50 border border-rose-200 rounded text-left">
+                    <p class="text-xs text-rose-700 font-medium flex items-start gap-2">
+                        <i class="fa-solid fa-triangle-exclamation text-rose-500 mt-0.5"></i>
+                        <span><strong>Attention DHIS2 :</strong> Ce niveau possède <strong>${childCount}</strong> sous-unité(s) rattachée(s).</span>
                     </p>
                 </div>
             `;
         }
 
         Swal.fire({
-            title: 'Confirmation de suppression',
+            title: 'Suppression du Niveau',
             html: messageHtml,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#ef4444',
+            confirmButtonColor: '#e11d48',
             cancelButtonColor: '#64748b',
-            confirmButtonText: 'Oui, supprimer',
+            confirmButtonText: 'Supprimer',
             cancelButtonText: 'Annuler',
             background: '#ffffff',
             customClass: {
-                popup: 'border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]',
-                confirmButton: 'border-2 border-slate-900 font-bold px-4 py-2',
-                cancelButton: 'border-2 border-slate-900 font-bold px-4 py-2'
+                popup: 'border border-slate-200 rounded-lg shadow-xl font-sans',
+                confirmButton: 'font-bold px-4 py-2 text-xs uppercase font-mono',
+                cancelButton: 'font-bold px-4 py-2 text-xs uppercase font-mono'
             }
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: 'Suppression en cours...',
+                    title: 'Traitement en cours...',
                     allowOutsideClick: false,
                     didOpen: () => { Swal.showLoading(); }
                 });

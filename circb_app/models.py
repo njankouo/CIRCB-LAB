@@ -84,6 +84,8 @@ class FicheEchantillon(models.Model):
     
     date_Envoie_labo = models.DateField(null=True)
     
+    status = models.BooleanField(default=True)
+    
     # Vos clés étrangères uniques vers le modèle Structure
     region = models.ForeignKey(
         Structure, 
@@ -195,6 +197,7 @@ class Echantillon(models.Model):
     poids = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # Poids en kg
     profilaxie_arv = models.ForeignKey(ProfilaxieArv, on_delete=models.SET_NULL, null=True, blank=True)
     rang_naissance = models.IntegerField(null=True)
+    ordre = models.PositiveIntegerField(editable=False, blank=True, null=True)
     
     
     #parents Informations
@@ -261,6 +264,14 @@ class Echantillon(models.Model):
             timestamp = timezone.now().strftime("%Y%m%d-%H%M")
             # Donne un slug du style : "ech-20260710-1032"
             self.slug = slugify(f"ech-{timestamp}")
+        if not self.pk: # Si c'est un nouvel échantillon en cours de création
+            if self.enfant:
+                # Compte uniquement les échantillons appartenant à CET enfant précis
+                dernier_ordre = Echantillon.objects.filter(enfant=self.enfant).count()
+                self.ordre = dernier_ordre + 1
+            else:
+                self.ordre = 1
+        
         super().save(*args, **kwargs)
     def __str__(self):
         return f"Echantillon {self.slug} (Fiche: {self.fiche.code})"
@@ -315,6 +326,8 @@ class Resultat(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    
 
     class Meta:
         verbose_name = "Résultat d'Analyse"
