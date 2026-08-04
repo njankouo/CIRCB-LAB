@@ -1,0 +1,460 @@
+{% extends '../dashbord_hosp.html' %}
+{% block breadcrumb %}
+<nav class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-inner px-5 py-3 text-xs font-sans mb-6 sticky top-0 z-50" aria-label="Breadcrumb">
+    <ol class="flex items-center space-x-2.5 text-slate-700 dark:text-slate-300 flex-wrap gap-y-2">
+        
+        <!-- 1. CONTEXTE GLOBAL / APPLICATION -->
+        <li class="flex items-center">
+            <a href="#" class="flex items-center gap-2 group px-3 py-1.5 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-950/40 transition-all duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#2C6693] dark:text-sky-400 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                <span class="font-semibold text-[#2C6693] dark:text-sky-400 tracking-tight">MEDYSIS LAB</span>
+                <span class="text-slate-400 dark:text-slate-500 font-normal ml-1.5 hidden md:inline">/ Laboratoire</span>
+            </a>
+        </li>
+        
+        <!-- Séparateur Flèche -->
+        <li class="text-slate-300 dark:text-slate-700 hidden md:block">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+        </li>
+        
+        <!-- Séparateur Slash (Mobile) -->
+        <li class="text-slate-300 dark:text-slate-700 md:hidden font-black">/</li>
+
+        <!-- 2. MODULE / PAGE PARENTE (Fiche d'expédition) -->
+        <li class="flex items-center">
+            <a href="" class="flex items-center gap-1.5 group px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500 group-hover:text-[#2C6693] dark:group-hover:text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+                <span class="font-medium text-slate-700 dark:text-slate-200 group-hover:text-[#2C6693] dark:group-hover:text-sky-400">Fiche d'expédition</span>
+                 <span class="text-slate-400 dark:text-slate-500 font-normal ml-1.5 hidden lg:inline">/ Dispatch Sheet</span>
+            </a>
+        </li>
+
+        <!-- Séparateur Flèche -->
+        <li class="text-slate-300 dark:text-slate-700 hidden md:block">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+        </li>
+
+         <!-- Séparateur Slash (Mobile) -->
+        <li class="text-slate-300 dark:text-slate-700 md:hidden font-black">/</li>
+
+        <!-- 3. PAGE ACTIVE (AJOUT D'ÉCHANTILLONS) -->
+        <li class="flex items-center" aria-current="page">
+            <span class="flex items-center gap-2 px-3.5 py-1.5 bg-sky-500 dark:bg-sky-600 text-white rounded-lg font-bold shadow-md border border-sky-600 dark:border-sky-700 tracking-wider text-[11px]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-sky-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Modification d'échantillons</span>
+                <span class="text-sky-100 font-medium ml-1.5 hidden xl:inline opacity-80">/ Update Samples</span>
+            </span>
+        </li>
+    </ol>
+</nav>
+{% endblock %}
+{% block main %}
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white">
+<div class="max-w-5xl mx-auto my-1 p-1">
+<div class="bg-white border border-[#e0e0e0] rounded-[3px] p-3.5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+    
+    <!-- Section Titre et Icône style DHIS2 -->
+    <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-[2px] bg-[#f8f9fa] border border-slate-200 flex items-center justify-center text-[#2c6693] shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M3.104 9.75h17.792M3.104 14.25h17.792M6.417 6.417l11.166 11.166M6.417 17.583L17.583 6.417" />
+            </svg>
+        </div>
+        <div>
+            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                Modification d'Échantillon de Laboratoire
+            </h2>
+            <p class="text-[11px] text-slate-500 font-normal mt-0.5">
+                Modification des spécifications cliniques, du suivi PCR et des données patient de l'enfant.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Section Métrique, Code en Rouge & Action Scan -->
+    <div class="flex items-center gap-3 bg-[#f8f9fa] border border-slate-200 p-2.5 rounded-[2px]">
+        <div>
+            <span class="block text-[9px] font-bold uppercase tracking-wider text-slate-500">Fiche Référence</span>
+            <span class="text-xs font-bold text-red-600 tracking-tight block font-mono">
+                {{ echantillon.fiche.code }}
+            </span>
+            {% comment %} <span class="text-[10px] text-slate-600 block mt-0.5">
+                Quota : <strong class="text-slate-800">{{ fiches_echantillon.nombre_echantillon|default:"0" }} attendu(s)</strong>
+            </span> {% endcomment %}
+        </div>
+
+        <!-- Bouton / Fonction de Scan Code-barres -->
+        <div class="border-l border-slate-300 pl-3">
+            <button type="button" class="px-3 py-1.5 bg-[#2c6693] hover:bg-[#235275] text-white font-semibold rounded-[2px] text-[11px] flex items-center gap-1.5 transition shadow-2xs uppercase tracking-wider">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                </svg>
+                Scanner
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+    <form method="POST" class="space-y-6"  action="{% url 'update_echantillon' echantillon.id %}">
+        {% csrf_token %}
+       
+
+<section class="bg-gradient-to-br from-rose-900 to-rose-950 dark:from-rose-950 dark:to-slate-950 border border-rose-200/20 dark:border-rose-900/40 rounded-xl p-4 shadow-md relative overflow-hidden text-white space-y-3">
+    
+    <!-- Filigrane d'arrière-plan (code-barres stylisé) -->
+    <div class="absolute right-1 -bottom-5 opacity-10 pointer-events-none text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M3 5v14"/><path d="M6 5v14"/><path d="M10 5v14"/><path d="M13 5v14"/><path d="M17 5v14"/><path d="M21 5v14"/>
+        </svg>
+    </div>
+
+    <!-- En-tête de la section avec le badge "MODE SCAN ACTIF" et icône -->
+    <div class="flex items-center justify-between pb-2 border-b border-rose-800/50 relative z-10">
+        <h3 class="text-[11px] font-bold uppercase font-mono text-rose-100 tracking-wide">
+            Identification <span class="text-rose-400">*</span>
+        </h3>
+        
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-white/10 text-white border border-white/20 shadow-2xs backdrop-blur-xs">
+            <svg class="w-3 h-3 text-rose-300 animate-pulse shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5m0 0H5a2 2 0 00-2 2v2m0 6v2a2 2 0 002 2h2m0 0v-2m10 2h2a2 2 0 002-2v-2m0 0h-2m-12 0H5m0 0V9m0 0h2" />
+            </svg>
+            <span>MODE SCAN ACTIF</span>
+        </div>
+    </div>
+
+    <!-- CODE PATIENT MIS EN AVANT (Version compacte mais percutante) -->
+    <div class="relative z-10 bg-black/40 border border-rose-400/80 rounded-lg p-2.5 shadow-[0_0_12px_rgba(244,63,94,0.2)] backdrop-blur-sm flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-md bg-rose-500/30 border border-rose-300/40 flex items-center justify-center shrink-0 text-rose-200">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+            </div>
+            <div>
+                <span class="block text-[9px] font-mono font-bold uppercase tracking-widest text-rose-300">Code Patient Cible</span>
+                <span class="text-lg sm:text-xl font-mono font-black text-white tracking-wider drop-shadow-sm">
+                    {{ echantillon.enfant.code }}
+                </span>
+            </div>
+        </div>
+        <div>
+            <span class="px-2 py-0.5 bg-rose-500/20 border border-rose-400/40 text-rose-200 rounded text-[8px] font-mono font-bold uppercase tracking-wider">
+                Dossier Lié
+            </span>
+        </div>
+    </div>
+
+    <!-- Corps de la section contenant le champ de scan -->
+    <div class="space-y-1.5 relative z-10">
+        <div class="flex items-center gap-2">
+            <span class="relative flex h-1.5 w-1.5">
+                <span id="pulse-dot" class="absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-300"></span>
+            </span>
+            <label for="code_echantillon" class="text-[9px] font-black text-rose-200 uppercase tracking-widest font-mono flex items-center gap-1.5">
+                Code Échantillon <span id="status-label-text" class="text-rose-300 font-normal normal-case">(Saisie terminée)</span>
+            </label>
+        </div>
+
+        <!-- Conteneur du champ -->
+        <div class="flex items-center justify-between gap-2 bg-black/30 px-3 py-2 rounded-lg border border-rose-400/80 shadow-[0_0_10px_rgba(244,63,94,0.2)] backdrop-blur-xs group">
+            <div class="flex items-center gap-2.5 w-full">
+                <!-- Icône Scanner de code-barres -->
+                <div class="w-8 h-8 rounded-md bg-rose-500/20 border border-rose-300/40 flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-rose-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                        <path d="M7 9h10"/><path d="M7 12h10"/><path d="M7 15h10"/>
+                    </svg>
+                </div>
+
+                <!-- Input Code Échantillon avec script dynamique -->
+                <input type="text" id="code_echantillon" name="code_echantillon" value="{{ echantillon.code }}"
+                       placeholder="saisissez le code de l'echantillon"
+                       autofocus
+                       required
+                       oninput="
+                           const statusText = document.getElementById('status-label-text');
+                           const badgeText = document.getElementById('scan-badge-text');
+                           const checkIcon = document.getElementById('scan-check-icon');
+                           const pulseDot = document.getElementById('pulse-dot');
+                           if(this.value.trim().length > 0) {
+                               statusText.textContent = '(Saisie en cours)';
+                               statusText.classList.add('animate-pulse');
+                               badgeText.textContent = 'VALIDE';
+                               checkIcon.classList.remove('hidden');
+                               pulseDot.classList.add('animate-ping');
+                           } else {
+                               statusText.textContent = '(Saisie terminée)';
+                               statusText.classList.remove('animate-pulse');
+                               badgeText.textContent = 'UNIQUE SCAN ID';
+                               checkIcon.classList.add('hidden');
+                               pulseDot.classList.remove('animate-ping');
+                           }
+                       "
+                       class="font-mono text-base sm:text-lg font-bold text-white placeholder-rose-300/60 bg-transparent border-none p-0 tracking-widest focus:outline-none focus:ring-0 w-full">
+            </div>
+
+            <div class="shrink-0 hidden sm:block">
+                <span id="scan-badge-container" class="px-2 py-0.5 bg-rose-500/30 backdrop-blur-md text-rose-100 border border-rose-300/40 rounded text-[8px] font-black font-mono uppercase tracking-widest flex items-center gap-1 transition-all">
+                    <!-- Icône Check (masquée par défaut) -->
+                    <svg id="scan-check-icon" class="w-3 h-3 text-emerald-400 hidden animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span id="scan-badge-text">UNIQUE SCAN ID</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+      <!-- SECTION 1 : INFORMATIONS DE LA FORMATION SANITAIRE -->
+<!-- SECTION 1 : FORMATION SANITAIRE (FOSA) -->
+<!-- Bloc Section 1 - Style ERP Professionnel / Health Facility Information -->
+<div class="bg-white border border-slate-200 rounded-xl shadow-sm font-sans overflow-hidden transition-all">
+    
+
+
+<!-- ======================================================== -->
+<!-- STYLE DHIS2 PRO : SECTION 3 - CODE D'IDENTIFICATION      -->
+<!-- ======================================================== -->
+
+   
+        {% include "../components/section-maj-echantillon/section_patient.html" %}
+
+        {% include "../components/section-maj-echantillon/section_mother.html" %}
+ 
+        {% include "../components/section-maj-echantillon/section_clinics.html" %}
+
+
+        {% include "../components/section-maj-echantillon/section_infos_echantillon.html" %}
+
+      
+    </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // =========================================================================
+        // 1. Zone Allaitement (Gestion du Select Global)
+        // =========================================================================
+        const selectAllaite = document.getElementById('enfant_allaite');
+        const zoneAllaitement = document.getElementById('zone_allaitement');
+
+        if (selectAllaite && zoneAllaitement) {
+            selectAllaite.addEventListener('change', function() {
+                if (this.value === 'oui') {
+                    zoneAllaitement.classList.remove('hidden');
+                } else {
+                    zoneAllaitement.classList.add('hidden');
+                }
+            });
+        }
+
+        // =========================================================================
+        // 2. Zone Sevrage (Nouvelle gestion via Boutons Radio)
+        // =========================================================================
+        const radioSevrageOui = document.getElementById('sevrage_oui');
+        const radioSevrageNon = document.getElementById('sevrage_non');
+        const dateSevrageWrapper = document.getElementById('wrapper_date_sevrage');
+        const dateSevrageInput = document.getElementById('date_sevrage');
+
+        if (radioSevrageOui && radioSevrageNon && dateSevrageWrapper && dateSevrageInput) {
+            function toggleDateSevrage() {
+                if (radioSevrageOui.checked) {
+                    dateSevrageWrapper.classList.remove('hidden');
+                    dateSevrageInput.required = true;
+                } else {
+                    dateSevrageWrapper.classList.add('hidden');
+                    dateSevrageInput.required = false;
+                    dateSevrageInput.value = ''; // Reset si l'utilisateur repasse à non
+                }
+            }
+
+            radioSevrageOui.addEventListener('change', toggleDateSevrage);
+            radioSevrageNon.addEventListener('change', toggleDateSevrage);
+        }
+
+        // =========================================================================
+        // 3. Traitements Médicaux (Cotrim & TARV - Fonction Générique)
+        // =========================================================================
+        def_toggleDynamicDate('sous_cotrim', 'date_cotrim');
+        def_toggleDynamicDate('sous_tarv', 'date_tarv');
+
+        function def_toggleDynamicDate(selectId, dateId) {
+            const selectEl = document.getElementById(selectId);
+            const dateEl = document.getElementById(dateId);
+
+            if (!selectEl || !dateEl) return;
+
+            selectEl.addEventListener('change', function() {
+                if (this.value === 'oui') {
+                    dateEl.removeAttribute('disabled');
+                    dateEl.classList.remove('bg-slate-100', 'text-slate-400', 'border-slate-300', 'cursor-not-allowed');
+                    dateEl.classList.add('bg-white', 'text-slate-800', 'border-slate-900');
+                    dateEl.setAttribute('required', 'true');
+                } else {
+                    dateEl.setAttribute('disabled', 'true');
+                    dateEl.value = '';
+                    dateEl.classList.add('bg-slate-100', 'text-slate-400', 'border-slate-300', 'cursor-not-allowed');
+                    dateEl.classList.remove('bg-white', 'text-slate-800', 'border-slate-900');
+                    dateEl.removeAttribute('required');
+                }
+            });
+        }
+
+    });
+</script>
+<!-- SECTION 4 : PERSONNEL PRÉLEVEUR & LABO -->
+
+
+<!-- LIAISON FACULTATIVE ENTRE COCHAGE "À RE-PRÉLEVER" ET CHAMP DATE -->
+<script>
+    // Si la case "again_prelevement" de la section précédente existe, 
+    // on peut optionnellement forcer visuellement ou exiger la date de re-prélèvement
+    const checkboxAgain = document.getElementById('again_prelevement');
+    const inputReprelevement = document.getElementById('date_reprelevement');
+
+    if (checkboxAgain && inputReprelevement) {
+        checkboxAgain.addEventListener('change', function() {
+            if (this.checked) {
+                inputReprelevement.setAttribute('required', 'true');
+                inputReprelevement.classList.add('border-rose-900', 'bg-rose-50/10');
+            } else {
+                inputReprelevement.removeAttribute('required');
+                inputReprelevement.classList.remove('border-rose-900', 'bg-rose-50/10');
+            }
+        });
+    }
+</script>
+
+       
+    </form>
+    
+</div>
+
+</main>
+<!-- Bloc Historique des Antécédents (Masqué par défaut) -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const dobInput = document.getElementById('enfant_dob');
+    const ageDisplay = document.getElementById('enfant_age_display');
+
+    function calculerAge() {
+        const dobValue = dobInput.value;
+        
+        if (!dobValue) {
+            ageDisplay.value = "Calcul automatique...";
+            return;
+        }
+
+        const dob = new Date(dobValue);
+        const aujourdhui = new Date();
+
+        // Sécurité si la date est invalide
+        if (isNaN(dob.getTime())) {
+            ageDisplay.value = "Date invalide";
+            return;
+        }
+
+        let ans = aujourdhui.getFullYear() - dob.getFullYear();
+        let mois = aujourdhui.getMonth() - dob.getMonth();
+        let jours = aujourdhui.getDate() - dob.getDate();
+
+        // Ajustement si l'anniversaire n'est pas encore passé cette année
+        if (mois < 0 || (mois === 0 && jours < 0)) {
+            ans--;
+            mois += 12;
+        }
+        
+        if (jours < 0) {
+            // Prendre le dernier jour du mois précédent
+            const dernierJourMoisPrecedent = new Date(aujourdhui.getFullYear(), aujourdhui.getMonth(), 0).getDate();
+            jours += dernierJourMoisPrecedent;
+            mois--;
+            if (mois < 0) {
+                mois += 12;
+                ans--;
+            }
+        }
+
+        // Formatage de l'affichage selon l'âge du patient (très utile en pédiatrie)
+        if (ans > 0) {
+            ageDisplay.value = `${ans} an(s) et ${mois} mois`;
+        } else if (mois > 0) {
+            ageDisplay.value = `${mois} mois et ${jours} jour(s)`;
+        } else {
+            ageDisplay.value = `${jours} jour(s)`;
+        }
+    }
+
+    // Écouter les changements sur le champ Date
+    dobInput.addEventListener('change', calculerAge);
+
+    // Lancer une première fois le calcul au cas où le champ est pré-rempli au chargement
+    if (dobInput.value) {
+        calculerAge();
+    }
+});
+</script>
+
+
+<script>
+    const ageInput = document.getElementById('main_mere_age');
+    const dobInput = document.getElementById('main_mere_date_naissance');
+
+    // 1. ÂGE -> DATE DE NAISSANCE
+    ageInput.addEventListener('input', function() {
+        const age = parseInt(this.value);
+
+        if (!isNaN(age) && age >= 0) {
+            const today = new Date();
+            const birthDate = new Date(today.getFullYear() - age, today.getMonth(), today.getDate());
+            
+            const year = birthDate.getFullYear();
+            const month = String(birthDate.getMonth() + 1).padStart(2, '0');
+            const day = String(birthDate.getDate()).padStart(2, '0');
+            
+            dobInput.value = `${year}-${month}-${day}`;
+        } else {
+            dobInput.value = '';
+        }
+    });
+
+    // 2. DATE DE NAISSANCE -> ÂGE
+    dobInput.addEventListener('change', function() {
+        if (this.value) {
+            const birthDate = new Date(this.value);
+            const today = new Date();
+
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            const dayDiff = today.getDate() - birthDate.getDate();
+
+            // Si l'anniversaire n'est pas encore passé cette année, on retire 1 an
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                age--;
+            }
+
+            if (age >= 0) {
+                ageInput.value = age;
+            } else {
+                ageInput.value = ''; // Réinitialise si la date est dans le futur
+            }
+        } else {
+            ageInput.value = '';
+        }
+    });
+</script>
+{% endblock %}

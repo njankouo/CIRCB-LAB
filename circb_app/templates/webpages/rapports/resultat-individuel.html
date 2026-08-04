@@ -2,257 +2,298 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Fiche de Résultat Individuelle - CIRCB</title>
+    <title>Fiche de Résultat - CIRCB</title>
     <style>
-        /* MARGES DE PAGE COMPACTES POUR S'ASSURER DU MONOPAGE */
         @page {
-            size: a4 landscape;
-            margin: 4mm 6mm;
+            size: A4 landscape;
+            margin: 8mm 10mm;
+            background-color: #ffffff;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
         }
 
         body {
             font-family: Helvetica, Arial, sans-serif;
-            font-size: 7.5pt;
-            color: #111111;
+            font-size: 8pt;
+            color: #000000;
             margin: 0;
             padding: 0;
             background-color: #ffffff;
         }
 
-        /* GRAND CADRE NOIR GLOBAL (Épuré en épaisseur) */
+        /* Cadre extérieur global */
         .outer-frame {
-            border: 1.5px solid #222222;
+            border: 1.5px solid #000000;
+            padding: 6px;
+            width: 100%;
+        }
+
+        /* CADRES GRANDS - Titres gros et soft, avec espacement plus large entre label et value */
+        .cadre-simple {
+            border: 1px solid #000000;
+            background-color: #ffffff;
             padding: 6px 8px;
-            width: 100%;
-            box-sizing: border-box;
+            height: 64px;
         }
-
-        /* TABLES ET CELLULES */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .header-table td {
-            vertical-align: top;
-            text-align: center;
-        }
-
-        .dotted-line {
-            border-bottom: 1px dotted #555555;
-            width: 60%;
-            margin: 2px auto;
-        }
-
-        /* BOÎTE TITRE CENTRAL (Suppression du double cadre redondant) */
-        .title-box {
-            border: 1px solid #333333;
-            background-color: #fcfcfc;
-            padding: 3px 8px;
-            font-size: 9pt;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 3px;
-        }
-
-        /* CELLULES D'INFORMATIONS (Harmonisées et plus aérées) */
-        .box-cell {
-            border: 1px solid #b0b0b0;
-            background-color: #fafafa;
-            padding: 4px 6px;
-            font-size: 7.5pt;
-            vertical-align: top;
-        }
-
-        .box-cell strong {
-            font-weight: bold;
-            color: #222222;
-        }
-
-        /* TABLEAU DES RÉSULTATS (Épuré des doubles bordures internes) */
-        .results-table {
-            border: 1px solid #333333;
-            margin-top: 6px;
+        .cadre-simple .label {
+            display: block;
+            font-weight: 600;
+            font-size: 8pt;
+            color: #2c3e50;
             margin-bottom: 8px;
         }
 
-        .results-table th, .results-table td {
-            border: 1px solid #cccccc;
-            padding: 4.5px;
-            text-align: center;
-            vertical-align: middle;
-            font-size: 7.5pt;
+        .cadre-quadrant {
+            border: 1px solid #000000;
+            background-color: #ffffff;
+            padding: 6px 8px;
+            height: 74px;
+        }
+        .cadre-quadrant .label {
+            display: block;
+            font-weight: 600;
+            font-size: 8pt;
+            color: #2c3e50;
+            margin-bottom: 8px;
         }
 
-        .results-table th {
-            background-color: #f2f2f2;
+        /* Tableaux de disposition avec espaces très larges (gutters) */
+        .layout-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        .layout-table td {
+            border: none;
+            padding: 0;
+            vertical-align: top;
+        }
+        .gutter-h {
+            width: 5%;
+        }
+        .gutter-v {
+            width: 8%;
+        }
+
+        /* En-tête institutionnel */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 6px;
+        }
+        .header-table td {
+            border: none;
+            vertical-align: middle;
+            text-align: center;
+            padding: 0;
+        }
+
+        .dotted-line {
+            border-bottom: 1px dotted #000000;
+            width: 70%;
+            margin: 2px auto;
+        }
+
+        .label {
+            font-weight: 600;
+            font-size: 7.5pt;
+            color: #2c3e50;
+        }
+
+        .value {
             font-weight: bold;
-            color: #111111;
+            font-size: 8.5pt;
+            color: #000000;
+        }
+
+        /* TABLEAU DES RÉSULTATS */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0;
+            margin-bottom: 10px;
+            border: 1px solid #000000;
+        }
+        .results-table th {
+            border: 1px solid #000000;
+            background-color: #e6e6e6;
+            text-align: center;
+            padding: 5px;
+            font-weight: bold;
+            font-size: 8pt;
+        }
+        .results-table td {
+            border: 1px solid #000000;
+            text-align: center;
+            padding: 6px;
+            font-weight: bold;
+            font-size: 9pt;
         }
     </style>
 </head>
 <body>
 
-    <!-- CADRE EXTÉRIEUR NOIR -->
-    <div class="outer-frame">
+<div class="outer-frame">
 
-        <!-- 1. EN-TÊTE INSTITUTIONNEL -->
-        <table class="header-table" style="margin-bottom: 6px;">
-            <tr>
-                <!-- GAUCHE : MINISTÈRE -->
-                <td style="width: 32%; font-weight: bold; font-size: 7.5pt; text-align: left;">
-                    MINISTERE DE LA SANTE PUBLIQUE
-                    <div class="dotted-line" style="margin: 2px 0 2px 0;"></div>
-                    <span style="font-weight: normal; font-size: 7pt;">DIRECTION DE LA LUTTE CONTRE LA MALADIE</span>
-                </td>
-                
-                <!-- CENTRE : LOGO ET TITRE -->
-                <td style="width: 36%;">
-                    {% if logo_base64 %}
-                        <img src="data:image/png;base64,{{ logo_base64 }}" style="height: 34px; width: auto;" alt="Logo CIRCB"><br>
-                    {% endif %}
-                    <div class="title-box">
-                        FICHE DE RESULTAT<br>
-                        <span style="font-size: 7pt; font-weight: normal;">(Diagnostic précoce du VIH-1)</span>
-                    </div>
-                </td>
-                
-                <!-- DROITE : RÉPUBLIQUE -->
-                <td style="width: 32%; font-weight: bold; font-size: 7.5pt; text-align: right;">
-                    REPUBLIQUE DU CAMEROUN<br>
-                    <span style="font-weight: normal; font-size: 7pt;">Paix - Travail - Patrie</span>
-                </td>
-            </tr>
-        </table>
+    <!-- 1. EN-TÊTE INSTITUTIONNEL -->
+    <table class="header-table">
+        <tr>
+            <td style="width: 32%; text-align: left; font-weight: bold; font-size: 8pt; vertical-align: top;">
+                MINISTERE DE LA SANTE PUBLIQUE
+                <div class="dotted-line" style="margin-left: 0;"></div>
+                <span style="font-weight: normal; font-size: 7.5pt;">DIRECTION DE LA LUTTE CONTRE LA MALADIE</span>
+            </td>
+            <td style="width: 36%; text-align: center;">
+                {% if logo_base64 %}
+                    <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo CIRCB" style="height: 60px; display: block; margin: 0 auto;" />
+                {% endif %}
+            </td>
+            <td style="width: 32%; text-align: right; font-weight: bold; font-size: 8pt; vertical-align: top;">
+                REPUBLIQUE DU CAMEROUN<br>
+                <span style="font-weight: normal; font-size: 7.5pt;">Paix - Travail - Patrie</span>
+            </td>
+        </tr>
+    </table>
 
-        <!-- 2. BLOCS D'INFORMATIONS (8 BOÎTES COMPACTES) -->
-        <table style="margin-bottom: 4px;">
-            <!-- LIGNE 1 : LABO / MÈRE -->
-            <tr>
-                <td style="width: 49%; padding-bottom: 4px;">
-                    <div class="box-cell">
-                        <strong>Nom et adresse du Laboratoire de référence :</strong><br>
-                        Centre International de Référence « Chantal Biya » (CIRCB)<br>
-                        B.P. 3307, Téléphone : 222-31-5450 / Fax: 222-31-56 Email : circbdoc@yahoo.fr
-                    </div>
-                </td>
-                <td style="width: 2%;"></td>
-                <td style="width: 49%; padding-bottom: 4px;">
-                    <div class="box-cell">
-                        <strong>Nom ou contact de la mère :</strong><br>
-                        {{ resultat.echantillon.mere.nom|default:"" }} {{ resultat.echantillon.mere.telephone|default:"" }}
-                    </div>
-                </td>
-            </tr>
-
-            <!-- LIGNE 2 : ENFANT / DATE NAISSANCE -->
-            <tr>
-                <td style="padding-bottom: 4px;">
-                    <div class="box-cell">
-                        <strong>Nom de l'enfant :</strong><br>
-                        {{ resultat.echantillon.enfant.nom|default:"" }} {{ resultat.echantillon.enfant.prenom|default:"" }}
-                    </div>
-                </td>
-                <td></td>
-                <td style="padding-bottom: 4px;">
-                    <div class="box-cell">
-                        <strong>Date de naissance ou Age de l'enfant :</strong><br>
-                        {{ resultat.echantillon.enfant.date_naissance|date:"d/m/Y"|default:"" }}
-                    </div>
-                </td>
-            </tr>
-
-            <!-- LIGNE 3 : RÉGION / DISTRICT -->
-            <tr>
-                <td style="padding-bottom: 4px;">
-                    <div class="box-cell">
-                        <strong>Région :</strong><br>
-                        {{ resultat.echantillon.fiche.region.nom|default:"NON DEFINI" }}
-                    </div>
-                </td>
-                <td></td>
-                <td style="padding-bottom: 4px;">
-                    <div class="box-cell">
-                        <strong>District :</strong><br>
-                        {{ resultat.echantillon.fiche.district.nom|default:"NON DEFINI" }}
-                    </div>
-                </td>
-            </tr>
-
-            <!-- LIGNE 4 : CODE / FOSA -->
-            <tr>
-                <td style="padding-bottom: 4px;">
-                    <div class="box-cell">
-                        <strong>Code de l'enfant :</strong><br>
-                        {{ resultat.echantillon.enfant.code }}
-                    </div>
-                </td>
-                <td></td>
-                <td style="padding-bottom: 4px;">
-                    <div class="box-cell">
-                        <strong>Formation sanitaire :</strong><br>
-                        {{ resultat.echantillon.fiche.fosa.nom|default:"NON DEFINI" }}
-                    </div>
-                </td>
-            </tr>
-        </table>
-
-        <!-- 3. NOM DU TEST -->
-        <div style="text-align: center; font-size: 8pt; margin: 4px 0;">
-            <strong>Nom du test :</strong> {{ resultat.test.nom|default:"Non defini" }}
-        </div>
-
-        <!-- 4. TABLEAU DES RÉSULTATS -->
-        <table class="results-table">
-            <thead>
-                <tr>
-                    <th colspan="4" style="font-size: 8.5pt; padding: 4px; background-color: #eaeaea;">
-                        RESULTATS
-                    </th>
-                </tr>
-                <tr>
-                    <th style="width: 25%;">Numéro du test</th>
-                    <th style="width: 25%;">Date de prélèvement</th>
-                    <th style="width: 25%;">Résultats</th>
-                    <th style="width: 25%;">Date de rendu du résultat</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ resultat.test.code|default:"Abbott PCR1" }}</td>
-                    <td>{{ resultat.echantillon.date_prelevement|date:"d/m/Y"|default:"Non defini" }}</td>
-                    <td style="font-weight: bold;">{{ resultat.resultat_pcr.nom|default:"Non defini" }}</td>
-                    <td>{{ resultat.date_resultat|date:"d/m/Y"|default:"Non defini" }}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- 5. OBSERVATIONS -->
-        <div style="font-size: 7.5pt; margin-bottom: 18px;">
-            <strong>Observations :</strong><br>
-            <div style="margin-left: 15px; margin-top: 2px;">
-                {{ resultat.observation|default:"Suivre l'enfant : Reprendre le test 4 semaines après sevrage ou Reprendre le test si clinique suspecte." }}
-            </div>
-        </div>
-
-        <!-- 6. SIGNATURES EN BAS -->
-        <table style="font-size: 8pt; font-weight: bold; margin-bottom: 10px;">
-            <tr>
-                <td style="width: 50%; text-align: left;">
-                    Nom du responsable du laboratoire
-                </td>
-                <td style="width: 50%; text-align: right;">
-                    Signature du responsable du laboratoire
-                </td>
-            </tr>
-        </table>
-
-        <!-- DATE D'IMPRESSION -->
-        <div style="font-size: 6.5pt; color: #555555;">
-            Date impression {{ date_impression|date:"d/m/Y"|default:"29/05/2026" }}
-        </div>
-
+    <!-- TRAITS SÉPARATEURS TOUCHANT LES BORDS & TITRE AVEC SOUS-TITRE -->
+    <hr style="border: none; border-top: 1.5px solid #000000; margin: 6px -6px; width: calc(100% + 12px);">
+    <div style="text-align: center; font-weight: bold; font-size: 11pt; margin: 6px 0; text-transform: uppercase;">
+        FICHE DE RESULTAT<br>
+        <span style="font-weight: normal; font-size: 8pt; text-transform: none;">(Diagnostic précoce du VIH-1)</span>
     </div>
+    <hr style="border: none; border-top: 1.5px solid #000000; margin: 6px -6px 10px -6px; width: calc(100% + 12px);">
+
+    <!-- TEXTE DU LABORATOIRE DE RÉFÉRENCE -->
+    <div style="margin-bottom: 12px; font-size: 7.5pt;">
+        <span class="label">Nom et adresse du Laboratoire de référence :</span>
+        <div style="font-weight: bold; font-size: 8.5pt; margin-top: 4px; margin-bottom: 4px;">Centre International de Référence « Chantal Biya » (CIRCB)</div>
+        <span style="font-size: 7.5pt;">B.P. 3307, Tél: 222-31-54-50 / Fax: 222-31-56 Email: circbdoc@yahoo.fr</span>
+    </div>
+
+    <!-- LIGNE 1 : 3 CADRES -->
+    <table class="layout-table">
+        <tr>
+            <td style="width: 30%;">
+                <div class="cadre-simple">
+                    <span class="label">Nom de l'enfant :</span>
+                    <span class="value">{{ resultat.echantillon.enfant.nom }} {{ resultat.echantillon.enfant.prenom }}</span>
+                </div>
+            </td>
+            <td class="gutter-h">&nbsp;</td>
+            <td style="width: 30%;">
+                <div class="cadre-simple">
+                    <span class="label">Date de naissance ou Âge :</span>
+                    <span class="value">{{ resultat.echantillon.enfant.date_naissance|date:"d/m/Y"|default:"-" }}</span>
+                </div>
+            </td>
+            <td class="gutter-h">&nbsp;</td>
+            <td style="width: 30%;">
+                <div class="cadre-simple">
+                    <span class="label">Nom ou contact de la mère :</span>
+                    <span class="value">{{ resultat.echantillon.mere.nom|default:"-" }}</span>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- LIGNE 2 : 3 CADRES -->
+    <table class="layout-table">
+        <tr>
+            <td style="width: 30%;">
+                <div class="cadre-simple">
+                    <span class="label">Région :</span>
+                    <span class="value">{{ resultat.echantillon.fiche.region.nom|default:"-" }}</span>
+                </div>
+            </td>
+            <td class="gutter-h">&nbsp;</td>
+            <td style="width: 30%;">
+                <div class="cadre-simple">
+                    <span class="label">District :</span>
+                    <span class="value">{{ resultat.echantillon.fiche.district.nom|default:"-" }}</span>
+                </div>
+            </td>
+            <td class="gutter-h">&nbsp;</td>
+            <td style="width: 30%;">
+                <div class="cadre-simple">
+                    <span class="label">Formation Sanitaire :</span>
+                    <span class="value">{{ resultat.echantillon.fiche.fosa.nom|default:"-" }}</span>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- LIGNE 3 : CODE ENFANT (AVEC CADRE) ET NOM DU TEST ALIGNÉ À DROITE -->
+    <table class="layout-table">
+        <tr>
+            <td style="width: 46%;">
+                <div class="cadre-quadrant">
+                    <span class="label">Code de l'enfant :</span>
+                    <span class="value" style="font-family: monospace; font-size: 10pt; color: #1d5288;">{{ resultat.echantillon.enfant.code }}</span>
+                </div>
+            </td>
+            <td class="gutter-v">&nbsp;</td>
+            <td style="width: 46%; text-align: right;">
+                <div style="padding: 6px 0; height: 74px;">
+                    <span class="label" style="display: block; font-size: 8pt; font-weight: 600; color: #2c3e50; margin-bottom: 8px;">Nom du test :</span>
+                    <span class="value" style="color: #1d5288;">{{ resultat.test.nom }}</span>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- TABLEAU DES RÉSULTATS -->
+    <div style="border: 1px solid #000000; border-bottom: none; background-color: #e6e6e6; padding: 6px; text-align: center; font-weight: bold; font-size: 9pt; text-transform: uppercase; margin-bottom: 0;">
+        RÉSULTATS
+    </div>
+    <table class="results-table" style="border-top: none; margin-top: 0;">
+        <thead>
+            <tr>
+                <th style="width: 28%;">Nom du test</th>
+                <th style="width: 22%;">Date de prélèvement</th>
+                <th style="width: 26%;">Résultats</th>
+                <th style="width: 24%;">Date de rendu du résultat</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="color: #1d5288;">{{ resultat.test.nom|default:"-" }}</td>
+                <td>{{ resultat.echantillon.date_prelevement|date:"d/m/Y" }}</td>
+               <td style="color: {% if resultat.resultat_pcr.nom|upper == 'DETECTE' %}red{% elif resultat.resultat_pcr.nom|upper == 'NON DETECTE' %}green{% else %}orange{% endif %};">
+    {{ resultat.resultat_pcr.nom|upper }}
+</td>
+                <td>{{ resultat.date_resultat|date:"d/m/Y" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- OBSERVATIONS SANS CADRE -->
+    <div style="margin-bottom: 10px; font-size: 10.5pt;">
+        <span style="font-weight: bold; text-decoration: underline;">Observations :</span>
+        <span style="font-style: italic; margin-left: 4px; color: {% if resultat.resultat_pcr.nom|upper == 'DETECTE' %}red{% elif resultat.resultat_pcr.nom|upper == 'NON DETECTE' %}green{% else %}orange{% endif %};">{{ resultat.resultat_pcr.observation|default:"-" }}</span>
+    </div>
+
+    <!-- SIGNATURES SANS CADRE -->
+    <table class="layout-table" style="margin-bottom: 0;">
+        <tr>
+            <td style="width: 46%; vertical-align: top;">
+                <span class="label" style="display: block; font-size: 8pt; font-weight: 600; color: #2c3e50; margin-bottom: 8px;">Nom du responsable du laboratoire :</span>
+                <span style="font-weight: normal; font-size: 7.5pt;">{{ responsable|default:"-" }}</span>
+            </td>
+            <td class="gutter-v">&nbsp;</td>
+            <td style="width: 46%; vertical-align: top;">
+                <span class="label" style="display: block; font-size: 8pt; font-weight: 600; color: #2c3e50; margin-bottom: 8px;">Signature du responsable du laboratoire :</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- DATE D'IMPRESSION -->
+    <div style="font-size: 6.5pt; color: #555555; margin-top: 8px;">
+        Date impression {% now "d/m/Y" %}
+    </div>
+
+</div>
 
 </body>
 </html>

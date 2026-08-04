@@ -33,7 +33,8 @@
 
         /* EN-TÊTE INSTITUTIONNEL */
         .header-table td {
-            vertical-align: top;
+            border: none !important;
+            vertical-align: middle;
             text-align: center;
         }
 
@@ -56,7 +57,7 @@
         .info-box {
             border: 1px solid #000000;
             padding: 4px 6px;
-            margin-top: 6px;
+            margin-top: 10px;
             margin-bottom: 6px;
             font-size: 7.5pt;
             background-color: #fafafa;
@@ -65,7 +66,7 @@
         /* TABLEAU PRINCIPAL DU LISTING */
         .listing-table {
             border: 1px solid #000000;
-            margin-top: 4px;
+            margin-top: 8px;
         }
 
         .listing-table th, 
@@ -90,6 +91,20 @@
         .text-bold {
             font-weight: bold;
         }
+           /* 4. FOOTER / SIGNATURES */
+        .footer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border: none !important;
+        }
+
+        .footer-table td {
+            font-size: 9px;
+            font-weight: bold;
+            vertical-align: top;
+            border: none !important;
+        }
     </style>
 </head>
 <body>
@@ -98,50 +113,25 @@
     <div class="outer-frame">
 
         <!-- 1. EN-TÊTE INSTITUTIONNEL AVEC LOGO -->
-        <table class="header-table" style="margin-bottom: 4px;">
-            <tr>
-                <!-- GAUCHE : MINISTÈRE -->
-                <td style="width: 32%; font-weight: bold; font-size: 7.5pt;">
-                    MINISTERE DE LA SANTE PUBLIQUE
-                    <div class="dotted-line"></div>
-                    <span style="font-weight: normal; font-size: 6.5pt;">DIRECTION DE LA LUTTE CONTRE LA MALADIE</span>
-                </td>
-                
-                <!-- CENTRE : LOGO ET TITRE -->
-                <td style="width: 36%;">
+        <table class="header-table" style="margin-bottom: 4px; border: none;">
+            <tr style="border: none;">
+                <!-- CENTRE : LOGO LÉGÈREMENT AGRANDI, CENTRÉ ET SANS AUCUNE BORDURE -->
+                <td style="border: none !important;">
                     {% if logo_base64 %}
-                        <img src="data:image/png;base64,{{ logo_base64 }}" style="height: 26px; width: auto;" alt="Logo CIRCB"><br>
+                        <img src="data:image/png;base64,{{ logo_base64 }}" border="0" style="border: 0 !important; outline: none; display: block; margin: 0 auto; height: 45px; width: auto;" alt="Logo CIRCB"><br>
                     {% endif %}
-                    {% comment %} <div style="font-size: 6pt; font-weight: bold;">CENTRE INTERNATIONAL DE REFERENCE "CHANTAL BIYA"</div>
-                    <div style="font-size: 5pt; margin-bottom: 2px;">POUR LA RECHERCHE SUR LA PREVENTION ET LA PRISE EN CHARGE DU VIH/SIDA</div> {% endcomment %}
-                    
-                    <div class="title-box">
-                        RAPPORT COLLECTIF DES RESULTATS<br>
-                        <span style="font-size: 6.5pt; font-weight: normal;">(Diagnostic précoce du VIH-1)</span>
-                    </div>
-                </td>
-                
-                <!-- DROITE : RÉPUBLIQUE -->
-                <td style="width: 32%; font-weight: bold; font-size: 7.5pt;">
-                    REPUBLIQUE DU CAMEROUN<br>
-                    <span style="font-weight: normal; font-size: 6.5pt;">Paix - Travail - Patrie</span>
                 </td>
             </tr>
         </table>
 
-        <!-- 2. BLOC INCLUS / EXCLUS -->
-        <div class="info-box">
-            <strong>Liste des inclus :</strong> {{ inclus|default:"67565, 67604" }}<br>
-            <strong>Liste des exclus :</strong> {{ exclus|default:"Aucun" }}
-        </div>
-
-        <!-- 3. TABLEAU DES RÉSULTATS COLLECTIFS -->
+        <!-- 2. TABLEAU DES RÉSULTATS COLLECTIFS -->
         <table class="listing-table">
             <thead>
                 <tr>
                     <th style="width: 4%;">N°</th>
                     <th style="width: 10%;">Code CIRCB</th>
-                    <th style="width: 18%;">PC Code Site</th>
+                    <th style="width: 8%;">PCR</th>
+                    <th style="width: 14%;">Code Site</th>
                     <th style="width: 14%;">Nom enfant</th>
                     <th style="width: 8%;">Date naiss.</th>
                     <th style="width: 14%;">Nom mère</th>
@@ -155,96 +145,42 @@
                 {% for item in resultats %}
                 <tr>
                     <td>{{ item.numero|default:forloop.counter }}</td>
-                    <td>{{ item.code_circb|default:"&nbsp;" }}</td>
-                    <td class="align-left">{{ item.code_site|default:"&nbsp;" }}</td>
-                    <td class="align-left">{% if item.nom_enfant %}{{ item.nom_enfant }}{% else %}&nbsp;{% endif %}</td>
-                    <td>{% if item.date_naissance %}{{ item.date_naissance|date:"d/m/Y" }}{% else %}&nbsp;{% endif %}</td>
-                    <td class="align-left">{% if item.nom_mere %}{{ item.nom_mere }}{% else %}&nbsp;{% endif %}</td>
-                    <td>{% if item.telephone %}{{ item.telephone }}{% else %}&nbsp;{% endif %}</td>
-                    <td>{% if item.date_prelevement %}{{ item.date_prelevement|date:"d/m/Y" }}{% else %}&nbsp;{% endif %}</td>
-                    <td>{% if item.date_rendu %}{{ item.date_rendu|date:"d/m/Y" }}{% else %}&nbsp;{% endif %}</td>
-                    <td class="text-bold">{% if item.statut_virologique %}{{ item.statut_virologique }}{% else %}&nbsp;{% endif %}</td>
-                </tr>
-                {% empty %}
-                <!-- DONNÉES DE TEST AVEC GESTION DES ESPACES SANS CHEVAUCHEMENT -->
-                <tr>
-                    <td>74</td>
-                    <td>08DP67718</td>
-                    <td class="align-left">2 CEN-NKO-CNK-PT-2014</td>
-                    <td class="align-left">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="align-left">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>21/04/2026</td>
-                    <td>29/05/2026</td>
-                    <td class="text-bold">NON DETECTE</td>
-                </tr>
-                <tr>
-                    <td>78</td>
-                    <td>08DP67720</td>
-                    <td class="align-left">1 CEN-NKO-CNK-PT-2048</td>
-                    <td class="align-left">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="align-left">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>21/04/2026</td>
-                    <td>29/05/2026</td>
-                    <td class="text-bold">NON DETECTE</td>
-                </tr>
-                <tr>
-                    <td>79</td>
-                    <td>08DP67721</td>
-                    <td class="align-left">1 CEN-BIY-ACA-PT-0051</td>
-                    <td class="align-left">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="align-left">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>25/03/2026</td>
-                    <td>29/05/2026</td>
-                    <td class="text-bold">NON DETECTE</td>
-                </tr>
-                <tr>
-                    <td>80</td>
-                    <td>08DP67722</td>
-                    <td class="align-left">1 CEN-BIY-ACA-PT-0052</td>
-                    <td class="align-left">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="align-left">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>06/04/2026</td>
-                    <td>29/05/2026</td>
-                    <td class="text-bold">NON DETECTE</td>
-                </tr>
-                <tr>
-                    <td>94</td>
-                    <td>08DP67736</td>
-                    <td class="align-left">1 CEN-BIY-EBH-PT-0870</td>
-                    <td class="align-left">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="align-left">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>08/05/2026</td>
-                    <td>29/05/2026</td>
-                    <td class="text-bold">NON DETECTE</td>
+                    <td>{{ item.id|default:"&nbsp;" }}</td>
+                    <td>
+                        {% if item.echantillon.ordre %}
+                            PCR{{ item.echantillon.ordre }}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    </td>
+                    <td class="align-left">{{ item.echantillon.enfant.code|default:"&nbsp;" }}</td>
+                    <td class="align-left">{% if item.echantillon.enfant.nom %}{{ item.echantillon.enfant.nom }}{% else %}&nbsp;{% endif %}</td>
+                    <td>{% if item.echantillon.enfant.date_naissance %}{{ item.echantillon.enfant.date_naissance|date:"d/m/Y" }}{% else %}&nbsp;{% endif %}</td>
+                    <td class="align-left">{% if item.echantillon.mere.nom %}{{ item.echantillon.mere.nom }}{% else %}&nbsp;{% endif %}</td>
+                    <td>{% if item.echantillon.mere.contact %}{{ item.echantillon.mere.contact }}{% else %}&nbsp;{% endif %}</td>
+                    <td>{% if item.echantillon.date_prelevement %}{{ item.echantillon.date_prelevement|date:"d/m/Y" }}{% else %}&nbsp;{% endif %}</td>
+                    <td>{% if item.date_resultat %}{{ item.date_resultat|date:"d/m/Y" }}{% else %}&nbsp;{% endif %}</td>
+                    <td class="text-bold">{% if item.resultat_pcr.nom %}{{ item.resultat_pcr.nom }}{% else %}&nbsp;{% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
-        <!-- 4. SIGNATURES ET BAS DE PAGE -->
-        <table style="margin-top: 15px; margin-bottom: 6px; font-size: 7.5pt; font-weight: bold;">
-            <tr>
-                <td style="width: 50%; text-align: left;">
-                    Nom du responsable du laboratoire
-                </td>
-                <td style="width: 50%; text-align: right;">
-                    Signature du responsable du laboratoire
-                </td>
-            </tr>
-        </table>
-
-        <div style="font-size: 6.5pt;">
-            Date d'impression : {{ date_impression|date:"d/m/Y"|default:"26/07/2026" }}
+   <!-- 4. SIGNATURES EN BAS DE PAGE -->
+    <table class="footer-table">
+        <tr>
+            <td style="width: 50%; text-align: left;">
+                Nom du Responsable du Laboratoire: 
+                {{responsable}}
+            </td>
+            <td style="width: 50%; text-align: right;">
+                Signature du Responsable du Laboratoire
+            </td>
+        </tr>
+    </table>
+        <!-- 3. BLOC INCLUS / EXCLUS À LA FIN -->
+        <div class="info-box">
+            <strong>Liste des inclus :</strong><br>
+            <strong>Liste des exclus :</strong> 
         </div>
 
     </div>

@@ -112,7 +112,11 @@ DATABASES = {
         'CONN_MAX_AGE': 600,
     }
 }
-
+AUTO_LOGOUT = {
+    'IDLE_TIME': 600,  # 10 minutes in seconds
+    'SESSION_TIME': 3600,  # Total max session time
+    'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
+}
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 

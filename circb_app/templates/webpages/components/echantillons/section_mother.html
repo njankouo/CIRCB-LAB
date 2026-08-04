@@ -1,178 +1,155 @@
-<!-- Conteneur Principal Style ERP / Main ERP Container -->
-<div class="bg-white border border-slate-300 rounded-lg shadow-sm font-sans" id="section_3">
-    
-    <!-- En-tête de section principal / Main Section Header -->
-   <!-- En-tête de section particulier (Style ERP Premium Dark) / Custom Main Section Header -->
-    <div class="relative bg-slate-950 border-b border-slate-900 px-5 py-4 flex items-center justify-between rounded-t-lg overflow-hidden">
-        <!-- Ligne d'accentuation gauche pour structurer l'ERP -->
-        <div class="absolute left-0 top-0 bottom-0 w-[4px] bg-blue-500"></div>
-        
-        <div class="flex items-center gap-3.5 pl-1">
-            <!-- Badge Section contrasté sur fond noir -->
-            <span class="bg-slate-800 text-slate-200 border border-slate-700 text-[10px] font-mono font-black px-2.5 py-0.5 rounded uppercase tracking-wider">
-               Section 3
-            </span>
-            <div class="flex flex-col">
-                <h3 class="text-sm font-bold text-white tracking-tight leading-tight">
-                    Informations sur la Mère
-                </h3>
-                <span class="text-[11px] font-medium text-slate-400 tracking-normal mt-0.5 font-sans italic">
-                    Mother's Information
-                </span>
-            </div>
-        </div>
-
-        <!-- Indicateur visuel discret à droite -->
-        <div class="hidden sm:flex items-center text-slate-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-        </div>
+<!-- ======================================================== -->
+<!-- STYLE DHIS2 PRO : SECTION 3 - INFORMATIONS SUR LA MÈRE -->
+<!-- ======================================================== -->
+<div class="bg-[#2C6693] text-white px-4 py-2.5 flex items-center justify-between border-b border-blue-900 rounded-t font-sans" id="section_3">
+    <div class="flex items-center gap-2">
+        <span class="bg-white/20 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+           3.0
+        </span>
+        <h3 class="text-xs font-bold uppercase tracking-wide">
+            Informations sur la Mère / Mother's Information
+        </h3>
     </div>
-    
-    <div class="p-6 space-y-6">
-
-        <!-- 8. IDENTITÉ / IDENTITY -->
-        <div class="space-y-3">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">8.Nom / Surname</h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <!-- Nom -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Nom  / Surname <span class="text-rose-500">*</span></label>
-                    <input  type="text" id="main_mere_nom" name="mere_nom" required placeholder="Nom de la mère" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 font-medium cursor-not-allowed focus:outline-none">
-                </div>
-                <!-- Prénom -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Prénom  /  First name</label>
-                    <input  type="text" id="main_mere_prenom" name="mere_prenom" placeholder="Prénom de la mère" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 font-medium cursor-not-allowed focus:outline-none">
-                </div>
-            </div>
-        </div>
-
-        <!-- 9. SUIVI CHRONOLOGIQUE / CHRONOLOGICAL FOLLOW-UP -->
-        <div class="space-y-3 pt-2">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">9.Prénom  /  First name</h4>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs items-end">
-                <!-- Date de naissance -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Date de naissance / Date of birth</label>
-                    <input  type="date" name="mere_date_naissance" id="main_mere_date_naissance"
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 cursor-not-allowed focus:outline-none">
-                </div>
-                <!-- Âge -->
-                <div class="space-y-1.5" >
-                    <label class="font-medium text-slate-700 block">Âge (ans) / Age (years) <span class="text-rose-500">*</span></label>
-                    <input  type="number" name="mere_age" id="main_mere_age" required placeholder="Ex: 28" min="10" max="85"
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-slate-50 text-slate-600 cursor-not-allowed focus:outline-none">
-                </div>
-                <!-- Date du prochain rdv -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Date du Prochain RDV / Date of Next Appointment <span class="text-rose-500">*</span></label>
-                    <input type="date" name="date_prochain_rdv" required 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-                <!-- Date du diagnostic LAV -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Diag. LAV / LAV Diagnosis Date <span class="text-rose-500">*</span></label>
-                    <input type="date" name="date_diagnostic_lav" required 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-            </div>
-        </div>
-
-        <!-- 10. MATERNITÉ / MATERNITY -->
-        <div class="space-y-3 pt-2">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">10. Mode d'accouchement  / Mode of Delivery</h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <!-- Mode d'accouchement -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Mode d'accouchement  / Mode of Delivery <span class="text-rose-500">*</span></label>
-                    <select name="mode_accouchement" required class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                        <option value="">Sélectionner le mode...</option>
-                        {% for m in mode_accouchement %}
-                            <option value="{{ m.id }}">{{ m.nom }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <!-- Numéro de grossesse -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Nº de Grossesse / Grvidity Nº</label>
-                    <input type="number" min="0" name="numero_grossesse" placeholder="0" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-            </div>
-        </div>
-
-        <!-- 11. STATUT VIH / HIV STATUS -->
-        <div class="space-y-3 pt-2">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">11. Date du diagnostic VIH / HIV Diagnosis Date</h4>
-            </div>
-            <div class="max-w-md text-xs">
-                <!-- Date diagnostic VIH -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Date du diagnostic VIH / HIV Diagnosis Date</label>
-                    <input type="date" name="date_diagnostic_vih" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-            </div>
-        </div>
-
-        <!-- 12. SUIVI DE LA FRATRIE / SIBLING FOLLOW-UP -->
-        <div class="space-y-3 pt-2">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">12. Nombre enfants exposés / Number of Exposed Children</h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <!-- Enfants exposés -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">
-                        Nombre enfants exposés / Number of Exposed Children
-                        <span title="Nombre total d'enfants nés de cette mère suivis dans le programme PMTCT" class="cursor-help text-[10px] text-slate-400 font-sans ml-1">(?)</span>
-                    </label>
-                    <input type="number" min="0" name="nb_enfant_expose" placeholder="0" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-                <!-- Enfants infectés -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Nombre enfants infectés / Number of Infected Children </label>
-                    <input type="number" min="0" name="nb_enfant_infecte" placeholder="0" 
-                           class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-            </div>
-        </div>
-
-        <!-- 13. PRISE EN CHARGE PTME / PMTCT CARE -->
-        <div class="space-y-3 pt-2">
-            <div class="border-b border-slate-200 pb-1.5">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">13. Protocole PTME suivi / ARV Protocol followed by mother</h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <!-- Protocole PTME suivi -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Protocole PTME suivi / ARV Protocol followed by mother <span class="text-rose-500">*</span></label>
-                    <select name="protocole_ptme" required class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors">
-                        <option value="">Sélectionner le protocole...</option>
-                        {% for p in protocole_ptme %}
-                            <option value="{{ p.id }}">{{ p.nom }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <!-- Date d'initiation PTME -->
-                <div class="space-y-1.5">
-                    <label class="font-medium text-slate-700 block">Date d'initiation du protocole / Regimen Initiation Date</label>
-                    <input type="date" name="date_initiation_ptme" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-            </div>
-        </div>
-
+    <div class="hidden sm:flex items-center gap-1.5 text-blue-100 text-[11px] font-mono">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>MOTHER METADATA</span>
     </div>
 </div>
 
+<!-- Corps du formulaire - Style DHIS2 Pro -->
+<div class="bg-white border border-slate-300 rounded-b shadow-2xs font-sans space-y-4 p-4 text-xs">
+
+    <!-- 8. IDENTITÉ / IDENTITY -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                8. Identité <span class="text-slate-400 font-normal lowercase">/ Mother's Identity</span>
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <!-- Nom -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nom <span class="text-slate-400 font-normal lowercase">/ Surname</span> <span class="text-red-600">*</span>
+                </label>
+                <input type="text" id="main_mere_nom" name="mere_nom" required placeholder="Nom de la mère" 
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+            <!-- Prénom -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Prénom <span class="text-slate-400 font-normal lowercase">/ First name</span>
+                </label>
+                <input type="text" id="main_mere_prenom" name="mere_prenom" placeholder="Prénom de la mère" 
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. SUIVI CHRONOLOGIQUE / CHRONOLOGICAL FOLLOW-UP -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                9. Suivi chronologique <span class="text-slate-400 font-normal lowercase">/ Chronological Follow-up</span>
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs items-end">
+            <!-- Date de naissance -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Date de naissance <span class="text-slate-400 font-normal lowercase">/ DOB</span>
+                </label>
+                <input type="date" name="mere_date_naissance" id="main_mere_date_naissance"
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+            <!-- Âge -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Âge (ans) <span class="text-slate-400 font-normal lowercase">/ Age</span> <span class="text-red-600">*</span>
+                </label>
+                <input type="number" name="mere_age" id="main_mere_age" required placeholder="Ex: 28" min="10" max="85"
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+            <!-- Date du prochain rdv -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Prochain RDV <span class="text-slate-400 font-normal lowercase">/ Next Appt</span> <span class="text-red-600"></span>
+                </label>
+                <input type="date" name="date_prochain_rdv"  
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+            <!-- Date du diagnostic LAV -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Date Diagnostic VIH <span class="text-slate-400 font-normal lowercase">/ Diagnostic VIH  Date</span> <span class="text-red-600"></span>
+                </label>
+                <input type="date" name="date_diagnostic_vih"  
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. MATERNITÉ / MATERNITY -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                10. Maternité <span class="text-slate-400 font-normal lowercase">/ Maternity</span>
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <!-- Mode d'accouchement -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Mode d'accouchement <span class="text-slate-400 font-normal lowercase">/ Delivery Mode</span> <span class="text-red-600">*</span>
+                </label>
+                <select name="mode_accouchement" required class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+                    <option value="">Sélectionner le mode...</option>
+                    {% for m in mode_accouchement %}
+                        <option value="{{ m.id }}">{{ m.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Numéro de grossesse -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nº de Grossesse <span class="text-slate-400 font-normal lowercase">/ Gravidity</span>
+                </label>
+                <input type="number" min="0" name="numero_grossesse" placeholder="0" 
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+    </div>
+
+    <!-- 13. PRISE EN CHARGE PTME / PMTCT CARE -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                13. Prise en charge PTME <span class="text-slate-400 font-normal lowercase">/ PMTCT Protocol</span>
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <!-- Protocole PTME suivi -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Protocole PTME <span class="text-slate-400 font-normal lowercase">/ ARV Protocol</span> <span class="text-red-600">*</span>
+                </label>
+                <select name="protocole_ptme" required class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+                    <option value="">Sélectionner le protocole...</option>
+                    {% for p in protocole_ptme %}
+                        <option value="{{ p.id }}">{{ p.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Date d'initiation PTME -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Date d'initiation <span class="text-slate-400 font-normal lowercase">/ Initiation Date</span>
+                </label>
+                <input type="date" name="date_initiation_ptme" 
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+    </div>
+</div>

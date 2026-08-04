@@ -70,31 +70,31 @@
 
     <!-- 3. GRILLE DU PERSONNEL (Cartes épurées au format DHIS2 App Grid) -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {% for p in personnels %}
+        {% for p in user %}
         <div class="bg-white border border-[#e0e0e0] rounded-[3px] p-4 shadow-2xs flex flex-col justify-between hover:border-[#2c6693] transition-colors">
             <div>
                 <div class="flex items-start justify-between mb-3">
                     <!-- Initiales type badge DHIS2 -->
                     <div class="w-10 h-10 rounded-[2px] bg-[#f8f9fa] border border-slate-200 flex items-center justify-center font-bold text-[#2c6693] text-sm">
-                        {{ p.prenom|slice:":1"|upper }}{{ p.nom|slice:":1"|upper }}
+                        {{ p.username|slice:":1"|upper }}{{ p.username|slice:":1"|upper }}
                     </div>
                     <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-[2px]">
                         Actif
                     </span>
                 </div>
                 
-                <h3 class="font-bold text-sm text-slate-900 tracking-tight">{{ p.nom }} {{ p.prenom }}</h3>
+                <h3 class="font-bold text-sm text-slate-900 tracking-tight">{{ p.first_name }} {{ p.last_name }}</h3>
                 <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mt-0.5">{{ p.service }}</p>
                 
                 <div class="mt-3 pt-3 border-t border-slate-100 space-y-1.5 text-xs text-slate-600">
                     <div class="flex items-center gap-2">
                         <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400"></i>
-                        <span class="truncate">{{ p.mail }}</span>
+                        <span class="truncate">{{ p.email }}</span>
                     </div>
-                    <div class="flex items-center gap-2">
+                    {% comment %} <div class="flex items-center gap-2">
                         <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400"></i>
                         <span>{{ p.tel|default:"Non renseigné" }}</span>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
             </div>
         </div>
@@ -116,7 +116,7 @@
 
     <div class="p-5">
         <form method="POST" action="#" class="space-y-4 text-xs" id="form-personnel">
-            {% csrf_token %>
+            {% csrf_token %}
             
             <div class="grid grid-cols-2 gap-3">
                 <div>
@@ -147,8 +147,8 @@
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Rôle / Grade <span class="text-red-500">*</span></label>
                     <select name="role" required class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-[2px] text-xs font-medium text-slate-800 focus:outline-none focus:border-[#2c6693]">
-                        {% for roles in role %}
-                        <option value="{{ roles.id }}">{{ roles.nom }}</option>
+                        {% for roles in groupes %}
+                        <option value="{{ roles.id }}">{{ roles.name }}</option>
                         {% endfor %}
                     </select>
                 </div>

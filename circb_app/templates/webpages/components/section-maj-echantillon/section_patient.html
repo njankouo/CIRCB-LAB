@@ -1,0 +1,221 @@
+<!-- ======================================================== -->
+<!-- STYLE DHIS2 PRO : SECTION 2 - IDENTIFICATION DE L'ENFANT -->
+<!-- ======================================================== -->
+<div class="bg-[#2C6693] text-white px-4 py-2.5 flex items-center justify-between border-b border-blue-900 rounded-t font-sans">
+    <div class="flex items-center gap-2">
+        <span class="bg-white/20 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+           2.0
+        </span>
+        <h3 class="text-xs font-bold uppercase tracking-wide">
+            Identification de l'enfant / Child's Identification
+        </h3>
+    </div>
+    <div class="hidden sm:flex items-center gap-1.5 text-blue-100 text-[11px] font-mono">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h4m10-9A10 10 0 1114 2h2a10 10 0 0110 10z" />
+        </svg>
+        <span>CHILD METADATA</span>
+    </div>
+</div>
+
+<!-- Corps du formulaire - Style DHIS2 Pro -->
+<div class="bg-white border border-slate-300 rounded-b shadow-2xs font-sans space-y-4 p-4 text-xs">
+
+    <!-- Grille de Contenu Dynamique -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+        
+        <!-- 4. CONTACT FAMILIAL / FAMILY CONTACT -->
+      <div class="space-y-2 pt-1 md:col-span-2">
+    <div class="border-b border-slate-300 pb-1 flex items-center justify-between">
+        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+            4. Contact familial <span class="text-slate-400 font-normal lowercase">/ Family Contact</span>
+        </h4>
+        <span class="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+            <svg class="w-3 h-3 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            VERROUILLÉ
+        </span>
+    </div>
+    <div class="w-full text-xs pt-1">
+        <input type="tel" name="contact_familial" readonly placeholder="Ex: +237 6XX XXX XXX" id="main_contact_familial" value="{{ echantillon.mere.contact }}"
+               class="w-full px-2.5 py-1.5 border border-slate-200 rounded bg-slate-100 text-slate-500 font-medium text-xs cursor-not-allowed select-none focus:outline-none">
+    </div>
+</div>
+
+    </div>
+
+    <!-- 5. IDENTITÉ DE L'ENFANT / CHILD'S IDENTITY -->
+ <!-- 5. IDENTITÉ DE L'ENFANT (VERROUILLÉE) -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1 flex items-center justify-between">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                5. Identité de l'enfant <span class="text-slate-400 font-normal lowercase">/ Child's Identity</span>
+            </h4>
+            <span class="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                <svg class="w-3 h-3 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                VERROUILLÉ
+            </span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <!-- Nom (Verrouillé) -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nom de l'enfant <span class="text-slate-400 font-normal lowercase">/ Last Name</span>
+                </label>
+                <input type="text" name="enfant_nom" readonly id="main_enfant_nom" value="{{ echantillon.enfant.nom }}"
+                       class="w-full px-2.5 py-1.5 border border-slate-200 rounded bg-slate-100 text-slate-500 font-medium text-xs cursor-not-allowed select-none focus:outline-none">
+            </div>
+            <!-- Prénom (Verrouillé) -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Prénom de l'enfant <span class="text-slate-400 font-normal lowercase">/ First Name</span>
+                </label>
+                <input type="text" name="enfant_prenom" readonly id="main_enfant_prenom" value="{{ echantillon.enfant.prenom }}"
+                       class="w-full px-2.5 py-1.5 border border-slate-200 rounded bg-slate-100 text-slate-500 font-medium text-xs cursor-not-allowed select-none focus:outline-none">
+            </div>
+        </div>
+    </div>
+    <!-- 6. PARAMÈTRES BIOMÉTRIQUES / BIOMETRIC PARAMETERS -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                6. Paramètres biométriques <span class="text-slate-400 font-normal lowercase">/ Biometric Parameters</span>
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs items-end">
+            <!-- Date de naissance -->
+         <div class="space-y-1">
+        <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider flex items-center justify-between">
+            <span>Date de naissance <span class="text-slate-400 font-normal lowercase">/ DOB</span> <span class="text-red-600">*</span></span>
+            <svg class="w-3 h-3 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+        </label>
+        <input type="date" name="date_naissance" id="enfant_dob" readonly value="{{ echantillon.enfant.date_naissance|date:'Y-m-d' }}"
+               class="w-full px-2.5 py-1.5 border border-slate-200 rounded bg-slate-100 text-slate-500 text-xs cursor-not-allowed select-none focus:outline-none">
+    </div>
+           <div class="space-y-1">
+        <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider flex items-center justify-between">
+            <span>Sexe <span class="text-slate-400 font-normal lowercase">/ Sex</span> <span class="text-red-600">*</span></span>
+            <svg class="w-3 h-3 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+        </label>
+        <select name="sexe" disabled class="w-full px-2.5 py-1.5 border border-slate-200 rounded bg-slate-100 text-slate-500 text-xs cursor-not-allowed select-none focus:outline-none">
+            <option value="">Sélectionner...</option>
+            <option value="M" {% if echantillon.enfant.sexe == "M" %}selected{% endif %}>Masculin (M)</option>
+            <option value="F" {% if echantillon.enfant.sexe == "F" %}selected{% endif %}>Féminin (F)</option>
+        </select>
+        <!-- Champ caché pour s'assurer que la valeur est bien transmise via POST -->
+        <input type="hidden" name="sexe" value="{{ echantillon.enfant.sexe }}">
+    </div>
+            <!-- Rang de naissance -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Si Jumeaux ou triplets, indiquer1,2,3 <span class="text-slate-400 font-normal lowercase">/ if multiple, indicate 1,2,3</span>
+                </label>
+                <select name="rang_naissance" class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+                    <option value="1" {% if echantillon.enfant.rang_naissance == "1" %}selected{% endif %}>1 </option>
+                    <option value="2" {% if echantillon.enfant.rang_naissance == "2" %}selected{% endif %}>2 </option>
+                    <option value="3" {% if echantillon.enfant.rang_naissance == "3" %}selected{% endif %}>3 </option>
+                </select>
+            </div>
+            <!-- Poids actuel -->
+            <div class="space-y-1">
+    <label for="main_poids" class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Poids <span class="text-slate-400 font-normal lowercase">/ Weight (kg)</span> <span class="text-red-600">*</span>
+        <span class="text-[9px] text-amber-600 font-semibold normal-case block sm:inline sm:ml-1">(Min: 6 kg)</span>
+    </label>
+    <input type="number" step="0.01" min="6" name="poids" required placeholder="Ex: 6.5" id="main_poids" value="{{echantillon.poids}}"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+        </div>
+
+        <!-- ZONE COMPLÉMENTAIRE : AGE AUTOMATIQUE -->
+        <div class="pt-1 max-w-xs text-xs">
+            <div class="space-y-1">
+                <label class="font-bold text-slate-500 block uppercase text-[10px] tracking-wider">
+                    Âge calculé <span class="text-slate-400 font-normal lowercase">/ Calculated Age</span>
+                </label>
+                <div class="relative">
+                    <input type="text" id="enfant_age_display" readonly placeholder="Calcul automatique..." 
+                           class="w-full px-2.5 py-1.5 border border-slate-200 rounded bg-slate-100 text-slate-600 font-mono text-xs focus:outline-none cursor-not-allowed">
+                </div>
+                <input type="hidden" name="enfant_age" id="enfant_age_raw">
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. PRISE EN CHARGE MEDICALE / MEDICAL CARE -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                7. Prophylaxie ARV <span class="text-slate-400 font-normal lowercase">/ PMTCT Prophylaxis</span>
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <!-- Prophylaxie ARV -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Prophylaxie reçue <span class="text-slate-400 font-normal lowercase">/ Prophylaxis Given</span>
+                </label>
+                <select name="profilaxie_arv" class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+                    <option value="">Choisir la prophylaxie...</option>
+                    {% for p in profilaxie_arv %}
+                    {% if echantillon.profilaxie_arv and echantillon.profilaxie_arv.id == p.id %}
+                        <option value="{{ p.id }}" selected>{{ p.nom }}</option>
+                    {% else %}
+                        <option value="{{ p.id }}">{{ p.nom }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Date d'initiation -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Date d'initiation <span class="text-slate-400 font-normal lowercase">/ Initiation Date</span>
+                </label>
+                <input type="date" name="date_initiation_arv" value="{{ echantillon.date_initiation_profilaxie_arv|date:'Y-m-d' }}"
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- CALCUL AUTOMATIQUE DE L'ÂGE PÉDIATRIQUE ---
+    document.getElementById('enfant_dob').addEventListener('change', function() {
+        const dobValue = this.value;
+        if (!dobValue) return;
+
+        const dob = new Date(dobValue);
+        const now = new Date();
+        const diffTime = now - dob;
+        
+        if (diffTime < 0) {
+            document.getElementById('enfant_age_display').value = "Date invalide (futur)";
+            return;
+        }
+
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const diffWeeks = Math.floor(diffDays / 7);
+        const diffMonths = Math.floor(diffDays / 30.4375);
+
+        let ageText = "";
+        
+        if (diffMonths >= 24) {
+            const years = Math.floor(diffMonths / 12);
+            ageText = years + " an(s)";
+        } else if (diffMonths >= 1) {
+            ageText = diffMonths + " mois";
+        } else {
+            ageText = diffWeeks + " semaine(s)";
+        }
+
+        document.getElementById('enfant_age_display').value = ageText;
+        document.getElementById('enfant_age_raw').value = diffMonths;
+    });
+</script>

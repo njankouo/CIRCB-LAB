@@ -1,0 +1,280 @@
+<!-- ======================================================== -->
+<!-- STYLE DHIS2 PRO : SECTION 4 - INFORMATIONS CLINIQUES -->
+<!-- ======================================================== -->
+<div class="bg-[#2C6693] text-white px-4 py-2.5 flex items-center justify-between border-b border-blue-900 rounded-t font-sans" id="section_4">
+    <div class="flex items-center gap-2">
+        <span class="bg-white/20 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+           4.0
+        </span>
+        <h3 class="text-xs font-bold uppercase tracking-wide">
+            Informations Cliniques / Clinical Information
+        </h3>
+    </div>
+    <div class="hidden sm:flex items-center gap-1.5 text-blue-100 text-[11px] font-mono">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z" />
+        </svg>
+        <span>CLINICAL METADATA</span>
+    </div>
+</div>
+
+<!-- Corps du formulaire - Style DHIS2 Pro -->
+<div class="bg-white border border-slate-300 rounded-b shadow-2xs font-sans space-y-4 p-4 text-xs">
+
+    <!-- SOUS-BLOC : ÉTAT CLINIQUE & ALIMENTATION (Questions 14 & 15) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+        <!-- 14. Enfant symptomatique -->
+        <div class="space-y-1">
+            <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                14. Enfant symptomatique <span class="text-slate-400 font-normal lowercase">/ Symptomatic child</span> <span class="text-red-600">*</span>
+            </label>
+          
+            <select name="enfant_symptomatique" required 
+                    class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+                <option value="">Sélectionner...</option>
+                 {% if echantillon.present_symptome %}
+                <option value="oui" selected>Oui</option>
+                <option value="non">Non</option>
+                {% else %}
+                <option value="oui">Oui</option>
+                <option value="non" selected>Non</option>
+              
+                {% endif %}
+            </select>
+        </div>
+
+        <!-- 15. Allaitement -->
+        <div class="space-y-1">
+            <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                15. Enfant allaité <span class="text-slate-400 font-normal lowercase">/ Is child breastfed</span> <span class="text-red-600">*</span>
+            </label>
+            <select name="enfant_allaite" id="enfant_allaite" required 
+                    class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+                <option value="">Sélectionner...</option>
+                {% if echantillon.present_allaitement %}
+                <option value="oui"selected >Oui</option>
+                <option value="non" >Non </option>
+                {% else %}
+                <option value="oui">Oui</option>
+                <option value="non" selected>Non</option>
+                {% endif %}
+            </select>
+        </div>
+    </div>
+
+    <!-- ZONE CONDITIONNELLE : MODE D'ALLAITEMENT (Affichée via JS) -->
+    <div id="zone_allaitement" class="hidden text-xs p-3 bg-slate-50 border border-slate-200 rounded space-y-1">
+        <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+            Mode d'allaitement <span class="text-slate-400 font-normal lowercase">/ Breastfeeding mode</span>
+        </label>
+        <select name="mode_allaitement" class="w-full sm:w-1/2 px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+            <option value="">Sélectionner le mode...</option>
+            {% for m in modes_allaitement %}
+            {% if echantillon.mode_allaitement == m %}selected{% endif %}
+
+                <option value="{{ m.id }}">{{ m.nom }}</option>
+            {% endfor %}
+        </select>
+    </div>
+<!-- Zone Allaitement Artificiel (S'affiche si "non") -->
+<div id="zone_allaitement_artificiel" class="hidden mt-4 p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+    <!-- Vos champs spécifiques à l'allaitement artificiel / sevrage / type de lait -->
+    <p class="text-xs font-semibold text-slate-700">Mode d'allaitement artificiel / Lait maternisé...</p>
+     <select name="mode_allaitement" class="w-full sm:w-1/2 px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+            <option value="">Sélectionner le mode...</option>
+      
+    {%for modes_allaitement_artificiels in modes_allaitement_artificiel%}
+    {%if echantillon.mode_allaitement == modes_allaitement_artificiels%}
+        <option value="{{ modes_allaitement_artificiels.id }}" selected>{{ modes_allaitement_artificiels.nom }}</option>
+    {%else%}
+        <option value="{{ modes_allaitement_artificiels.id }}">{{ modes_allaitement_artificiels.nom }}</option>
+    {%endif%}
+    {%endfor%}
+     </select>
+</div>
+    <!-- 16. STATUT DU SEVRAGE -->
+    <div class="space-y-2 bg-slate-50 p-3 border border-slate-200 rounded text-xs">
+        <label class="block font-bold text-slate-700 uppercase tracking-wider text-[10px]">
+            16. Statut du Sevrage <span class="text-slate-400 font-normal lowercase">/ Weaning Status</span> <span class="text-red-600">*</span>
+        </label>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <!-- Option Non -->
+            <label class="group relative flex items-center gap-2 p-2 bg-white border border-slate-300 rounded cursor-pointer hover:border-slate-400 transition-all select-none">
+                <input {%if echantillon.present_sevrage == False %} checked {% endif %} type="radio" name="statut_sevrage" value="non" id="sevrage_non"  class="text-[#2C6693] focus:ring-[#2C6693]">
+                <span class="font-medium text-slate-700 text-xs">Pas encore sevré / Not yet weaned</span>
+            </label>
+
+            <!-- Option Oui -->
+            <label class="group relative flex items-center gap-2 p-2 bg-white border border-slate-300 rounded cursor-pointer hover:border-slate-400 transition-all select-none">
+                <input {%if echantillon.present_sevrage == True %} checked {% endif %} type="radio" name="statut_sevrage" value="oui" id="sevrage_oui" class="text-[#2C6693] focus:ring-[#2C6693]">
+                <span class="font-medium text-slate-700 text-xs">Oui, sevré / Yes, weaned</span>
+            </label>
+        </div>
+
+        <!-- Date de sevrage conditionnelle -->
+        <div id="wrapper_date_sevrage" class="hidden space-y-1 pt-1 max-w-xs">
+            <label for="date_sevrage" class="block font-bold text-slate-700 uppercase text-[10px] tracking-wider">
+                Date effective du sevrage <span class="text-slate-400 font-normal lowercase">/ Date of weaning</span> <span class="text-red-600">*</span>
+            </label>
+            <input type="date" name="date_sevrage" id="date_sevrage" value="{{ echantillon.date_sevrage|date:'Y-m-d' }}"
+                   class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+        </div>
+    </div>
+
+    <!-- SOUS-BLOC : MEDICATION (Questions 17 & 18) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+        <!-- 17. Prophylaxie Cotrimoxazole -->
+        <div class="p-3 border border-slate-200 bg-slate-50/50 rounded space-y-2">
+            <span class="text-[10px] bg-slate-700 text-white px-2 py-0.5 rounded font-mono uppercase font-bold tracking-wider block w-fit">
+                17. Prophylaxie Cotrimoxazole
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div class="space-y-1">
+                    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">Sous Cotrim <span class="text-red-600">*</span></label>
+                    <select name="sous_cotrim" id="sous_cotrim" required class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+                       {%if echantillon.present_cotrimoxazole%}
+                         <option value="oui" selected>Oui</option>
+                        <option value="non">Non</option>
+                        {%else%}
+                             <option value="oui" >Oui</option>
+                        <option value="non" selected>Non</option>
+                        {%endif%}
+                      
+                    </select>
+                </div>
+                <div class="space-y-1">
+                    <label class="font-bold text-slate-500 block uppercase text-[10px] tracking-wider">Date d'initiation</label>
+                    <input type="date" name="date_initiation_cotrim" id="date_cotrim" disabled  value="{{echantillon.date_cotrimoxazole|date:'Y-M-D'}}"
+                           class="w-full px-2.5 py-1.5 border border-slate-200 bg-slate-100 text-slate-400 rounded text-xs cursor-not-allowed focus:outline-none">
+                </div>
+            </div>
+        </div>
+
+        <!-- 18. Traitement ARV Enfant (TARV) -->
+        <div class="p-3 border border-slate-200 bg-slate-50/50 rounded space-y-2">
+            <span class="text-[10px] bg-slate-700 text-white px-2 py-0.5 rounded font-mono uppercase font-bold tracking-wider block w-fit">
+                18. Traitement ARV Enfant (TARV)
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div class="space-y-1">
+                    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">Sous TARV <span class="text-red-600">*</span></label>
+                    <select name="sous_tarv" id="sous_tarv" required class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+                       {%if echantillon.present_tarv%}
+                        <option value="oui" selected>Oui</option>
+                        <option value="non">Non</option>
+                        {%else%}
+                        <option value="oui">Oui</option>
+                         <option value="non" selected>Non</option>
+
+                         {%endif%}
+
+                       
+                    </select>
+                </div>
+                <div class="space-y-1">
+                    <label class="font-bold text-slate-500 block uppercase text-[10px] tracking-wider">Date d'initiation</label>
+                    <input type="date" name="date_initiation_tarv" id="date_tarv" disabled value="{{echantillon.date_tarv|date:'Y-M-D'}}"
+                           class="w-full px-2.5 py-1.5 border border-slate-200 bg-slate-100 text-slate-400 rounded text-xs cursor-not-allowed focus:outline-none">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 19. EXAMEN -->
+    <div class="pt-2 border-t border-slate-200 space-y-2 text-xs">
+       <div class="flex items-center justify-between border-b border-slate-200 pb-1">
+    <label class="block font-bold text-slate-700 uppercase tracking-wider text-[10px] flex items-center gap-1.5">
+        <!-- Icône de cadenas -->
+        <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+        </svg>
+        19. Raisons de prélèvements <span class="text-red-600">*</span>
+    </label>
+    <span class="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 bg-amber-50 text-amber-700 rounded border border-amber-200">
+   
+</div>
+
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 items-center">
+
+    
+    {% for raisons_prelevements in raisons_prelevement %}
+    <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 border border-slate-200 rounded hover:bg-slate-50 transition-colors">
+        <input type="radio" name="raisons_prelevement" value="{{ raisons_prelevements.id }}" class="text-[#2C6693] focus:ring-[#2C6693]">
+        <span class="font-medium text-slate-700 text-xs truncate" title="{{ raisons_prelevements.nom }}">
+            {{ raisons_prelevements.nom }}
+        </span>
+    </label>
+    {% empty %}
+    <div class="col-span-full py-3 text-center border border-dashed border-slate-300 rounded text-slate-400 bg-slate-50/50">
+        Aucune raison de prélèvement disponible
+    </div>
+    {% endfor %}
+</div>
+    </div>
+
+</div>
+
+<script>
+    // Logique conditionnelle pour l'allaitement et le sevrage
+    document.getElementById('enfant_allaite').addEventListener('change', function() {
+        const zone = document.getElementById('zone_allaitement');
+        const zoneArtificiel = document.getElementById('zone_allaitement_artificiel'); // ID de la zone artificielle
+
+        if (this.value === 'oui') {
+            zone.classList.remove('hidden');
+            if (zoneArtificiel) zoneArtificiel.classList.add('hidden');
+        } else {
+            zone.classList.add('hidden');
+            if (zoneArtificiel) zoneArtificiel.classList.remove('hidden');
+        }
+    });
+
+    document.querySelectorAll('input[name="statut_sevrage"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const wrapper = document.getElementById('wrapper_date_sevrage');
+            if (this.value === 'oui') {
+                wrapper.classList.remove('hidden');
+                document.getElementById('date_sevrage').setAttribute('required', 'required');
+            } else {
+                wrapper.classList.add('hidden');
+                document.getElementById('date_sevrage').removeAttribute('required');
+            }
+        });
+    });
+
+    // Logique conditionnelle Cotrimoxazole
+    document.getElementById('sous_cotrim').addEventListener('change', function() {
+        const input = document.getElementById('date_cotrim');
+        if (this.value === 'oui') {
+            input.removeAttribute('disabled');
+            input.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+            input.classList.add('bg-white', 'text-slate-900');
+            input.setAttribute('required', 'required');
+        } else {
+            input.setAttribute('disabled', 'disabled');
+            input.value = '';
+            input.classList.add('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+            input.classList.remove('bg-white', 'text-slate-900');
+            input.removeAttribute('required');
+        }
+    });
+
+    // Logique conditionnelle TARV
+    document.getElementById('sous_tarv').addEventListener('change', function() {
+        const input = document.getElementById('date_tarv');
+        if (this.value === 'oui') {
+            input.removeAttribute('disabled');
+            input.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+            input.classList.add('bg-white', 'text-slate-900');
+            input.setAttribute('required', 'required');
+        } else {
+            input.setAttribute('disabled', 'disabled');
+            input.value = '';
+            input.classList.add('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+            input.classList.remove('bg-white', 'text-slate-900');
+            input.removeAttribute('required');
+        }
+    });
+</script>

@@ -1,0 +1,103 @@
+{% for ech in historique_echantillons %}
+<div class="group relative bg-white border border-slate-200/80 hover:border-[#2C6693]/60 hover:shadow-md rounded-xl p-4 text-xs flex flex-col gap-3 transition-all duration-200">
+    
+    <!-- Ligne 1 : Code échantillon, Test, Ordre et Résultat -->
+    <div class="flex justify-between items-start gap-2">
+        <div class="space-y-1">
+            <div class="flex items-center gap-2 flex-wrap">
+                <!-- Code avec bouton copier rapide -->
+                <span class="font-bold text-slate-900 text-sm tracking-wide bg-slate-100 px-2.5 py-0.5 rounded-lg border border-slate-200 flex items-center gap-1.5 shadow-2xs">
+                    {{ ech.code }}
+                    <button type="button" onclick="event.stopPropagation(); copierCode('{{ ech.code }}', this)" class="text-slate-400 hover:text-[#2C6693] transition-colors" title="Copier le code">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                    </button>
+                </span>
+                
+                <span class="text-slate-300">•</span>
+                <span class="font-semibold text-[#2C6693]">{{ ech.test.nom|default:"Test PCR" }}</span>
+                
+                {% if ech.ordre %}
+                    <span class="px-2 py-0.5 rounded-full bg-sky-50 text-sky-800 border border-sky-200 font-extrabold text-[10px]">
+                        {% if ech.ordre == 1 %}PCR I{% elif ech.ordre == 2 %}PCR II{% elif ech.ordre == 3 %}PCR III{% else %}PCR {{ ech.ordre }}{% endif %}
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Résultat dynamique avec couleur adaptative -->
+        <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-lg font-bold text-[10px] uppercase shadow-2xs tracking-wider
+                {% if 'positif' in ech.resultat_pcr.nom|lower %} bg-rose-50 border border-rose-200 text-rose-700 animate-pulse
+                {% elif 'negatif' in ech.resultat_pcr.nom|lower %} bg-emerald-50 border border-emerald-200 text-emerald-700
+                {% else %} bg-amber-50 border border-amber-200 text-amber-700 {% endif %}">
+                {{ ech.resultat_pcr.nom|default:"En attente" }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Ligne 2 : Données Démographiques (Enfant & Mère) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-slate-50/80 rounded-lg border border-slate-100/80 text-[11px]">
+        <!-- Bloc Enfant -->
+        <div class="space-y-1">
+            <div class="text-slate-400 font-bold uppercase text-[9px] tracking-wider flex items-center gap-1">
+                <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span>Enfant</span>
+            </div>
+            <div class="font-bold text-slate-800">
+                {{ ech.enfant.nom|default:"N/A" }} {{ ech.enfant.prenom|default:"" }}
+            </div>
+            <div class="text-slate-500 flex items-center gap-2 flex-wrap">
+                <span>Sexe : <strong class="text-slate-700">{{ ech.enfant.sexe|default:"N/A" }}</strong></span>
+                <span>•</span>
+                <span>Né(e) le : <strong class="text-slate-700">{{ ech.enfant.date_naissance|date:"d/m/Y"|default:"N/A" }}</strong></span>
+            </div>
+        </div>
+
+        <!-- Bloc Mère & Contact -->
+        <div class="space-y-1 sm:border-l sm:border-slate-200 sm:pl-3">
+            <div class="text-slate-400 font-bold uppercase text-[9px] tracking-wider flex items-center gap-1">
+                <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Mère / Contact</span>
+            </div>
+            <div class="font-bold text-slate-800">
+                {{ ech.enfant.mere.nom|default:"Non renseignée" }} {{ ech.enfant.mere.prenom|default:"" }}
+            </div>
+            <div class="text-slate-500">
+                Contact : <strong class="text-slate-700">{{ ech.enfant.mere.contact|default:"N/A" }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ligne 3 : Dates clés et action de consultation -->
+    <div class="flex items-center justify-between text-[10px] text-slate-500 pt-1 border-t border-slate-100">
+        <div class="flex items-center gap-3">
+            <span>Prélèvement : <strong class="text-slate-700">{{ ech.date_prelevement|date:"d/m/Y"|default:"N/A" }}</strong></span>
+            <span>•</span>
+            {% comment %} <span>Résultat : <strong class="text-slate-700">{{ ech.date_resultat|date:"d/m/Y"|default:"En attente" }}</strong></span> {% endcomment %}
+        </div>
+        <button type="button" onclick="ouvrirDetailsEchantillon('{{ ech.id }}')" class="text-[#2C6693] hover:underline font-bold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+            <span>Voir la fiche</span>
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+    </div>
+
+</div>
+{% empty %}
+<div class="p-8 text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
+    <svg class="w-8 h-8 text-slate-300 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+    <p class="text-xs text-slate-400 italic">Aucun antécédent de prélèvement trouvé pour ce patient.</p>
+</div>
+{% endfor %}
+
+<!-- Petite fonction utilitaire pour le bouton de copie -->
+<script>
+function copierCode(code, btnElement) {
+    navigator.clipboard.writeText(code).then(() => {
+        const originalHTML = btnElement.innerHTML;
+        btnElement.innerHTML = `<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
+        setTimeout(() => {
+            btnElement.innerHTML = originalHTML;
+        }, 1500);
+    });
+}
+</script>

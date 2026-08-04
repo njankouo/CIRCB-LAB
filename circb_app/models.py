@@ -16,22 +16,16 @@ class Role(models.Model):
 
     def __str__(self):
         return self.nom
-class Personnel(models.Model):
-    roles = models.ManyToManyField(Role, blank=True, related_name="utilisateurs")
-    nom = models.CharField(max_length=128, blank=True, null=True)
-    prenom = models.CharField(max_length=128, blank=True, null=True)
-    mail = models.EmailField(max_length=128, blank=True, null=True)  # Changé en EmailField pour la validation automatique
-    tel = models.CharField(max_length=128, blank=True, null=True)
-    photo = models.FileField(blank=True, null=True, upload_to='personnel_photos/')
-    sexe = models.CharField(max_length=255, null=True, blank=True)
-    bd_user = models.OneToOneField(User, blank=True, null=True, on_delete=models.SET_NULL)
-    service = models.CharField(max_length=255, null=True)
+class RoleUser(models.Model):
+    """Association entre un utilisateur et un rôle spécifique."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="roles")
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name="users")
+
+    class Meta:
+        unique_together = ('user', 'role')  # Assure qu'un utilisateur ne peut pas avoir le même rôle plusieurs fois
 
     def __str__(self):
-        if self.nom or self.prenom:
-            return f"{self.nom or ''} {self.prenom or ''}".strip()
-        return f"Personnel N°{self.id}"
-
+        return f"{self.user.username} - {self.role.nom}"
 
 
 class Transporteur(models.Model):
@@ -72,6 +66,16 @@ class Structure(models.Model):
     def __str__(self):
         # Affiche le nom, et ajoute le code/désignation entre parenthèses s'il existe
         return f"{self.nom} [{self.designation}]" if self.designation else self.nom
+    
+    class Meta:
+        verbose_name_plural = "Structures"
+        ordering = ['nom']  # Tri par nom par défaut
+        
+        permissions = [
+            ("peut_voir_structures", "Peut voir les structures"),
+            ("peut_modifier_structures", "Peut modifier les structures"),
+            ("peut_supprimer_structures", "Peut supprimer les structures"),
+        ]
 
 
 class FicheEchantillon(models.Model):
@@ -83,6 +87,8 @@ class FicheEchantillon(models.Model):
     observation = models.TextField(null=True, blank=True)
     
     date_Envoie_labo = models.DateField(null=True)
+    
+    expediteur = models.CharField(null=True, max_length=255)
     
     status = models.BooleanField(default=True)
     
@@ -112,6 +118,13 @@ class FicheEchantillon(models.Model):
 
     def __str__(self):
         return f"Fiche {self.code} ({self.fosa.nom if self.fosa else 'Inconnue'})"
+    
+    class Meta:
+        permissions = [
+            ("peut_voir_fiches_expedition", "Peut voir les fiches d'expédition"),
+            ("peut_valider_resultats", "Peut valider les résultats d'analyses"),
+            ("peut_saisir_echantillon", "Peut enregistrer un nouvel échantillon"),
+        ]
 
 class PorteEntree(models.Model):
     nom = models.CharField(max_length=255, null=True, blank=True)
@@ -129,6 +142,7 @@ class ProfilaxieArv(models.Model):
 class ModeAllaitement(models.Model):
     nom = models.CharField(max_length=255, null=True, blank=True)
     code = models.CharField(max_length=255, null=True, blank=True)
+    is_artificiel = models.BooleanField(default=False)  # Nouveau champ pour indiquer si c'est artificiel
 
     def __str__(self):
         return self.nom if self.nom else "Mode d'allaitement Inconnu"   
@@ -163,7 +177,7 @@ class Patient(models.Model):
     sexe = models.CharField(max_length=10, choices=[('M', 'Masculin'), ('F', 'Féminin')], null=True, blank=True)
     #contact = models.ForeignKey(Personnel, on_delete=models.SET_NULL, null=True, blank=True)
     fosa = models.ForeignKey(Structure, on_delete=models.SET_NULL, null=True, blank=True, related_name='patients_fosa')
-    poids = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # Poids en kg
+   # poids = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # Poids en kg
    # profilaxie = models.ForeignKey(ProfilaxieArv, on_delete=models.SET_NULL, null=True, blank=True)
     mere = models.ForeignKey(Mere, on_delete=models.SET_NULL, null=True, blank=True, related_name='enfants')
     code = models.SlugField(unique=True, null=True, blank=True)  # Code unique pour chaque patient
@@ -173,6 +187,13 @@ class Patient(models.Model):
 
     def __str__(self):
         return f"{self.nom} {self.prenom or ''}".strip()
+    
+    class Meta:
+        permissions = [
+            ("Consulter_dossier_patient", "Consulter le dossier patient"),
+            ("modifier_informations_patients", "Modifier les informations des patients"),
+            
+        ]
 
 class RaisonPrelevement(models.Model):
     nom = models.CharField(max_length=255, null=True, blank=True)
@@ -184,6 +205,7 @@ class RaisonPrelevement(models.Model):
 class ResultatPcr(models.Model):
     nom = models.CharField(max_length=255, null=True, blank=True)
     code = models.CharField(max_length=255, null=True, blank=True)
+    observation = models.TextField(null=True)
 
     def __str__(self):
         return self.nom if self.nom else "Résultat PCR Inconnu"
@@ -196,8 +218,10 @@ class Echantillon(models.Model):
     enfant =models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True, related_name='echantillons_enfant')
     poids = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # Poids en kg
     profilaxie_arv = models.ForeignKey(ProfilaxieArv, on_delete=models.SET_NULL, null=True, blank=True)
+    date_initiation_profilaxie_arv = models.DateField(null=True, blank=True)
     rang_naissance = models.IntegerField(null=True)
     ordre = models.PositiveIntegerField(editable=False, blank=True, null=True)
+    
     
     
     #parents Informations
@@ -275,6 +299,13 @@ class Echantillon(models.Model):
         super().save(*args, **kwargs)
     def __str__(self):
         return f"Echantillon {self.slug} (Fiche: {self.fiche.code})"
+    
+    class Meta:
+        permissions = [
+            ("peut_voir_fiches_expedition", "Peut voir les fiches d'expédition"),
+            ("peut_valider_resultats", "Peut valider les résultats d'analyses"),
+            ("peut_saisir_echantillon", "Peut enregistrer un nouvel échantillon"),
+        ]
 
 
 
@@ -296,6 +327,7 @@ class Test(models.Model):
     code = models.CharField(max_length=255, null=True, blank=True)
     nom = models.CharField(max_length=255, null=True, blank=True)
     pcr = models.ForeignKey(Pcr, on_delete=models.CASCADE, null=True, blank=True, related_name="tests")
+    
 
     class Meta:
         verbose_name = "Configuration de Test"
@@ -333,7 +365,18 @@ class Resultat(models.Model):
         verbose_name = "Résultat d'Analyse"
         verbose_name_plural = "Résultats d'Analyses"
         ordering = ['-date_resultat']
+        permissions = [
+            ("Consulter_resultat_patient", "Consulter le resultat patient"),
+            ("modifier_resultats_patients", "Modifier les resultats des patients"),
+            ("supprimer_resultats_patients", "Supprimer les resultats des patients"),
+            
+                        
+         ]
+        
 
     def __str__(self):
         verdict = self.resultat_pcr.nom if self.resultat_pcr else "En attente"
         return f"Échantillon {self.echantillon} -> Verdict : {verdict}"
+ 
+           
+

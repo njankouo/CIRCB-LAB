@@ -15,6 +15,7 @@ from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 from django.utils.crypto import get_random_string
 from django.db.models import Q
+from .decorators import role_required
 # 1. On garde l'import de Django sous un autre nom ou on importe ton fichier models local
 from .models import Structure_Hierachy, Structure 
 # Create your views here.
@@ -24,13 +25,17 @@ def connexion_view(request):
 
 @login_required(login_url='/')
 def dashboard(request):
-    return render(request, 'webpages/dashbord_hosp.html')
+    context={
+        'fosas_niveau_3': Structure.objects.filter(hierachy__rang=2)
+    }
+    return render(request, 'webpages/dashbord_hosp.html', context)
 @login_required(login_url='/')
 def personnel(request):
     context ={
         'user':User.objects.all(),
         'role':Role.objects.all(),
-        'personnels': Personnel.objects.all(),
+        'groupes': Group.objects.all()
+      
     }
     return render(request, 'webpages/personnel.html',context)
 
@@ -85,12 +90,30 @@ def details_patient(request, slug):
     }
     return render(request, 'webpages/patients/details-patient.html', context)
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group, Permission
+from django.db.models import Q
+from django.shortcuts import render
+
 @login_required(login_url='/')
 def configurations(request):
+    # Récupère uniquement les permissions personnalisées de votre application 'circb_app'
+    permissions = Permission.objects.filter(content_type__app_label='circb_app').exclude(
+        Q(codename__startswith='add_') |
+        Q(codename__startswith='change_') |
+        Q(codename__startswith='delete_') |
+        Q(codename__startswith='view_')
+    )
+
     context = {
-        'roles': Role.objects.all().order_by('id'),
+        'roles': Group.objects.all().order_by('id'),
+        'permissions': permissions,
     }
     return render(request, 'webpages/config/configurations.html', context)
+from django.contrib.auth.decorators import permission_required
+
+# Remplacez 'votre_app' par le nom réel de votre application Django
+@permission_required('circb_app.peut_voir_fiches_expedition', raise_exception=True)
 @login_required(login_url='/')
 def fiches_echantillons(request):
     dernier_numero= FicheEchantillon.objects.order_by('-numero_ordre').first()
@@ -104,6 +127,7 @@ def fiches_echantillons(request):
         'prochain_numero': prochain_numero,
         'fichescount':FicheEchantillon.objects.filter(status=False).count(),
         'fiche_enable':FicheEchantillon.objects.filter(status=False)[:8],
+      
         
     }
     return render(request, 'webpages/echantillonages/fiche_echantillons.html', context)
@@ -115,14 +139,16 @@ def echantillons(request, id):
         'fiches_echantillon':FicheEchantillon.objects.get(id=id),
         'tests':Test.objects.all().order_by('nom'),
         'raisons_prelevement':RaisonPrelevement.objects.all().order_by('nom'),
-        'modes_allaitement':ModeAllaitement.objects.all().order_by('nom'),
+        'modes_allaitement':ModeAllaitement.objects.filter(is_artificiel=False).order_by('nom'),
+        'modes_allaitement_artificiel':ModeAllaitement.objects.filter(is_artificiel=True).order_by('nom'),
         'resultats_pcr':ResultatPcr.objects.all().order_by('nom'),
         'regions':Structure.objects.filter(parent__isnull=True).order_by('nom'),
         'portes_entree':PorteEntree.objects.all().order_by('nom'),
         'protocole_ptme':ProtocolePTME.objects.all().order_by('nom'),
         'profilaxie_arv':ProfilaxieArv.objects.all(),
         'mode_accouchement': ModeAccouchement.objects.all(),
-        'prochain_numero':prochain_numero
+        'prochain_numero':prochain_numero,
+        'examen':Test.objects.all()
     }
     return render(request, 'webpages/echantillonages/echantillons.html', context)
 @login_required(login_url='/')
@@ -342,7 +368,6 @@ def details_fiche(request, slug):
 def detail_fiche(request, code):
     pass
 
-
 def ajouter_echantillon(request):
     if request.method == 'POST':
         is_ajax = (
@@ -356,13 +381,14 @@ def ajouter_echantillon(request):
             code_district = (request.POST.get('code_district') or '').strip().upper()
             code_fosa = (request.POST.get('code_fosa') or '').strip().upper()
             code_pt = (request.POST.get('code_pt') or '').strip().upper()
-            numero_serie = (request.POST.get('numero_serie') or '').strip().upper()
             mere_id = request.POST.get('mere_id')
-            
             enfant_id = request.POST.get('enfant_id')
             
+            try:
+                instance_test = Test.objects.get(id=request.POST.get('examen'))
+            except Test.DoesNotExist:
+                return JsonResponse({'success': False, 'error': "Examen introuvable."}, status=400)
            
-            # 2. Construction du code de base
             code_patient = f"{code_region}{code_district}{code_fosa}{code_pt}"
 
             try:
@@ -388,6 +414,42 @@ def ajouter_echantillon(request):
                     try: return datetime.strptime(str(val).strip(), '%Y-%m-%d').date()
                     except ValueError: return None
 
+                # --- Récupération des données pour validation préalable ---
+                poids = p_float(request.POST.get('poids'))
+                date_naissance_enfant = p_date(request.POST.get('date_naissance'))
+                date_initiation_tarv = p_date(request.POST.get('date_initiation_tarv'))
+                date_sevrage = p_date(request.POST.get('date_sevrage'))
+                date_naissance_mere = p_date(request.POST.get('mere_date_naissance'))
+
+                # --- VALIDATIONS MÉTIER STRICTES ---
+                
+                # 1. Le poids doit être supérieur ou égal à 6 kg
+                if poids is not None and poids < 6:
+                    return JsonResponse({'success': False, 'error': "Le poids de l'échantillon/enfant doit être supérieur ou égal à 6 kg."}, status=400)
+
+                # 2. La date d'initiation TARV doit être supérieure à la date de naissance de l'enfant
+                if date_initiation_tarv and date_naissance_enfant:
+                    if date_initiation_tarv <= date_naissance_enfant:
+                        return JsonResponse({'success': False, 'error': "La date d'initiation TARV doit être strictement supérieure à la date de naissance de l'enfant."}, status=400)
+
+                # 3. La date de naissance de l'enfant doit être inférieure à la date de sevrage
+                if date_naissance_enfant and date_sevrage:
+                    if date_naissance_enfant >= date_sevrage:
+                        return JsonResponse({'success': False, 'error': "La date de naissance de l'enfant doit être inférieure à la date de sevrage."}, status=400)
+
+                # 4 & 5. Règles sur l'âge de la mère et comparaison avec l'enfant
+                if date_naissance_mere:
+                    # Âge minimum de la mère : >= 11 ans (on approxime en comparant les années ou jours)
+                    # 11 ans en jours ~= 11 * 365.25 jours
+                    age_mere_jours = (datetime.now().date() - date_naissance_mere).days
+                    if age_mere_jours < (11 * 365):
+                        return JsonResponse({'success': False, 'error': "L'âge de la mère doit être supérieur ou égal à 11 ans."}, status=400)
+
+                    # L'enfant ne doit pas être plus âgé que la mère
+                    if date_naissance_enfant and date_naissance_mere >= date_naissance_enfant:
+                        return JsonResponse({'success': False, 'error': "Incohérence : L'enfant ne peut pas être plus âgé (ou né avant) que sa mère."}, status=400)
+
+
                 # --- Transaction Atomique ---
                 with transaction.atomic():
 
@@ -403,17 +465,15 @@ def ajouter_echantillon(request):
                     if not enfant:
                         return JsonResponse({'success': False, 'error': f"Le patient avec le code '{code_patient}' est introuvable."}, status=404)
 
-                    # Mise à jour des informations spécifiques de l'enfant
                     if request.POST.get('enfant_nom'):
                         enfant.nom = request.POST.get('enfant_nom', '').strip()
                     if request.POST.get('enfant_prenom'):
                         enfant.prenom = request.POST.get('enfant_prenom', '').strip()
-                    if request.POST.get('date_naissance'):
-                        enfant.date_naissance = p_date(request.POST.get('date_naissance'))
+                    if date_naissance_enfant:
+                        enfant.date_naissance = date_naissance_enfant
                     if request.POST.get('sexe'):
                         enfant.sexe = request.POST.get('sexe', '').strip()
-                    enfant.status=True
-                    
+                    enfant.status = True
                     enfant.save()
 
                     # -------------------------------------------------------------
@@ -423,15 +483,12 @@ def ajouter_echantillon(request):
                     if mere_id:
                         mere = Mere.objects.filter(id=mere_id).first()
 
-                    # Données Mère envoyées depuis le formulaire
                     nom_mere = request.POST.get('mere_nom', '').strip()
                     prenom_mere = request.POST.get('mere_prenom', '').strip()
-                    date_naissance_mere = p_date(request.POST.get('mere_date_naissance'))
                     contact_mere = request.POST.get('contact_familial', '').strip()
 
                     if not mere:
-                        # Si la mère n'existe pas, on la crée si au moins un champ est fourni
-                        if nom_mere or prenom_mere or contact_mere:
+                        if nom_mere or prenom_mere or contact_mere or date_naissance_mere:
                             mere = Mere.objects.create(
                                 nom=nom_mere,
                                 prenom=prenom_mere,
@@ -439,14 +496,12 @@ def ajouter_echantillon(request):
                                 contact=contact_mere
                             )
                     else:
-                        # Si la mère existe déjà, on met à jour ses coordonnées
                         if nom_mere: mere.nom = nom_mere
                         if prenom_mere: mere.prenom = prenom_mere
                         if date_naissance_mere: mere.date_naissance = date_naissance_mere
                         if contact_mere: mere.contact = contact_mere
                         mere.save()
 
-                    # Association de la mère à l'enfant
                     if mere and hasattr(enfant, 'mere'):
                         enfant.mere = mere
                         enfant.save()
@@ -454,19 +509,15 @@ def ajouter_echantillon(request):
                     # -------------------------------------------------------------
                     # 4. ENREGISTREMENT DE L'ÉCHANTILLON
                     # -------------------------------------------------------------
-                    ech = Echantillon.objects.all()
-                    for echs in ech:
-                        if echs.fiche.nombre_echantillon == fiche.nombre_echantillon:
-                            fiche.status = False
                     echantillon = Echantillon.objects.create(
                         code = request.POST.get('code_echantillon'),
                         fiche=fiche,
                         enfant=enfant,
                         mere=mere,
                         
-                        # INFOS ENFANT (Variables au précompte)
+                        # INFOS ENFANT
                         rang_naissance=p_int(request.POST.get('rang_naissance')),
-                        poids=p_float(request.POST.get('poids')),
+                        poids=poids,
                         profilaxie_arv_id=p_int(request.POST.get('profilaxie_arv')),
                         
                         # INFOS SUIVI MÈRE
@@ -479,22 +530,21 @@ def ajouter_echantillon(request):
                         nb_enfant_infecte=p_int(request.POST.get('nb_enfant_infecte')),
                         mode_accouchement_id=p_int(request.POST.get('mode_accouchement')),
                         date_diagnostic_lav=p_date(request.POST.get('date_diagnostic_lav')),
+                        test = instance_test,
                         
                         # SUIVI CLINIQUE ET VIROLOGIQUE
                         present_symptome=p_bool(request.POST.get('enfant_symptomatique')),
                         present_allaitement=p_bool(request.POST.get('enfant_allaite')),
                         mode_allaitement_id=p_int(request.POST.get('mode_allaitement')),
                         present_sevrage=p_bool(request.POST.get('statut_sevrage')),
-                        date_sevrage=p_date(request.POST.get('date_sevrage')),
+                        date_sevrage=date_sevrage,
                         present_cotrimoxazole=p_bool(request.POST.get('sous_cotrim')),
                         date_cotrimoxazole=p_date(request.POST.get('date_initiation_cotrim')),
                         present_tarv=p_bool(request.POST.get('sous_tarv')),
-                        date_tarv=p_date(request.POST.get('date_initiation_tarv')),
+                        date_tarv=date_initiation_tarv,
                         
                         # PCR ET PRÉLÈVEMENT
-                      
                         raison_prelevement_id=p_int(request.POST.get('raisons_prelevement')),
-                        
                         date_prelevement=p_date(request.POST.get('date_prelevement')),
                         duplicate_prelevement=p_bool(request.POST.get('duplicate_prelevement')),
                         nom_preleveur=request.POST.get('nom_preleveur', '').strip(),
@@ -503,9 +553,8 @@ def ajouter_echantillon(request):
                         observation=request.POST.get('observation', '').strip(),
                         date_enregistrement = datetime.now()
                     )
+                    
                     nombre_actuel = Echantillon.objects.filter(fiche=fiche).count()
-
-                    # Si le nombre d'échantillons atteint ou dépasse la limite de la fiche
                     if fiche.nombre_echantillon and nombre_actuel >= fiche.nombre_echantillon:
                         fiche.status = False
                         fiche.save()
@@ -521,6 +570,121 @@ def ajouter_echantillon(request):
         return JsonResponse({'success': False, 'error': "Requête non autorisée."}, status=400)
 
     return render(request, 'webpages/echantillonages/echantillons.html', {})
+def update_echantillon(request, id):
+    echantillon = get_object_or_404(Echantillon, id=id)
+    
+    if request.method == 'POST':
+        try:
+            # Fonctions utilitaires intégrées directement pour éviter les erreurs
+            raw_poids = request.POST.get('poids')
+            poids = float(raw_poids.replace(',', '.')) if raw_poids and str(raw_poids).strip() != '' else None
+
+            def parse_date(val):
+                if val and str(val).strip() != '':
+                    try:
+                        return datetime.strptime(str(val).strip(), '%Y-%m-%d').date()
+                    except ValueError:
+                        return None
+                return None
+
+            def parse_int(val):
+                try:
+                    return int(val) if val and str(val).strip() != '' else None
+                except (ValueError, TypeError):
+                    return None
+
+            def parse_bool(val):
+                return val in [True, 'on', 'true', '1', 'True']
+
+            # Récupération des données converties
+            date_naissance_enfant = parse_date(request.POST.get('date_naissance'))
+            date_initiation_tarv = parse_date(request.POST.get('date_initiation_tarv'))
+            date_sevrage = parse_date(request.POST.get('date_sevrage'))
+            date_naissance_mere = parse_date(request.POST.get('mere_date_naissance'))
+            
+            # --- VALIDATIONS MÉTIER STRICTES ---
+            
+            # 1. Le poids doit être supérieur ou égal à 6 kg
+            if poids is not None and poids < 6:
+                messages.error(request, "Le poids de l'échantillon/enfant doit être supérieur ou égal à 6 kg.")
+                return redirect('update_echantillon', id=echantillon.id)
+            
+            # 2. La date d'initiation TARV doit être supérieure à la date de naissance de l'enfant
+            if date_initiation_tarv and date_naissance_enfant:
+                if date_initiation_tarv <= date_naissance_enfant:
+                    messages.error(request, "La date d'initiation TARV doit être strictement supérieure à la date de naissance de l'enfant.")
+                    return redirect('update_echantillon', id=echantillon.id)
+            
+            # 3. La date de naissance de l'enfant doit être inférieure à la date de sevrage
+            if date_naissance_enfant and date_sevrage:
+                if date_naissance_enfant >= date_sevrage:
+                    messages.error(request, "La date de naissance de l'enfant doit être inférieure à la date de sevrage.")
+                    return redirect('update_echantillon', id=echantillon.id)
+            
+            # 4 & 5. Règles sur l'âge de la mère et comparaison avec l'enfant
+            if date_naissance_mere:
+                age_mere_jours = (datetime.now().date() - date_naissance_mere).days
+                if age_mere_jours < (11 * 365):
+                    messages.error(request, "L'âge de la mère doit être supérieur ou égal à 11 ans.")
+                    return redirect('update_echantillon', id=echantillon.id)
+            
+                if date_naissance_enfant and date_naissance_mere >= date_naissance_enfant:
+                    messages.error(request, "Incohérence : L'enfant ne peut pas être plus âgé (ou né avant) que sa mère.")
+                    return redirect('update_echantillon', id=echantillon.id)
+            
+            # --- MISE À JOUR DE L'ÉCHANTILLON ---
+            echantillon.code = request.POST.get('code_echantillon', echantillon.code)
+            
+            # INFOS ENFANT
+            echantillon.rang_naissance = parse_int(request.POST.get('rang_naissance'))
+            echantillon.poids = poids
+            echantillon.profilaxie_arv_id = parse_int(request.POST.get('profilaxie_arv'))
+            
+            # INFOS SUIVI MÈRE
+            echantillon.protocole_ptme_id = parse_int(request.POST.get('protocole_ptme'))
+            echantillon.date_rdv = parse_date(request.POST.get('date_prochain_rdv'))
+            echantillon.date_initiation_ptme = parse_date(request.POST.get('date_initiation_ptme'))
+            echantillon.date_diagnostic_vih = parse_date(request.POST.get('date_diagnostic_vih'))
+            echantillon.numero_grossesse = parse_int(request.POST.get('numero_grossesse'))
+            echantillon.nb_enfant_expose = parse_int(request.POST.get('nb_enfant_expose'))
+            echantillon.nb_enfant_infecte = parse_int(request.POST.get('nb_enfant_infecte'))
+            echantillon.mode_accouchement_id = parse_int(request.POST.get('mode_accouchement'))
+            echantillon.date_diagnostic_lav = parse_date(request.POST.get('date_diagnostic_lav'))
+            
+           
+            
+            
+            
+            # SUIVI CLINIQUE ET VIROLOGIQUE
+            echantillon.present_symptome = parse_bool(request.POST.get('enfant_symptomatique'))
+            echantillon.present_allaitement = parse_bool(request.POST.get('enfant_allaite'))
+            echantillon.mode_allaitement_id = parse_int(request.POST.get('mode_allaitement'))
+            echantillon.present_sevrage = parse_bool(request.POST.get('statut_sevrage'))
+            echantillon.date_sevrage = date_sevrage
+            echantillon.present_cotrimoxazole = parse_bool(request.POST.get('sous_cotrim'))
+            echantillon.date_cotrimoxazole = parse_date(request.POST.get('date_initiation_cotrim'))
+            echantillon.present_tarv = parse_bool(request.POST.get('sous_tarv'))
+            echantillon.date_tarv = date_initiation_tarv
+            
+            # PCR ET PRÉLÈVEMENT
+            echantillon.raison_prelevement_id = parse_int(request.POST.get('raisons_prelevement'))
+            echantillon.date_prelevement = parse_date(request.POST.get('date_prelevement'))
+            echantillon.duplicate_prelevement = parse_bool(request.POST.get('is_reprelevement'))
+            echantillon.nom_preleveur = request.POST.get('nom_preleveur', '').strip()
+            echantillon.prenom_preleveur = request.POST.get('prenom_preleveur', '').strip()
+            echantillon.contact_preleveur = parse_int(request.POST.get('contact_preleveur'))
+            echantillon.observation = request.POST.get('observation', '').strip()
+            
+            echantillon.save()
+
+            messages.success(request, "Échantillon mis à jour avec succès.")
+            return redirect('/echantillonages/')
+
+        except Exception as e:
+            messages.error(request, f"Une erreur technique est survenue : {str(e)}")
+            return redirect('update_echantillon', id=echantillon.id)
+
+    return redirect('/echantillonages/')
 def ajouter_patient(request):
     if request.method == 'POST':
         # 1. Récupération des données du POST
@@ -584,7 +748,7 @@ def ajouter_patient(request):
 
     # 4. Contexte envoyé au formulaire HTML (Méthode GET)
     context = {
-        'personnels': Personnel.objects.all(),
+     
         'structures': Structure.objects.all(),
         'profilaxies': ProfilaxieArv.objects.all(),
         'meres': Mere.objects.all(),
@@ -606,6 +770,9 @@ def search_porte_entree(request, porte_entree_id):
     })
 
 from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+
 def formater_date(valeur_date):
     """Convertit en toute sécurité une date en chaîne YYYY-MM-DD"""
     if not valeur_date:
@@ -613,8 +780,9 @@ def formater_date(valeur_date):
     if hasattr(valeur_date, 'strftime'):
         return valeur_date.strftime('%Y-%m-%d')
     return str(valeur_date)
+
 def verifier_patient(request):
-    """Vérifie l'existence d'un patient par son code unique complet"""
+    """Vérifie l'existence d'un patient par son code unique complet et récupère ses antécédents d'échantillons"""
     code_recherche = request.GET.get('code', '').strip()
     
     if not code_recherche:
@@ -626,12 +794,18 @@ def verifier_patient(request):
         if not patient:
             return JsonResponse({'existe': False})
 
+        # --- RÉCUPÉRATION DES ANCIENS ÉCHANTILLONS / RÉSULTATS DU PATIENT ---
+        echantillons_precedents = Echantillon.objects.filter(enfant=patient).order_by('-ordre')
+        
+        historique_html = render_to_string('webpages/echantillonages/historique_items.html', {
+            'historique_echantillons': echantillons_precedents
+        }, request=request)
+
         # Données de la mère
         mere_data = None
         mere_obj = getattr(patient, 'mere', None)
         
         if mere_obj:
-            # Récupération sécurisée de l'ID du contact
             contact_id = None
             if hasattr(mere_obj, 'contact_id') and mere_obj.contact_id is not None:
                 contact_id = mere_obj.contact_id
@@ -664,6 +838,7 @@ def verifier_patient(request):
                 'porte_entree': porte_entree_id,
                 'date_naissance': formater_date(getattr(patient, 'date_naissance', None)),
                 'mere': mere_data,
+                'historique_html': historique_html  # <-- Corrigé ici : renvoie bien le HTML généré
             }
         })
 
@@ -673,129 +848,13 @@ def verifier_patient(request):
             'existe': False, 
             'erreur': f"Erreur serveur : {str(e)}"
         }, status=500)
-
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Structure, PorteEntree, Patient, Mere  # Assure-toi d'importer ton modèle Mere
 from datetime import datetime
 from django.db import transaction
 import sys
-def creer_patient(request):
-    if request.method == 'POST':
-        # Détection robuste de la requête AJAX
-        is_ajax = (
-            request.headers.get('X-Requested-With') == 'XMLHttpRequest' or 
-            request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-        )
-        
-        if is_ajax:
-            try:
-                with transaction.atomic():
-                    # 1. Extraction des données de l'enfant depuis le Modal
-                    nom_enfant = request.POST.get('nom', '').strip()
-                    prenom_enfant = request.POST.get('prenom', '').strip()
-                    sexe_enfant = request.POST.get('sexe', '').strip()
-                    dob_enfant_str = request.POST.get('date_naissance', '').strip()
-                    poids_enfant_str = request.POST.get('poids', '').strip()
-                    code_enfant = request.POST.get('code', '').strip()  # Code combiné (ex: LT-DEIDO-...)
-                    
-                    fosa_id = request.POST.get('fosa', '').strip()
-                    porte_entree_id = request.POST.get('porte_entree', '').strip()
-                    personnel_id = request.POST.get('contact', '').strip()
 
-                    # 2. Extraction des données de la mère depuis le Modal
-                    mere_nom = request.POST.get('mere_nom', '').strip()
-                    mere_prenom = request.POST.get('mere_prenom', '').strip()
-                    mere_age_str = request.POST.get('mere_age', '').strip()
-                    mere_dob_str = request.POST.get('mere_date_naissance', '').strip()
-
-                    # Validation minimale obligatoire
-                    if not nom_enfant or not sexe_enfant or not mere_nom:
-                        return JsonResponse({
-                            'success': False, 
-                            'error': 'Le nom, le sexe de l’enfant et le nom de la mère sont obligatoires.'
-                        }, status=400)
-
-                    # 3. Traitement, conversion et nettoyage des types
-                    date_naissance_enfant = datetime.strptime(dob_enfant_str, '%Y-%m-%d').date() if dob_enfant_str else None
-                    mere_dob = datetime.strptime(mere_dob_str, '%Y-%m-%d').date() if mere_dob_str else None
-                    
-                    poids_enfant = None
-                    if poids_enfant_str:
-                        poids_enfant = float(poids_enfant_str.replace(',', '.'))
-                    
-                    mere_age = int(mere_age_str) if mere_age_str.isdigit() else None
-
-                    # Récupération sécurisée des instances de clés étrangères (ForeignKeys)
-                    personnel_instance = Personnel.objects.filter(id=personnel_id).first() if personnel_id.isdigit() else None
-                    fosa_instance = Structure.objects.filter(id=fosa_id).first() if fosa_id.isdigit() else None
-                    porte_instance = PorteEntree.objects.filter(id=porte_entree_id).first() if porte_entree_id.isdigit() else None
-
-                    # 4. Enregistrement de la Mère
-                    nouvelle_mere = Mere.objects.create(
-                        nom=mere_nom,
-                        prenom=mere_prenom,
-                        age=mere_age,
-                        date_naissance=mere_dob,
-                       
-                        contact=personnel_instance  # Utilisation sécurisée de l'instance réseau récupérée
-                    )
-
-                    # 5. Enregistrement de l'Enfant (Patient)
-                    nouveau_patient = Patient.objects.create(
-                        code=code_enfant,
-                        nom=nom_enfant,
-                        prenom=prenom_enfant,
-                        sexe=sexe_enfant,
-                        date_naissance=date_naissance_enfant,
-                        poids=poids_enfant,
-                       
-                        fosa=fosa_instance,
-                        porte_entree=porte_instance,
-                        mere=nouvelle_mere
-                    )
-
-                    # 6. Réponse JSON renvoyée pour alimenter directement ta page principale
-                    return JsonResponse({
-                        'success': True,
-                        'patient': {
-                            'id': nouveau_patient.id,
-                            'nom': nouveau_patient.nom,
-                            'prenom': nouveau_patient.prenom,
-                            'sexe': nouveau_patient.sexe,
-                            'date_naissance': nouveau_patient.date_naissance.strftime('%Y-%m-%d') if nouveau_patient.date_naissance else '',
-                            'poids': float(nouveau_patient.poids) if nouveau_patient.poids else '',
-                            'porte_entree': nouveau_patient.porte_entree.id if nouveau_patient.porte_entree else '',
-                            'mere': {
-                                'id': nouvelle_mere.id,
-                                'nom': nouvelle_mere.nom,
-                                'prenom': nouvelle_mere.prenom,
-                                'age': nouvelle_mere.age,
-                                'date_naissance': nouvelle_mere.date_naissance.strftime('%Y-%m-%d') if nouvelle_mere.date_naissance else ''
-                            }
-                        }
-                    })
-
-            except Exception as e:
-                print(f"!!! ERREUR CRITIQUE DJANGO : {str(e)}", file=sys.stderr)
-                return JsonResponse({'success': False, 'error': f'Erreur BDD : {str(e)}'}, status=500)
-        
-        return JsonResponse({'success': False, 'error': 'Requête AJAX invalide.'}, status=400)
-
-    # ==========================================
-    # CHARGEMENT INITIAL DE LA PAGE (Méthode GET)
-    # ==========================================
-    regions = Structure.objects.filter(parent__isnull=True).order_by('nom')
-    portes_entree = PorteEntree.objects.all().order_by('nom')
-    personnels = Personnel.objects.all().order_by('nom')
-
-    context = {
-        'regions': regions,
-        'portes_entree': portes_entree,
-        'personnels': personnels
-    }
-
-    return render(request, 'webpages/echantillonages/echantillons.html', context)
 
 def custom_page_not_found_view(request, exception):
     return render(request, 'webpages/404.html', status=404)
@@ -815,13 +874,25 @@ def create_or_edit_role(request):
         messages.success(request, f"Le rôle '{nom}' a été créé avec succès.")
 
     return redirect('/configurations/')  # Remplacez par le nom de votre URL de redirection pour la liste des rôles   
-
-def delete_role(request, role_id):
-    role = get_object_or_404(Role, id=role_id)
-    role.delete()
-    messages.success(request, f"Le rôle '{role.nom}' a été supprimé avec succès.")
-    return redirect('/configurations/')  # Remplacez par le nom de votre URL de redirection pour la liste des rôles
-
+@login_required(login_url='/')
+def delete_role(request, id):
+    role = get_object_or_404(Group, id=id)
+    
+    # Vérifie si le rôle est lié à au moins un utilisateur
+    if role.user_set.exists():
+        messages.error(
+            request, 
+            f"Impossible de supprimer le rôle '{role.name}' car il est attribué à un ou plusieurs utilisateurs."
+        )
+    else:
+        role_name = role.name
+        role.delete()
+        messages.success(
+            request, 
+            f"Le rôle '{role_name}' a été supprimé avec succès."
+        )
+        
+    return redirect('/configurations/')
 def edit_role(request, role_id):
     role = get_object_or_404(Role, id=role_id)
     context = {
@@ -887,11 +958,22 @@ def enregistrer_resultat_ajax(request):
 
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+import qrcode
+import qrcode.image.svg
 
+def generer_qr_svg(texte):
+    factory = qrcode.image.svg.SvgPathImage
+    img = qrcode.make(texte, image_factory=factory, box_size=5)
+    return img.to_string().decode('utf-8')
 
 def resultats(request):
+    resultats=Resultat.objects.filter(resultat_pcr__isnull=False).order_by('-date_resultat')
+    for res in resultats:
+        code_str = str(res.echantillon.code)
+        res.qr_code_svg = generer_qr_svg(code_str)
     context ={
-        'resultats':Resultat.objects.all()
+        'resultats': resultats
+       
     }
     return render(request, 'webpages/resultats/list_resultat.html',context)
 
@@ -904,13 +986,19 @@ from django.shortcuts import get_object_or_404, HttpResponse
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 
-
-
+import base64
+import os
+from django.contrib.staticfiles import finders
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+from django.utils import timezone
+from weasyprint import HTML
 
 def resultats_individuel(request, id):
     resultat = get_object_or_404(Resultat, id=id)
 
-    # 1. Récupération et conversion du logo en Base64 (contourne tout souci de chemin relatif avec xhtml2pdf)
+    # 1. Récupération et conversion du logo en Base64
     logo_base64 = ""
     logo_path = finders.find("images/Logo-CIRCB.png") or finders.find(
         "images/logo_circb.png"
@@ -923,8 +1011,9 @@ def resultats_individuel(request, id):
     # 2. Transmission au template avec la date du jour d'impression
     context = {
         "resultat": resultat,
+        'responsable': request.user,  # Ajout de l'utilisateur connecté comme responsable
         "logo_base64": logo_base64,
-        "date_impression": timezone.now(),  # Permet d'avoir la date du jour dynamique sur le PDF
+        "date_impression": timezone.now(),
     }
 
     # 3. Rendu du template HTML
@@ -932,22 +1021,16 @@ def resultats_individuel(request, id):
         "webpages/rapports/resultat-individuel.html", context
     )
 
-    # 4. Génération du PDF
+    # 4. Génération du PDF avec WeasyPrint
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = (
         f'inline; filename="Resultat_{resultat.id}.pdf"'
     )
 
-    pisa_status = pisa.pisaDocument(
-        io.BytesIO(html_content.encode("utf-8")), response, encoding="utf-8"
-    )
-
-    if pisa_status.err:
-        return HttpResponse("Erreur lors de la compilation du PDF.", status=500)
+    # WeasyPrint prend directement la chaîne HTML et écrit dans la réponse HTTP
+    HTML(string=html_content, base_url=request.build_absolute_uri()).write_pdf(response)
 
     return response
-
-
 
 
 def resultats_collectifs(request):
@@ -967,7 +1050,12 @@ def resultats_collectifs(request):
     context = {
        
         "logo_base64": logo_base64,
-        "date_impression": timezone.now(),  # Permet d'avoir la date du jour dynamique sur le PDF
+        "date_impression": timezone.now(), 
+        "resultats":Resultat.objects.filter(resultat_pcr__isnull=False).order_by('-date_resultat'),
+        'responsable': request.user,  # Ajout de l'utilisateur connecté comme responsable
+     
+    
+       
     }
 
     # 3. Rendu du template HTML
@@ -1135,13 +1223,6 @@ def rechercher_patient(request):
 
 
 
-def delete_role(request, id):
-    role = Role.objects.get(id=int(id))
-    role.delete()
-    messages.success(request, 'suppression reussie')
-    return redirect(request.META.get('HTTP_REFERER','/'))
-
-
 
 def save_personnel(request):
     if request.method == "POST":
@@ -1150,49 +1231,34 @@ def save_personnel(request):
             prenom = request.POST.get('first_name')
             email = request.POST.get('email')
             service = request.POST.get('service')
-            role_id = request.POST.get('role')
+            group_id = request.POST.get('role') # ID du groupe sélectionné dans votre formulaire
 
-            if not all([nom, prenom, email, service, role_id]):
+            if not all([nom, prenom, email, service, group_id]):
                 return JsonResponse({'success': False, 'message': 'Tous les champs sont requis.'}, status=400)
 
-            # Utilisation de transaction.atomic pour éviter les données orphelines
             with transaction.atomic():
                 # 1. Création de l'utilisateur
-                # On génère un mot de passe aléatoire de 12 caractères
                 password = get_random_string(length=12)
                 user = User.objects.create_user(
-                    username=email, # L'email sert de login
+                    username=email,
                     email=email,
                     password=password,
                     first_name=prenom,
                     last_name=nom
                 )
 
-                # 2. Création de l'instance Personnel liée à cet utilisateur
-                personnel = Personnel.objects.create(
-                    nom=nom,
-                    prenom=prenom,
-                    mail=email,
-                    service=service,
-                    bd_user=user
-                )
+                # 2. Attribution du rôle (Groupe Django natif)
+                groupe = Group.objects.get(id=group_id)
+                user.groups.add(groupe) # Méthode native Django
 
-                # 3. Ajout du rôle
-                role = Role.objects.get(id=role_id)
-                personnel.roles.add(role)
-
-            # Vous pourriez envoyer ce mot de passe par email ici
             return JsonResponse({
                 'success': True, 
                 'message': f'Agent enregistré. Mot de passe généré : {password}',
-                'generated_password': password # Utile pour l'afficher à l'admin
+                'generated_password': password
             })
 
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)}, status=500)
-    
-    return JsonResponse({'success': False, 'message': 'Méthode non autorisée.'}, status=405)
-
 
 def recherche_patient(request): 
     query = request.GET.get('q', '').strip()
@@ -1214,91 +1280,15 @@ def profile(request):
     return render(request, 'webpages/profile.html')
 
 def define_plage(request):
-    return render(request, 'webpages/resultats/plages.html')
+    context={
+        'now':datetime.now()
+    }
+    return render(request, 'webpages/resultats/plages.html',context)
 
 
 def liste_echantillon(request):
     if request.method=="POST":
        pass
-
-def statistic_echantillon(request):
-    # 1. QuerySet de base
-    echantillons = Echantillon.objects.all()
-
-    # 2. Filtre par FOSA (sélectionné dans la modale HTML)
-    fosa = request.GET.get('fosa')
-    if fosa:
-        echantillons = echantillons.filter(fosa=fosa)
-
-    # 3. Récupération de la période et de l'année
-    periode_type = request.GET.get('periode_type', 'toutes')
-    annee_val = request.GET.get('annee')
-    annee = (
-        int(annee_val) if annee_val and annee_val.isdigit() else datetime.now().year
-    )
-
-    # 4. Filtres temporels (On conserve un QuerySet à chaque étape)
-    if periode_type == 'journalier':
-        date_jour = request.GET.get('date_jour')
-        if date_jour:
-            # ✅ Pas de __date sur un DateField
-            echantillons = echantillons.filter(date_enregistrement=date_jour)
-
-    elif periode_type == 'mensuel':
-        mois_raw = request.GET.get('mois')  # Format YYYY-MM
-        if mois_raw and '-' in mois_raw:
-            year, month = mois_raw.split('-')
-            echantillons = echantillons.filter(
-                date_enregistrement__year=year, date_enregistrement__month=month
-            )
-
-    elif periode_type == 'trimestriel':
-        trimestre_val = request.GET.get('trimestre', '1')
-        trimestre = int(trimestre_val) if trimestre_val.isdigit() else 1
-        echantillons = echantillons.filter(
-            date_enregistrement__year=annee,
-            date_enregistrement__quarter=trimestre,
-        )
-
-    elif periode_type == 'semestriel':
-        semestre = request.GET.get('semestre', 'S1')
-        mois_semestre = range(1, 7) if semestre == 'S1' else range(7, 13)
-        echantillons = echantillons.filter(
-            date_enregistrement__year=annee,
-            date_enregistrement__month__in=mois_semestre,
-        )
-
-    elif periode_type == 'annuel':
-        echantillons = echantillons.filter(date_enregistrement__year=annee)
-
-    elif periode_type == 'custom':
-        date_debut = request.GET.get('date_debut')
-        date_fin = request.GET.get('date_fin')
-        if date_debut and date_fin:
-            # ✅ __range direct sur DateField
-            echantillons = echantillons.filter(
-                date_enregistrement__range=[date_debut, date_fin]
-            )
-        elif date_debut:
-            echantillons = echantillons.filter(
-                date_enregistrement__gte=date_debut
-            )
-        elif date_fin:
-            echantillons = echantillons.filter(
-                date_enregistrement__lte=date_fin
-            )
-
-    # 5. Calcul du total après filtrage
-    total_echantillons = echantillons.count()
-
-    return render(
-        request,
-        'webpages/dashbord_hosp.html',
-        {
-            'echantillons': echantillons,  # QuerySet filtré (pour boucler dessus)
-            'total_echantillons': total_echantillons,  # Entier pour afficher la métrique
-        },
-    )
 
 @require_POST
 def save_code_patient(request):
@@ -1495,7 +1485,7 @@ def save_plage(request):
                             'test_id': test_id,
                             'resultat_pcr_id': resultat_pcr_id,
                             'responsable': request.user,
-                            'date_resultat': datetime.now(),
+                            'date_resultat': request.POST.get('date_resultat'),
                             
                         }
                     )
@@ -1562,12 +1552,12 @@ def historique_echantillon(request):
 
 
 def line_delete_structure(request, id):
-    # 1. Récupération de l'objet
+    # 1. Récupération de l'objetline_dele
     structure = get_object_or_404(Structure, id=int(id))
     
     # 2. Vérification des relations avec les autres entités métiers
     # On exclut Structure d'ici pour traiter son arborescence proprement après
-    models_to_check = [Echantillon]
+    models_to_check = [FicheEchantillon]
     can_delete = True
 
     for model in models_to_check:
@@ -1973,6 +1963,8 @@ def modifier_fiche_echantillon(request, id):
             fiche.expediteur = request.POST.get('expediteur')
             fiche.date_expedition = request.POST.get('date_expedition')
             fiche.nombre_echantillon = request.POST.get('nombre_echantillon')
+           
+           
             
             transporteur_id = request.POST.get('transporteur')
             if transporteur_id:
@@ -1983,18 +1975,18 @@ def modifier_fiche_echantillon(request, id):
                 fiche.moyen_transport_id = moyen_id
                 
             fiche.date_reception = request.POST.get('date_reception')
-            fiche.date_entree_labo = request.POST.get('date_entree_labo')
+            fiche.date_Envoie_labo = request.POST.get('date_entree_labo')
             fiche.observation = request.POST.get('observation')
             
             fiche.save()
             
             messages.success(request, f"La fiche d'expédition {fiche.code} a été mise à jour avec succès.")
-            return redirect('nom_de_votre_liste_fiches') # Remplacez par le nom de votre route de redirection
+            return redirect('/fiches-echantillons/') # Remplacez par le nom de votre route de redirection
             
         except Exception as e:
             messages.error(request, f"Erreur lors de la modification : {stratif(e) if 'stratif' in globals() else e}")
             
-    return redirect('modifier_fiche', id=fiche.id)
+    return redirect('/fiches-echantillons/')
 
 
 def modifier_fiche(request, id):
@@ -2007,3 +1999,274 @@ def modifier_fiche(request, id):
         'moyens_transport': MoyenTransport.objects.all(), # Adaptez selon vos modèles réels
     }
     return render(request, 'webpages/echantillonages/edit-fiche.html', context)
+
+
+def delete_echantillon(request, id):
+    echantillon = Echantillon.objects.get(id=int(id))
+    echantillon.delete()
+    messages.success(request, 'Supression reussie' )
+    
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+
+def modifier_echantillon(request, id):
+    context={
+        'echantillon':Echantillon.objects.get(id=int(id)),
+        'portes_entree':PorteEntree.objects.all(),
+        'profilaxie_arv': ProfilaxieArv.objects.all(),
+        'mode_accouchement': ModeAccouchement.objects.all(),
+        'protocole_ptme': ProtocolePTME.objects.all(),
+        'modes_allaitement':ModeAllaitement.objects.filter(is_artificiel=False),
+        'modes_allaitement_artificiel':ModeAllaitement.objects.filter(is_artificiel=True),
+    }
+    return render(request, 'webpages/echantillonages/edit-echantillon.html', context)
+
+
+def edit_patient(request, code):
+    context={
+        'patient':Patient.objects.get(code=code)
+    }
+    return render(request,'webpages/patients/edit-patient.html', context)
+
+
+def UploadSubStructure(request, id):
+    template = 'webpages/config/upload-sub-structure.html'
+    structure = Structure.objects.get(id=int(id))
+   
+    context = {
+    'structure': structure
+    }
+    return render(request, template, context)
+
+
+
+
+def import_structure_view(request):
+    
+    
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        # 1. Récupération de la structure parente sélectionnée sur l'interface (par défaut)
+        parent_id = request.POST.get('parent_id')
+        current_structure = None
+        
+        if parent_id:
+            try:
+                current_structure = Structure.objects.get(id=parent_id)
+            except (Structure.DoesNotExist, ValueError):
+                return JsonResponse({'success': False, 'error': 'Structure parente par défaut introuvable.'}, status=400)
+
+        file = request.FILES.get('file_structure')
+        if not file:
+            return JsonResponse({'success': False, 'error': 'Aucun fichier fourni.'}, status=400)
+
+        if not file.name.endswith('.csv'):
+            return JsonResponse({'success': False, 'error': 'Format de fichier non supporté. Veuillez injecter un fichier .csv'}, status=400)
+
+        try:
+            data_set = file.read().decode('UTF-8')
+            io_string = io.StringIO(data_set)
+            
+            try:
+                header = next(io_string) 
+            except StopIteration:
+                return JsonResponse({'success': False, 'error': 'Le fichier CSV est vide.'}, status=400)
+            
+            structures_creees = 0
+            errors = []
+
+            reader = csv.reader(io_string, delimiter=';', quotechar='"')
+            
+            for index, row in enumerate(reader, start=2):
+                if not row or len(row) < 1 or not row[0].strip():
+                    continue  
+
+                # Extraction des données du CSV
+                nom = row[0].strip()
+                designation = row[1].strip() if len(row) > 1 else ''
+                parent_nom_csv = row[2].strip() if len(row) > 2 and row[2].strip() else None
+
+                # Détermination du parent
+                parent_obj = current_structure  
+                
+                # Si le CSV spécifie explicitement un nom de parent, on le cherche
+                if parent_nom_csv:
+                    try:
+                        parent_obj = Structure.objects.get(
+                            nom__iexact=parent_nom_csv, 
+                           
+                        )
+                    except Structure.DoesNotExist:
+                        errors.append(f"Ligne {index} : La structure parente nommée '{parent_nom_csv}' est introuvable dans cette institution.")
+                        continue
+                    except Structure.MultipleObjectsReturned:
+                        errors.append(f"Ligne {index} : Plusieurs structures portent le nom '{parent_nom_csv}'. Impossible de trancher.")
+                        continue
+
+                # Création ou mise à jour basée sur le NOM sous un même PARENT
+                # (Évite les doublons exacts au même endroit de l'arborescence)
+                obj, created = Structure.objects.get_or_create(
+                    nom=nom,
+                    parent=parent_obj,
+                  
+                    defaults={
+                        'designation': designation,
+                    }
+                )
+
+                # Optionnel : si la structure existait déjà mais qu'on veut mettre à jour sa désignation
+                if not created and designation:
+                    obj.designation = designation
+                    obj.save()
+
+                if created:
+                    structures_creees += 1
+
+            if errors:
+                return JsonResponse({
+                    'success': False, 
+                    'error': f"{len(errors)} erreur(s) critique(s) rencontrée(s) : \n" + "\n".join(errors[:5])
+                }, status=400)
+
+            parent_name = current_structure.nom if current_structure else "la racine"
+            return JsonResponse({
+                'success': True,
+                'message': f"{structures_creees} unité(s) organisationnelle(s) traitée(s) avec succès !"
+            })
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': f"Erreur de traitement interne : {str(e)}"}, status=500)
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def mode_utilisation(request):
+    return render(request, 'webpages/mode_utilisation.html')
+
+
+def modifier_patient(request, pk):
+    # Récupérer le patient par son identifiant
+    patient = get_object_or_404(Patient, pk=pk)
+    
+    if request.method == 'POST':
+        try:
+            # 1. Mise à jour des informations de l'enfant (Patient)
+            patient.nom = request.POST.get('nom')
+            patient.prenom = request.POST.get('prenom', '')
+            
+            date_naiss = request.POST.get('date_naissance')
+            patient.date_naissance = date_naiss if date_naiss else None
+            
+            patient.sexe = request.POST.get('sexe')
+            
+            
+            # Gestion de la case à cocher (checkbox 'status')
+            patient.status = True if request.POST.get('status') == 'on' else False
+            
+            patient.save()
+
+            # 2. Mise à jour ou création des informations de la Mère
+            # Récupère la mère liée, ou en crée une nouvelle si elle n'existe pas encore
+            mere = getattr(patient, 'mere', None)
+            if not mere:
+                mere = Mere(patient=patient) # Adaptez selon la structure de votre modèle Mere
+            
+            mere.nom = request.POST.get('mere_nom', '')
+            mere.prenom = request.POST.get('mere_prenom', '')
+            
+            date_naiss_mere = request.POST.get('mere_date_naissance')
+            mere.date_naissance = date_naiss_mere if date_naiss_mere else None
+            
+            age_mere = request.POST.get('mere_age')
+            mere.age = int(age_mere) if age_mere else None
+            
+            mere.contact = request.POST.get('mere_contact', '')
+            mere.save()
+
+            messages.success(request, "Les modifications du dossier ont été enregistrées avec succès.")
+            return redirect('/dossiers/patients/', pk=patient.pk) # Remplacez par le nom de votre route de redirection
+
+        except Exception as e:
+            messages.error(request, f"Erreur lors de la modification : {e}")
+
+    context = {
+        'patient': patient,
+    }
+    return render(request, 'webpages/patients/dossiers.html', context)
+
+def delete_resultat(request, id):
+    resultat = get_object_or_404(Resultat, id=id)
+    
+    # Récupérer l'échantillon associé et réinitialiser son champ resultat_pcr
+    if resultat.echantillon:
+        echantillon = resultat.echantillon
+        echantillon.resultat_pcr = None
+        echantillon.save()
+            
+    # Suppression du résultat
+    resultat.delete()
+    
+    messages.success(request, "Le résultat a été supprimé avec succès.")
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+from django.contrib.auth.models import Group, Permission
+def gestion_roles_interface(request):
+    # Récupère tous les groupes (rôles) existants
+    groupes = Group.objects.all()
+    
+    # Récupère uniquement les permissions de votre application (remplacez 'votre_app' par votre nom d'app)
+    permissions = Permission.objects.filter(content_type__app_label='circb_app')
+
+    if request.method == 'POST':
+        nom_groupe = request.POST.get('nom_groupe')
+        permissions_ids = request.POST.getlist('permissions') # Liste des IDs des checkboxes cochées
+
+        if nom_groupe:
+            # Crée ou récupère le groupe
+            groupe, created = Group.objects.get_or_create(name=nom_groupe)
+            
+            # Assigne les permissions sélectionnées au groupe
+            groupe.permissions.set(permissions_ids)
+            return redirect('/configurations/')
+
+    return render(request, 'webpages/config/configurations.html', {
+        'groupes': groupes,
+        'permissions': permissions
+    })
+
+
+@login_required(login_url='/')
+def edit_role(request, role_id):
+    # 1. Récupérer le rôle (groupe) concerné, ou erreur 404 s'il n'existe pas
+    role = get_object_or_404(Group, id=role_id)
+    
+    # 2. Récupérer les permissions (ajustez le filtre selon votre application)
+    permissions = Permission.objects.filter(content_type__app_label='circb_app')
+    # Si vous voulez filtrer les permissions personnalisées comme vu avant :
+    permissions = Permission.objects.filter(content_type__app_label='circb_app').exclude(
+         Q(codename__startswith='add_') | Q(codename__startswith='change_') |
+         Q(codename__startswith='delete_') | Q(codename__startswith='view_')
+     )
+
+    # 3. Traitement lors de la soumission du formulaire (POST)
+    if request.method == 'POST':
+        nom_groupe = request.POST.get('nom_groupe')
+        permissions_ids = request.POST.getlist('permissions') # Liste des IDs cochés
+
+        if nom_groupe:
+            # Mettre à jour le nom du rôle
+            role.name = nom_groupe.strip()
+            role.save()
+            
+            # Assigner/Mettre à jour les permissions du groupe
+            role.permissions.set(permissions_ids)
+            
+            # Rediriger vers la page principale de configurations (ou autre)
+            return redirect('/configurations/')
+
+    # 4. Affichage de la page (GET)
+    context = {
+        'role': role,
+        'permissions': permissions,
+    }
+    return render(request, 'webpages/config/edit-role.html', context)

@@ -1,4 +1,63 @@
 {% extends '../dashbord_hosp.html' %}
+{% block breadcrumb %}
+<nav class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-inner px-5 py-3 text-xs font-sans mb-6 sticky top-0 z-50" aria-label="Breadcrumb">
+    <ol class="flex items-center space-x-2.5 text-slate-700 dark:text-slate-300 flex-wrap gap-y-2">
+        
+        <!-- 1. CONTEXTE GLOBAL / APPLICATION -->
+        <li class="flex items-center">
+            <a href="#" class="flex items-center gap-2 group px-3 py-1.5 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-950/40 transition-all duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#2C6693] dark:text-sky-400 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                <span class="font-semibold text-[#2C6693] dark:text-sky-400 tracking-tight">MEDYSIS LAB</span>
+                <span class="text-slate-400 dark:text-slate-500 font-normal ml-1.5 hidden md:inline">/ Laboratoire</span>
+            </a>
+        </li>
+        
+        <!-- Séparateur Flèche -->
+        <li class="text-slate-300 dark:text-slate-700 hidden md:block">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+        </li>
+        
+        <!-- Séparateur Slash (Mobile) -->
+        <li class="text-slate-300 dark:text-slate-700 md:hidden font-black">/</li>
+
+        <!-- 2. MODULE / PAGE PARENTE (Fiche d'expédition) -->
+        <li class="flex items-center">
+            <a href="" class="flex items-center gap-1.5 group px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500 group-hover:text-[#2C6693] dark:group-hover:text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+                <span class="font-medium text-slate-700 dark:text-slate-200 group-hover:text-[#2C6693] dark:group-hover:text-sky-400">Fiche d'expédition</span>
+                 <span class="text-slate-400 dark:text-slate-500 font-normal ml-1.5 hidden lg:inline">/ Dispatch Sheet</span>
+            </a>
+        </li>
+
+        <!-- Séparateur Flèche -->
+        <li class="text-slate-300 dark:text-slate-700 hidden md:block">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+        </li>
+
+         <!-- Séparateur Slash (Mobile) -->
+        <li class="text-slate-300 dark:text-slate-700 md:hidden font-black">/</li>
+
+        <!-- 3. PAGE ACTIVE (AJOUT D'ÉCHANTILLONS) -->
+        <li class="flex items-center" aria-current="page">
+            <span class="flex items-center gap-2 px-3.5 py-1.5 bg-sky-500 dark:bg-sky-600 text-white rounded-lg font-bold shadow-md border border-sky-600 dark:border-sky-700 tracking-wider text-[11px]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-sky-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Ajout d'échantillons</span>
+                <span class="text-sky-100 font-medium ml-1.5 hidden xl:inline opacity-80">/ Add Samples</span>
+            </span>
+        </li>
+    </ol>
+</nav>
+{% endblock %}
 {% block main %}
 <main class="flex-1 h-full min-h-0 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-white">
 <div class="max-w-5xl mx-auto my-1 p-1">
@@ -44,107 +103,225 @@
         </div>
     </div>
 </div>
+<!-- Bouton pour ouvrir / réouvrir le drawer (Masqué par défaut) -->
+<div id="container-btn-historique" class="hidden mt-4">
+    <button id="btn-toggle-historique" type="button" class="px-4 py-2 bg-sky-50 border border-sky-200 text-[#2C6693] hover:bg-sky-100 rounded-xl font-bold text-xs flex items-center gap-2 shadow-xs transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Consulter l'historique des prélèvements</span>
+    </button>
+</div>
 
+<!-- Le Drawer (Panneau latéral coulissant) -->
+<div id="historique-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <!-- Fond semi-transparent (Overlay) -->
+    <div id="drawer-overlay" class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity opacity-0 duration-300"></div>
+
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+        <!-- Panneau coulissant -->
+        <div id="drawer-panel" class="w-screen max-w-md transform transition-transform duration-300 ease-in-out translate-x-full bg-white shadow-2xl flex flex-col">
+            
+            <!-- En-tête du Drawer -->
+            <div class="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 flex items-center gap-2">
+                    <span class="p-1.5 bg-sky-50 rounded-lg text-[#2C6693]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </span>
+                    <span>Historique des prélèvements</span>
+                </h3>
+                <button id="btn-close-drawer" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition-colors">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Corps du Drawer (La liste des antécédents injectée par Django) -->
+            <div id="liste-historique" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50">
+                <!-- Les éléments HTML injectés s'afficheront ici -->
+            </div>
+
+            <!-- Pied du Drawer -->
+            <div class="p-3 bg-white border-t border-slate-200 text-right">
+                <button id="btn-close-drawer-footer" type="button" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
+                    Fermer
+                </button>
+            </div>
+            
+        </div>
+    </div>
+</div>
     <form method="POST" class="space-y-6" id="form_echantillon" action="{% url 'ajouter_echantillon' %}">
         {% csrf_token %}
         <input type="hidden" name="fiche_echantillon" value="{{ fiches_echantillon.id }}" >
         <input type="hidden" name="enfant_id" id="main_enfant_id">
         <input type="hidden" name="enfant_mere_id" id="main_enfant_mere_id">
 
+<section class="bg-gradient-to-br from-rose-900 to-rose-950 dark:from-rose-950 dark:to-slate-950 border border-rose-200/20 dark:border-rose-900/40 rounded-2xl p-6 shadow-md relative overflow-hidden text-white space-y-4">
+    
+    <!-- Filigrane d'arrière-plan (code-barres stylisé) -->
+    <div class="absolute right-1 -bottom-5 opacity-10 pointer-events-none text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M3 5v14"/><path d="M6 5v14"/><path d="M10 5v14"/><path d="M13 5v14"/><path d="M17 5v14"/><path d="M21 5v14"/>
+        </svg>
+    </div>
 
+    <!-- En-tête de la section avec le badge "MODE SCAN ACTIF" et icône -->
+    <div class="flex items-center justify-between pb-3 border-b border-rose-800/50 relative z-10">
+        <h3 class="text-xs font-bold uppercase font-mono text-rose-100 tracking-wide">
+            Identification de l'Échantillon <span class="text-rose-400">*</span>
+        </h3>
+        
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-white/10 text-white border border-white/20 shadow-2xs backdrop-blur-xs">
+            <svg class="w-3.5 h-3.5 text-rose-300 animate-pulse shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5m0 0H5a2 2 0 00-2 2v2m0 6v2a2 2 0 002 2h2m0 0v-2m10 2h2a2 2 0 002-2v-2m0 0h-2m-12 0H5m0 0V9m0 0h2" />
+            </svg>
+            <span>MODE SCAN ACTIF</span>
+        </div>
+    </div>
+
+    <!-- Corps de la section contenant le champ de scan -->
+    <div class="space-y-2 relative z-10">
+        <div class="flex items-center gap-2">
+            <span class="relative flex h-2 w-2">
+                <span id="pulse-dot" class="absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-300"></span>
+            </span>
+            <label for="code_echantillon" class="text-[10px] font-black text-rose-200 uppercase tracking-widest font-mono flex items-center gap-2">
+                Code Échantillon <span id="status-label-text" class="text-rose-300 font-normal normal-case">(Saisie terminée)</span>
+            </label>
+        </div>
+
+        <!-- Conteneur du champ -->
+        <div class="flex items-center justify-between gap-3 bg-black/30 p-3 rounded-xl border-2 border-rose-400/80 shadow-[0_0_15px_rgba(244,63,94,0.3)] backdrop-blur-xs group">
+            <div class="flex items-center gap-3 w-full">
+                <!-- Icône Scanner de code-barres -->
+                <div class="w-10 h-10 rounded-lg bg-rose-500/20 border border-rose-300/40 flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-rose-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                        <path d="M7 9h10"/><path d="M7 12h10"/><path d="M7 15h10"/>
+                    </svg>
+                </div>
+
+                <!-- Input Code Fiche avec script dynamique -->
+                <input type="text" id="code_echantillon" name="code_echantillon"  
+                       placeholder="saisissez le code de l'echantillon"
+                       autofocus
+                       required
+                       oninput="
+                           const statusText = document.getElementById('status-label-text');
+                           const badgeText = document.getElementById('scan-badge-text');
+                           const checkIcon = document.getElementById('scan-check-icon');
+                           const pulseDot = document.getElementById('pulse-dot');
+                           if(this.value.trim().length > 0) {
+                               statusText.textContent = '(Saisie en cours)';
+                               statusText.classList.add('animate-pulse');
+                               badgeText.textContent = 'VALIDE';
+                               checkIcon.classList.remove('hidden');
+                               pulseDot.classList.add('animate-ping');
+                           } else {
+                               statusText.textContent = '(Saisie terminée)';
+                               statusText.classList.remove('animate-pulse');
+                               badgeText.textContent = 'UNIQUE SCAN ID';
+                               checkIcon.classList.add('hidden');
+                               pulseDot.classList.remove('animate-ping');
+                           }
+                       "
+                       class="font-mono text-xl sm:text-2xl font-black text-white placeholder-rose-300/60 bg-transparent border-none p-0 tracking-widest focus:outline-none focus:ring-0 drop-shadow-md w-full">
+            </div>
+
+            <div class="shrink-0 hidden sm:block">
+                <span id="scan-badge-container" class="px-2.5 py-1 bg-rose-500/30 backdrop-blur-md text-rose-100 border border-rose-300/40 rounded text-[9px] font-black font-mono uppercase tracking-widest flex items-center gap-1.5 transition-all">
+                    <!-- Icône Check (masquée par défaut) -->
+                    <svg id="scan-check-icon" class="w-3 h-3 text-emerald-400 hidden animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span id="scan-badge-text">UNIQUE SCAN ID</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
       <!-- SECTION 1 : INFORMATIONS DE LA FORMATION SANITAIRE -->
 <!-- SECTION 1 : FORMATION SANITAIRE (FOSA) -->
 <!-- Bloc Section 1 - Style ERP Professionnel / Health Facility Information -->
 <div class="bg-white border border-slate-200 rounded-xl shadow-sm font-sans overflow-hidden transition-all">
     
     <!-- En-tête de section (Style ERP Premium Dark avec Dégradé) -->
-    <div class="relative bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-slate-800 px-5 py-3.5 flex items-center justify-between rounded-t-xl">
-        <!-- Ligne d'accentuation gauche -->
-        <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-tl-xl"></div>
-        
-        <div class="flex items-center gap-3 pl-1">
-            <!-- Badge Section -->
-            <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-mono font-bold px-2.5 py-0.5 rounded uppercase tracking-wider">
-               Section 1
+   <!-- ======================================================== -->
+<!-- STYLE DHIS2 PRO : SECTION 1 - FORMATION SANITAIRE        -->
+<!-- ======================================================== -->
+<div class="bg-white border border-slate-300 rounded-md shadow-2xs overflow-hidden font-sans">
+    
+    <!-- En-tête DHIS2 Classic Blue -->
+    <div class="bg-[#2C6693] text-white px-4 py-2.5 flex items-center justify-between border-b border-blue-900">
+        <div class="flex items-center gap-2">
+            <span class="bg-white/20 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+               1.0
             </span>
-            <div class="flex flex-col">
-                <h3 class="text-xs sm:text-sm font-bold text-slate-100 tracking-tight leading-none">
-                    Renseignements sur la formation sanitaire
-                </h3>
-                <span class="text-[10px] font-medium text-slate-400 tracking-wide mt-1 italic">
-                    Health facility information
-                </span>
-            </div>
+            <h3 class="text-xs font-bold uppercase tracking-wide">
+                Renseignements sur la formation sanitaire / Health facility information
+            </h3>
         </div>
-
-        <!-- Indicateur visuel discret à droite -->
-        <div class="hidden sm:flex items-center gap-2 text-slate-400 text-xs font-mono bg-slate-800/50 px-2.5 py-1 rounded-md border border-slate-700/50">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        <div class="hidden sm:flex items-center gap-1.5 text-blue-100 text-[11px] font-mono">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
-            <span class="text-[10px]">FOSA</span>
+            <span>FOSA METADATA</span>
         </div>
     </div>
 
-    <!-- Corps du formulaire / Form Fields Grid (12 Colonnes complètes) -->
-    <div class="p-5 sm:p-6 bg-slate-50/30">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 text-xs">
+    <!-- Corps du formulaire (Style grille compacte DHIS2) -->
+    <div class="p-4 bg-slate-50/50">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-xs">
             
-            <!-- Région (3 cols) -->
-            <div class="space-y-1.5 lg:col-span-3">
-                <label for="input_region" class="font-semibold text-slate-700 flex items-center justify-between">
-                    <span>Région <span class="text-slate-400 font-normal italic text-[10px]">/ Region</span></span>
-                    <span class="text-rose-500 font-bold">*</span>
+            <!-- Région -->
+            <div class="space-y-1 lg:col-span-3">
+                <label for="input_region" class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Région <span class="text-slate-400 font-normal lowercase">/ region</span> <span class="text-red-600">*</span>
                 </label>
-                <div class="relative">
-                    <input type="text" id="input_region" name="region" readonly value="{{ fiches_echantillon.region.nom }}"
-                           class="w-full px-3 py-2 bg-slate-100/80 border border-slate-200 rounded-lg text-slate-700 font-semibold text-xs cursor-not-allowed focus:outline-none truncate"
-                           title="{{ fiches_echantillon.region.nom }}">
-                </div>
+                <input type="text" id="input_region" name="region" readonly value="{{ fiches_echantillon.region.nom }}"
+                       class="w-full px-2.5 py-1.5 bg-slate-200/70 border border-slate-300 rounded text-slate-700 font-medium text-xs cursor-not-allowed focus:outline-none truncate"
+                       title="{{ fiches_echantillon.region.nom }}">
             </div>
 
-            <!-- District de Santé (3 cols) -->
-            <div class="space-y-1.5 lg:col-span-3">
-                <label for="input_district" class="font-semibold text-slate-700 flex items-center justify-between">
-                    <span>District de Santé <span class="text-slate-400 font-normal italic text-[10px]">/ Health District</span></span>
-                    <span class="text-rose-500 font-bold">*</span>
+            <!-- District de Santé -->
+            <div class="space-y-1 lg:col-span-3">
+                <label for="input_district" class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    District de Santé <span class="text-slate-400 font-normal lowercase">/ district</span> <span class="text-red-600">*</span>
                 </label>
-                <div class="relative">
-                    <input type="text" id="input_district" name="district" readonly value="{{ fiches_echantillon.district.nom }}"
-                           class="w-full px-3 py-2 bg-slate-100/80 border border-slate-200 rounded-lg text-slate-700 font-semibold text-xs cursor-not-allowed focus:outline-none truncate"
-                           title="{{ fiches_echantillon.district.nom }}">
-                </div>
+                <input type="text" id="input_district" name="district" readonly value="{{ fiches_echantillon.district.nom }}"
+                       class="w-full px-2.5 py-1.5 bg-slate-200/70 border border-slate-300 rounded text-slate-700 font-medium text-xs cursor-not-allowed focus:outline-none truncate"
+                       title="{{ fiches_echantillon.district.nom }}">
             </div>
 
-            <!-- Structure (FOSA) (3 cols) -->
-            <div class="space-y-1.5 lg:col-span-3">
-                <label for="input_fosa" class="font-semibold text-slate-700 flex items-center justify-between">
-                    <span>Structure (FOSA) <span class="text-slate-400 font-normal italic text-[10px]">/ Facility</span></span>
-                    <span class="text-rose-500 font-bold">*</span>
+            <!-- Structure (FOSA) -->
+            <div class="space-y-1 lg:col-span-3">
+                <label for="input_fosa" class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Structure (FOSA) <span class="text-slate-400 font-normal lowercase">/ facility</span> <span class="text-red-600">*</span>
                 </label>
-                <div class="relative">
-                    <input type="text" id="input_fosa" name="fosa" readonly value="{{ fiches_echantillon.fosa.nom }}"
-                           class="w-full px-3 py-2 bg-slate-100/80 border border-slate-200 rounded-lg text-slate-700 font-semibold text-xs cursor-not-allowed focus:outline-none truncate"
-                           title="{{ fiches_echantillon.fosa.nom }}">
-                </div>
+                <input type="text" id="input_fosa" name="fosa" readonly value="{{ fiches_echantillon.fosa.nom }}"
+                       class="w-full px-2.5 py-1.5 bg-slate-200/70 border border-slate-300 rounded text-slate-700 font-medium text-xs cursor-not-allowed focus:outline-none truncate"
+                       title="{{ fiches_echantillon.fosa.nom }}">
             </div>
 
-            <!-- Porte d'Entrée (3 cols - Éditable) -->
-            <div class="space-y-1.5 lg:col-span-3">
-                <label for="select-porte-entree" class="font-semibold text-slate-800 flex items-center justify-between">
-                    <span>Porte d'Entrée <span class="text-slate-400 font-normal italic text-[10px]">/ Point of Entry</span></span>
-                    <span class="text-rose-500 font-bold">*</span>
+            <!-- Porte d'Entrée (Modifiable) -->
+            <div class="space-y-1 lg:col-span-3">
+                <label for="select-porte-entree" class="font-bold text-slate-800 block uppercase text-[10px] tracking-wider">
+                    Porte d'Entrée <span class="text-slate-400 font-normal lowercase">/ point of entry</span> <span class="text-red-600">*</span>
                 </label>
                 <div class="relative">
                     <select id="select-porte-entree" name="porte_entree" required 
-                            class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 cursor-pointer transition-all shadow-xs appearance-none pr-8">
+                            class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer transition-all appearance-none pr-6">
                         <option value="">Sélectionner...</option>
                         {% for pe in portes_entree %}
                             <option value="{{ pe.id }}">{{ pe.nom }}</option>
                         {% endfor %}
                     </select>
-                    <!-- Flèche personnalisée pour le menu déroulant -->
-                    <div class="absolute inset-y-0 right-0 flex items-center px-2.5 pointer-events-none text-slate-400">
+                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-500">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
@@ -155,115 +332,149 @@
         </div>
     </div>
 </div>
-  <div class="space-y-3">
-        <div class="border-b border-slate-200 pb-1.5">
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">3. Code d'identification / Identification Code <span class="text-rose-500">*</span></h4>
-        </div>
+
+
+<!-- ======================================================== -->
+<!-- STYLE DHIS2 PRO : SECTION 3 - CODE D'IDENTIFICATION      -->
+<!-- ======================================================== -->
+<div class="space-y-2 mt-4 font-sans">
+    <div class="border-b border-slate-300 pb-1 flex items-center justify-between">
+        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+            3. Code d'identification <span class="text-slate-400 font-normal lowercase">/ Identification Code</span> <span class="text-red-600">*</span>
+        </h4>
+    </div>
+    
+    <!-- Bloc de saisie typique d'un formulaire DHIS2 DataEntry -->
+    <div class="flex flex-col sm:flex-row items-stretch gap-2 bg-white p-2.5 border border-slate-300 rounded shadow-2xs w-full">
         
-        <!-- Segment de saisie consolidé ERP -->
-        <div class="flex flex-col sm:flex-row items-stretch gap-2 bg-slate-50 p-2 border border-slate-300 rounded-md w-full">
-            <div class="flex items-center gap-1 bg-white px-2 py-1.5 border border-slate-200 rounded w-full justify-start overflow-x-auto font-mono">
-                
-                <!-- Région -->
-                <div class="flex flex-col items-center gap-0.5 min-w-[54px]">
-                    <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">REGION</span>
-                    <input type="text" id="code_region" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.region.designation}}"
-                           class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white font-bold text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
-                </div>
-                
-                <span class="text-slate-400 font-bold self-end mb-1 select-none font-sans">-</span>
-                
-                <!-- District -->
-                <div class="flex flex-col items-center gap-0.5 min-w-[54px]">
-                    <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">DISTRICT</span>
-                    <input type="text" id="code_district" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.district.designation}}"
-                           class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white font-bold text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
-                </div>
-                
-                <span class="text-slate-400 font-bold self-end mb-1 select-none font-sans">-</span>
-                
-                <!-- FOSA -->
-                <div class="flex flex-col items-center gap-0.5 min-w-[64px]">
-                    <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">Hôpital</span>
-                    <input type="text" id="code_fosa" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.fosa.designation}}"
-                           class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white font-bold text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
-                </div>
-                
-                <span class="text-slate-400 font-bold self-end mb-1 select-none font-sans">-</span>
-                
-                <!-- Point de Test (PT) -->
-                <div class="flex flex-col items-center gap-0.5 min-w-[54px]">
-                    <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">Porte ent.</span>
-                    <input type="text" id="code_pt" maxlength="2" placeholder="--" autocomplete="off" required
-                           class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white font-bold text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
-                </div>
-                
-                <span class="text-slate-400 font-bold self-end mb-1 select-none font-sans">-</span>
-                
-                <!-- Numéro de Série Chronologique -->
-                <div class="flex flex-col items-center gap-0.5 min-w-[64px]">
-                    <span class="text-[9px] text-slate-400 font-sans uppercase font-bold tracking-tight">Numéro</span>
-                    <input type="text" id="numero_serie" maxlength="4" placeholder="----" autocomplete="off" required
-                           class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white font-bold text-xs text-slate-800 uppercase tracking-wide transition-all placeholder:text-slate-300">
-                </div>
-
-                <span class="text-slate-400 font-bold self-end mb-1 select-none text-xs font-sans" style='display:none'>/</span>
-
-                <!-- Suffixe Médical -->
-                <div class="flex flex-col items-center gap-0.5 min-w-[44px]" style='display:none'>
-                    <span class="text-[9px] text-emerald-600 font-sans uppercase font-bold tracking-tight">SUFF</span>
-                    <input type="text" id="code_suffixe" maxlength="2" placeholder="01" autocomplete="off" title="Suffixe"
-                           class="w-full text-center py-1 border border-emerald-300 bg-emerald-50/50 rounded focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 font-bold text-xs text-emerald-950 uppercase tracking-wide transition-all placeholder:text-emerald-300">
-                </div>
+        <div class="flex items-center gap-1 bg-slate-50 px-2 py-1.5 border border-slate-200 rounded w-full justify-between sm:justify-start overflow-x-auto font-mono">
+            
+            <!-- Région -->
+            <div class="flex flex-col items-center gap-0.5 min-w-[50px]">
+                <span class="text-[9px] text-slate-500 font-sans uppercase font-bold">REGION</span>
+                <input type="text" id="code_region" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.region.designation}}"
+                       class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] bg-white font-bold text-xs text-slate-800 uppercase">
+            </div>
+            
+            <span class="text-slate-400 font-bold self-end mb-1 select-none">-</span>
+            
+            <!-- District -->
+            <div class="flex flex-col items-center gap-0.5 min-w-[50px]">
+                <span class="text-[9px] text-slate-500 font-sans uppercase font-bold">DISTRICT</span>
+                <input type="text" id="code_district" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.district.designation}}"
+                       class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] bg-white font-bold text-xs text-slate-800 uppercase">
+            </div>
+            
+            <span class="text-slate-400 font-bold self-end mb-1 select-none">-</span>
+            
+            <!-- FOSA -->
+            <div class="flex flex-col items-center gap-0.5 min-w-[58px]">
+                <span class="text-[9px] text-slate-500 font-sans uppercase font-bold">FOSA</span>
+                <input type="text" id="code_fosa" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.fosa.designation}}"
+                       class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] bg-white font-bold text-xs text-slate-800 uppercase">
+            </div>
+            
+            <span class="text-slate-400 font-bold self-end mb-1 select-none">-</span>
+            
+            <!-- Porte d'Entrée (PT) -->
+            <div class="flex flex-col items-center gap-0.5 min-w-[45px]">
+                <span class="text-[9px] text-blue-700 font-sans uppercase font-bold">PT</span>
+                <input type="text" id="code_pt" maxlength="2" placeholder="--" autocomplete="off" required
+                       class="w-full text-center py-1 border border-blue-300 bg-blue-50/40 rounded focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] font-bold text-xs text-blue-900 uppercase">
+            </div>
+            
+            <span class="text-slate-400 font-bold self-end mb-1 select-none">-</span>
+            
+            <!-- Numéro de Série -->
+            <div class="flex flex-col items-center gap-0.5 min-w-[60px]">
+                <span class="text-[9px] text-rose-700 font-sans uppercase font-bold">NUM</span>
+                <input type="text" id="numero_serie" maxlength="4" placeholder="----" autocomplete="off" required
+                       class="w-full text-center py-1 border border-rose-300 bg-rose-50/40 rounded focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600 font-bold text-xs text-rose-950 uppercase">
             </div>
 
-            <!-- Bouton d'interrogation LIMS -->
-            <div class="flex items-stretch shrink-0 w-full sm:w-auto">
-                <button type="button" id="btn-rechercher-code" title="Interroger le registre central"
-                        class="w-full sm:w-12 bg-slate-800 hover:bg-slate-700 text-white rounded border border-slate-800 flex items-center justify-center transition-colors shadow-sm focus:ring-1 focus:ring-offset-1 focus:ring-slate-900 cursor-pointer py-2 sm:py-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                </button>
+            <!-- Suffixe (Optionnel) -->
+            <div class="hidden flex-col items-center gap-0.5 min-w-[40px]" id="wrapper_suffixe">
+                <span class="text-[9px] text-emerald-700 font-sans uppercase font-bold">SUFF</span>
+                <input type="text" id="code_suffixe" maxlength="2" placeholder="01" autocomplete="off"
+                       class="w-full text-center py-1 border border-emerald-300 bg-emerald-50 rounded focus:outline-none focus:border-emerald-600 font-bold text-xs text-emerald-950 uppercase">
             </div>
+        </div>
+
+        <!-- Bouton d'action standard DHIS2 -->
+        <div class="flex items-stretch shrink-0 w-full sm:w-auto">
+            <button type="button" id="btn-rechercher-code" title="Interroger le registre LIMS"
+                    class="w-full sm:w-11 bg-[#2C6693] hover:bg-[#235275] text-white rounded border border-[#235275] flex items-center justify-center transition-colors shadow-2xs cursor-pointer py-2 sm:py-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </button>
         </div>
     </div>
+</div>
 <!-- CONTENEUR GLOBAL DU FORMULAIRE VERROUILLÉ (Sections 3, 4, 5, etc.) -->
 
-        
         <!-- SECTION 2 : INFORMATIONS SUR LE PATIENT / ENFANT -->
-         <div id="locked-section-wrapper" class="relative transition-all duration-300">
-    
-    <!-- OVERLAY CADENAS (Masque visuel affiché par défaut) -->
-    <div id="lock-overlay" class="absolute inset-0 z-30 bg-slate-100/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-slate-300 transition-all duration-300">
-        <div class="w-14 h-14 rounded-full bg-slate-900 text-amber-400 flex items-center justify-center shadow-xl mb-3">
-            <!-- Icône Cadenas Fermé -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+<div class="locked-section-wrapper relative transition-all duration-300 mb-6">
+    <div class="lock-overlay absolute inset-0 z-30 bg-slate-100/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-slate-300 transition-all duration-300">
+        <div class="w-12 h-12 rounded-full bg-slate-900 text-amber-400 flex items-center justify-center shadow-lg mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
         </div>
-        <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest font-mono">
-            Formulaire Verrouillé
-        </h4>
-        <p class="text-xs text-slate-600 mt-1 max-w-sm font-medium">
-            Veuillez saisir et vérifier le code patient ci-dessus pour déverrouiller la suite du formulaire.
-        </p>
+        <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest font-mono">Patient Verrouillé</h4>
+        <p class="text-[11px] text-slate-600 mt-0.5 max-w-xs font-medium">Veuillez valider le code patient ci-dessus.</p>
     </div>
-
-    <!-- FIELDSET (Désactive nativement tous les inputs/selects/buttons inclus) -->
-    <fieldset id="form-fieldset" disabled class="space-y-6 opacity-40 pointer-events-none transition-all duration-300">
+    <fieldset class="form-fieldset space-y-6 opacity-40 pointer-events-none transition-all duration-300" disabled>
         {% include "../components/echantillons/section_patient.html" %}
-
-        <!-- SECTION 3 : INFORMATIONS SUR LA MÈRE -->
-        {% include "../components/echantillons/section_mother.html" %}
-
-        <!-- SECTION 4 : SUIVI VIROLOGIQUE, MÉDICAL & DIAGNOSTICS -->
-        {% include "../components/echantillons/section_clinics.html" %}
-
-        <!-- SECTION 5 : INFORMATIONS SUR L'ÉCHANTILLON -->
-        {% include "../components/echantillons/section_infos_echantillon.html" %}
-
     </fieldset>
-
 </div>
+
+<!-- SECTION 3 : INFORMATIONS SUR LA MÈRE -->
+<div class="locked-section-wrapper relative transition-all duration-300 mb-6">
+    <div class="lock-overlay absolute inset-0 z-30 bg-slate-100/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-slate-300 transition-all duration-300">
+        <div class="w-12 h-12 rounded-full bg-slate-900 text-amber-400 flex items-center justify-center shadow-lg mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+        </div>
+        <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest font-mono">Mère Verrouillée</h4>
+        <p class="text-[11px] text-slate-600 mt-0.5 max-w-xs font-medium">Validation du code patient requise.</p>
+    </div>
+    <fieldset class="form-fieldset space-y-6 opacity-40 pointer-events-none transition-all duration-300" disabled>
+        {% include "../components/echantillons/section_mother.html" %}
+    </fieldset>
+</div>
+
+<!-- SECTION 4 : SUIVI VIROLOGIQUE, MÉDICAL & DIAGNOSTICS -->
+<div class="locked-section-wrapper relative transition-all duration-300 mb-6">
+    <div class="lock-overlay absolute inset-0 z-30 bg-slate-100/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-slate-300 transition-all duration-300">
+        <div class="w-12 h-12 rounded-full bg-slate-900 text-amber-400 flex items-center justify-center shadow-lg mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+        </div>
+        <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest font-mono">Suivi Clinique Verrouillé</h4>
+        <p class="text-[11px] text-slate-600 mt-0.5 max-w-xs font-medium">Validation du code patient requise.</p>
+    </div>
+    <fieldset class="form-fieldset space-y-6 opacity-40 pointer-events-none transition-all duration-300" disabled>
+        {% include "../components/echantillons/section_clinics.html" %}
+    </fieldset>
+</div>
+
+<!-- SECTION 5 : INFORMATIONS SUR L'ÉCHANTILLON -->
+<div class="locked-section-wrapper relative transition-all duration-300 mb-6">
+    <div class="lock-overlay absolute inset-0 z-30 bg-slate-100/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-slate-300 transition-all duration-300">
+        <div class="w-12 h-12 rounded-full bg-slate-900 text-amber-400 flex items-center justify-center shadow-lg mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+        </div>
+        <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest font-mono">Échantillon Verrouillé</h4>
+        <p class="text-[11px] text-slate-600 mt-0.5 max-w-xs font-medium">Validation du code patient requise.</p>
+    </div>
+    <fieldset class="form-fieldset space-y-6 opacity-40 pointer-events-none transition-all duration-300" disabled>
+        {% include "../components/echantillons/section_infos_echantillon.html" %}
+    </fieldset>
+</div>
+      
     </div>
     </div>
 </div>
@@ -369,55 +580,70 @@
 </div>
 
 </main>
+<!-- Bloc Historique des Antécédents (Masqué par défaut) -->
 
 <!-- MODAL SUCCÈS -->
-<dialog id="modal-succes" class="backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm bg-white border-4 border-slate-900 rounded-2xl p-0 max-w-md w-full shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] overflow-hidden">
+<dialog id="modal-succes" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-xs bg-white border border-slate-200 rounded-xl p-0 max-w-sm w-full shadow-2xl overflow-hidden font-sans text-xs">
     <div class="p-6 text-center space-y-4">
-        <!-- Badge Icône Succès -->
-        <div class="w-16 h-16 mx-auto bg-emerald-100 border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        
+        <!-- Badge Icône Succès (Soft & Pro) -->
+        <div class="w-12 h-12 mx-auto bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
         </div>
         
+        <!-- Titres -->
         <div class="space-y-1">
-            <h3 class="text-xl font-black uppercase tracking-tight text-slate-900">Enregistrement Réussi !</h3>
-            <p class="text-xs font-bold text-slate-500">L'échantillon a bien été synchronisé avec la base de données.</p>
+            <h3 class="text-sm font-bold uppercase tracking-wide text-slate-900">Enregistrement Réussi</h3>
+            <p class="text-[11px] text-slate-500 font-normal">L'échantillon a bien été synchronisé avec la base de données.</p>
         </div>
 
-        <div class="bg-slate-50 border-2 border-slate-900 rounded-xl p-4 text-left space-y-2 font-mono text-xs text-slate-700">
-            <div class="flex justify-between border-b border-dashed border-slate-200 pb-1">
-                <span class="font-bold">Date prélèvement :</span>
-                <span id="recap-date" class="font-black text-slate-900">-</span>
+        <!-- Bloc Récapitulatif Propre -->
+        <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-left space-y-1.5 font-mono text-[11px] text-slate-700">
+            <div class="flex justify-between border-b border-slate-200/60 pb-1.5">
+                <span class="font-medium text-slate-500">Date prélèvement :</span>
+                <span id="recap-date" class="font-bold text-slate-900">-</span>
             </div>
-            <div class="flex justify-between">
-                <span class="font-bold">Préleveur :</span>
-                <span id="recap-preleveur" class="font-black text-slate-900">-</span>
+            <div class="flex justify-between pt-0.5">
+                <span class="font-medium text-slate-500">Préleveur :</span>
+                <span id="recap-preleveur" class="font-bold text-slate-900">-</span>
             </div>
         </div>
 
-        <button onclick="document.getElementById('modal-succes').close(); window.location.reload();" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none cursor-pointer">
+        <!-- Bouton d'action principal aux couleurs de l'app -->
+        <button onclick="document.getElementById('modal-succes').close(); window.location.reload();" 
+                class="w-full py-2.5 bg-[#2C6693] hover:bg-[#235275] text-white font-bold rounded-lg text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-xs">
             Fermer et continuer
         </button>
     </div>
 </dialog>
 
 <!-- MODAL ERREUR -->
-<dialog id="modal-erreur" class="backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm bg-white border-4 border-slate-900 rounded-2xl p-0 max-w-md w-full shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] overflow-hidden">
+<dialog id="modal-erreur" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-xs bg-white border border-slate-200 rounded-xl p-0 max-w-sm w-full shadow-2xl overflow-hidden font-sans text-xs">
     <div class="p-6 text-center space-y-4">
-        <!-- Badge Icône Erreur -->
-        <div class="w-16 h-16 mx-auto bg-rose-100 border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        
+        <!-- Badge Icône Erreur (Soft & Pro) -->
+        <div class="w-12 h-12 mx-auto bg-rose-50 text-rose-600 rounded-full flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
         </div>
         
+        <!-- Titres -->
         <div class="space-y-1">
-            <h3 class="text-xl font-black uppercase tracking-tight text-slate-900">Échec de l'Opération</h3>
-            <p class="text-xs font-bold text-slate-500">Le serveur a refusé de traiter la demande d'échantillon.</p>
+            <h3 class="text-sm font-bold uppercase tracking-wide text-slate-900">Échec de l'Opération</h3>
+            <p class="text-[11px] text-slate-500 font-normal">Le serveur a refusé de traiter la demande d'échantillon.</p>
         </div>
 
-        <div class="bg-rose-50 border-2 border-rose-900 rounded-xl p-4 text-center font-mono text-xs font-bold text-rose-900" id="recap-erreur-msg">
+        <!-- Bloc Détail de l'erreur Propre -->
+        <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-left font-mono text-[11px] text-rose-800" id="recap-erreur-msg">
             Détail de l'erreur inconnu.
         </div>
 
-        <button onclick="document.getElementById('modal-erreur').close()" class="w-full py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-900 text-slate-900 font-black rounded-xl text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none cursor-pointer">
+        <!-- Bouton d'action secondaire -->
+        <button onclick="document.getElementById('modal-erreur').close()" 
+                class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-bold rounded-lg text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-xs">
             Corriger les données
         </button>
     </div>
@@ -669,31 +895,33 @@ let isSearching = false;
 
 // --- FONCTIONS DE GESTION DU CADENAS ---
 function unlockForm() {
-    const overlay = document.getElementById('lock-overlay');
-    const fieldset = document.getElementById('form-fieldset');
+    const overlays = document.querySelectorAll('.lock-overlay');
+    const fieldsets = document.querySelectorAll('.form-fieldset');
 
-    if (overlay && fieldset) {
-        // Masquer le cadenas
+    overlays.forEach(overlay => {
         overlay.classList.add('opacity-0', 'pointer-events-none');
         setTimeout(() => overlay.classList.add('hidden'), 300);
+    });
 
-        // Déverrouiller le fieldset
+    fieldsets.forEach(fieldset => {
         fieldset.removeAttribute('disabled');
         fieldset.classList.remove('opacity-40', 'pointer-events-none');
-    }
+    });
 }
 
 function lockForm() {
-    const overlay = document.getElementById('lock-overlay');
-    const fieldset = document.getElementById('form-fieldset');
+    const overlays = document.querySelectorAll('.lock-overlay');
+    const fieldsets = document.querySelectorAll('.form-fieldset');
 
-    if (overlay && fieldset) {
+    overlays.forEach(overlay => {
         overlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+    });
+
+    fieldsets.forEach(fieldset => {
         fieldset.setAttribute('disabled', 'true');
         fieldset.classList.add('opacity-40', 'pointer-events-none');
-    }
+    });
 }
-
 // --- FONCTION TOAST ---
 function showToast(message, type = 'info') {
     const toast = document.createElement('div');
@@ -717,7 +945,38 @@ function showToast(message, type = 'info') {
         setTimeout(() => toast.remove(), 300);
     }, 3500);
 }
+// --- FONCTIONS DE GESTION DU DRAWER ---
+const drawer = document.getElementById('historique-drawer');
+const drawerOverlay = document.getElementById('drawer-overlay');
+const drawerPanel = document.getElementById('drawer-panel');
 
+function ouvrirDrawer() {
+    if (!drawer) return;
+    drawer.classList.remove('hidden');
+    // Déclenchement de l'animation en douceur
+    setTimeout(() => {
+        drawerOverlay.classList.remove('opacity-0');
+        drawerPanel.classList.remove('translate-x-full');
+    }, 10);
+}
+
+function fermerDrawer() {
+    if (!drawer) return;
+    drawerOverlay.classList.add('opacity-0');
+    drawerPanel.classList.add('translate-x-full');
+    // Masquage complet après la fin de l'animation CSS (300ms)
+    setTimeout(() => {
+        drawer.classList.add('hidden');
+    }, 300);
+}
+
+// Écouteurs d'événements pour la fermeture du drawer
+document.getElementById('btn-close-drawer').addEventListener('click', fermerDrawer);
+document.getElementById('btn-close-drawer-footer').addEventListener('click', fermerDrawer);
+document.getElementById('drawer-overlay').addEventListener('click', fermerDrawer);
+
+// Écouteur pour réouvrir le drawer via le bouton permanent
+document.getElementById('btn-toggle-historique').addEventListener('click', ouvrirDrawer);
 // --- ÉVÉNEMENT RECHERCHE CODE ---
 document.getElementById('btn-rechercher-code').addEventListener('click', function(e) {
     e.preventDefault();
@@ -757,18 +1016,53 @@ document.getElementById('btn-rechercher-code').addEventListener('click', functio
         .then(res => res.json())
         .then(data => {
             if (data.existe) {
-                // 🟢 CAS 1 : PATIENT EXISTE -> DÉVERROUILLER LE FORMULAIRE
+                // 🟢 CAS 1 : PATIENT EXISTE -> DÉVERROUILLER LE FORMULAIRE ET CHARGER L'HISTORIQUE
                 showToast("Patient trouvé ! Formulaire déverrouillé.", "success");
                 alimenterChampsPrincipaux(data.patient);
                 
-                // Déverrouillage du cadenas
+                // Injection de l'ID du patient existant pour le backend
+                let hiddenPatientIdInput = document.getElementById('enfant_id_hidden');
+                if (!hiddenPatientIdInput) {
+                    hiddenPatientIdInput = document.createElement('input');
+                    hiddenPatientIdInput.type = 'hidden';
+                    hiddenPatientIdInput.id = 'enfant_id_hidden';
+                    hiddenPatientIdInput.name = 'enfant_id';
+                    document.querySelector('form').appendChild(hiddenPatientIdInput);
+                }
+                hiddenPatientIdInput.value = data.patient.id;
+
+                // --- GESTION DE L'AFFICHAGE DE L'HISTORIQUE (HTML DU SERVEUR) ---
+              const containerBtnHist = document.getElementById('container-btn-historique');
+const listeHist = document.getElementById('liste-historique');
+   
+              
+             if (data.patient.historique_html && data.patient.historique_html.trim() !== '') {
+                    if (data.patient.historique_html && data.patient.historique_html.trim() !== '') {
+                      
+                        listeHist.innerHTML = data.patient.historique_html;
+                        containerBtnHist.classList.remove('hidden');
+    
+                        // 3. Optionnel : Ouverture automatique du drawer dès la recherche du patient
+                        ouvrirDrawer();
+                    } else {
+                       containerBtnHist.classList.add('hidden');
+                        listeHist.innerHTML = '';
+                    }
+                } else {
+                    console.error("❌ ERREUR : L'un des conteneurs HTML (#section-historique ou #liste-historique) est introuvable dans la page !");
+                }
+
+                // Déverrouillage des sections
                 unlockForm();
 
             } else {
                 // 🟠 CAS 2 : PATIENT N'EXISTE PAS -> GARDER VERROUILLÉ ET OUVRIR LA MODALE
                 showToast("Code non attribué. Enregistrement requis.", "info");
                 
-                // Le cadenas RESTE VERROUILLÉ tant qu'il n'a pas créé le patient
+                // Masquer la section historique en cas de non-existence
+               
+               
+
                 lockForm();
 
                 const patientModal = document.getElementById('patient-modal');
@@ -813,7 +1107,6 @@ document.getElementById('btn-rechercher-code').addEventListener('click', functio
             this.disabled = false;
         });
 });
-
 // 💡 Astuce : Appelez `unlockForm()` dans le callback de votre modale de création de patient 
 // lorsqu'un nouveau patient est enregistré avec succès !
 </script>

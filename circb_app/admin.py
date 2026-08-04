@@ -1,14 +1,37 @@
 from django.contrib import admin
 from .models import *
 
-@admin.register(Personnel)
-class PersonnelAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'prenom', 'mail', 'tel', 'sexe', 'bd_user')
-    search_fields = ('nom', 'prenom', 'mail', 'tel')
-    list_filter = ('sexe',)
-    ordering = ('nom',)
 
 
+
+# ==========================================
+# 1. GESTION DES RÔLES ET UTILISATEURS
+# ==========================================
+
+
+# Optionnel : Si vous souhaitez intégrer les rôles directement dans la modification des utilisateurs Django
+# (Décommentez les 4 lignes ci-dessous si vous voulez remplacer l'admin User par défaut)
+# admin.site.unregister(User)
+# @admin.register(User)
+# class CustomUserAdmin(BaseUserAdmin):
+#     inlines = [RoleUserInline]
+
+@admin.register(Role)
+class RoleAdmin(admin.ModelAdmin):
+    list_display = ('code', 'nom', 'description')
+    search_fields = ('nom', 'code')
+    list_filter = ('nom',)
+
+@admin.register(RoleUser)
+class RoleUserAdmin(admin.ModelAdmin):
+    list_display = ('user', 'role')
+    list_filter = ('role', 'user')
+    search_fields = ('user__username', 'user__email', 'role__nom')
+
+
+# ==========================================
+# 2. CONFIGURATION DYNAMIQUE DES ACCÈS (RÔLES <-> URLS)
+# ==========================================
 
 @admin.register(Transporteur)
 class TransporteurAdmin(admin.ModelAdmin):

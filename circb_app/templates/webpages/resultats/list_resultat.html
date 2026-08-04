@@ -91,125 +91,144 @@
         <!-- TABLEAU TECHNIQUE DES RÉSULTATS (Bleu Nuit DHIS2 #1d5288) -->
         <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-[#1d5288] text-white text-[11px] font-bold uppercase tracking-wider">
-                        <tr>
-                      
-                            <th class="p-3 border-r border-blue-900/40">Échantillon & Patient</th>
-                            <th class="p-3 border-r border-blue-900/40">Kit de Test</th>
-                            <th class="p-3 border-r border-blue-900/40 text-center">Verdict Biologique</th>
-                            <th class="p-3 border-r border-blue-900/40">Dates (Prélèv. / Saisie)</th>
-                            <th class="p-3 border-r border-blue-900/40">Responsable / Commentaire</th>
-                            <th class="p-3 text-center w-20">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200 text-xs text-slate-700">
-                        
-                        {% for resultat in resultats %}
-                        {% with verdict_str=resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code|default:""|upper %}
-                        <tr class="hover:bg-blue-50/50 transition-colors {% if 'POSITIF' in verdict_str or 'DETECT' in verdict_str %}bg-rose-50/40{% endif %}">
+             <div class="overflow-x-auto border border-slate-200 rounded-lg shadow-xs bg-white">
+    <table class="w-full text-left border-collapse">
+        <thead class="bg-[#1d5288] text-white text-[11px] font-bold uppercase tracking-wider">
+            <tr>
+                <th class="p-3 border-r border-blue-900/40">Échantillon & Patient</th>
+                <th class="p-3 border-r border-blue-900/40">Kit de Test</th>
+                <th class="p-3 border-r border-blue-900/40 text-center">Verdict Biologique</th>
+                <th class="p-3 border-r border-blue-900/40">Dates (Prélèv. / Saisie)</th>
+                <th class="p-3 border-r border-blue-900/40">Responsable / Commentaire</th>
+                <th class="p-3 text-center w-20">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 text-xs text-slate-700">
+            
+            {% for resultat in resultats %}
+            {% with verdict_str=resultat.resultat_pcr.nom|upper %}
+            <tr class="hover:bg-blue-50/50 transition-colors {% if 'POSITIF' in verdict_str or 'DETECT' in verdict_str %}bg-rose-50/40{% endif %}">
+                
+                <!-- Code Échantillon, QR Code & Nom Patient -->
+                <td class="p-3 border-r border-slate-200">
+                    <div class="flex items-center gap-3">
+                        <!-- Mini QR Code -->
+                        <div class="w-10 h-10 shrink-0 bg-white p-0.5 border border-slate-200 rounded shadow-2xs flex items-center justify-center">
+                            {{ resultat.qr_code_svg|safe }}
                             
-                            <!-- ID -->
-                         
-
-                            <!-- Code Échantillon & Nom Patient -->
-                            <td class="p-3 border-r border-slate-200">
-                                {% comment %} <span class="block text-[#1478c1] font-bold font-mono text-xs hover:underline">
-                                    {{ resultat.echantillon.code|default:resultat.echantillon }}
-                                </span> {% endcomment %}
-                                {% if resultat.echantillon.enfant %}
-                                    <span class="block text-[11px] font-semibold text-slate-600 truncate max-w-[180px] mt-0.5">
-                                        👤 {{ resultat.echantillon.enfant.nom }} {{ resultat.echantillon.enfant.prenom }}
-                                    </span>
-                                {% endif %}
-                            </td>
-
-                            <!-- Kit de Test -->
-                            <td class="p-3 border-r border-slate-200">
-                                <span class="block text-slate-900 font-bold">
-                                    {{ resultat.test.nom|default:resultat.test|default:"Non spécifié" }}
+                        </div>
+                          <span class="block text-[#1478c1] font-bold font-mono text-xs hover:underline">
+                                {{ resultat.echantillon.code|default:resultat.echantillon }}
+                            </span>
+                        <div class="space-y-0.5">
+                          
+                            
+                            {% if resultat.echantillon.enfant %}
+                                <span class="block text-[11px] font-semibold text-slate-600 truncate max-w-[150px]">
+                                    👤 {{ resultat.echantillon.enfant.nom }} {{ resultat.echantillon.enfant.prenom }}
                                 </span>
-                                <span class="text-[10px] font-semibold text-blue-600 uppercase tracking-tight">Analyse Moléculaire</span>
-                            </td>
+                            {% else %}
+                                <span class="text-[10px] text-slate-400 italic">Patient non lié</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </td>
 
-                            <!-- Verdict Biologique -->
-                            <td class="p-3 border-r border-slate-200 text-center whitespace-nowrap">
-                                {% if 'NÉGATIF' in verdict_str or 'NEGATIF' in verdict_str or 'NON DETECT' in verdict_str or 'NON DÉTECT' in verdict_str %}
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-emerald-300 bg-emerald-50 text-emerald-800 font-bold text-[10px] tracking-wide uppercase">
-                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                        {{ resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code }}
-                                    </span>
-                                {% elif 'POSITIF' in verdict_str or 'DETECT' in verdict_str or 'DÉTECT' in verdict_str %}
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-rose-300 bg-rose-50 text-rose-800 font-bold text-[10px] tracking-wide uppercase">
-                                        <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-                                        {{ resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code }}
-                                    </span>
-                                {% else %}
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-amber-300 bg-amber-50 text-amber-800 font-bold text-[10px] tracking-wide uppercase">
-                                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                                        {{ resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code|default:"En attente" }}
-                                    </span>
-                                {% endif %}
-                            </td>
+                <!-- Kit de Test -->
+                <td class="p-3 border-r border-slate-200">
+                    <span class="block text-slate-900 font-bold">
+                        {{ resultat.test.nom|default:resultat.test|default:"Non spécifié" }}
+                    </span>
+                    <span class="text-[10px] font-semibold text-blue-600 uppercase tracking-tight">{{ resultat.test.code|default:resultat.test|default:"Non spécifié" }}</span>
+                </td>
 
-                            <!-- Dates (Prélèvement + Saisie) -->
-                           <td class="p-3 border-r border-slate-200 text-slate-600 whitespace-nowrap">
-    <div class="flex flex-col space-y-1">
-        <!-- Date de prélèvement -->
-        <div class="flex items-center gap-1.5 text-slate-900 font-bold text-xs">
-            <span>📅</span>
-            <span>{{ resultat.echantillon.date_prelevement|date:"d/m/Y"|default:"Non renseignée" }}</span>
-        </div>
+                <!-- Verdict Biologique -->
+                <td class="p-3 border-r border-slate-200 text-center whitespace-nowrap">
+                    {% if 'NÉGATIF' in verdict_str or 'NEGATIF' in verdict_str or 'NON DETECT' in verdict_str or 'NON DÉTECT' in verdict_str %}
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-emerald-300 bg-emerald-50 text-emerald-800 font-bold text-[10px] tracking-wide uppercase">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            {{ resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code }}
+                        </span>
+                    {% elif 'POSITIF' in verdict_str or 'DETECT' in verdict_str or 'DÉTECT' in verdict_str %}
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-rose-300 bg-rose-50 text-rose-800 font-bold text-[10px] tracking-wide uppercase">
+                            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                            {{ resultat.resultat_pcr.nom|default:resultat.resultat_pcr.code }}
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-amber-300 bg-amber-50 text-amber-800 font-bold text-[10px] tracking-wide uppercase">
+                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                            {{ resultat.resultat_pcr.nom }}
+                        </span>
+                    {% endif %}
+                </td>
 
-        <!-- Badge du numéro de PCR -->
-        <div>
-            {% if resultat.echantillon.ordre == 1 %}
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-sky-50 text-[#1478c1] border border-sky-200">PCR I</span>
-            {% elif resultat.echantillon.ordre == 2 %}
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-sky-50 text-[#1478c1] border border-sky-200">PCR II</span>
-            {% elif resultat.echantillon.ordre == 3 %}
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-sky-50 text-[#1478c1] border border-sky-200">PCR III</span>
-            {% endif %}
-        </div>
+                <!-- Dates (Prélèvement + Saisie) -->
+                <td class="p-3 border-r border-slate-200 text-slate-600 whitespace-nowrap">
+                    <div class="flex flex-col space-y-1">
+                        <div class="flex items-center gap-1.5 text-slate-900 font-bold text-xs">
+                            <span>📅</span>
+                            <span>{{ resultat.echantillon.date_prelevement|date:"d/m/Y"|default:"Non renseignée" }}</span>
+                        </div>
 
-        <!-- Date de saisie système -->
-        <span class="text-[10px] text-slate-400 font-medium">
-            Saisie : {{ resultat.created_at|date:"d/m/Y à H:i"|default:"-" }}
-        </span>
-    </div>
-</td>
+                        <div>
+                            {% if resultat.echantillon.ordre == 1 %}
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-sky-50 text-[#1478c1] border border-sky-200">PCR I</span>
+                            {% elif resultat.echantillon.ordre == 2 %}
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-sky-50 text-[#1478c1] border border-sky-200">PCR II</span>
+                            {% elif resultat.echantillon.ordre == 3 %}
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-sky-50 text-[#1478c1] border border-sky-200">PCR III</span>
+                            {% endif %}
+                        </div>
 
-                            <!-- Responsable & Commentaire -->
-                            <td class="p-3 border-r border-slate-200 text-slate-600 max-w-xs">
-                                {% if resultat.responsable %}
-                                    <span class="block text-[11px] font-bold text-[#1d5288] uppercase">
-                                        👨‍🔬 {{ resultat.responsable.get_full_name|default:resultat.responsable.username }}
-                                    </span>
-                                {% endif %}
-                                <span class="block truncate text-xs text-slate-500" title="{{ resultat.commentaire }}">
-                                    {{ resultat.commentaire|default:"Aucun commentaire" }}
-                                </span>
-                            </td>
+                        <span class="text-[10px] text-slate-400 font-medium">
+                            Saisie : {{ resultat.created_at|date:"d/m/Y à H:i"|default:"-" }}
+                        </span>
+                    </div>
+                </td>
 
-                            <!-- Actions -->
-                            <td class="p-3 text-center">
-                                 <a href="/resultats-individuel/{{ resultat.id }}/" target="_blank" title="Imprimer le bulletin PDF" class="inline-flex items-center justify-center p-1.5 rounded border border-blue-200 bg-blue-50 hover:bg-[#1478c1] text-[#1478c1] hover:text-white transition-all shadow-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                </a>
-                            </td>
-                        </tr>
-                        {% endwith %}
-                        {% empty %}
-                        <tr>
-                            <td colspan="7" class="p-10 text-center text-slate-500 font-semibold uppercase tracking-wide bg-slate-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 mx-auto text-slate-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                                Aucun résultat ne correspond aux critères de recherche.
-                            </td>
-                        </tr>
-                        {% endfor %}
+                <!-- Responsable & Commentaire -->
+                <td class="p-3 border-r border-slate-200 text-slate-600 max-w-xs">
+                    {% if resultat.responsable %}
+                        <span class="block text-[11px] font-bold text-[#1d5288] uppercase">
+                            👨‍🔬 {{ resultat.responsable.get_full_name|default:resultat.responsable.username }}
+                        </span>
+                    {% endif %}
+                    <span class="block truncate text-xs text-slate-500" title="{{ resultat.observations }}">
+                        {{ resultat.resultat_pcr.observation|default:"Aucun commentaire" }}
+                    </span>
+                </td>
 
-                    </tbody>
-                </table>
+                <!-- Actions -->
+                <td class="p-3 text-center">
+                    <a href="/resultats-individuel/{{ resultat.id }}/" target="_blank" title="Imprimer le bulletin PDF" class="inline-flex items-center justify-center p-1.5 rounded border border-blue-200 bg-blue-50 hover:bg-[#1478c1] text-[#1478c1] hover:text-white transition-all shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </a>
+                     <button type="button"
+                                    onclick="openDeleteModal('{{ resultat.id }}', '{{ resultat.code }}', {{ resultat.echantillon.id }})"
+                                    class="inline-flex items-center justify-center bg-white hover:bg-rose-50 text-rose-600 border border-slate-300 hover:border-rose-300 p-1.5 rounded transition-colors cursor-pointer" 
+                                    title="Supprimer le résultat">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
+                </td>
+            </tr>
+            {% endwith %}
+            {% empty %}
+            <tr>
+                <td colspan="6" class="p-10 text-center text-slate-500 font-semibold uppercase tracking-wide bg-slate-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 mx-auto text-slate-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                    Aucun résultat ne correspond aux critères de recherche.
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>
             </div>
 
             <!-- COMPTEUR GLOBAL (Surbrillance Bleu DHIS2) -->
@@ -222,5 +241,54 @@
     </div>
 
 </main>
+<script>
+    function openDeleteModal(resultatId, resultatCode, echantillonId) {
+    Swal.fire({
+        html: `
+            <div class="text-left font-sans space-y-4 pt-1">
+                <!-- En-tête alerte suppression -->
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-rose-50 flex items-center justify-center overflow-hidden border border-rose-200 shadow-2xs p-1">
+                            <svg class="w-5 h-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="block text-[9px] font-bold tracking-wider text-slate-400 uppercase font-mono">CIRCB · LIMS</span>
+                            <span class="block text-xs font-bold text-slate-800">Suppression du Résultat</span>
+                        </div>
+                    </div>
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-100 text-rose-800 border border-rose-200">
+                        Attention
+                    </span>
+                </div>
 
+                <!-- Message et question sur les statistiques -->
+                <div class="p-3.5 rounded-xl border bg-rose-50/80 border-rose-200 text-rose-900 text-xs leading-relaxed font-medium space-y-2">
+                    <p>Vous êtes sur le point de supprimer définitivement le résultat <span class="font-mono font-bold">${resultatCode}</span>.</p>
+                    <p class="text-[11px] text-rose-800/90 border-t border-rose-200/60 pt-2">
+                        <strong class="uppercase font-bold">Impact statistiques :</strong> Cette action retirera ce cas des indicateurs globaux et des rapports épidémiologiques du laboratoire. Voulez-vous vraiment procéder à cette suppression ?
+                    </p>
+                </div>
+            </div>
+        `,
+        icon: false,
+        showCancelButton: true,
+        confirmButtonText: "Oui, supprimer",
+        cancelButtonText: "Annuler",
+        buttonsStyling: false,
+        customClass: {
+            popup: 'rounded-2xl border border-slate-200/90 border-t-4 border-t-rose-600 shadow-2xl p-5 bg-white max-w-md',
+            confirmButton: 'px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-md transition-all duration-200 cursor-pointer mr-2',
+            cancelButton: 'px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all duration-200 cursor-pointer'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Redirection vers l'URL de suppression (adaptez selon votre route Django)
+            window.location.href = `/resultats/supprimer/${resultatId}/`;
+        }
+    });
+}
+</script>
 {% endblock %}

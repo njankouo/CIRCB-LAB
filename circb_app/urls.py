@@ -42,7 +42,7 @@ urlpatterns = [
     path('details-fiche/<str:slug>/', views.details_fiche, name='details-fiche'),
     path('search_porte_entree/<int:porte_entree_id>/', views.search_porte_entree, name='search_porte_entree'),
     path('verifier_patient/', views.verifier_patient, name='verifier_patient'),
-    path('create_patient/', views.creer_patient, name='create_patient'),
+   
     path('details-patient/<str:slug>/', views.details_patient, name='details-patient'),
     
     path('echantillonages/', views.echantillonages, name='echantillonages'),
@@ -92,8 +92,7 @@ urlpatterns = [
     
     path('search-plage/', views.search_plage, name='search-plage'),
     
-    path('filter-stats/', views.statistic_echantillon, name='filter-stats'),
-    
+  
     
     path('save-plage/', views.save_plage, name='save-plage'),
     
@@ -120,7 +119,30 @@ urlpatterns = [
     
     path('modifier-fiche/<int:id>/', views.modifier_fiche, name='modifier-fiche'),
     
-    path('modifier_fiche_echantillon/<int:id>/', views.modifier_fiche_echantillon, name='modifier_fiche_echantillon')
+    path('modifier_fiche_echantillon/<int:id>/', views.modifier_fiche_echantillon, name='modifier_fiche_echantillon'),
+    
+    path('supprimer-echantillon/<int:id>/', views.delete_echantillon, name='supprimer-echantillon'),
+    
+    path('modifier-echantillon/<int:id>/', views.modifier_echantillon, name='modifier-echantillon'),
+    
+    path('edit-patient/<str:code>/', views.edit_patient, name='edit-patient'),
+    
+    path('upload-sub-structure/<int:id>/', views.UploadSubStructure, name='upload-sub-structure'),
+    
+    path('import_structure_view/',views.import_structure_view, name='import_structure_view'),
+    
+    path('guide-utilisation/', views.mode_utilisation, name='guide-utilisation'),
+    
+    path('patient/<int:pk>/modifier/', views.modifier_patient, name='modifier_patient'),
+    
+    path('update_echantillon/<int:id>/', views.update_echantillon, name='update_echantillon'),
+    
+    path('resultats/supprimer/<int:id>/', views.delete_resultat, name='delete_resultat'),
+    
+    path('gestion_roles_interface/', views.gestion_roles_interface, name='gestion_roles_interface'),
+    
+    path('edit-role/<int:role_id>/', views.edit_role, name='edit-role'),
+
     
     
 

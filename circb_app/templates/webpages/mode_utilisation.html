@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide d'Utilisation - LIMS CIRCB</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dhis: {
+                            blue: '#2C6693',
+                            dark: '#1b435c',
+                            light: '#f4f6f8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- En-tête / Barre de navigation DHIS2 Style -->
+    <header class="bg-[#2C6693] text-white shadow-sm border-b border-[#1b435c]">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-white/10 rounded border border-white/20">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-sm font-bold tracking-wide uppercase">CIRCB — Système de Gestion LIMS</h1>
+                    <p class="text-[11px] text-sky-100">Centre International de Référence Chantal Biya</p>
+                </div>
+            </div>
+            <span class="px-2.5 py-1 bg-white/10 text-xs font-semibold rounded border border-white/20 font-mono">
+                v2.4 - Manuel Opérationnel
+            </span>
+        </div>
+    </header>
+
+    <!-- Contenu Principal -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-6 space-y-6">
+
+        <!-- Introduction -->
+        <section class="bg-white border border-slate-200 rounded shadow-sm p-6 space-y-3">
+            <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                <span class="w-6 h-6 rounded bg-[#2C6693] text-white text-xs font-bold flex items-center justify-center font-mono">1</span>
+                <h2 class="text-xs font-bold uppercase font-mono text-slate-900 tracking-wide">Présentation de l'Application</h2>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Cette plateforme centralise la gestion des échantillons biologiques, le suivi des indicateurs de performance (taux de rejet, positivité) via <strong class="text-slate-900">Metabase</strong>, ainsi que l'édition et la validation des rapports officiels pour les structures sanitaires partenaires.
+            </p>
+        </section>
+
+        <!-- Section 2 : Paramétrage Temporel -->
+        <section class="bg-white border border-slate-200 rounded shadow-sm p-6 space-y-4">
+            <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                <span class="w-6 h-6 rounded bg-[#2C6693] text-white text-xs font-bold flex items-center justify-center font-mono">2</span>
+                <h2 class="text-xs font-bold uppercase font-mono text-slate-900 tracking-wide">Paramétrage Temporel & Filtres</h2>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Avant d'analyser les données ou d'imprimer les fiches, définissez la période d'activité cible :
+            </p>
+            <ul class="text-xs text-slate-600 space-y-2 list-disc pl-5">
+                <li><strong class="text-slate-900">Date de début :</strong> Délimite le début de l'intervalle de recherche.</li>
+                <li><strong class="text-slate-900">Date de fin :</strong> Délimite la fin de la période d'analyse.</li>
+                <li>Cliquez sur <strong class="text-slate-900">Appliquer la plage</strong> pour synchroniser les graphiques et rapports.</li>
+            </ul>
+        </section>
+
+        <!-- Section 3 : Suivi Analytique (Metabase) -->
+        <section class="bg-white border border-slate-200 rounded shadow-sm p-6 space-y-4">
+            <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                <span class="w-6 h-6 rounded bg-[#2C6693] text-white text-xs font-bold flex items-center justify-center font-mono">3</span>
+                <h2 class="text-xs font-bold uppercase font-mono text-slate-900 tracking-wide">Indicateurs & Tableaux de Bord Analytiques</h2>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Le tableau de bord Metabase intégré permet de surveiller en temps réel :
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-slate-50 border border-slate-200 rounded p-4 space-y-1">
+                    <span class="text-xs font-bold text-slate-900 block font-mono">Taux de Rejet</span>
+                    <p class="text-[11px] text-slate-500">Calcul automatique des échantillons non conformes reçus des districts (Garoua, Guider, etc.).</p>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 rounded p-4 space-y-1">
+                    <span class="text-xs font-bold text-slate-900 block font-mono">Flux Opérationnel FOSA</span>
+                    <p class="text-[11px] text-slate-500">Suivi détaillé des prélèvements par formation sanitaire et par département.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4 : Validation et Édition des Rapports -->
+        <section class="bg-white border border-slate-200 rounded shadow-sm p-6 space-y-4">
+            <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                <span class="w-6 h-6 rounded bg-[#2C6693] text-white text-xs font-bold flex items-center justify-center font-mono">4</span>
+                <h2 class="text-xs font-bold uppercase font-mono text-slate-900 tracking-wide">Validation & Édition des Fiches Officielles</h2>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Le module de validation vous permet de générer deux types de documents officiels :
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="p-3.5 bg-sky-50/50 border border-sky-200 rounded flex items-start gap-3">
+                    <div class="p-2 bg-sky-100 text-[#2C6693] rounded shrink-0">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-slate-900 block">Fiche Synthétique</span>
+                        <span class="text-[11px] text-slate-500">Aperçu rapide et ciblé des indicateurs clés.</span>
+                    </div>
+                </div>
+                <div class="p-3.5 bg-emerald-50/50 border border-emerald-200 rounded flex items-start gap-3">
+                    <div class="p-2 bg-emerald-100 text-emerald-700 rounded shrink-0">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-slate-900 block">Fiche Récapitulative</span>
+                        <span class="text-[11px] text-slate-500">Rapport complet et détaillé par structure sanitaire.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bouton Flottant (FAB) style DHIS2 -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'});" class="flex items-center gap-2 bg-[#2C6693] hover:bg-[#204d6f] text-white px-4 py-2.5 rounded shadow border border-[#1b435c] transition-all cursor-pointer font-sans text-xs font-semibold tracking-wide">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+            </svg>
+            <span>Haut de page</span>
+        </button>
+    </div>
+
+    <!-- Pied de page -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-4 text-center text-slate-500 text-[11px]">
+        CIRCB — Plateforme LIMS © 2026. Tous droits réservés.
+    </footer>
+
+</body>
+</html>

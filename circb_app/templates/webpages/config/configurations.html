@@ -1,6 +1,7 @@
 {% extends "../dashbord_hosp.html" %}
 
 {% block main %}
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-4 bg-slate-100 flex flex-col gap-4 w-full">
 <div class="p-6 bg-gray-50 min-h-screen" x-data="roleManagement()">
     
     <!-- En-tête de la page -->
@@ -11,7 +12,7 @@
         </div>
         <button 
             @click="openModal('create')"
-            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow transition-colors">
+            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow transition-colors cursor-pointer">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             Nouveau Rôle
         </button>
@@ -44,23 +45,34 @@
                     </tr>
                 </thead>
                 <tbody class="text-sm divide-y divide-gray-100 text-gray-700">
-                    <!-- Exemple Ligne 1: Administrateur -->
-                     {%for role in roles%}
+                    {% for role in roles %}
                     <tr class="hover:bg-gray-50/70 transition-colors">
-                        <td class="p-4 font-semibold text-gray-900">{{ role.nom }}</td>
-                        <td class="p-4 text-gray-500 max-w-xs truncate">{{ role.description }}</td>
+                        <td class="p-4 font-semibold text-gray-900">{{ role.name }}</td>
+                        <td class="p-4 text-gray-500 max-w-xs truncate">Groupe système Django</td>
                         <td class="p-4">
-                            <div class="flex flex-wrap gap-1">
-                                <span class="px-2 py-0.5 text-xs font-medium rounded bg-red-50 text-red-700 border border-red-100">Tout contrôler</span>
+                            <div class="flex flex-wrap gap-1 max-w-xs">
+                                {% for perm in role.permissions.all %}
+                                <span class="px-2 py-0.5 text-[10px] font-medium rounded bg-sky-50 text-sky-700 border border-sky-100 truncate max-w-[150px]" title="{{ perm.name }}">{{ perm.name }}</span>
+                                {% empty %}
+                                <span class="text-xs text-gray-400 italic">Aucune permission</span>
+                                {% endfor %}
                             </div>
                         </td>
-                          <td class="p-4 text-right">
-                            <button @click="openModal('edit', 'Administrateur')" class="text-blue-600 hover:text-blue-800 font-medium mr-3">Modifier</button>
-                            <a class="text-red-600 hover:text-red-800 font-medium" href='/delete-role/{{role.id}}/'>Supprimer</a>
+                        <td class="p-4">
+                            <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-700">
+                                {{ role.user_set.count }} utilisateur(s)
+                            </span>
+                        </td>
+                        <td class="p-4 text-right">
+                            <a href="/edit-role/{{ role.id }}/" class="text-blue-600 hover:text-blue-800 font-medium mr-3 cursor-pointer">Modifier</a>
+                            <a class="text-red-600 hover:text-red-800 font-medium" href="/delete-role/{{ role.id }}/">Supprimer</a>
                         </td>
                     </tr>
-                    
-                  {%endfor%}
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-6 text-center text-gray-400 italic">Aucun rôle trouvé.</td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -80,66 +92,54 @@
         
         <div 
             @click.away="closeModal()"
-            class="bg-white rounded-xl shadow-xl max-w-lg w-full overflow-hidden border border-gray-100"
+            class="bg-white rounded-xl shadow-xl max-w-lg w-full overflow-hidden border border-gray-100 flex flex-col max-h-[90vh]"
             x-transition:enter="transition ease-out duration-300"
             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100">
             
             <!-- Tête de la Modal -->
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
                 <h3 class="text-lg font-bold text-gray-800" x-text="modalMode === 'create' ? 'Créer un nouveau rôle' : 'Modifier le rôle : ' + selectedRole"></h3>
-                <button @click="closeModal()" class="text-gray-400 hover:text-gray-600">
+                <button @click="closeModal()" class="text-gray-400 hover:text-gray-600 cursor-pointer">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
             
-            <!-- Formulaire de la Modal -->
-            <form method="POST"  class="p-6 space-y-4" action="{% url 'create_or_edit_role' %}">
+            <!-- Corps de la Modal (Formulaire) -->
+            <form method="POST" class="p-6 space-y-4 overflow-y-auto flex-1" action='/gestion_roles_interface/'>
                 {% csrf_token %}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nom du rôle</label>
-                    <input name="role_name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="Ex: Infirmier Chef">
-                </div>
                 
+                <!-- Nom du rôle -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea name="description" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" rows="2" placeholder="Brève description des responsabilités..."></textarea>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nom du rôle (Ex: Superviseur)</label>
+                    <input type="text" name="nom_groupe" required class="w-full px-4 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-[#1478c1] focus:outline-none">
                 </div>
 
-                <!-- Section des Permissions avec Checkboxes -->
+                <!-- Liste des permissions disponibles dynamiquement -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Permissions associées</label>
-                    <div class="space-y-2 max-h-48 overflow-y-auto p-3 border border-gray-100 bg-gray-50 rounded-lg">
-                        <label class="flex items-center text-sm font-normal text-gray-700 cursor-pointer">
-                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2.5">
-                            <span>Dossier Patient : Voir</span>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Permissions associées au module :</label>
+                    <div class="grid grid-cols-1 gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 max-h-60 overflow-y-auto">
+                        {% for perm in permissions %}
+                        <label class="flex items-center gap-3 p-2 bg-white rounded-lg border border-slate-200 cursor-pointer hover:border-[#1478c1] transition-all">
+                            <input type="checkbox" name="permissions" value="{{ perm.id }}" class="w-4 h-4 text-[#1478c1] rounded border-slate-300 focus:ring-[#1478c1]">
+                            <span class="text-xs font-medium text-slate-700">{{ perm.name }}</span>
                         </label>
-                        <label class="flex items-center text-sm font-normal text-gray-700 cursor-pointer">
-                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2.5">
-                            <span>Dossier Patient : Modifier / Créer</span>
-                        </label>
-                        <label class="flex items-center text-sm font-normal text-gray-700 cursor-pointer">
-                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2.5">
-                            <span>Facturation : Accès aux rapports</span>
-                        </label>
-                        <label class="flex items-center text-sm font-normal text-gray-700 cursor-pointer">
-                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2.5">
-                            <span>Configuration du système</span>
-                        </label>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <!-- Actions de la Modal -->
-                <div class="pt-4 border-t border-gray-100 flex justify-end gap-2">
-                    <button type="button" @click="closeModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Annuler</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow transition-colors">Enregistrer</button>
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3 bg-[#1478c1] hover:bg-sky-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all cursor-pointer">
+                        Enregistrer le rôle et ses permissions
+                    </button>
                 </div>
             </form>
+
         </div>
     </div>
 
 </div>
-
+</main>
 <!-- Script Alpine.js pour la logique UI -->
 <script>
     function roleManagement() {
