@@ -16,6 +16,7 @@ from django.views.decorators.http import require_POST
 from django.utils.crypto import get_random_string
 from django.db.models import Q
 from .decorators import role_required
+from django.contrib.auth.decorators import permission_required
 # 1. On garde l'import de Django sous un autre nom ou on importe ton fichier models local
 from .models import Structure_Hierachy, Structure 
 # Create your views here.
@@ -75,6 +76,7 @@ def logout_view(request):
     return redirect('/')  
 
 @login_required(login_url='/')
+@permission_required('circb_app.Consulter_dossier_patient', raise_exception=True)
 def dossiers_patients(request):
     context ={
         'patients':Patient.objects.filter(status=True)
@@ -82,6 +84,7 @@ def dossiers_patients(request):
     return render(request, 'webpages/patients/dossiers.html', context)
 
 @login_required(login_url='/')
+@permission_required('circb_app.Consulter_dossier_patient', raise_exception=True)
 def details_patient(request, slug):
     patient = get_object_or_404(Patient, code=slug)
     context ={
@@ -151,6 +154,7 @@ def echantillons(request, id):
         'examen':Test.objects.all()
     }
     return render(request, 'webpages/echantillonages/echantillons.html', context)
+@permission_required('circb_app.peut_voir_consulter_echantillons')
 @login_required(login_url='/')
 def echantillonages(request):
     # Préchargement intelligent des relations imbriquées
@@ -367,7 +371,7 @@ def details_fiche(request, slug):
 
 def detail_fiche(request, code):
     pass
-
+@permission_required('circb_app.peut_saisir_echantillon')
 def ajouter_echantillon(request):
     if request.method == 'POST':
         is_ajax = (
@@ -570,6 +574,7 @@ def ajouter_echantillon(request):
         return JsonResponse({'success': False, 'error': "Requête non autorisée."}, status=400)
 
     return render(request, 'webpages/echantillonages/echantillons.html', {})
+@permission_required('circb_app.peut_modifier_echantillons')
 def update_echantillon(request, id):
     echantillon = get_object_or_404(Echantillon, id=id)
     
@@ -965,7 +970,7 @@ def generer_qr_svg(texte):
     factory = qrcode.image.svg.SvgPathImage
     img = qrcode.make(texte, image_factory=factory, box_size=5)
     return img.to_string().decode('utf-8')
-
+@permission_required('circb_app.Consulter_resultat_patient', raise_exception=True)
 def resultats(request):
     resultats=Resultat.objects.filter(resultat_pcr__isnull=False).order_by('-date_resultat')
     for res in resultats:
@@ -1445,7 +1450,7 @@ def search_plage(request):
 
 
 
-
+@permission_required('circb_app.modifier_resultats_patients', raise_exception=True)
 @login_required
 def save_plage(request):
     echantillons = []
@@ -2000,7 +2005,7 @@ def modifier_fiche(request, id):
     }
     return render(request, 'webpages/echantillonages/edit-fiche.html', context)
 
-
+@permission_required('circb_app.peut_supprimer_echantillons')
 def delete_echantillon(request, id):
     echantillon = Echantillon.objects.get(id=int(id))
     echantillon.delete()
@@ -2192,7 +2197,7 @@ def modifier_patient(request, pk):
         'patient': patient,
     }
     return render(request, 'webpages/patients/dossiers.html', context)
-
+@permission_required('circb_app.supprimer_resultats_patients', raise_exception=True)
 def delete_resultat(request, id):
     resultat = get_object_or_404(Resultat, id=id)
     
@@ -2270,3 +2275,101 @@ def edit_role(request, role_id):
         'permissions': permissions,
     }
     return render(request, 'webpages/config/edit-role.html', context)
+
+
+
+def custom_permission_denied_view(request, exception=None):
+    # Vous pouvez passer des variables spécifiques au template ici
+    context = {
+        'user_connecte': request.user,
+        'message_specifique': "Accès restreint par la politique de sécurité du CIRCB."
+    }
+    return render(request, 'webpages/403.html', context, status=403)
+
+
+def modifier_personnel(request, id):
+    context={
+        'user':User.objects.get(id=int(id)),
+        'groups':Group.objects.all()
+    }
+    return render(request,'webpages/config/edit-personnel.html', context)
+
+
+def modifier_personnel(request, id):
+    user = get_object_or_404(User, id=id)
+    
+    if request.method == 'POST':
+        # Récupération des données du formulaire
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        user.email = request.POST.get('email')
+        
+        # Gestion du groupe (remplace l'ancien groupe par le nouveau sélectionné)
+        group_name = request.POST.get('group_name')
+        if group_name:
+            try:
+                group = Group.objects.get(name=group_name)
+                user.groups.set([group])  # Remplace tous les groupes actuels par ce groupe unique
+            except Group.DoesNotExist:
+                pass
+        
+        # Gestion optionnelle du mot de passe
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        
+        if password:  # Si un nouveau mot de passe a été saisi
+            if password == confirm_password:
+                user.set_password(password)  # Hache et met à jour le mot de passe
+            else:
+                messages.error(request, "Les mots de passe ne correspondent pas.")
+                return redirect('modifier-personnel', id=id)
+                
+        user.save()
+        messages.success(request, "Le personnel a été mis à jour avec succès.")
+        return redirect('/personnel/')  # Remplacez par le nom de votre route de redirection après modification
+        
+    context = {
+        'user': user,
+        'groups': Group.objects.all()
+    }
+    return render(request, 'webpages/config/edit-personnel.html', context)
+
+
+
+
+def annuaire_personnel(request):
+    # Récupération du terme de recherche
+    query = request.GET.get('q', '')
+    
+    # Récupération de tous les utilisateurs (avec optimisation des groupes)
+    users_list = User.objects.all().prefetch_related('groups').order_by('-date_joined')
+    
+    # Filtrage si une recherche est effectuée
+    if query:
+        users_list = users_list.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(email__icontains=query) |
+            Q(username__icontains=query)
+        )
+        
+    # Configuration de la pagination (12 utilisateurs par page pour correspondre à la grille)
+    paginator = Paginator(users_list, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    groupes = Group.objects.all()
+    
+    context = {
+        'user': page_obj,      # Utilisé dans votre template (itérable de la page)
+        'page_obj': page_obj,  # Objet de pagination Django
+        'groupes': groupes,    # Pour le select de la modale d'ajout
+        'query': query,
+    }
+    
+    # Si la requête vient de HTMX, on renvoie uniquement le fragment HTML ( Grille + Pagination )
+    if request.headers.get('HX-Request'):
+        return render(request, 'webpages/config/partials/personnel_container.html', context)
+        
+    # Sinon, on renvoie la page complète
+    return render(request, 'webpages/config/annuaire_personnel.html', context)

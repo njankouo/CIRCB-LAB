@@ -122,8 +122,9 @@ class FicheEchantillon(models.Model):
     class Meta:
         permissions = [
             ("peut_voir_fiches_expedition", "Peut voir les fiches d'expédition"),
-            ("peut_valider_resultats", "Peut valider les résultats d'analyses"),
-            ("peut_saisir_echantillon", "Peut enregistrer un nouvel échantillon"),
+            ("peut_supprimer_fiches_expedition", "Peut supprimer les fiches d'expédition"),
+            ("peut_saisir_fiche_expedition", "Peut enregistrer une nouvelle fiche d'expédition"),
+            ("peut_modifier_fiches_expedition", "Peut modifier les fiches d'expédition"),
         ]
 
 class PorteEntree(models.Model):
@@ -302,9 +303,10 @@ class Echantillon(models.Model):
     
     class Meta:
         permissions = [
-            ("peut_voir_fiches_expedition", "Peut voir les fiches d'expédition"),
-            ("peut_valider_resultats", "Peut valider les résultats d'analyses"),
+            ("peut_voir_consulter_echantillons", "Peut consulter liste des echantillons"),
+            ("peut_modifier_echantillons", "Peut Modifier les echantillons"),
             ("peut_saisir_echantillon", "Peut enregistrer un nouvel échantillon"),
+            ("peut_supprimer_echantillons", "Peut supprimer les echantillons"),
         ]
 
 
@@ -380,3 +382,15 @@ class Resultat(models.Model):
  
            
 
+class ParametresGlobal(models.Model):
+    # Modèle fictif ou technique pour stocker les permissions globales
+    class Meta:
+        permissions = [
+            ("can_export_pdf", "Peut exporter les rapports PDF"),
+            ("access_eid_dashboard", "Peut accéder au tableau de bord EID"),
+          
+            ("manage_user_roles", "Peut gérer les rôles des utilisateurs"),
+            ("manage_system_settings", "Peut gérer les paramètres du système"),
+            ("manage_rh", "Peut gérer les ressources humaines"),
+            ("view_audit_logs", "Peut voir les journaux d'audit"),
+        ]

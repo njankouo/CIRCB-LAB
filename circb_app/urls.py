@@ -142,6 +142,12 @@ urlpatterns = [
     path('gestion_roles_interface/', views.gestion_roles_interface, name='gestion_roles_interface'),
     
     path('edit-role/<int:role_id>/', views.edit_role, name='edit-role'),
+    
+    path('modifier-personnel/<int:id>/', views.modifier_personnel, name='modifier-personnel'),
+    
+    path('modifier_personnel/<int:id>/', views.modifier_personnel, name='modifier_personnel'),
+    
+    path('annuaire-personnel/', views.annuaire_personnel, name='annuaire-personnel'),
 
     
     
@@ -152,3 +158,4 @@ urlpatterns = [
 
 handler404 = 'circb_app.views.custom_page_not_found_view'
 handler500 = 'circb_app.views.custom_error_view'
+handler403 = 'circb_app.views.custom_permission_denied_view'

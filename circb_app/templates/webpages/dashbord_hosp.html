@@ -228,21 +228,25 @@ main {
                 <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
                 <span>Échantillons</span>
             </button>
-            
+              {% if perms.circb_app.Consulter_dossier_patient %}
             <a href='/dossiers/patients/' class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-[#1478c1] transition-all">
                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                 <span>Dossiers Patients</span>
             </a>
-
+            {%endif%}
+            {% if perms.circb_app.manage_rh %}
             <a href='{% url "personnel" %}' class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-[#1478c1] transition-all">
                 <span class="w-2 h-2 rounded-full bg-purple-500"></span>
                 <span>Ressources Humaines</span>
             </a>
-
+              {%endif%}
+                 {% if perms.circb_app.manage_system_settings %}
             <button onclick="switchTab(event, 'config-segment')" class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-[#1478c1] transition-all cursor-pointer">
                 <span class="w-2 h-2 rounded-full bg-slate-400"></span>
                 <span>Configurations</span>
             </button>
+            {%endif%}
+          
         </div>
 
         <!-- CONTENU PANNEAUX DHIS2 -->
@@ -270,6 +274,7 @@ main {
                         </div>
                     </a>
                     {%endif%}
+                     {% if perms.circb_app.peut_voir_consulter_echantillons %}
                     <a href="/echantillonages/" class="group p-3.5 bg-white border border-slate-200 hover:border-[#1478c1] rounded-xl shadow-2xs hover:shadow-md transition-all flex items-start gap-3">
                         <div class="p-2 rounded-lg bg-sky-50 text-[#1478c1] border border-sky-100 shrink-0 group-hover:bg-[#1478c1] group-hover:text-white transition-colors">
                             <i data-lucide="flask-conical" class="w-4 h-4"></i>
@@ -279,14 +284,16 @@ main {
                             <span class="block text-[11px] text-slate-500 font-medium mt-0.5 leading-tight">Registre central des prélèvements biomédicaux.</span>
                         </div>
                     </a>
+                    {%endif%}
                 </div>
-
+                   {% if perms.circb_app.Consulter_resultat_patient %}
                 <div class="pt-3 pb-1 border-t border-slate-200 my-3">
                     <h5 class="text-[11px] font-bold text-[#1d5288] uppercase font-mono tracking-wide">02. Livrables & Résultats</h5>
                     <p class="text-[10px] text-slate-500 mt-0.5">Validation technique, éditions et sorties</p>
                 </div>
-
+                {%endif%}
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {% if perms.circb_app.Consulter_resultat_patient %}
                     <a href="{% url 'resultats' %}" class="group p-3.5 bg-white border border-slate-200 hover:border-[#1478c1] rounded-xl shadow-2xs hover:shadow-md transition-all flex items-start gap-3">
                         <div class="p-2 rounded-lg bg-sky-50 text-[#1478c1] border border-sky-100 shrink-0 group-hover:bg-[#1478c1] group-hover:text-white transition-colors">
                             <i data-lucide="check-circle-2" class="w-4 h-4"></i>
@@ -306,6 +313,7 @@ main {
                             <span class="block text-[11px] text-slate-500 font-medium mt-0.5 leading-tight">Acheminement et livraison des résultats validés.</span>
                         </div>
                     </a>
+                    {%endif%}
                 </div>
             </div>
 
@@ -321,8 +329,8 @@ main {
                             <i data-lucide="settings" class="w-4 h-4"></i>
                         </div>
                         <div>
-                            <span class="block text-xs font-bold text-slate-800 uppercase font-mono group-hover:text-[#1478c1] transition-colors">Variables & Nomenclatures</span>
-                            <span class="block text-[11px] text-slate-500 font-medium mt-0.5 leading-tight">Éléments de données, protocoles et nomenclatures.</span>
+                            <span class="block text-xs font-bold text-slate-800 uppercase font-mono group-hover:text-[#1478c1] transition-colors">Roles et Permissions</span>
+                            <span class="block text-[11px] text-slate-500 font-medium mt-0.5 leading-tight">Gestion des roles et permissions.</span>
                         </div>
                     </a>
                     <a href="{% url 'structures' %}" class="group p-3.5 bg-white border border-slate-200 hover:border-[#1478c1] rounded-xl shadow-2xs hover:shadow-md transition-all flex items-start gap-3">
