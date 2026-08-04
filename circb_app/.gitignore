@@ -1,0 +1,28 @@
+# Fichiers de bytecode Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Base de données locale de développement
+db.sqlite3
+db.sqlite3-journal
+
+# Fichiers d'environnement et secrets
+.env
+secret_key.py
+
+# Fichiers statiques collectés en production
+staticfiles/
+
+# Fichiers médias et uploads des utilisateurs
+media/
+
+# Fichiers de configuration IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Fichiers système d'exploitation
+.DS_Store
+Thumbs.db
