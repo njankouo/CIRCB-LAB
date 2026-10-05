@@ -1,0 +1,541 @@
+{% extends '../dashbord_hosp.html' %}
+
+{% block main %}
+<style>
+    /* Style Odoo Enterprise / LIMS */
+    .patient-card {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .patient-card:hover {
+        border-color: #94a3b8;
+        box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+    }
+</style>
+
+<main class="flex-1 h-full min-h-0 overflow-y-auto bg-[#f8fafc] text-slate-800 w-full font-sans antialiased selection:bg-[#714B67] selection:text-white text-xs">
+    
+    <div class="max-w-5xl mx-auto p-4 sm:p-6 space-y-4">
+        
+        <!-- EN-TÊTE TYPE ODOO / LIMS -->
+        <div class="bg-[#714B67] text-white p-4 rounded-lg shadow-sm border border-[#5f3f56] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-md bg-white/15 border border-white/20 flex items-center justify-center shrink-0 shadow-inner">
+                    <svg class="w-5 h-5 text-purple-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[9px] font-bold text-purple-200 tracking-wider uppercase font-mono">MEDYSIS Tracker • Module Validation</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    </div>
+                    <h1 class="text-sm font-bold tracking-tight text-white uppercase font-mono">Fiche d'Échantillon N° {{ fiche.numero_ordre|default:fiche.id }}</h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 self-end sm:self-auto flex-wrap">
+                <!-- BOUTON AJOUTER NOUVEAU CODE -->
+                <a href="/verification-code/{{ fiche.id }}/" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-mono font-bold px-3 py-1.5 rounded border border-emerald-500 shadow-xs transition-all flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                    Nouveau Code
+                </a>
+
+                <!-- COMPTEUR DE PATIENTS -->
+                <div class="bg-purple-900/50 border border-purple-300/30 text-white text-xs px-3 py-1.5 rounded font-mono font-semibold flex items-center gap-1.5">
+                    <span class="text-purple-200">Total Patients:</span>
+                    <strong class="text-white text-sm" id="patient-count-badge">{{ patients|length }}</strong>
+                </div>
+
+                <button onclick="window.history.back()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-mono px-3 py-1.5 rounded border border-white/20 transition-all cursor-pointer">
+                    ← Retour
+                </button>
+            </div>
+        </div>
+
+        <!-- LISTE DES PATIENTS -->
+      <div class="space-y-3" id="patients-list">
+    {% for patient in patients %}
+    <div class="patient-card bg-white border border-slate-200/90 rounded-lg shadow-xs hover:shadow-md transition-all duration-200 overflow-hidden group" data-patient-id="{{ patient.patient.id }}">
+        
+        <!-- ENTÊTE STYLE "ODOO FORM HEADER" -->
+        <div class="bg-slate-50/70 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] shrink-0"></span>
+                
+                <div class="flex items-center gap-2">
+                    <span class="font-bold font-mono text-slate-800 uppercase text-xs tracking-wide">
+                        {{ patient.patient.nom|default:"PATIENT SANS NOM" }} {{ patient.patient.prenom|default:"" }}
+                    </span>
+                    {% if patient.patient.sexe %}
+                    <span class="text-[10px] font-mono px-2 py-0.5 bg-slate-200/80 text-slate-700 rounded-md font-bold uppercase tracking-wider">
+                        {{ patient.patient.sexe }}
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- STATUT BADGE -->
+                <span class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wider shadow-2xs">
+                    VALIDE
+                </span>
+
+                <!-- BOUTON COPIER CODE -->
+                <button type="button" 
+                        onclick="copyFullCode(this, '{{ patient.patient.code }}')"
+                        class="text-xs text-[#714B67] hover:bg-[#714B67]/10 font-mono font-semibold px-2.5 py-1 rounded transition-all flex items-center gap-1.5 border border-[#714B67]/30 cursor-pointer active:scale-95"
+                        title="Copier le code complet">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                    <span class="btn-text">Copier</span>
+                </button>
+
+                <!-- BOUTON SUPPRIMER -->
+                <button type="button"
+                        onclick="promptDeletePatient('{{ patient.patient.id }}', '{{ patient.patient.nom|escapejs|default:"PATIENT" }}')"
+                        class="text-xs text-rose-600 hover:bg-rose-50 font-mono font-semibold px-2.5 py-1 rounded transition-all flex items-center gap-1.5 border border-rose-200 cursor-pointer active:scale-95"
+                        title="Supprimer ce patient">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    <span>Supprimer</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- CONTENU DE LA CARTE -->
+        <div class="p-4 bg-white space-y-3.5">
+            
+            <!-- AFFICHAGE DU CODE PATIENT + BOUTON MODIFIER -->
+            <div class="flex items-center justify-between gap-4">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block mb-1">Code d'identification unique :</span>
+                    <div class="inline-block px-3 py-1.5 rounded bg-slate-100 border border-slate-200 text-slate-800 font-bold font-mono text-xs shadow-2xs tracking-wider patient-code-display" data-code-id="{{ patient.patient.id }}">
+                        {{ patient.patient.code|default:"---" }}
+                    </div>
+                </div>
+
+                <!-- BOUTON MODIFIER LE CODE -->
+                <button type="button"
+                        onclick="openEditCodeModal('{{ patient.patient.id }}', '{{ patient.patient.code|escapejs }}')"
+                        class="bg-slate-100 hover:bg-[#714B67] hover:text-white text-slate-700 text-xs font-mono font-semibold px-3 py-1.5 rounded border border-slate-200 transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+                        title="Modifier le code patient">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    <span>Modifier le code</span>
+                </button>
+            </div>
+
+            <!-- SECTION : HISTORIQUE DES PCR -->
+          <div class="border-t border-slate-100 pt-3">
+    <div class="flex items-center justify-between mb-2.5">
+        <p class="text-[11px] font-bold text-[#714B67] uppercase tracking-wider font-mono flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            Historique des Analyses PCR
+        </p>
+        <span class="text-[10px] font-mono bg-[#714B67]/10 text-[#714B67] px-2 py-0.5 rounded-full font-bold">
+            <!-- On filtre les échantillons de la liste globale liés à cet enfant -->
+            {{ patient.patient.echantillons_enfant.count }} échantillon(s)
+        </span>
+    </div>
+
+    <!-- LISTE DES ÉCHANTILLONS / PCR -->
+    <div class="space-y-2">
+        {% for ech in echantillon %}
+            {% if ech.enfant_id == patient.patient.id %}
+            <div class="bg-slate-50 border border-slate-200 rounded-md p-2.5 text-xs font-mono space-y-1">
+                <div class="flex items-center justify-between text-slate-700 font-semibold">
+                    <div class="flex items-center gap-2">
+                        {% if ech.ordre %}
+                        <span class="px-1.5 py-0.5 bg-slate-200 text-slate-700 rounded font-bold text-[10px]">#{{ ech.ordre }}</span>
+                        {% endif %}
+                        <span>Code Éch : {{ ech.code_ech|default:ech.code|default:"N/A" }}</span>
+                    </div>
+                    <span class="text-[10px] text-slate-500">Prélèvement : {{ ech.date_prelevement|date:"d-m-Y"|default:"---" }}</span>
+                </div>
+                <div class="flex items-center justify-between pt-1 border-t border-slate-200/60 text-[11px]">
+                    <span class="text-slate-600">Examen : {{ ech.examen|default:"PCR" }}</span>
+                    <div>
+                        <span class="font-bold">Résultat :</span>
+                        {% if ech.resultat_pcr %}
+                            <span class="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold">{{ ech.resultat_pcr.nom }}</span>
+                        {% else %}
+                            <span class="text-amber-600 font-medium">En attente</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% empty %}
+            <p class="text-[11px] text-slate-400 italic">Aucun échantillon enregistré pour ce patient.</p>
+        {% endfor %}
+    </div>
+</div>
+        </div>
+    </div>
+    {% empty %}
+    <div id="empty-state" class="p-10 text-center bg-white border border-slate-200 rounded-lg text-slate-500 font-mono text-xs space-y-3 shadow-xs">
+        <svg class="w-10 h-10 text-slate-300 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+        <p class="font-semibold text-sm text-slate-700">Aucun patient ou code associé à cette fiche.</p>
+        <a href="/verification-code/{{ fiche.id }}/" class="inline-flex items-center gap-1.5 text-white bg-[#714B67] hover:bg-[#5f3f56] font-bold px-4 py-2 rounded-md transition-all shadow-xs">
+            <span>+ Ajouter le premier code patient</span>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+    </div>
+</main>
+
+<!-- MODAL DE MODIFICATION DU CODE PATIENT -->
+<div id="editCodeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-md w-full border border-slate-300 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div class="bg-[#714B67] text-white px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                <h3 class="text-xs font-bold font-mono uppercase tracking-wider text-white">Modifier le Code Patient</h3>
+            </div>
+            <button type="button" onclick="closeEditCodeModal()" class="text-purple-200 hover:text-white font-mono text-sm font-bold cursor-pointer">✕</button>
+        </div>
+
+        <div class="p-4 space-y-3 font-sans text-xs">
+            <input type="hidden" id="edit-patient-id">
+            
+            <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono mb-1">Code d'identification unique</label>
+                
+                <div class="flex items-center rounded border border-slate-300 bg-slate-50 overflow-hidden shadow-2xs focus-within:border-[#714B67]">
+                    <!-- 11 premiers caractères masqués -->
+                    <span id="edit-prefix-display" class="bg-slate-200 text-slate-600 px-3 py-2 font-mono font-bold text-xs select-none border-r border-slate-300 tracking-widest">
+                        ***********
+                    </span>
+                    <!-- Reste modifiable -->
+                    <input type="text" id="edit-code-suffix-input" class="w-full px-3 py-2 bg-white text-slate-800 font-mono text-xs focus:outline-none" placeholder="XXXX">
+                </div>
+                
+                <span id="code-check-msg" class="text-[10px] font-mono mt-1 block"></span>
+            </div>
+
+            <p class="text-[10px] text-slate-400 font-mono italic">Le code final doit comporter exactement 15 caractères (les 11 premiers sont protégés).</p>
+        </div>
+
+        <div class="p-3 bg-slate-50 border-t border-slate-200 flex justify-end gap-2 font-mono text-xs">
+            <button type="button" onclick="closeEditCodeModal()" class="px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded transition-colors cursor-pointer">
+                Annuler
+            </button>
+            <button type="button" id="confirmEditCodeBtn" class="px-4 py-1.5 bg-[#714B67] hover:bg-[#5f3f56] text-white font-bold rounded transition-colors cursor-pointer flex items-center gap-1.5">
+                <span>Enregistrer</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DE CONFIRMATION DE SUPPRESSION -->
+<!-- MODAL DE CONFIRMATION DE SUPPRESSION -->
+<div id="deleteModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-sm w-full border border-slate-300 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div class="bg-rose-600 text-white px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-rose-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <h3 class="text-xs font-bold font-mono uppercase tracking-wider text-white">Confirmation de Suppression</h3>
+            </div>
+            <button type="button" onclick="closeDeleteModal()" class="text-rose-200 hover:text-white font-mono text-sm font-bold cursor-pointer">✕</button>
+        </div>
+
+        <div class="p-4 space-y-3 font-sans text-xs">
+            <p class="text-slate-600 font-medium">Êtes-vous sûr de vouloir supprimer le patient <strong id="delete-patient-name" class="text-slate-800 font-mono"></strong> ?</p>
+            <p class="text-[11px] text-rose-600 bg-rose-50 p-2 rounded border border-rose-200 font-mono">
+                ⚠️ Cette action est irréversible.
+            </p>
+        </div>
+
+        <div class="p-3 bg-slate-50 border-t border-slate-200 flex justify-end gap-2 font-mono text-xs">
+            <button type="button" onclick="closeDeleteModal()" class="px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded transition-colors cursor-pointer">
+                Annuler
+            </button>
+            
+            <!-- BOUTON DE CONFIRMATION CORRIGÉ (AVEC ID & BON APPEL) -->
+            <button type="button" id="confirmDeleteBtn" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded transition-colors cursor-pointer flex items-center gap-1.5 active:scale-95">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                <span>Oui, Supprimer</span>
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+let targetPatientId = null;
+let currentFullCode = "";
+const TOTAL_LENGTH = 19;
+
+// Fonction de copie du code complet
+function copyFullCode(btn, code) {
+    const btnText = btn.querySelector('.btn-text');
+    if (code) {
+        navigator.clipboard.writeText(code);
+        if (btnText) btnText.textContent = 'Copié !';
+        btn.classList.replace('text-[#714B67]', 'text-emerald-700');
+        
+        setTimeout(() => {
+            if (btnText) btnText.textContent = 'Copier';
+            btn.classList.replace('text-emerald-700', 'text-[#714B67]');
+        }, 1500);
+    }
+}
+
+// --- GESTION DE LA MODIFICATION DU CODE ---
+function openEditCodeModal(patientId, fullCode) {
+    document.getElementById('edit-patient-id').value = patientId;
+    currentFullCode = fullCode;
+
+    const prefix = fullCode.slice(0, 11); // 11 premiers caractères masqués
+    const editablePart = fullCode.slice(11); // Reste modifiable
+
+    document.getElementById('edit-prefix-display').textContent = "*".repeat(prefix.length);
+    document.getElementById('edit-code-suffix-input').value = editablePart;
+
+    const modal = document.getElementById('editCodeModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    const confirmBtn = document.getElementById('confirmEditCodeBtn');
+    confirmBtn.disabled = false;
+    document.getElementById('code-check-msg').textContent = "";
+}
+
+function closeEditCodeModal() {
+    const modal = document.getElementById('editCodeModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+// Validation et requête AJAX vers la base de données
+const suffixInput = document.getElementById('edit-code-suffix-input');
+
+if (suffixInput) {
+    // 1. Formatage automatique à la volée pour forcer le format -XX-XXXX
+    suffixInput.addEventListener('input', async (e) => {
+        let inputField = e.target;
+        let rawValue = inputField.value;
+
+        // Étape A : On nettoie pour ne garder que les lettres et les chiffres (on ignore tout le reste, y compris les tirets saisis manuellement)
+        let cleaned = '';
+        for (let i = 0; i < rawValue.length; i++) {
+            let char = rawValue[i].toUpperCase();
+            if (/[A-Z0-9]/.test(char)) {
+                cleaned += char;
+            }
+        }
+
+        // Étape B : On applique strictement la structure `-XX-XXXX` (max 2 lettres, puis max 4 chiffres)
+        // Les 2 premiers caractères vont dans les lettres (XX), le reste dans les chiffres (XXXX)
+        let letters = cleaned.slice(0, 2);
+        let digits = cleaned.slice(2, 6); // Limité à 4 chiffres
+
+        // Étape C : Reconstitution automatique du format exact `-XX-XXXX`
+        let formatted = '-';
+        if (letters.length > 0) {
+            formatted += letters;
+        }
+        if (letters.length === 2) {
+            formatted += '-';
+        }
+        if (digits.length > 0) {
+            formatted += digits;
+        }
+
+        // Si l'utilisateur a tout effacé, on laisse vide ou juste un tiret
+        if (cleaned.length === 0) {
+            formatted = '';
+        }
+
+        inputField.value = formatted;
+
+        // --- VALIDATION ET REQUÊTE AJAX ---
+        const prefix = currentFullCode.slice(0, 11); // Préfixe d'origine
+        const fullNewCode = prefix + formatted;
+
+        const msgBox = document.getElementById('code-check-msg');
+        const confirmBtn = document.getElementById('confirmEditCodeBtn');
+
+        const exactPattern = /^-[A-Z]{2}-\d{4}$/;
+
+        // Si le code n'a pas changé par rapport à l'original
+        if (fullNewCode === currentFullCode) {
+            msgBox.textContent = "";
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            return;
+        }
+
+        // Si le format complet n'est pas encore atteint (ex: en train de taper)
+        if (!exactPattern.test(formatted)) {
+            msgBox.textContent = "Format en cours de saisie...";
+            msgBox.className = "text-[10px] font-mono text-slate-400 mt-1 block font-bold";
+            confirmBtn.disabled = true;
+            confirmBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            return;
+        }
+
+        // Appel AJAX une fois que le format est parfaitement rempli (-XX-XXXX)
+        try {
+            msgBox.textContent = "⏳ Vérification en cours...";
+            msgBox.className = "text-[10px] font-mono text-slate-500 mt-1 block font-bold";
+
+            const response = await fetch(`/check-patient-code-exists/?code=${encodeURIComponent(fullNewCode)}`, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.exists) {
+                    msgBox.textContent = "❌ Ce code patient existe déjà en base de données.";
+                    msgBox.className = "text-[10px] font-mono text-rose-600 mt-1 block font-bold";
+                    confirmBtn.disabled = true;
+                    confirmBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    msgBox.textContent = "✔️ Code disponible.";
+                    msgBox.className = "text-[10px] font-mono text-emerald-600 mt-1 block font-bold";
+                    confirmBtn.disabled = false;
+                    confirmBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            } else {
+                msgBox.textContent = "⚠️ Erreur lors de la vérification serveur.";
+                msgBox.className = "text-[10px] font-mono text-amber-600 mt-1 block font-bold";
+            }
+        } catch (err) {
+            console.error("Erreur AJAX :", err);
+            msgBox.textContent = "⚠️ Erreur réseau.";
+            msgBox.className = "text-[10px] font-mono text-amber-600 mt-1 block font-bold";
+        }
+    });
+
+    // 2. Gestion propre de la touche Backspace pour effacer naturellement
+    suffixInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace') {
+            // Laisse le comportement par défaut gérer l'effacement, 
+            // le formatage s'occupera de réajuster proprement les tirets instantanément à l'événement 'input'.
+        }
+    });
+}
+// Enregistrement final par POST
+document.getElementById('confirmEditCodeBtn')?.addEventListener('click', async () => {
+    const patientId = document.getElementById('edit-patient-id').value;
+    const prefix = currentFullCode.slice(0, 11);
+    const suffix = document.getElementById('edit-code-suffix-input').value.trim();
+    const finalCode = prefix + suffix;
+
+    const btn = document.getElementById('confirmEditCodeBtn');
+    btn.disabled = true;
+    btn.textContent = "Mise à jour...";
+
+    try {
+        const response = await fetch(`/update-patient-code/${patientId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken'),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ code: finalCode })
+        });
+
+        if (!response.ok) throw new Error(`Erreur serveur (${response.status})`);
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+            const codeDisplay = document.querySelector(`.patient-code-display[data-code-id="${patientId}"]`);
+            if (codeDisplay) {
+                codeDisplay.textContent = finalCode;
+            }
+            closeEditCodeModal();
+        } else {
+            alert("Erreur : " + (data.message || "Impossible de modifier le code"));
+        }
+    } catch (err) {
+        alert("❌ " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "Enregistrer";
+    }
+});
+
+// --- GESTION DE LA SUPPRESSION ---
+function promptDeletePatient(patientId, patientName) {
+    targetPatientId = patientId;
+    document.getElementById('delete-patient-name').textContent = patientName;
+    const modal = document.getElementById('deleteModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeDeleteModal() {
+    targetPatientId = null;
+    const modal = document.getElementById('deleteModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+document.getElementById('confirmDeleteBtn')?.addEventListener('click', async () => {
+    if (!targetPatientId) return;
+
+    const btn = document.getElementById('confirmDeleteBtn');
+    btn.disabled = true;
+    btn.innerText = "Suppression...";
+
+    try {
+        const response = await fetch(`/delete-patient/${targetPatientId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken'),
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error(`Erreur serveur (${response.status})`);
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+            const card = document.querySelector(`.patient-card[data-patient-id="${targetPatientId}"]`);
+            if (card) {
+                card.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    card.remove();
+                    updatePatientCounter(-1);
+                }, 200);
+            }
+            closeDeleteModal();
+        } else {
+            alert("Erreur : " + (data.message || "Erreur inconnue"));
+        }
+    } catch (err) {
+        alert("❌ " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Oui, Supprimer</span>`;
+    }
+});
+
+function updatePatientCounter(delta) {
+    const badge = document.getElementById('patient-count-badge');
+    if (badge) {
+        let current = parseInt(badge.textContent, 10) || 0;
+        let newCount = Math.max(0, current + delta);
+        badge.textContent = newCount;
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

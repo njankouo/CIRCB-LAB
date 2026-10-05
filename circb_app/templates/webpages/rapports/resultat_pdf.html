@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fiche de Résultat - CIRCB</title>
+    <style>
+        @page {
+            size: a4 landscape;
+            margin: 6mm;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: Helvetica, Arial, sans-serif;
+            color: #000000;
+        }
+
+        body {
+            font-size: 8px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .fosa-block {
+            page-break-after: always;
+        }
+
+        /* Annuler le saut de page sur le dernier bloc FOSA */
+        .fosa-block:last-child {
+            page-break-after: auto;
+        }
+
+        /* 1. EN-TÊTE */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 4px;
+        }
+
+        .header-table td {
+            vertical-align: top;
+            text-align: center;
+        }
+
+        .header-left, .header-right {
+            font-size: 8px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .dotted-line {
+            border-bottom: 1px dotted #000000;
+            width: 50%;
+            margin: 2px auto;
+        }
+
+        .doc-title-box {
+            border: 2px solid #000000;
+            padding: 2px 10px;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+            margin-top: 2px;
+        }
+
+        /* 2. ENCADRÉS METADATA */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 4px;
+        }
+
+        .info-box {
+            border: 1px solid #000000;
+            padding: 3px 5px;
+            font-size: 8px;
+        }
+
+        /* 3. TABLEAU PRINCIPAL */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 4px;
+            margin-bottom: 10px;
+        }
+
+        .results-table th, .results-table td {
+            border: 1px solid #000000;
+            padding: 2px 1px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 7px;
+            word-wrap: break-word;
+        }
+
+        .results-table th {
+            font-weight: bold;
+            background-color: #ffffff;
+        }
+
+        .results-table td {
+            height: 20px;
+        }
+
+        /* 4. FOOTER / SIGNATURES */
+        .footer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .footer-table td {
+            font-size: 8.5px;
+            font-weight: bold;
+            vertical-align: top;
+        }
+    </style>
+</head>
+<body>
+
+    {% if donnees_par_fosa %}
+        {% for item in donnees_par_fosa %}
+        <div class="fosa-block">
+            
+            <!-- 1. EN-TÊTE DU DOCUMENT -->
+            <table class="header-table">
+                <tr>
+                    <td style="width: 32%;" class="header-left">
+                        MINISTERE DE LA SANTE PUBLIQUE
+                        <div class="dotted-line"></div>
+                        <span style="font-size: 7px;">DIRECTION DE LA LUTTE CONTRE LA MALADIE</span>
+                    </td>
+                    
+                    <td style="width: 36%;">
+                         {% if logo_base64 %}
+                            <img src="data:image/png;base64,{{ logo_base64 }}" style="height: 35px; width: auto; margin-bottom: 2px;" alt="Logo CIRCB"><br>
+                        {% endif %}
+                        <div class="doc-title-box">FICHE DE RESULTAT EID</div>
+                    </td>
+                    
+                    <td style="width: 32%;" class="header-right">
+                        REPUBLIQUE DU CAMEROUN<br>
+                        <span style="font-weight: normal; font-size: 7px;">Paix - Travail - Patrie</span>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 2. BLOCS D'INFORMATIONS -->
+         <!-- REGION ET DISTRICT EN PARALLÈLE -->
+
+<!-- FOSA ET LABORATOIRE DE RÉFÉRENCE -->
+<!-- LIGNE 1 : LABORATOIRE & RÉGION -->
+<table class="info-table" style="width: 100%; border-collapse: collapse;">
+    <!-- LIGNE 1 : LABORATOIRE & RÉGION -->
+    <tr>
+        <td style="width: 50%; padding-right: 2px; padding-bottom: 4px; vertical-align: top;">
+            <div class="info-box" style="text-align: center;">
+                <strong>Laboratoire de Référence :</strong><br>
+                Centre International de Recherche sur le VIH/SIDA (CIRCB)<br>
+                <span style="font-size: 7px;">B.P. 3307 | Tél : 222-31-5459 | Email : circbdoc@yahoo.fr</span>
+            </div>
+        </td>
+        <td style="width: 50%; padding-left: 2px; padding-bottom: 4px; vertical-align: top;">
+            <div class="info-box">
+                <strong>Région :</strong><br>
+                <span style="font-size: 8.5px; font-weight: bold;">{{ item.region_nom|default:"Non renseignée" }}</span>
+            </div>
+        </td>
+    </tr>
+    
+    <!-- LIGNE 2 : DISTRICT & FOSA -->
+    <tr>
+        <td style="width: 50%; padding-right: 2px; vertical-align: top;">
+            <div class="info-box">
+                <strong>District de Santé :</strong><br>
+                <span style="font-size: 8.5px; font-weight: bold;">{{ item.district_nom|default:"Non renseigné" }}</span>
+            </div>
+        </td>
+        <td style="width: 50%; padding-left: 2px; vertical-align: top;">
+            <div class="info-box">
+                <strong>Formation Sanitaire (FOSA) :</strong><br>
+                <span style="font-size: 8.5px; font-weight: bold;">{{ item.fosa_nom|default:"Non renseignée" }}</span>
+            </div>
+        </td>
+    </tr>
+</table>
+            <!-- 3. TABLEAU DES RÉSULTATS AVEC LARGEURS CORRIGÉES -->
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width: 3%;">N°</th>
+                        <th rowspan="2" style="width: 9%;">Code Enfant</th>
+                        <th rowspan="2" style="width: 10%;">Nom Enfant</th>
+                        <th rowspan="2" style="width: 7%;">Né(e) le</th>
+                        <th rowspan="2" style="width: 10%;">Nom Mère</th>
+                        <th rowspan="2" style="width: 9%;">Contact Mère</th>
+                        
+                        <!-- PCR 1 -->
+                        <th colspan="3" style="width: 16%;">PCR 1</th>
+                        
+                        <!-- PCR 2 -->
+                        <th colspan="3" style="width: 16%;">PCR 2</th>
+                        
+                        <!-- PCR 3 -->
+                        <th colspan="3" style="width: 16%;">PCR 3</th>
+                        
+                        <th rowspan="2" style="width: 4%;">Obs</th>
+                    </tr>
+                    <tr>
+                        <!-- Sous-colonnes PCR 1 -->
+                        <th style="width: 5%;">Prél.</th>
+                        <th style="width: 6%;">Résultat</th>
+                        <th style="width: 5%;">Rendu</th>
+
+                        <!-- Sous-colonnes PCR 2 -->
+                        <th style="width: 5%;">Prél.</th>
+                        <th style="width: 6%;">Résultat</th>
+                        <th style="width: 5%;">Rendu</th>
+
+                        <!-- Sous-colonnes PCR 3 -->
+                        <th style="width: 5%;">Prél.</th>
+                        <th style="width: 6%;">Résultat</th>
+                        <th style="width: 5%;">Rendu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if item.lignes %}
+                        {% for row in item.lignes %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ row.code|default:"" }}</td>
+                            <td>{{ row.patient_nom|default:"" }}</td>
+                            <td>{{ row.date_naissance|date:"d/m/Y"|default:row.date_naissance }}</td>
+                            <td>{{ row.mere_nom|default:"" }}</td>
+                            <td>{{ row.mere_contact|default:"NON EXISTANT" }}</td>
+                            
+                            <!-- PCR1 -->
+                            <td>{{ row.pcr1.date_prel|date:"d/m/Y"|default:"-" }}</td>
+                            <td {% if row.pcr1.statut == "DETECTE" %}style="color: red;"{% endif %}>
+                                {{ row.pcr1.statut|default:"-" }}
+                            </td>
+                            <td>{{ row.pcr1.date_resultat|date:"d/m/Y"|default:"-" }}</td>
+
+                            <!-- PCR2 -->
+                            <td>{{ row.pcr2.date_prel|date:"d/m/Y"|default:"-" }}</td>
+                           <td {% if row.pcr2.statut == "DETECTE" %}style="color: red;"{% endif %}>
+                                {{ row.pcr2.statut|default:"-" }}
+                            </td>
+                            <td>{{ row.pcr2.date_resultat|date:"d/m/Y"|default:"-" }}</td>
+
+                            <!-- PCR3 -->
+                            <td>{{ row.pcr3.date_prel|date:"d/m/Y"|default:"-" }}</td>
+                            <td {% if row.pcr3.statut == "DETECTE" %}style="color: red;"{% endif %}>
+                                {{ row.pcr3.statut|default:"-" }}
+                            </td>
+                            <td>{{ row.pcr3.date_resultat|date:"d/m/Y"|default:"-" }}</td>
+
+                            <td>-</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="15" style="text-align: center; padding: 10px; font-style: italic;">
+                                Aucun enregistrement pour cette Formation Sanitaire.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+
+            <!-- 4. SIGNATURES EN BAS DE CHAQUE PAGE/FOSA -->
+            <table class="footer-table">
+                <tr>
+                    <td style="width: 50%; text-align: left;">
+                        Nom du Responsable du Laboratoire
+                    </td>
+                    <td style="width: 50%; text-align: right;">
+                        Signature du Responsable du Laboratoire
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; padding: 30px; font-size: 12px;">
+            Aucune donnée à afficher.
+        </div>
+    {% endif %}
+
+</body>
+</html>

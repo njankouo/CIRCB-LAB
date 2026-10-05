@@ -1,0 +1,191 @@
+{% extends "./dashbord_hosp.html" %}
+
+{% block main %}
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-3 sm:p-4 bg-slate-50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 antialiased">
+    
+<!-- Conteneur principal : Fond clair, scroll vertical fluide -->
+<div class="w-full min-h-screen bg-slate-50 p-4 md:p-6 text-slate-800 font-sans">
+
+    <!-- NAVIGATION & BREADCRUMB -->
+    <div class="max-w-4xl mx-auto mb-6">
+        <a href="javascript:history.back()" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors mb-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Retour au registre des anomalies
+        </a>
+        
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-5 rounded-2xl border border-slate-200 shadow-sm gap-4">
+            <div>
+                <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
+                    <span>Audit & QA</span>
+                    <span class="text-slate-300">/</span>
+                    <span class="text-amber-600">Correction d'Échantillon</span>
+                </div>
+                <h1 class="text-xl font-bold text-slate-900 tracking-tight mt-1 flex items-center gap-3">
+                    Échantillon : {{ echantillon.code_ech|default:"[SANS CODE]" }}
+                    <span class="text-xs font-mono font-medium bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-0.5 rounded-full">
+                        ID #{{ echantillon.id }}
+                    </span>
+                </h1>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-mono bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                    Correction Requise
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ENCADRÉ D'ALERTE : DÉTAIL DES ANOMALIES À CORRIGER -->
+    <div class="max-w-4xl mx-auto mb-6">
+        <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4 shadow-sm flex items-start gap-3">
+            <div class="p-2 bg-rose-100 rounded-xl text-rose-600 shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <div class="flex-1 text-xs">
+                <h3 class="font-bold text-rose-900 uppercase font-mono tracking-wider">Erreur(s) détectée(s) à corriger :</h3>
+                <ul class="mt-1.5 space-y-1 text-rose-800 font-medium list-disc list-inside font-mono">
+                    {% if not echantillon.code_ech or not echantillon.code_circb %}
+                        <li>Code échantillon ou Code CIRCB manquant.</li>
+                    {% endif %}
+                    {% if echantillon.poids and echantillon.poids <= 0 or echantillon.poids > 20 %}
+                        <li>Poids aberrant ({{ echantillon.poids }} kg) : doit être supérieur à 0 kg et ≤ 20 kg.</li>
+                    {% endif %}
+                    {% if echantillon.date_resultat and echantillon.date_prelevement and echantillon.date_resultat < echantillon.date_prelevement %}
+                        <li>Incohérence de chronologie : la date de résultat est antérieure au prélèvement.</li>
+                    {% endif %}
+                    {% if echantillon.date_enregistrement and echantillon.date_prelevement and echantillon.date_enregistrement < echantillon.date_prelevement %}
+                        <li>Incohérence de chronologie : la date d'enregistrement est antérieure au prélèvement.</li>
+                    {% endif %}
+                    {% if echantillon.nb_enfant_infecte and echantillon.nb_enfant_expose and echantillon.nb_enfant_infecte > echantillon.nb_enfant_expose %}
+                        <li>Incohérence clinique : le nombre d'enfants infectés est supérieur aux enfants exposés.</li>
+                    {% endif %}
+                    {% if echantillon.rang_naissance and echantillon.rang_naissance <= 0 %}
+                        <li>Rang de naissance invalide ({{ echantillon.rang_naissance }}).</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORMULAIRE DE CORRECTION DE L'ÉCHANTILLON -->
+    <div class="max-w-4xl mx-auto">
+        <form method="POST" class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-12">
+            {% csrf_token %}
+
+            <!-- SECTION 1 : IDENTIFIANTS -->
+            <div class="p-6 border-b border-slate-100">
+                <h2 class="text-xs font-bold text-slate-400 uppercase font-mono tracking-wider mb-4 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path></svg>
+                    1. Identifiants
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                            Code Échantillon
+                            {% if not echantillon.code_ech %}<span class="text-rose-600 font-bold">⚠️ Manquant</span>{% endif %}
+                        </label>
+                        <input type="text" name="code_ech" value="{{ echantillon.code_ech|default:'' }}" 
+                            class="w-full px-3 py-2 bg-slate-50 border {% if not echantillon.code_ech %}border-rose-400 bg-rose-50/50{% else %}border-slate-300{% endif %} rounded-lg text-xs font-mono text-slate-800 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 focus:bg-white outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                            Code CIRCB
+                            {% if not echantillon.code_circb %}<span class="text-rose-600 font-bold">⚠️ Manquant</span>{% endif %}
+                        </label>
+                        <input type="text" name="code_circb" value="{{ echantillon.code_circb|default:'' }}" 
+                            class="w-full px-3 py-2 bg-slate-50 border {% if not echantillon.code_circb %}border-rose-400 bg-rose-50/50{% else %}border-slate-300{% endif %} rounded-lg text-xs font-mono text-slate-800 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 focus:bg-white outline-none transition-all">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2 : CHRONOLOGIE ET DATES -->
+            <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                <h2 class="text-xs font-bold text-slate-400 uppercase font-mono tracking-wider mb-4 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    2. Chronologie & Dates
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Date Prélèvement</label>
+                        <input type="date" name="date_prelevement" value="{{ echantillon.date_prelevement|date:'Y-m-d' }}" 
+                            class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono text-slate-800 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                            Date Enregistrement
+                            {% if echantillon.date_enregistrement and echantillon.date_prelevement and echantillon.date_enregistrement < echantillon.date_prelevement %}<span class="text-rose-600 font-bold">⚠️ Chronologie</span>{% endif %}
+                        </label>
+                        <input type="date" name="date_enregistrement" value="{{ echantillon.date_enregistrement|date:'Y-m-d' }}" 
+                            class="w-full px-3 py-2 bg-white border {% if echantillon.date_enregistrement and echantillon.date_prelevement and echantillon.date_enregistrement < echantillon.date_prelevement %}border-rose-400 bg-rose-50/50{% else %}border-slate-300{% endif %} rounded-lg text-xs font-mono text-slate-800 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                            Date Résultat
+                            {% if echantillon.date_resultat and echantillon.date_prelevement and echantillon.date_resultat < echantillon.date_prelevement %}<span class="text-rose-600 font-bold">⚠️ Chronologie</span>{% endif %}
+                        </label>
+                        <input type="date" name="date_resultat" value="{{ echantillon.date_resultat|date:'Y-m-d' }}" 
+                            class="w-full px-3 py-2 bg-white border {% if echantillon.date_resultat and echantillon.date_prelevement and echantillon.date_resultat < echantillon.date_prelevement %}border-rose-400 bg-rose-50/50{% else %}border-slate-300{% endif %} rounded-lg text-xs font-mono text-slate-800 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3 : PARAMÈTRES MÉDICAUX -->
+            <div class="p-6 border-b border-slate-100">
+                <h2 class="text-xs font-bold text-slate-400 uppercase font-mono tracking-wider mb-4 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    3. Paramètres Médicaux
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                            Poids (kg)
+                            {% if echantillon.poids and echantillon.poids <= 0 or echantillon.poids > 20 %}<span class="text-rose-600 font-bold">⚠️ Invalide</span>{% endif %}
+                        </label>
+                        <input type="number" step="0.01" name="poids" value="{{ echantillon.poids|default:'' }}" 
+                            class="w-full px-3 py-2 bg-slate-50 border {% if echantillon.poids and echantillon.poids <= 0 or echantillon.poids > 20 %}border-rose-400 bg-rose-50/50{% else %}border-slate-300{% endif %} rounded-lg text-xs font-mono text-slate-800 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 focus:bg-white outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                            Rang Naissance
+                            {% if echantillon.rang_naissance and echantillon.rang_naissance <= 0 %}<span class="text-rose-600 font-bold">⚠️ Invalide</span>{% endif %}
+                        </label>
+                        <input type="number" name="rang_naissance" value="{{ echantillon.rang_naissance|default:'' }}" 
+                            class="w-full px-3 py-2 bg-slate-50 border {% if echantillon.rang_naissance and echantillon.rang_naissance <= 0 %}border-rose-400 bg-rose-50/50{% else %}border-slate-300{% endif %} rounded-lg text-xs font-mono text-slate-800 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 focus:bg-white outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Enfants Exposés</label>
+                        <input type="number" name="nb_enfant_expose" value="{{ echantillon.nb_enfant_expose|default:'' }}" 
+                            class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono text-slate-800 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 focus:bg-white outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                            Enfants Infectés
+                            {% if echantillon.nb_enfant_infecte and echantillon.nb_enfant_expose and echantillon.nb_enfant_infecte > echantillon.nb_enfant_expose %}<span class="text-rose-600 font-bold">⚠️ > Exposés</span>{% endif %}
+                        </label>
+                        <input type="number" name="nb_enfant_infecte" value="{{ echantillon.nb_enfant_infecte|default:'' }}" 
+                            class="w-full px-3 py-2 bg-slate-50 border {% if echantillon.nb_enfant_infecte and echantillon.nb_enfant_expose and echantillon.nb_enfant_infecte > echantillon.nb_enfant_expose %}border-rose-400 bg-rose-50/50{% else %}border-slate-300{% endif %} rounded-lg text-xs font-mono text-slate-800 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 focus:bg-white outline-none transition-all">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOUTONS D'ACTION -->
+            <div class="p-4 bg-slate-100 border-t border-slate-200 flex items-center justify-end gap-3">
+                <a href="javascript:history.back()" class="px-4 py-2 bg-white hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg border border-slate-300 transition-all">
+                    Annuler
+                </a>
+                <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Enregistrer les Modifications
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+</main>
+{% endblock %}

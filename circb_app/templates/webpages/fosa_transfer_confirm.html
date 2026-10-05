@@ -1,0 +1,192 @@
+{% extends './dashbord_hosp.html' %}
+
+{% block main %}
+<main class="flex-1 h-full min-h-0 overflow-y-auto bg-slate-100 text-slate-900 w-full font-sans antialiased text-xs">
+  <div class="max-w-5xl mx-auto px-4 py-6 transition-all duration-300">
+    
+    <!-- Conteneur principal (Animation d'apparition) -->
+    <div class="bg-white rounded border border-slate-300 shadow-sm overflow-hidden transform transition-all duration-300 opacity-0 translate-y-2 animate-[fadeIn_0.4s_ease-out_forwards]">
+      
+      <!-- Barre d'en-tête / Contrôles (Odoo Control Panel) -->
+      <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <!-- Icône avec effet pulse subtil -->
+          <div class="w-8 h-8 rounded bg-amber-100 text-amber-800 border border-amber-300 flex items-center justify-center shrink-0 shadow-2xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-1.5 py-0.5 bg-slate-200 text-slate-700 font-semibold rounded text-[10px] uppercase tracking-wider">Assistant</span>
+              <h1 class="font-bold text-slate-900 text-sm">Transfert de FOSA</h1>
+            </div>
+            <p class="text-slate-500 text-[11px] mt-0.5">Structure concernée : <strong class="text-slate-800 font-semibold">{{ fosa.nom }}</strong></p>
+          </div>
+        </div>
+
+        <!-- Boutons d'actions principaux avec états interactifs -->
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <a href="javascript:history.back()" class="px-3.5 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 active:scale-95 text-slate-700 font-medium rounded transition-all">
+            Annuler
+          </a>
+          
+          <!-- Formulaire avec gestion du chargement au submit -->
+          <form id="transferForm" action="{% url 'fosa_transfer_confirmed' fosa.id %}" method="POST" class="inline" onsubmit="handleFormSubmit(event)">
+            {% csrf_token %}
+            <input type="hidden" name="district_id" value="{{ nouveau_district.id }}">
+            <input type="hidden" name="old_code" value="{{ old_code }}">
+            <input type="hidden" name="new_code" value="{{ new_code }}">
+            
+            <button type="submit" id="submitBtn" class="px-4 py-1.5 bg-purple-900 hover:bg-purple-950 active:scale-95 text-white font-medium rounded transition-all shadow-2xs flex items-center gap-2 cursor-pointer">
+              <span id="btnText">Confirmer le transfert</span>
+              <!-- Spinner caché par défaut -->
+              <svg id="btnSpinner" class="w-3.5 h-3.5 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Corps du formulaire -->
+      <div class="p-6 space-y-6">
+        
+        <!-- Alerte / Notification dynamique -->
+        <div class="p-3.5 bg-amber-50 border border-amber-200 text-amber-900 rounded text-[11px] flex items-start gap-2.5 transition-all hover:shadow-2xs">
+          <svg class="w-4 h-4 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div>
+            <strong>Attention :</strong> Ce transfert modifie la hiérarchie organisationnelle. Les identifiants racines (11 caractères) de la structure et des dossiers rattachés seront mis à jour en cascade.
+          </div>
+        </div>
+
+        <!-- Groupes de champs (Comparatif Source / Cible) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Bloc Source -->
+          <div class="space-y-3 p-4 bg-slate-50 border border-slate-200 rounded transition-all hover:border-slate-300">
+            <h2 class="font-bold text-slate-700 uppercase tracking-wider text-[10px] border-b border-slate-200 pb-1.5 flex items-center justify-between">
+              <span>Situation actuelle (Départ)</span>
+              <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+            </h2>
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase font-medium">District source</span>
+              <span class="text-slate-800 font-semibold">{{ district_actuel.nom }}</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase font-medium">Ancien code racine (11 car.)</span>
+              <span class="font-mono text-slate-600 bg-white px-2 py-1 border border-slate-200 rounded block text-[11px] mt-0.5">{{ old_code }}</span>
+            </div>
+          </div>
+
+          <!-- Bloc Destination (Effet interactif de mise en valeur) -->
+          <div class="space-y-3 p-4 bg-purple-50/40 border border-purple-200 rounded transition-all hover:shadow-2xs hover:border-purple-300">
+            <h2 class="font-bold text-purple-900 uppercase tracking-wider text-[10px] border-b border-purple-200 pb-1.5 flex items-center justify-between">
+              <span>Nouvelle affectation (Cible)</span>
+              <span class="w-2 h-2 rounded-full bg-purple-600 animate-ping"></span>
+            </h2>
+            <div>
+              <span class="text-purple-700/80 block text-[10px] uppercase font-medium">Nouveau district cible</span>
+              <span class="text-purple-950 font-bold">{{ nouveau_district.nom }}</span>
+            </div>
+            <div>
+              <span class="text-purple-700/80 block text-[10px] uppercase font-medium">Nouveau code racine (11 car.)</span>
+              <span class="font-mono text-purple-900 bg-white px-2 py-1 border border-purple-200 rounded block text-[11px] font-semibold mt-0.5 shadow-2xs">{{ new_code }}</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Section Liste / Lignes (Tableau dynamique) -->
+        <div class="space-y-2 pt-2">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
+              Enregistrements dépendants impactés
+            </h3>
+            <span class="px-2 py-0.5 bg-purple-100 text-purple-800 font-semibold rounded text-[11px] transition-all">
+              {{ patients_concernes|length }} ligne(s)
+            </span>
+          </div>
+
+          <!-- Tableau épuré avec effet de survol amélioré -->
+          <div class="border border-slate-300 rounded overflow-hidden bg-white shadow-2xs">
+            <div class="max-h-60 overflow-y-auto custom-scroll">
+              <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-100 text-slate-600 text-[11px] uppercase font-bold sticky top-0 border-b border-slate-300 z-10">
+                  <tr>
+                    <th class="p-2.5 border-r border-slate-200">Patient / ID</th>
+                    <th class="p-2.5 border-r border-slate-200">Code Actuel Complet</th>
+                    <th class="p-2.5 text-purple-900 bg-purple-50/50">Nouveau Code Simulé</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 text-xs">
+                  {% for p in patients_concernes %}
+                  <tr class="hover:bg-purple-50/30 transition-colors group">
+                    <td class="p-2.5 border-r border-slate-200 font-medium text-slate-900 group-hover:text-purple-900 transition-colors">{{ p.nom|default:p.id }}</td>
+                    <td class="p-2.5 border-r border-slate-200 font-mono text-slate-500">{{ p.code }}</td>
+                    <td class="p-2.5 font-mono font-semibold text-purple-900 bg-purple-50/20">
+                      {{ new_code }}{{ p.code|slice:"11:" }}
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="3" class="p-6 text-center text-slate-400 italic bg-white">
+                      Aucun patient rattaché à cet ancien code. Seule la structure organisationnelle sera mise à jour.
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<!-- Script pour l'animation de chargement du bouton au clic -->
+<script>
+  function handleFormSubmit(event) {
+    const btn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const spinner = document.getElementById('btnSpinner');
+
+    // Désactive le bouton pour éviter les double-clics
+    btn.disabled = true;
+    btn.classList.add('opacity-80', 'cursor-not-allowed');
+    
+    // Change le texte et affiche le spinner
+    btnText.textContent = "Traitement en cours...";
+    spinner.classList.remove('hidden');
+  }
+</script>
+
+<!-- Style additionnel pour l'animation d'apparition et scrollbar fine -->
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .custom-scroll::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  .custom-scroll::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  .custom-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+  }
+  .custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+</style>
+{% endblock %}

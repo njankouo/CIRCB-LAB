@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide d'Utilisation — MEDISYS EID</title>
+      {%load static%}
+    <script src="{%static 'js/tailwind.js'%}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        // "Aubergine" — la couleur de marque historique d'Odoo
+                        odoo: {
+                            50:  '#faf7f9',
+                            100: '#f1e9ee',
+                            300: '#c79cb7',
+                            500: '#8f5a7d',
+                            600: '#714B67',
+                            700: '#5c3c54',
+                            900: '#3a2634',
+                        },
+                    },
+                    keyframes: {
+                        fadeUp: { '0%': { opacity: 0, transform: 'translateY(16px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+                    },
+                    animation: { fadeUp: 'fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) both' },
+                }
+            }
+        }
+    </script>
+    <style>
+        body{ background:#fbfaf9; }
+        .reveal{ opacity:0; }
+        #progress-bar{ transform-origin:left; transform:scaleX(0); }
+
+        /* Callout façon documentation Odoo : bordure latérale colorée, pas de fond plein */
+        .odoo-callout{ border-left:3px solid var(--cc); background:var(--cbg); }
+
+        /* Bouton "texte" secondaire, signature Odoo (pas de bordure, juste une flèche qui glisse) */
+        .odoo-link{ position:relative; }
+        .odoo-link .arrow{ transition:transform .2s ease; }
+        .odoo-link:hover .arrow{ transform:translateX(4px); }
+
+        /* Cadre d'écran épuré façon capture Odoo (pas de faux chrome de navigateur) */
+        .screen-frame{ box-shadow:0 20px 45px -15px rgba(58,38,52,0.25), 0 0 0 1px rgba(58,38,52,0.06); }
+
+        ::-webkit-scrollbar{ width:10px; }
+        ::-webkit-scrollbar-track{ background:#f4f1f3; }
+        ::-webkit-scrollbar-thumb{ background:#d9c6d2; border-radius:8px; }
+    </style>
+</head>
+<body class="text-slate-700 font-sans antialiased selection:bg-odoo-600 selection:text-white">
+
+    <div class="fixed top-0 left-0 w-full h-[3px] z-[60]">
+        <div id="progress-bar" class="h-full bg-odoo-600 transition-transform duration-150"></div>
+    </div>
+
+    <!-- HEADER — sobre, blanc, logo + nav horizontale (convention Odoo) -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-lg bg-odoo-600 flex items-center justify-center text-white shadow-sm">
+                    <i class="fa-solid fa-microscope text-sm"></i>
+                </div>
+                <span class="font-bold text-slate-900 tracking-tight text-sm sm:text-base">MEDISYS <span class="text-odoo-600">EID</span></span>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+                <a data-nav href="#etape1" class="nav-link pb-1 border-b-2 border-transparent transition hover:text-odoo-600">Accès</a>
+                <a data-nav href="#etape2" class="nav-link pb-1 border-b-2 border-transparent transition hover:text-odoo-600">Connexion</a>
+                <a data-nav href="#etape3" class="nav-link pb-1 border-b-2 border-transparent transition hover:text-odoo-600">Tableau de bord</a>
+            </nav>
+
+            <a href="https://medisys-eid" target="_blank" class="inline-flex items-center space-x-2 bg-odoo-600 hover:bg-odoo-700 text-white px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors">
+                <span>Lancer l'app</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO — grand titre noir, sous-titre gris, CTA plein + lien texte, fond blanc pur -->
+    <section class="relative py-20 lg:py-28 bg-white border-b border-slate-100 overflow-hidden">
+        <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-odoo-50"></div>
+        <div class="absolute -left-16 bottom-0 w-64 h-64 rounded-full bg-teal-50/70"></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <span class="inline-block text-xs font-semibold uppercase tracking-widest text-odoo-600 mb-4">Documentation utilisateur</span>
+            <h1 class="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">
+                Prenez en main<br><span class="text-odoo-600">MEDISYS EID</span>
+            </h1>
+            <p class="text-base sm:text-lg text-slate-500 max-w-xl mx-auto leading-relaxed mb-10">
+                Trois étapes pour accéder à votre portail de laboratoire, vous connecter en toute sécurité et démarrer sur le tableau de bord.
+            </p>
+            <div class="flex flex-wrap justify-center items-center gap-6">
+                <a href="#etape1" class="bg-odoo-600 hover:bg-odoo-700 text-white px-7 py-3.5 rounded-lg font-semibold transition-colors text-sm shadow-lg shadow-odoo-600/20">
+                    Commencer le guide
+                </a>
+                <a href="mailto:support@circb.cm" class="odoo-link text-slate-600 hover:text-odoo-600 font-medium text-sm inline-flex items-center gap-1.5">
+                    Contacter le support <i class="fa-solid fa-arrow-right arrow text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fil d'Ariane, convention documentation -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 text-xs text-slate-400 font-medium">
+        <span>Documentation</span> <i class="fa-solid fa-angle-right mx-1.5 text-[10px]"></i>
+        <span>Guide utilisateur</span> <i class="fa-solid fa-angle-right mx-1.5 text-[10px]"></i>
+        <span class="text-odoo-600">Première connexion</span>
+    </div>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-20">
+
+        <!-- ================= ÉTAPE 1 ================= -->
+        <section id="etape1" class="reveal grid sm:grid-cols-5 gap-10 items-center">
+            <div class="sm:col-span-2">
+                <div class="w-11 h-11 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center text-lg font-bold mb-5">
+                    01
+                </div>
+                <span class="text-xs font-bold uppercase tracking-widest text-teal-700 mb-2 block">Accès</span>
+                <h2 class="text-2xl font-bold text-slate-900 mb-4">Accès direct à la plateforme</h2>
+                <p class="text-slate-500 text-sm leading-relaxed mb-6">
+                    Rendez-vous sur le portail officiel de l'application via le lien sécurisé. Nous vous conseillons de l'ajouter à vos favoris pour un accès rapide.
+                </p>
+                <div class="odoo-callout rounded-r-lg p-4 text-sm" style="--cc:#0f766e; --cbg:#f0fdfa;">
+                    <p class="font-semibold text-teal-800 mb-1"><i class="fa-solid fa-circle-info mr-1.5"></i>Astuce</p>
+                    <p class="text-teal-900/80 text-xs leading-relaxed">Utilisez un navigateur moderne et à jour (Chrome, Firefox, Safari ou Edge) pour une expérience optimale.</p>
+                </div>
+            </div>
+
+            <div class="sm:col-span-3">
+                <div class="screen-frame rounded-2xl overflow-hidden bg-white">
+                    <div class="bg-slate-50 px-4 py-2.5 border-b border-slate-100 flex items-center">
+                        <div class="bg-white border border-slate-200 text-slate-500 text-xs px-3 py-1 rounded-md flex items-center space-x-2 font-mono mx-auto">
+                            <i class="fa-solid fa-lock text-[9px] text-teal-600"></i>
+                            <span>https://medisys-eid</span>
+                        </div>
+                    </div>
+                    <div class="p-10 text-center bg-gradient-to-br from-white to-teal-50/40">
+                        <div class="w-14 h-14 bg-teal-600 text-white rounded-xl mx-auto flex items-center justify-center text-xl mb-4 shadow-lg shadow-teal-600/20">
+                            <i class="fa-solid fa-microscope"></i>
+                        </div>
+                        <h3 class="text-slate-900 font-bold text-base mb-1">Portail Laboratoire — CIRCB</h3>
+                        <p class="text-slate-400 text-xs mb-6 font-mono">Connexion chiffrée SSL/TLS</p>
+                        <a href="#" class="inline-flex items-center space-x-2 bg-teal-700 hover:bg-teal-800 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition">
+                            <span>Ouvrir le portail</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ÉTAPE 2 ================= -->
+        <section id="etape2" class="reveal grid sm:grid-cols-5 gap-10 items-center">
+            <div class="sm:col-span-3 sm:order-1 order-2">
+                <div class="screen-frame rounded-2xl overflow-hidden bg-white">
+                    <div class="bg-slate-50 px-4 py-2.5 border-b border-slate-100 text-center">
+                        <span class="text-xs text-slate-400 font-mono">Écran de connexion</span>
+                    </div>
+                    <img src="{%static 'images/connexion.gif'%}"/>
+                </div>
+            </div>
+
+            <div class="sm:col-span-2 sm:order-2 order-1">
+                <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-lg font-bold mb-5">
+                    02
+                </div>
+                <span class="text-xs font-bold uppercase tracking-widest text-emerald-700 mb-2 block">Connexion</span>
+                <h2 class="text-2xl font-bold text-slate-900 mb-4">Authentification sécurisée</h2>
+                <p class="text-slate-500 text-sm leading-relaxed mb-6">
+                    Entrez vos identifiants professionnels. Un message d'aide interactif vous guide en cas de mot de passe oublié.
+                </p>
+                <div class="space-y-3">
+                    <div class="odoo-callout rounded-r-lg p-3.5 text-xs" style="--cc:#059669; --cbg:#ecfdf5;">
+                        <p class="font-semibold text-emerald-800"><i class="fa-solid fa-shield-halved mr-1.5"></i>Double authentification</p>
+                        <p class="text-emerald-900/70 mt-0.5">Un code à 6 chiffres peut vous être envoyé par e-mail.</p>
+                    </div>
+                    <div class="odoo-callout rounded-r-lg p-3.5 text-xs" style="--cc:#d97706; --cbg:#fffbeb;">
+                        <p class="font-semibold text-amber-800"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i>Première visite ?</p>
+                        <p class="text-amber-900/70 mt-0.5">Utilisez le mot de passe provisoire reçu par e-mail ; un changement sera demandé.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ÉTAPE 3 ================= -->
+        <section id="etape3" class="reveal">
+            <div class="flex items-start gap-4 mb-8">
+                <div class="w-11 h-11 rounded-xl bg-cyan-50 text-cyan-700 flex items-center justify-center text-lg font-bold shrink-0">
+                    03
+                </div>
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-cyan-700 mb-1 block">Tableau de bord</span>
+                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Votre espace de pilotage</h2>
+                    <p class="text-slate-500 text-sm leading-relaxed max-w-2xl">
+                        Dès l'authentification validée, une redirection automatique vous bascule vers le tableau de bord : échantillons, résultats et indicateurs en temps réel.
+                    </p>
+                </div>
+            </div>
+
+            <div class="screen-frame rounded-2xl overflow-hidden bg-white">
+                <div class="bg-slate-50 px-4 py-2.5 border-b border-slate-100 flex items-center justify-center">
+                    <span class="text-xs text-slate-400 font-mono">/dashboard/laboratoire</span>
+                </div>
+                <div class="p-5 sm:p-7 bg-white">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 mb-4 border-b border-slate-100">
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Tableau de Bord Laboratoire</h4>
+                            <p class="text-[11px] text-slate-400">Suivi des échantillons</p>
+                        </div>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full font-semibold">● Session active</span>
+                    </div>
+
+                      <img src="{%static 'images/dash.png'%}"/>
+                </div>
+            </div>
+
+            <div class="odoo-callout rounded-r-lg p-4 mt-6 text-sm" style="--cc:#0891b2; --cbg:#ecfeff;">
+                <p class="font-semibold text-cyan-800 mb-1"><i class="fa-solid fa-circle-check mr-1.5"></i>Redirection intelligente</p>
+                <p class="text-cyan-900/70 text-xs leading-relaxed">Le système détecte automatiquement votre profil (Technicien, Biologiste ou Administrateur) pour afficher les modules adaptés à vos droits d'accès.</p>
+            </div>
+        </section>
+        <!-- ================= ÉTAPE 4 ================= -->
+        <section id="etape4" class="reveal">
+            <div class="flex items-start gap-4 mb-8">
+                <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-lg font-bold shrink-0">
+                    04
+                </div>
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-purple-700 mb-1 block">Expéditions</span>
+                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Accès au menu et saisie d'une fiche d'expédition</h2>
+                    <p class="text-slate-500 text-sm leading-relaxed max-w-2xl">
+                        Apprenez à naviguer vers le module logistique pour créer, renseigner et valider une nouvelle fiche d'expédition d'échantillons en toute simplicité.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-6 mb-8">
+                <!-- Bloc 1 : Navigation -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-xs mb-4">
+                            A
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mb-2">Navigation dans le menu</h3>
+                        <p class="text-slate-500 text-xs leading-relaxed mb-4">
+                            Depuis le tableau de bord, cliquez sur le menu principal en haut à gauche, puis sélectionnez la section dédiée aux transferts et expéditions.
+                        </p>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs font-mono text-slate-600 flex items-center space-x-2">
+                        <i class="fa-solid fa-bars text-purple-600"></i>
+                        <span>Menu principal &gt; Expéditions &gt; Créer</span>
+                    </div>
+                </div>
+
+                <!-- Bloc 2 : Saisie -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-xs mb-4">
+                            B
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mb-2">Renseignement de la fiche</h3>
+                        <p class="text-slate-500 text-xs leading-relaxed mb-4">
+                            Remplissez les champs obligatoires (site source, destination, code de transport) et scannez ou ajoutez les échantillons concernés.
+                        </p>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs font-mono text-slate-600 flex items-center space-x-2">
+                        <i class="fa-solid fa-pen-to-square text-purple-600"></i>
+                        <span>Validation &amp; Impression du bordereau</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cadre image/capture d'écran de l'expédition -->
+            <div class="screen-frame rounded-2xl overflow-hidden bg-white">
+                <div class="bg-slate-50 px-4 py-2.5 border-b border-slate-100 text-center">
+                    <span class="text-xs text-slate-400 font-mono">/dashboard/expeditions/nouvelle</span>
+                </div>
+                <!-- Remplacez l'image ci-dessous par votre propre illustration/GIF d'expédition -->
+                <img src="{% static 'images/expedition.png' %}" alt="Formulaire de saisie d'expédition MEDISYS EID" class="w-full h-auto object-cover"/>
+            </div>
+
+            <div class="odoo-callout rounded-r-lg p-4 mt-6 text-sm" style="--cc:#7e22ce; --cbg:#faf5ff;">
+                <p class="font-semibold text-purple-800 mb-1"><i class="fa-solid fa-circle-exclamation mr-1.5"></i>Conseil important</p>
+                <p class="text-purple-900/70 text-xs leading-relaxed">Assurez-vous de vérifier le nombre total d'échantillons listés avant de cliquer sur le bouton "Valider l'expédition" afin de garantir la traçabilité du transfert.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bloc contact, style bandeau Odoo (fond brand plein, CTA blanc) -->
+    <section class="reveal max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <div class="bg-odoo-600 rounded-3xl p-10 text-white flex flex-col sm:flex-row items-center justify-between gap-6 relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-white/10"></div>
+            <div class="relative z-10">
+                <h3 class="text-xl font-bold mb-2">Besoin d'aide supplémentaire ?</h3>
+                <p class="text-odoo-100 text-sm max-w-lg leading-relaxed opacity-90">L'équipe technique du CIRCB est à votre disposition pour tout incident de connexion ou de routage.</p>
+            </div>
+            <a href="mailto:support@circb.cm" class="relative z-10 bg-white hover:bg-slate-100 text-odoo-600 font-semibold px-6 py-3 rounded-lg transition shadow-md whitespace-nowrap text-sm">
+                Contacter le support
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-white border-t border-slate-100 py-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-400">
+            <p>&copy; 2026 MEDISYS EID — CIRCB. Guide interactif d'utilisation.</p>
+        </div>
+    </footer>
+
+    <script>
+        const progressBar = document.getElementById('progress-bar');
+        function updateProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const ratio = docHeight > 0 ? scrollTop / docHeight : 0;
+            progressBar.style.transform = `scaleX(${Math.min(1, Math.max(0, ratio))})`;
+        }
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeUp');
+                    entry.target.classList.remove('reveal');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        const chartObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.chart-bar').forEach((bar, i) => {
+                        setTimeout(() => { bar.style.height = bar.dataset.h + '%'; }, i * 70);
+                    });
+                    chartObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        document.querySelectorAll('#etape3').forEach(el => chartObserver.observe(el));
+
+        const sections = document.querySelectorAll('main section[id]');
+        const navLinks = document.querySelectorAll('[data-nav]');
+        const spyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const link = document.querySelector(`[data-nav][href="#${entry.target.id}"]`);
+                if (!link) return;
+                if (entry.isIntersecting) {
+                    navLinks.forEach(l => l.classList.remove('text-odoo-600', 'border-odoo-600'));
+                    link.classList.add('text-odoo-600', 'border-odoo-600');
+                }
+            });
+        }, { rootMargin: '-40% 0px -50% 0px' });
+        sections.forEach(s => spyObserver.observe(s));
+    </script>
+
+</body>
+</html>

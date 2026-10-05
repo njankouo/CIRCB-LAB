@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Listing des Résultats Collectifs - CIRCB</title>
+    <style>
+        /* CONFIGURATION LANDSCAPE STRICTE POUR XHTML2PDF */
+        @page {
+            size: a4 landscape;
+            margin: 6mm 8mm;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 7.5pt;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* GRAND CADRE NOIR DE LA PAGE */
+        .outer-frame {
+            border: 1px solid #000000;
+            padding: 6px 8px;
+            width: 100%;
+        }
+
+        /* TABLES DE STRUCTURE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        /* EN-TÊTE INSTITUTIONNEL */
+        .header-table td {
+            border: none !important;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .title-box {
+            border: 1px solid #000000;
+            padding: 3px 8px;
+            font-size: 9pt;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 3px;
+            display: inline-block;
+        }
+
+        /* BLOC CRITÈRES D'IMPRESSION (INCLUS / EXCLUS) */
+        .info-box {
+            border: 1px solid #000000;
+            padding: 5px 8px;
+            margin-top: 10px;
+            margin-bottom: 4px;
+            font-size: 7.5pt;
+            background-color: #fafafa;
+            line-height: 1.4;
+        }
+
+        /* TABLEAU PRINCIPAL DU LISTING */
+        .listing-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* OBLIGATOIRE pour xhtml2pdf */
+            border: 1px solid #000000;
+            margin-top: 8px;
+        }
+
+        .listing-table th, 
+        .listing-table td {
+            border: 1px solid #000000;
+            padding: 3px 2px;
+            font-size: 6.5pt;
+            text-align: center;
+            vertical-align: middle;
+            word-wrap: break-word;
+            white-space: normal;
+            overflow: hidden;
+        }
+
+        .listing-table th {
+            font-weight: bold;
+            background-color: #e6e6e6;
+        }
+
+        .align-left {
+            text-align: left !important;
+            padding-left: 3px !important;
+        }
+
+        .text-bold {
+            font-weight: bold;
+        }
+
+        /* FOOTER / SIGNATURES */
+        .footer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border: none !important;
+        }
+
+        .footer-table td {
+            font-size: 8.5pt;
+            font-weight: bold;
+            vertical-align: top;
+            border: none !important;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+        thead {
+            display: table-header-group;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CADRE NOIR GLOBAL -->
+    <div class="outer-frame">
+
+        <!-- 1. EN-TÊTE INSTITUTIONNEL AVEC LOGO ET TITRE -->
+        <table class="header-table" style="margin-bottom: 4px; border: none;">
+            <tr style="border: none;">
+                <td style="border: none !important;">
+                    {% if logo_base64 %}
+                        <img src="data:image/png;base64,{{ logo_base64 }}" border="0" style="border: 0 !important; outline: none; display: block; margin: 0 auto; height: 42px; width: auto;" alt="Logo CIRCB"><br>
+                    {% endif %}
+                    <div class="title-box">LISTING DES RESULTATS COLLECTIFS EID</div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- 2. TABLEAU UNIQUE ET GLOBAL DES RÉSULTATS -->
+        <table class="listing-table">
+            <thead>
+                <tr>
+                    <th style="width: 4%;">N°</th>
+                    <th style="width: 9%;">Code CIRCB</th>
+                    <th style="width: 6%;">PCR</th>
+                    <th style="width: 11%;">Code Site</th>
+                    <th style="width: 16%;">Nom Enfant</th>
+                    <th style="width: 8%;">Date Naiss.</th>
+                    <th style="width: 15%;">Nom Mère</th>
+                    <th style="width: 9%;">Contact</th>
+                    <th style="width: 7%;">Date Prél.</th>
+                    <th style="width: 7%;">Date Rendu</th>
+                    <th style="width: 8%;">Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if resultats %}
+                    {% for item in resultats %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.code|truncatechars:12|default:"-" }}</td>
+                        <td>
+                            {% if item.ordre %}
+                                {{ item.ordre }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="align-left">
+                            {% if item.enfant and item.enfant.code %}
+                                {{ item.enfant.code|truncatechars:20 }}
+                            {% else %}
+                                {{ item.code|truncatechars:20|default:"-" }}
+                            {% endif %}
+                        </td>
+                        <td class="align-left">
+                            {% if item.enfant %}
+                                {{ item.enfant.nom|default:"" }} {{ item.enfant.prenom|default:"" }}
+                            {% else %}
+                                Non renseigné
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.enfant and item.enfant.date_naissance %}
+                                {{ item.enfant.date_naissance|date:"d/m/Y" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="align-left">
+                            {% if item.mere %}
+                                {{ item.mere.nom|default:"" }} {{ item.mere.prenom|default:"" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ item.mere.contact|default:"NON EXISTANT" }}</td>
+                        <td>{{ item.date_prelevement|date:"d/m/Y"|default:"-" }}</td>
+                        
+                        <!-- Date de rendu -->
+                        <td>
+                           
+                                {{ item.date_resultat|date:"d/m/Y"|default:"-" }}
+                            
+                        </td>
+                        
+                        <!-- Statut Virologique -->
+                        <td class="text-bold">
+                            {{ item.resultat_pcr.nom|default:"-" }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="11" style="text-align: center; padding: 12px; font-style: italic;">
+                            Aucun résultat collectif trouvé pour les critères sélectionnés.
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        <!-- 3. SIGNATURES EN BAS DE PAGE -->
+        <table class="footer-table">
+            <tr>
+                <td style="width: 50%; text-align: left;">
+                    Nom du Responsable du Laboratoire : 
+                 
+                </td>
+                <td style="width: 50%; text-align: right;">
+                    Signature du Responsable du Laboratoire
+                </td>
+            </tr>
+        </table>
+
+        <!-- 4. BLOC DÉTAILLÉ DES CRITÈRES (PLAGE, INCLUS, EXCLUS) -->
+        <div class="info-box">
+            <strong>Critères d'impression :</strong><br>
+            • Plage de codes : Du <strong>{{ debut|default:"Début" }}</strong> au <strong>{{ fin|default:"Fin" }}</strong><br>
+            • Code(s) spécifiquement inclus : 
+            <strong>
+                {% if codes_inclure %}
+                    {{ codes_inclure|join:", " }}
+                {% else %}
+                    Aucun
+                {% endif %}
+            </strong><br>
+            • Code(s) spécifiquement exclus : 
+            <strong>
+                {% if codes_exclure %}
+                    {{ codes_exclure|join:", " }}
+                {% else %}
+                    Aucun
+                {% endif %}
+            </strong><br>
+            <strong>Date d'impression :</strong> {{ date_impression|date:"d/m/Y H:i" }}
+        </div>
+
+    </div>
+
+</body>
+</html>

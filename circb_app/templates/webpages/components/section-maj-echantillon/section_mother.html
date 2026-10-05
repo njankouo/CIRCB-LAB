@@ -1,0 +1,261 @@
+<!-- ======================================================== -->
+<!-- STYLE DHIS2 PRO : SECTION 3 - INFORMATIONS SUR LA MÈRE -->
+<!-- ======================================================== -->
+<div class="bg-[#2C6693] text-white px-4 py-2.5 flex items-center justify-between border-b border-blue-900 rounded-t font-sans" id="section_3">
+    <div class="flex items-center gap-2">
+        <span class="bg-white/20 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+           3.
+        </span>
+        <h3 class="text-xs font-bold uppercase tracking-wide">
+            Informations sur la Mère / Mother's Information
+        </h3>
+    </div>
+    <div class="hidden sm:flex items-center gap-1.5 text-blue-100 text-[11px] font-mono">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>MOTHER METADATA</span>
+    </div>
+</div>
+
+<!-- Corps du formulaire - Style DHIS2 Pro -->
+<div class="bg-white border border-slate-300 rounded-b shadow-2xs font-sans space-y-4 p-4 text-xs">
+
+    <!-- 8. IDENTITÉ / IDENTITY -->
+   <!-- 8. IDENTITÉ DE LA MÈRE (VERROUILLÉE) -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1 flex items-center justify-between">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                8. 
+            </h4>
+            <span class="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                <svg class="w-3 h-3 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                VERROUILLÉ
+            </span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <!-- Nom (Verrouillé) -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nom <span class="text-slate-400 font-normal lowercase">/ Surname</span>
+                </label>
+                <input type="text" id="main_mere_nom" name="mere_nom"  value="{{ echantillon.mere.nom }}"
+                       class="w-full px-2.5 py-1.5 border border-slate-200 rounded bg-slate-100 text-slate-500 font-medium text-xs cursor-not-allowed select-none focus:outline-none">
+            </div>
+            <!-- Prénom (Verrouillé) -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Prénom <span class="text-slate-400 font-normal lowercase">/ First name</span>
+                </label>
+                <input type="text" id="main_mere_prenom" name="mere_prenom"  value="{{ echantillon.mere.prenom }}"
+                       class="w-full px-2.5 py-1.5 border border-slate-200 rounded bg-slate-100 text-slate-500 font-medium text-xs cursor-not-allowed select-none focus:outline-none">
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. SUIVI CHRONOLOGIQUE -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                9. 
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs items-end">
+            <!-- Date de naissance (Verrouillée) -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider flex items-center gap-1">
+                    Date de naissance <span class="text-slate-400 font-normal lowercase">/ DOB</span>
+                    <svg class="w-3 h-3 text-amber-600 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </label>
+                <input type="date" name="mere_date_naissance" id="main_mere_date_naissance"  value="{{ echantillon.mere.date_naissance|date:'Y-m-d' }}"
+                       class="w-full px-2.5 py-1.5 border border-slate-200 rounded bg-slate-100 text-slate-500 text-xs cursor-not-allowed select-none focus:outline-none">
+            </div>
+            <!-- Âge (Verrouillé) -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider flex items-center gap-1">
+                    Âge (ans) <span class="text-slate-400 font-normal lowercase">/ Age</span>
+                    <svg class="w-3 h-3 text-amber-600 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </label>
+                <input type="number" name="mere_age" id="main_mere_age"  value="{{ echantillon.mere.age }}"
+                       class="w-full px-2.5 py-1.5 border border-slate-200 rounded bg-slate-100 text-slate-500 font-medium text-xs cursor-not-allowed select-none focus:outline-none">
+            </div>
+            <!-- Date du prochain rdv (Éditable) -->
+         <div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Prochain RDV <span class="text-slate-400 font-normal lowercase">/ Next Appt</span>
+    </label>
+    <input type="text" 
+           name="date_prochain_rdv" 
+           value="{{ echantillon.date_rdv|date:'d-m-Y' }}"
+           placeholder="JJ-MM-AAAA"
+           pattern="\d{2}-\d{2}-\d{4}"
+           maxlength="10"
+           oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^(\d{2})(\d)/, '$1-$2').replace(/^(\d{2}-\d{2})(\d)/, '$1-$2');"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+            <!-- Date du diagnostic VIH (Éditable) -->
+           
+        </div>
+    </div>
+
+    <!-- 10. MATERNITÉ / MATERNITY -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                10.
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <!-- Mode d'accouchement -->
+           <div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Mode d'accouchement <span class="text-slate-400 font-normal lowercase">/ Delivery Mode</span> <span class="text-red-600">*</span>
+    </label>
+    <select name="mode_accouchement"  class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+        <option value="">Sélectionner le mode...</option>
+        <option value="1" {% if echantillon.mode_accouchement == '1' or echantillon.mode_accouchement == 1 %}selected{% endif %}>Voie Basse / Normal</option>
+        <option value="2" {% if echantillon.mode_accouchement == '2' or echantillon.mode_accouchement == 2 %}selected{% endif %}>Césarienne / Cesarean</option>
+        <option value="0" {% if echantillon.mode_accouchement == '0' or echantillon.mode_accouchement == 0 %}selected{% endif %}>Inconnu / Unknown</option>
+    </select>
+</div>
+            <!-- Numéro de grossesse -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nº de Grossesse <span class="text-slate-400 font-normal lowercase">/ Gravidity</span>
+                </label>
+                <input type="number" min="0" name="numero_grossesse" placeholder="0"  value="{{ echantillon.numero_grossesse }}"
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+    </div>
+     <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                11. 
+            </h4>
+        </div>
+       
+              <div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Date Diagnostic VIH <span class="text-slate-400 font-normal lowercase">/ Diagnostic VIH Date</span>
+    </label>
+    <input type="text" 
+           name="date_diagnostic_vih" 
+           value="{{ echantillon.date_diagnostic_vih|date:'d-m-Y' }}"
+           placeholder="JJ-MM-AAAA"
+           pattern="\d{2}-\d{2}-\d{4}"
+           maxlength="10"
+           oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^(\d{2})(\d)/, '$1-$2').replace(/^(\d{2}-\d{2})(\d)/, '$1-$2');"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+         <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                12.
+            </h4>
+        </div>
+        <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nombre d'enfants Expos&eacute;s <span class="text-slate-400 font-normal lowercase">/ Number of exposed children</span>
+                </label>
+                <input type="number" name="nbre_enfant_expose" value="{{ echantillon.nb_enfant_expose }}"
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+        <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nombre enfants Infect&eacute;s <span class="text-slate-400 font-normal lowercase">/ Diagnostic VIH Date</span>
+                </label>
+                <input type="number" name="nbre_enfant_infecte" value="{{ echantillon.nb_enfant_infecte}}"
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+   
+       
+    <!-- 13. PRISE EN CHARGE PTME / PMTCT CARE -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                13. 
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <!-- Protocole PTME suivi -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Protocole PTME <span class="text-slate-400 font-normal lowercase">/ ARV Protocol</span> <span class="text-red-600">*</span>
+                </label>
+               <div class="space-y-2">
+    <select name="protocole_ptme" 
+            id="protocole_ptme"
+            onchange="toggleProtocoleAutreModif(this)"
+             
+            class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+        
+        <option value="" disabled {% if not echantillon.protocole_ptme %}selected{% endif %}>
+            Sélectionner le protocole...
+        </option>
+
+        <option value="rien" {% if echantillon.protocole_ptme == 'rien' %}selected{% endif %}>
+            Rien / Nothing
+        </option>
+
+        <option value="TELE (TDF+3TC+EFV)" {% if echantillon.protocole_ptme == 'TELE (TDF+3TC+EFV)' %}selected{% endif %}>
+            TELE (TDF+3TC+EFV)
+        </option>
+
+        <option value="Autre / Other" {% if echantillon.protocole_ptme == 'Autre / Other' or echantillon.protocole_ptme_autre %}selected{% endif %}>
+            Autre / Other
+        </option>
+    </select>
+
+    <!-- Champ texte affiché si "Autre" était déjà enregistré -->
+    <div id="champ_protocole_autre_modif" 
+         class="{% if echantillon.protocole_ptme != 'Autre / Other' and not echantillon.protocole_ptme_autre %}hidden{% endif %}">
+        
+        <input type="text" 
+               name="protocole_ptme_autre" 
+               id="protocole_ptme_autre_input"
+               value="{{ echantillon.protocole_ptme_autre|default:'' }}"
+               placeholder="Préciser le protocole..."
+               {% if echantillon.protocole_ptme == 'Autre / Other' or echantillon.protocole_ptme_autre %}required{% endif %}
+               class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-slate-50 text-slate-900 text-xs focus:bg-white focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+    </div>
+</div>
+
+<script>
+    function toggleProtocoleAutreModif(select) {
+        const container = document.getElementById('champ_protocole_autre_modif');
+        const input = document.getElementById('protocole_ptme_autre_input');
+        
+        if (select.value === 'Autre / Other') {
+            container.classList.remove('hidden');
+            input.setAttribute('required', 'required');
+            input.focus();
+        } else {
+            container.classList.add('hidden');
+            input.removeAttribute('required');
+            input.value = '';
+        }
+    }
+</script>
+            </div>
+            <!-- Date d'initiation PTME -->
+           <div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Date d'initiation <span class="text-slate-400 font-normal lowercase">/ Initiation Date</span>
+    </label>
+    <input type="text" 
+           name="date_initiation_ptme" 
+           value="{{ echantillon.date_initiation_ptme|date:'d-m-Y' }}"
+           placeholder="JJ-MM-AAAA"
+           pattern="\d{2}-\d{2}-\d{4}"
+           maxlength="10"
+           oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^(\d{2})(\d)/, '$1-$2').replace(/^(\d{2}-\d{2})(\d)/, '$1-$2');"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+        </div>
+    </div>
+</div>

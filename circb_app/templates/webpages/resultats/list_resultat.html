@@ -1,0 +1,473 @@
+{% extends '../dashbord_hosp.html' %}
+{% block main %}
+
+<main class="flex-1 h-full min-h-0 overflow-y-auto bg-slate-100 w-full max-w-[100vw] custom-scrollbar font-sans text-slate-800">
+    
+    <!-- EN-TÊTE DU REGISTRE -->
+    <div class="bg-white border-b border-slate-200 border-t-4 border-t-[#1478c1] px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+        <div>
+            <div class="flex items-center gap-2.5">
+                <span class="w-3 h-3 bg-[#1478c1] rounded-full animate-pulse"></span>
+                <h1 class="text-xl font-bold text-[#1d5288] tracking-tight">
+                    Registre des Résultats Biologiques
+                </h1>
+            </div>
+            <p class="text-xs font-semibold text-slate-500 mt-0.5 uppercase tracking-wider">
+                Archives & Validation des Analyses Moléculaires · CIRCB LIMS
+            </p>
+        </div>
+        
+        <div>
+            <a href="/plages/" class="px-4 py-2.5 rounded bg-[#1478c1] hover:bg-[#11629e] text-white text-xs font-bold shadow-sm transition-all inline-flex items-center gap-2 focus:ring-2 focus:ring-blue-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span class="uppercase tracking-wide">Saisir / Modifier Resultats</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="p-4 sm:p-6 flex flex-col gap-5">
+        <!-- MODULE DE FILTRES ET RECHERCHE AVANCÉE -->
+     <div class="bg-white border border-slate-200/80 border-t-4 border-t-[#1478c1] p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+    <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
+        
+        <!-- 1. Code Échantillon -->
+        <div class="flex flex-col gap-1.5 sm:col-span-1 lg:col-span-3">
+            <label class="text-[11px] font-bold text-[#1d5288] uppercase tracking-wider flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-[#1478c1]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" /></svg>
+                Code Échantillon
+            </label>
+            <input 
+                type="text" 
+                name="code_echantillon" 
+                value="{{ request.GET.code_echantillon|default:'' }}" 
+                placeholder="Ex: ECH-001..." 
+                class="w-full bg-slate-50/80 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#1478c1] focus:ring-2 focus:ring-[#1478c1]/20 focus:outline-none transition-all font-mono shadow-sm"
+            >
+        </div>
+
+        <!-- 2. Code Patient / Enfant -->
+        <div class="flex flex-col gap-1.5 sm:col-span-1 lg:col-span-3">
+            <label class="text-[11px] font-bold text-[#1d5288] uppercase tracking-wider flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-[#1478c1]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                Code Patient
+            </label>
+            <input 
+                type="text" 
+                name="code_patient" 
+                value="{{ request.GET.code_patient|default:'' }}" 
+                placeholder="Ex: PAT-001..." 
+                class="w-full bg-slate-50/80 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#1478c1] focus:ring-2 focus:ring-[#1478c1]/20 focus:outline-none transition-all font-mono shadow-sm"
+            >
+        </div>
+
+        <!-- 3. Date de prélèvement -->
+        <div class="flex flex-col gap-1.5 sm:col-span-1 lg:col-span-2">
+            <label class="text-[11px] font-bold text-[#1d5288] uppercase tracking-wider flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-[#1478c1]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                Date Prélèvement
+            </label>
+            <input 
+                type="text" 
+                id="date_prelevement_input"
+                name="date_prelevement" 
+                value="{{ request.GET.date_prelevement|default:'' }}"
+                placeholder="JJ-MM-AAAA"
+                maxlength="10"
+                class="w-full bg-slate-50/80 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#1478c1] focus:ring-2 focus:ring-[#1478c1]/20 focus:outline-none transition-all shadow-sm"
+            >
+        </div>
+
+        <!-- 5. Verdict Biologique / Résultat -->
+        <div class="flex flex-col gap-1.5 sm:col-span-1 lg:col-span-2">
+            <label class="text-[11px] font-bold text-[#1d5288] uppercase tracking-wider flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-[#1478c1]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                Résultat
+            </label>
+            <div class="relative">
+                <select name="verdict" class="w-full bg-slate-50/80 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold text-slate-800 focus:bg-white focus:border-[#1478c1] focus:ring-2 focus:ring-[#1478c1]/20 focus:outline-none appearance-none pr-8 cursor-pointer transition-all shadow-sm">
+                    <option value="">-- Tous les Resultats --</option>
+                    {% for resultat_pcrs in resultat_pcr %}
+                        <option value="{{ resultat_pcrs.id }}" {% if request.GET.verdict == resultat_pcrs.id|stringformat:"i" %}selected{% endif %}>{{ resultat_pcrs.nom }}</option>
+                    {% endfor %}
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-slate-400">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Boutons Filtrer / Réinitialiser -->
+        <div class="flex items-center gap-2 sm:col-span-2 lg:col-span-2">
+            <button type="submit" class="flex-1 py-2 px-3 rounded-lg bg-[#1d5288] hover:bg-[#153f6a] active:scale-[0.98] text-white text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-sm shadow-[#1d5288]/20 cursor-pointer">
+                <svg class="w-3.5 h-3.5 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>Filtrer</span>
+            </button>
+
+            {% if request.GET.code_echantillon or request.GET.code_patient or request.GET.date_prelevement or request.GET.verdict %}
+            <a href="?" class="py-2 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-600 hover:text-slate-800 text-xs font-bold transition-all flex items-center justify-center shadow-sm" title="Réinitialiser les filtres">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </a>
+            {% endif %}
+        </div>
+
+    </form>
+</div>
+
+<!-- Formatage automatique de la date lors de la frappe -->
+<script>
+    document.getElementById('date_prelevement_input')?.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 8) value = value.slice(0, 8);
+        
+        if (value.length >= 5) {
+            e.target.value = `${value.slice(0, 2)}-${value.slice(2, 4)}-${value.slice(4)}`;
+        } else if (value.length >= 3) {
+            e.target.value = `${value.slice(0, 2)}-${value.slice(2)}`;
+        } else {
+            e.target.value = value;
+        }
+    });
+</script>
+        <!-- TABLEAU TECHNIQUE DES RÉSULTATS -->
+        <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+               <table class="w-full text-left border-collapse">
+    <thead class="bg-[#1d5288] text-white text-[11px] font-bold uppercase tracking-wider shadow-xs">
+        <tr>
+            <th class="p-3 border-r border-blue-900/40">Échantillon & Patient</th>
+            <th class="p-3 border-r border-blue-900/40 text-center">Resultat</th>
+            <th class="p-3 border-r border-blue-900/40">Dates & PCR</th>
+            <th class="p-3 border-r border-blue-900/40">Test</th>
+            <th class="p-3 text-center w-24">Actions</th>
+        </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200/80 text-xs text-slate-700">
+        
+        {% for echantillon in resultats %}
+        {% with verdict_str=echantillon.resultat_pcr.nom|upper %}
+        <tr class="transition-colors hover:bg-slate-50/80 {% if 'POSITIF' in verdict_str or 'DETECT' in verdict_str %}bg-rose-50/30 hover:bg-rose-50/60{% endif %}">
+            
+            <!-- 1. ÉCHANTILLON & PATIENT -->
+            <td class="p-3 border-r border-slate-200/80">
+                <div class="flex items-center gap-2.5">
+                    <!-- Badge Flacon / Tube d'analyse -->
+                    <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-sky-50 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-800/50 flex items-center justify-center text-[#1478c1] shadow-2xs">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                        </svg>
+                    </div>
+
+                    <!-- Métadonnées Échantillon + Patient -->
+                    <div class="space-y-1 min-w-0">
+                        <!-- Code CIRCB -->
+                        <a href="#" class="inline-flex items-center gap-1 text-[#1478c1] hover:text-sky-800 font-bold font-mono text-xs tracking-tight transition-colors group">
+                            <span>{{ echantillon.code_ech|default:echantillon.code }}</span>
+                            <svg class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                            </svg>
+                        </a>
+                        
+                        {% if echantillon.enfant %}
+    <div class="patient-card-container flex items-center justify-between gap-2 p-2 rounded-xl bg-slate-50/80 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-800/80 transition-all duration-300">
+        
+        <!-- Bloc Informations Patient -->
+        <div class="flex flex-col gap-1 text-left min-w-0 flex-1 select-none">
+            
+            <!-- 1. Nom & Prénom du Patient -->
+            <div class="flex items-center gap-1.5 text-[11px] font-bold text-slate-800 dark:text-slate-100">
+                <svg class="w-3.5 h-3.5 text-sky-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                
+                <div class="relative min-w-0 flex-1">
+                    <!-- Donnée Réelle (Masquée par défaut) -->
+                    <span class="patient-real uppercase truncate block hidden {% if not echantillon.enfant.nom %}text-amber-500 italic font-normal{% endif %}" 
+                          title="{{ echantillon.enfant.nom|default:'Anonyme' }} {{ echantillon.enfant.prenom }}">
+                        {{ echantillon.enfant.nom|default:"Patient Anonyme" }} {{ echantillon.enfant.prenom }}
+                    </span>
+                    
+                    <!-- Skeleton Loader (Visuel par défaut) -->
+                    <div class="patient-mask flex items-center gap-1">
+                        <span class="h-3 w-16 bg-slate-200 dark:bg-slate-700/80 rounded animate-pulse"></span>
+                        <span class="h-3 w-12 bg-slate-200 dark:bg-slate-700/80 rounded animate-pulse"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Code Patient / Identifiant -->
+            <div class="flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                <svg class="w-3 h-3 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10M7 12h10m-8 5h8"/>
+                </svg>
+
+                <div class="relative">
+                    <!-- Code Réel (Masqué par défaut) -->
+                    <span class="code-real hidden font-medium px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                        {{ echantillon.enfant.code|default:"N/A" }}
+                    </span>
+                    
+                    <!-- Skeleton Loader Code -->
+                    <span class="code-mask inline-block h-3 w-20 bg-slate-200 dark:bg-slate-700/60 rounded animate-pulse"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Bouton Interactive Afficher / Masquer -->
+        <button type="button" 
+                onclick="togglePatientInfo(this)"
+                title="Afficher/Masquer l'identité du patient"
+                class="privacy-btn flex items-center justify-center p-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-sky-500 dark:hover:text-sky-400 hover:border-sky-300 dark:hover:border-sky-500/50 shadow-sm active:scale-95 transition-all duration-200 shrink-0">
+            
+            <!-- Icône Afficher (Œil) -->
+            <svg class="icon-show w-3.5 h-3.5 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+            </svg>
+
+            <!-- Icône Masquer (Œil Barré) -->
+            <svg class="icon-hide w-3.5 h-3.5 text-sky-500 hidden" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+            </svg>
+        </button>
+    </div>
+<script>
+function togglePatientInfo(btn) {
+    const card = btn.closest('.patient-card-container');
+    
+    // Sélection des éléments de texte et de masquage
+    const patientReal = card.querySelector('.patient-real');
+    const patientMask = card.querySelector('.patient-mask');
+    const codeReal = card.querySelector('.code-real');
+    const codeMask = card.querySelector('.code-mask');
+    
+    // Icônes
+    const iconShow = btn.querySelector('.icon-show');
+    const iconHide = btn.querySelector('.icon-hide');
+
+    const isHidden = patientReal.classList.contains('hidden');
+
+    if (isHidden) {
+        // --- AFFICHER LES DONNÉES ---
+        patientReal.classList.remove('hidden');
+        patientMask.classList.add('hidden');
+        codeReal.classList.remove('hidden');
+        codeMask.classList.add('hidden');
+
+        iconShow.classList.add('hidden');
+        iconHide.classList.remove('hidden');
+
+        // Masquage automatique de sécurité après 15 secondes
+        if (btn.privacyTimer) clearTimeout(btn.privacyTimer);
+        btn.privacyTimer = setTimeout(() => {
+            if (!patientReal.classList.contains('hidden')) {
+                togglePatientInfo(btn);
+            }
+        }, 15000);
+
+    } else {
+        // --- MASQUER LES DONNÉES ---
+        patientReal.classList.add('hidden');
+        patientMask.classList.remove('hidden');
+        codeReal.classList.add('hidden');
+        codeMask.classList.remove('hidden');
+
+        iconShow.classList.remove('hidden');
+        iconHide.classList.add('hidden');
+
+        if (btn.privacyTimer) clearTimeout(btn.privacyTimer);
+    }
+}
+</script>
+
+                            </div>
+                        {% else %}
+                            <!-- Patient non lié -->
+                            <div class="inline-flex items-center gap-1 text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/80 font-medium">
+                                <svg class="w-2.5 h-2.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                </svg>
+                                <span>Patient non lié</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </td>
+
+            <!-- 2. VERDICT BIOLOGIQUE -->
+            <td class="p-3 border-r border-slate-200/80 text-center whitespace-nowrap">
+                {% if 'NÉGATIF' in verdict_str or 'NEGATIF' in verdict_str or 'NON DETECT' in verdict_str or 'NON DÉTECT' in verdict_str %}
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-300/80 bg-emerald-50 text-emerald-800 font-bold text-[10px] tracking-wide uppercase shadow-2xs">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        {{ echantillon.resultat_pcr.nom|default:echantillon.resultat_pcr.code }}
+                    </span>
+                {% elif 'POSITIF' in verdict_str or 'DETECT' in verdict_str or 'DÉTECT' in verdict_str %}
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-rose-300/80 bg-rose-50 text-rose-800 font-bold text-[10px] tracking-wide uppercase shadow-2xs">
+                        <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                        {{ echantillon.resultat_pcr.nom|default:echantillon.resultat_pcr.code }}
+                    </span>
+                {% else %}
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-300/80 bg-amber-50 text-amber-800 font-bold text-[10px] tracking-wide uppercase shadow-2xs">
+                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                        {{ echantillon.resultat_pcr.nom|default:"INDÉTERMINÉ" }}
+                    </span>
+                {% endif %}
+            </td>
+
+            <!-- 3. DATES & ORDRE DE PCR -->
+            <td class="p-3 border-r border-slate-200/80 whitespace-nowrap">
+                <div class="flex flex-col space-y-1.5">
+                    <!-- Date Prélèvement avec SVG Calendrier -->
+                    <div class="flex items-center gap-1.5 text-slate-800 font-bold text-xs">
+                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <span class="text-slate-500 font-normal">Prélèv :</span>
+                        <span>{{ echantillon.date_prelevement|date:"d/m/Y"|default:"-" }}</span>
+                    </div>
+
+                    <!-- Badge Ordre PCR -->
+                    <div class="flex items-center gap-2">
+                        {% if echantillon.ordre == 1 %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-extrabold bg-sky-50 text-[#1478c1] border border-sky-200">PCR I</span>
+                        {% elif echantillon.ordre == 2 %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-extrabold bg-purple-50 text-purple-700 border border-purple-200">PCR II</span>
+                        {% elif echantillon.ordre == 3 %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200">PCR III</span>
+                        {% endif %}
+
+                        <!-- Date du Résultat avec SVG Horloge -->
+                        <span class="inline-flex items-center gap-1 text-[10px] text-slate-400 font-medium">
+                            <svg class="w-3 h-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            {{ echantillon.date_resultat|date:"d/m/Y"|default:"-" }}
+                        </span>
+                    </div>
+                </div>
+            </td>
+
+            <!-- 4. COMMENTAIRE -->
+            <td class="p-3 border-r border-slate-200/80 max-w-xs">
+               {{echantillon.examen|default:"-"}}
+            </td>
+
+            <!-- 5. ACTIONS -->
+            <td class="p-3 text-center whitespace-nowrap">
+                <div class="flex items-center justify-center gap-1.5">
+                    <!-- Imprimer PDF -->
+                    {% comment %} <a href="/resultats-individuel/{{ echantillon.id }}/" 
+                       target="_blank" 
+                       title="Imprimer le bulletin PDF" 
+                       class="inline-flex items-center justify-center p-1.5 rounded-lg border border-sky-200 bg-sky-50 hover:bg-[#1478c1] text-[#1478c1] hover:text-white transition-all shadow-2xs hover:shadow-xs active:scale-95">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </a> {% endcomment %}
+
+                    <!-- Supprimer -->
+                    <button type="button"
+                            onclick="openDeleteModal('{{ echantillon.id }}', '{{ echantillon.code_circb|default:echantillon.code }}')"
+                            title="Supprimer le résultat"
+                            class="inline-flex items-center justify-center p-1.5 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white transition-all shadow-2xs hover:shadow-xs active:scale-95 cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </td>
+        </tr>
+        {% endwith %}
+        {% empty %}
+        <tr>
+            <td colspan="5" class="p-10 text-center bg-slate-50">
+                <div class="flex flex-col items-center justify-center gap-2">
+                    <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <span class="text-slate-500 font-semibold uppercase tracking-wide text-xs">
+                        Aucun résultat ne correspond aux critères de recherche.
+                    </span>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+            </div>
+
+            <!-- BLOC DE PAGINATION & COMPTEUR -->
+            <div class="bg-blue-50/60 border-t border-slate-200 p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-[#1d5288]">
+                <span>
+                    Affichage de <span class="font-bold">{{ resultats.start_index }}</span> à <span class="font-bold">{{ resultats.end_index }}</span> sur <span class="bg-[#1478c1] text-white px-2 py-0.5 rounded-full font-bold text-[11px]">{{ resultats.paginator.count }}</span> résultats
+                </span>
+
+                {% if resultats.has_other_pages %}
+                <nav class="inline-flex -space-x-px rounded-md shadow-xs">
+                    {% if resultats.has_previous %}
+                        <a href="?page={{ resultats.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.verdict %}&verdict={{ request.GET.verdict }}{% endif %}" class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-l text-slate-700 hover:bg-slate-100">Précédent</a>
+                    {% endif %}
+
+                    {% for i in resultats.paginator.page_range %}
+                        {% if resultats.number == i %}
+                            <span class="px-3 py-1.5 bg-[#1478c1] text-white border border-[#1478c1] font-bold">{{ i }}</span>
+                        {% elif i > resultats.number|add:'-3' and i < resultats.number|add:'3' %}
+                            <a href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.verdict %}&verdict={{ request.GET.verdict }}{% endif %}" class="px-3 py-1.5 bg-white border border-slate-300 text-slate-700 hover:bg-slate-100">{{ i }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if resultats.has_next %}
+                        <a href="?page={{ resultats.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.verdict %}&verdict={{ request.GET.verdict }}{% endif %}" class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-r text-slate-700 hover:bg-slate-100">Suivant</a>
+                    {% endif %}
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+function openDeleteModal(resultatId, resultatCode) {
+    Swal.fire({
+        html: `
+            <div class="text-left font-sans space-y-4 pt-1">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-rose-50 flex items-center justify-center overflow-hidden border border-rose-200 shadow-2xs p-1">
+                            <svg class="w-5 h-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="block text-[9px] font-bold tracking-wider text-slate-400 uppercase font-mono">CIRCB · LIMS</span>
+                            <span class="block text-xs font-bold text-slate-800">Suppression du Résultat</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3.5 rounded-xl border bg-rose-50/80 border-rose-200 text-rose-900 text-xs leading-relaxed font-medium space-y-2">
+                    <p>Vous êtes sur le point de supprimer le résultat pour l'échantillon <span class="font-mono font-bold">${resultatCode}</span>.</p>
+                </div>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: "Oui, supprimer",
+        cancelButtonText: "Annuler",
+        buttonsStyling: false,
+        customClass: {
+            popup: 'rounded-2xl border border-slate-200 shadow-2xl p-5 bg-white max-w-md',
+            confirmButton: 'px-4 py-2.5 text-xs font-bold uppercase text-white bg-rose-600 hover:bg-rose-700 rounded-xl mr-2',
+            cancelButton: 'px-4 py-2.5 text-xs font-bold uppercase text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = `/resultats/supprimer/${resultatId}/`;
+        }
+    });
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,318 @@
+<!-- ======================================================== -->
+<!-- STYLE DHIS2 PRO : SECTION 2 - IDENTIFICATION DE L'ENFANT -->
+<!-- ======================================================== -->
+<div class="bg-[#2C6693] text-white px-4 py-2.5 flex items-center justify-between border-b border-blue-900 rounded-t font-sans">
+    <div class="flex items-center gap-2">
+        <span class="bg-white/20 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+           2.0
+        </span>
+        <h3 class="text-xs font-bold uppercase tracking-wide">
+            Identification de l'enfant / Child's Identification
+        </h3>
+    </div>
+    <div class="hidden sm:flex items-center gap-1.5 text-blue-100 text-[11px] font-mono">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h4m10-9A10 10 0 1114 2h2a10 10 0 0110 10z" />
+        </svg>
+        <span>CHILD METADATA</span>
+    </div>
+</div>
+
+<!-- Corps du formulaire - Style DHIS2 Pro -->
+<div class="bg-white border border-slate-300 rounded-b shadow-2xs font-sans space-y-4 p-4 text-xs">
+
+    <!-- Grille de Contenu Dynamique -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+        
+        <!-- 4. CONTACT FAMILIAL / FAMILY CONTACT -->
+        <div class="space-y-1 md:col-span-2">
+            <div class="border-b border-slate-300 pb-1">
+                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    4. Contact familial <span class="text-slate-400 font-normal lowercase">/ Family Contact</span> <span class="text-red-600">*</span>
+                </h4>
+            </div>
+            <div class="w-full text-xs pt-1">
+                <input type="tel" name="contact_familial" required placeholder="Ex: +237 6XX XXX XXX" id="main_contact_familial"
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 5. IDENTITÉ DE L'ENFANT / CHILD'S IDENTITY -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                5. 
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <!-- Nom -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nom de l'enfant <span class="text-slate-400 font-normal lowercase">/ Last Name</span> <span class="text-red-600">*</span>
+                </label>
+                <input type="text" name="enfant_nom" required placeholder="Saisir le nom" id="main_enfant_nom"
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+            <!-- Prénom -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Prénom de l'enfant <span class="text-slate-400 font-normal lowercase">/ First Name</span>
+                </label>
+                <input type="text" name="enfant_prenom" placeholder="Saisir le prénom" id="main_enfant_prenom"
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. PARAMÈTRES BIOMÉTRIQUES / BIOMETRIC PARAMETERS -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                6.
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs items-end">
+            <!-- Date de naissance -->
+            <div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider" for="enfant_dob">
+        Date de naissance <span class="text-slate-400 font-normal lowercase">/ DOB</span> <span class="text-red-600">*</span>
+    </label>
+    <input type="text" 
+           name="date_naissance" 
+           id="enfant_dob" 
+           required
+           placeholder="JJ-MM-AAAA" 
+           maxlength="10"
+           pattern="\d{2}-\d{2}-\d{4}"
+           title="Veuillez respecter le format JJ-MM-AAAA (ex: 15-08-2022)"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+
+<!-- Optionnel : Champ Âge calculé pour l'enfant -->
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dobInput = document.getElementById('enfant_dob');
+    const ageInput = document.getElementById('enfant_age');
+
+    dobInput.addEventListener('input', function (e) {
+        // 1. Masque automatique avec tirets (JJ-MM-AAAA)
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 8) value = value.slice(0, 8);
+
+        if (value.length >= 5) {
+            e.target.value = value.slice(0, 2) + '-' + value.slice(2, 4) + '-' + value.slice(4);
+        } else if (value.length >= 3) {
+            e.target.value = value.slice(0, 2) + '-' + value.slice(2);
+        } else {
+            e.target.value = value;
+        }
+
+        // 2. Calcul automatique de l'âge si la date est complète
+        if (e.target.value.length === 10) {
+            const parts = e.target.value.split('-');
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const year = parseInt(parts[2], 10);
+
+            const birthDate = new Date(year, month, day);
+            const today = new Date();
+
+            if (!isNaN(birthDate.getTime()) && birthDate <= today && year > 1900) {
+                let years = today.getFullYear() - birthDate.getFullYear();
+                let months = today.getMonth() - birthDate.getMonth();
+                let days = today.getDate() - birthDate.getDate();
+
+                if (days < 0) {
+                    months--;
+                }
+                if (months < 0) {
+                    years--;
+                    months += 12;
+                }
+
+                // Affichage intelligent selon l'âge de l'enfant
+                if (ageInput) {
+                    if (years >= 1) {
+                        ageInput.value = `${years} ans`;
+                    } else if (months >= 1) {
+                        ageInput.value = `${months} mois`;
+                    } else {
+                        const diffTime = Math.abs(today - birthDate);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        ageInput.value = `${diffDays} jour(s)`;
+                    }
+                }
+            } else if (ageInput) {
+                ageInput.value = '';
+            }
+        } else if (ageInput) {
+            ageInput.value = '';
+        }
+    });
+});
+</script>
+            <!-- Sexe -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Sexe <span class="text-slate-400 font-normal lowercase">/ Sex</span> <span class="text-red-600">*</span>
+                </label>
+                <select name="sexe" required id="main_sexe" class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+                    <option value="">Sélectionner...</option>
+                    <option value="M">Masculin (M)</option>
+                    <option value="F">Féminin (F)</option>
+                </select>
+            </div>
+            <!-- Rang de naissance -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Si Jumeaux ou triplets, indiquer1,2,3 <span class="text-slate-400 font-normal lowercase">/ if multiple, indicate 1,2,3</span>
+                </label>
+                <select name="rang_naissance" class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+                    <option value="1">1 </option>
+                    <option value="2">2 </option>
+                    <option value="3">3 </option>
+                </select>
+            </div>
+            <!-- Poids actuel -->
+            <div class="space-y-1">
+    <label for="main_poids" class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Poids <span class="text-slate-400 font-normal lowercase">/ Weight (kg)</span> <span class="text-red-600"></span>
+        <span class="text-[9px] text-amber-600 font-semibold normal-case block sm:inline sm:ml-1"></span>
+    </label>
+    <input type="number" name="poids"  placeholder="Ex: 6.5" id="main_poids"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+        </div>
+
+        <!-- ZONE COMPLÉMENTAIRE : AGE AUTOMATIQUE -->
+        <div class="pt-1 max-w-xs text-xs">
+            <div class="space-y-1">
+                <label class="font-bold text-slate-500 block uppercase text-[10px] tracking-wider">
+                    Âge calculé <span class="text-slate-400 font-normal lowercase">/ Calculated Age</span>
+                </label>
+                <div class="relative">
+                    <input type="text" id="enfant_age_display" readonly placeholder="Calcul automatique..." 
+                           class="w-full px-2.5 py-1.5 border border-slate-200 rounded bg-slate-100 text-slate-600 font-mono text-xs focus:outline-none cursor-not-allowed">
+                </div>
+                <input type="hidden" name="enfant_age" id="enfant_age_raw">
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. PRISE EN CHARGE MEDICALE / MEDICAL CARE -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                7. Prophylaxie ARV  donn&eacute;e a l'enfant
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <!-- Prophylaxie ARV -->
+           <div class="space-y-1.5">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Prophylaxie administrée à l'enfant <span class="text-slate-400 font-normal lowercase">/ Prophylaxis Given to child</span>
+    </label>
+    
+    <div class="relative">
+        <select name="profilaxie_arv" 
+                onchange="
+                    const inputWrapper = document.getElementById('autre_profilaxie_wrapper');
+                    if (this.value === 'Autre/Other') {
+                        inputWrapper.classList.remove('hidden');
+                        setTimeout(() => {
+                            inputWrapper.classList.remove('opacity-0', '-translate-y-2');
+                            inputWrapper.classList.add('opacity-100', 'translate-y-0');
+                        }, 10);
+                    } else {
+                        inputWrapper.classList.remove('opacity-100', 'translate-y-0');
+                        inputWrapper.classList.add('opacity-0', '-translate-y-2');
+                        setTimeout(() => inputWrapper.classList.add('hidden'), 200);
+                    }
+                "
+                class="w-full px-2.5 py-2 border border-slate-300 rounded-lg bg-white text-slate-900 text-xs font-medium focus:outline-none focus:border-[#2C6693] focus:ring-2 focus:ring-[#2C6693]/20 cursor-pointer shadow-xs transition-all duration-200">
+            <option value="">Choisir la prophylaxie...</option>
+            <option value="AZT">AZT</option>
+            <option value="NVP">NVP</option>
+            <option value="Rien/Nothing">Rien/Nothing</option>
+            <option value="Autre/Other">Autre/Other</option>
+        </select>
+    </div>
+
+    <!-- CHAMP GÉNÉRÉ EXPRESSIF (ANIMÉ ET ACCENTUÉ) -->
+    <div id="autre_profilaxie_wrapper" 
+         class="hidden opacity-0 -translate-y-2 transition-all duration-200 ease-out pt-1.5">
+        
+        <div class="relative flex items-center">
+            <!-- Petit indicateur visuel latéral -->
+            <div class="absolute left-0 top-0 bottom-0 w-1 bg-[#2C6693] rounded-l-lg"></div>
+            
+            <input type="text" 
+                   name="autre_profilaxie_arv" 
+                   placeholder="Veuillez préciser la prophylaxie... / Please specify..." 
+                   class="w-full pl-3.5 pr-8 py-2 border border-l-0 border-slate-300 rounded-r-lg bg-slate-50/50 text-slate-900 text-xs font-semibold placeholder:font-normal placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#2C6693] focus:ring-2 focus:ring-[#2C6693]/20 transition-all duration-200 shadow-inner">
+            
+            <!-- Icône d'édition stylisée -->
+            <div class="absolute right-2.5 text-slate-400 pointer-events-none">
+                <svg class="w-3.5 h-3.5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- Date d'initiation -->
+           <div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Date d'initiation <span class="text-slate-400 font-normal lowercase">/ Initiation Date</span>
+    </label>
+    <input type="text" 
+           name="date_initiation_arv" 
+           placeholder="JJ-MM-AAAA"
+           pattern="\d{2}-\d{2}-\d{4}"
+           maxlength="10"
+           oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^(\d{2})(\d)/, '$1-$2').replace(/^(\d{2}-\d{2})(\d)/, '$1-$2');"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- CALCUL AUTOMATIQUE DE L'ÂGE PÉDIATRIQUE ---
+    document.getElementById('enfant_dob').addEventListener('change', function() {
+        const dobValue = this.value;
+        if (!dobValue) return;
+
+        const dob = new Date(dobValue);
+        const now = new Date();
+        const diffTime = now - dob;
+        
+        if (diffTime < 0) {
+            document.getElementById('enfant_age_display').value = "Date invalide (futur)";
+            return;
+        }
+
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const diffWeeks = Math.floor(diffDays / 7);
+        const diffMonths = Math.floor(diffDays / 30.4375);
+
+        let ageText = "";
+        
+        if (diffMonths >= 24) {
+            const years = Math.floor(diffMonths / 12);
+            ageText = years + " an(s)";
+        } else if (diffMonths >= 1) {
+            ageText = diffMonths + " mois";
+        } else {
+            ageText = diffWeeks + " semaine(s)";
+        }
+
+        document.getElementById('enfant_age_display').value = ageText;
+        document.getElementById('enfant_age_raw').value = diffMonths;
+    });
+</script>

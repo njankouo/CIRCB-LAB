@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDISYS EID | Portail Génomique & Laboratoire - CIRCB</title>
+    <meta name="description" content="Plateforme officielle de gestion des données d'Early Infant Diagnosis (EID) et d'analyses virologiques et génomiques du Centre International de Référence Chantal Biya (CIRCB).">
+    <meta name="keywords" content="MEDISYS, EID, CIRCB, Chantal Biya, virologie, génomique, PCR, laboratoire, santé, Cameroun, diagnostic précoce nourrissons">
+    <meta name="author" content="Centre International de Référence Chantal Biya (CIRCB)">
+    <meta name="robots" content="index, follow">
+
+    <!-- ================================================================= -->
+    <!-- FAVICON & ICÔNES DE L'APPLICATION                                  -->
+    <!-- ================================================================= -->
+    <!-- Remplacez les liens href par vos fichiers statiques Django réels si nécessaire -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/circb.jpeg' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/circb.jpeg' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/circb.jpeg' %}">
+
+    <!-- ================================================================= -->
+    <!-- OPEN GRAPH (Optimisation pour Facebook, LinkedIn, WhatsApp, etc.) -->
+    <!-- ================================================================= -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MEDISYS EID | Portail Génomique & Laboratoire - CIRCB">
+    <meta property="og:description" content="Plateforme sécurisée de pilotage des flux biologiques, des patients et des résultats PCR du CIRCB.">
+    <meta property="og:url" content="https://medisys-eid/"> <!-- Mettez l'URL réelle de votre instance -->
+    <meta property="og:site_name" content="MEDISYS EID CIRCB">
+    <meta property="og:locale" content="fr_FR">
+    <!-- <meta property="og:image" content="{% static 'images/og-cover-medisys.jpg' %}"> --> <!-- Recommandé : une image de preview 1200x630px -->
+
+    <!-- ================================================================= -->
+    <!-- TWITTER / X CARDS                                                 -->
+    <!-- ================================================================= -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MEDISYS EID | Portail Génomique & Laboratoire - CIRCB">
+    <meta name="twitter:description" content="Plateforme sécurisée de pilotage des flux biologiques et des résultats PCR du CIRCB.">
+    <!-- <meta name="twitter:image" content="{% static 'images/og-cover-medisys.jpg' %}"> -->
+
+    <!-- ================================================================= -->
+    <!-- CONFIGURATION APPAREILS MOBILES & THÈME NAVIGATEUR                -->
+    <!-- ================================================================= -->
+    <!-- Couleur de la barre d'adresse sur mobile (Teinte Odoo / Teal) -->
+    <meta name="theme-color" content="#00A099">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MEDISYS EID">
+    <script src="{%static 'js/tailwind.js'%}"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- 2. Configuration pour l'affichage de la barre d'état et du mode standalone -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LIMS">
+    <meta name="theme-color" content="#0f172a">
+
+    <!-- 3. Vos icônes d'application de bureau -->
+    <link rel="apple-touch-icon" href="{%static 'images/icons.png'%}">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    
+    <script src="{%static 'js/aepexcharts.js'%}"></script>
+   
+    <style>
+        /* Style du conteneur principal */
+.custom-scrollbar {
+    /* Fond très légèrement bleuté pour le côté "pro" */
+    background-color: #f8fafc;
+}
+
+/* Personnalisation de la barre de défilement (Chrome, Edge, Safari) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 20px;
+    border: 2px solid #f8fafc;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+}
+
+/* Ajout d'une ombre douce et d'un effet "page" sur le main */
+main {
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+}
+    </style>
+<style>
+    body { 
+    font-variant-numeric: tabular-nums; 
+    overflow: hidden; /* Sécurité CSS absolue */
+    height: 100vh;
+    
+    
+}
+
+</style>
+</head>
+<!-- Fond blanc pur global -->
+<body id="app-body" class="h-screen overflow-hidden  text-slate-900 antialiased font-sans ">
+    <!-- FOND D'ÉCRAN STYLE LIMS CLAIRE -->
+
+    <div id="navProgressBar" class="fixed top-0 left-0 w-0 h-1 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-800 z-[100] transition-all duration-300 ease-out"></div>
+
+  
+        <div class="flex flex-col h-full w-full overflow-hidden">
+        <!-- Header avec bordure sombre affirmée -->
+ <!-- ================================================================= -->
+<!-- HEADER AU DESIGN INSTITUTIONNEL DHIS2 (TEXTE ENTRÉE BLANC)        -->
+<!-- ================================================================= -->
+<header class="sticky top-0 z-40 bg-[#714B67] text-white border-b border-[#5e3a53] px-4 sm:px-6 py-2 flex items-center justify-between shadow-sm">
+    
+    <!-- BRANDING / LOGO STYLE ODOO BACKEND -->
+    <a href="/dashboard/" class="group flex items-center gap-3 shrink-0 outline-none">
+        <div class="w-8 h-8 rounded bg-white/10 border border-white/15 flex items-center justify-center font-mono font-bold text-sm text-white shadow-xs group-hover:bg-white/20 transition-colors">
+            M
+        </div>
+        <div class="leading-tight">
+            <div class="text-xs font-bold tracking-wide text-white font-sans flex items-center gap-1.5">
+                MEDISYS EID
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            </div>
+            <div class="text-[10px] text-purple-200/80 font-sans tracking-tight">CIRCB • LIMS Workspace</div>
+        </div>
+    </a>
+
+    <!-- BARRE DE RECHERCHE DYNAMIQUE STYLE ODOO -->
+    <div class="relative hidden md:block flex-1 max-w-lg mx-6" id="search-wrapper">
+        <div class="relative flex items-center w-full bg-black/15 hover:bg-black/25 focus-within:bg-black/30 border border-white/15 focus-within:border-white/40 rounded-md transition-all duration-150">
+            
+            <!-- SÉLECTEUR DE FILTRE -->
+            <div class="relative shrink-0 border-r border-white/15">
+                <select id="patient-filter" 
+                        class="bg-transparent text-white text-[11px] font-medium py-1.5 pl-2.5 pr-6 appearance-none outline-none cursor-pointer transition-colors">
+                    <option value="all" class="bg-[#714B67] text-white">Tous les critères</option>
+                    <option value="patient" class="bg-[#714B67] text-white">Nom / ID Patient</option>
+                    <option value="code_echantillon" class="bg-[#714B67] text-white">Code Échantillon</option>
+                    <option value="structure" class="bg-[#714B67] text-white">District / Formation</option>
+                </select>
+                <i data-lucide="chevron-down" class="w-3 h-3 text-purple-200 absolute right-2 top-2.5 pointer-events-none"></i>
+            </div>
+
+            <!-- CHAMP DE RECHERCHE -->
+            <div class="relative flex-1 flex items-center">
+                <div class="absolute left-2.5 text-purple-200/80 flex items-center">
+                    <i data-lucide="search" id="search-icon" class="w-3.5 h-3.5"></i>
+                    <i data-lucide="loader-2" id="search-loader" class="w-3.5 h-3.5 hidden animate-spin text-white"></i>
+                </div>
+                
+                <input id="search" type="text" 
+                       placeholder="Rechercher dans MEDISYS EID..." 
+                       autocomplete="off"
+                       class="w-full pl-8 pr-3 py-1.5 bg-transparent text-white focus:text-white caret-white text-xs font-normal outline-none placeholder:text-purple-200/60" />
+            </div>
+        </div>
+
+        <!-- OVERLAY DE RÉSULTATS -->
+        <div id="search-results-overlay" 
+             class="absolute top-full left-0 w-full mt-1.5 bg-white border border-slate-200 rounded-md shadow-xl z-[9999] hidden max-h-[70vh] overflow-y-auto text-slate-800">
+            <div id="results-content" class="p-2 divide-y divide-slate-100">
+                <!-- Résultats dynamiques AJAX -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIONS / MENU APPS & PROFIL -->
+    <div class="flex items-center gap-2 shrink-0">
+        
+        <!-- Bouton Grille d'Applications (Style Odoo App Switcher) -->
+        <button id="btnOpenMenuModal" onclick="document.getElementById('menu-modal').showModal()" 
+                title="Applications MEDISYS"
+                class="p-2 text-white hover:bg-white/15 rounded-md transition-all active:scale-95 relative cursor-pointer flex items-center justify-center border border-transparent hover:border-white/10">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z"/>
+            </svg>
+        </button>
+        
+        <div class="w-px h-4 bg-white/25 my-auto"></div>
+
+        <!-- PROFIL UTILISATEUR ET MENU DÉROULANT -->
+        <div class="relative">
+            <!-- Bouton déclencheur -->
+            <button id="profile-menu-button" 
+                    onclick="toggleProfileMenu(event)" 
+                    class="flex items-center gap-2 px-2 py-1 hover:bg-white/15 rounded-md transition-all focus:outline-none cursor-pointer border border-transparent hover:border-white/10">
+                <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=5a3851&color=fff" 
+                     class="w-6 h-6 rounded object-cover border border-white/20 pointer-events-none" alt="Avatar" />
+                <span class="text-xs font-medium text-white pr-1 hidden lg:block pointer-events-none">
+                    {% if request.user.first_name %}
+                        {{ request.user.first_name }}
+                    {% else %}
+                        {{ request.user.username }}
+                    {% endif %}
+                </span>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-purple-200 hidden lg:block pointer-events-none"></i>
+            </button>
+            
+            <!-- Menu Déroulant (Profile Dropdown) -->
+            <div id="profile-menu" 
+                 class="hidden absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-md shadow-xl p-1 z-50 text-slate-800 transition-all">
+                
+                <!-- Lien Profil -->
+                <a href="/profile/" class="flex items-center gap-2 px-3 py-2 text-slate-700 hover:bg-purple-50 hover:text-[#714B67] rounded text-xs font-medium transition-colors">
+                    <i data-lucide="user" class="w-3.5 h-3.5 text-[#714B67]"></i> Mon Profil
+                </a>
+                
+                <div class="h-px bg-slate-100 my-1"></div>
+
+                <!-- Bouton Déconnexion POST -->
+                <form method="POST" action="{% url 'logout' %}" class="w-full m-0 p-0">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full flex items-center gap-2 px-3 py-2 text-rose-600 hover:bg-rose-50 hover:text-rose-700 rounded text-xs font-medium transition-colors text-left cursor-pointer">
+                        <svg class="w-3.5 h-3.5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        Déconnexion
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</header>
+
+<!-- SCRIPT JS DE GESTION DU MENU DÉROULANT -->
+<script>
+    function toggleProfileMenu(event) {
+        event.stopPropagation();
+        const menu = document.getElementById('profile-menu');
+        if (menu) {
+            menu.classList.toggle('hidden');
+        }
+    }
+
+    // Fermer le menu si l'utilisateur clique en dehors
+    document.addEventListener('click', function(event) {
+        const menu = document.getElementById('profile-menu');
+        const button = document.getElementById('profile-menu-button');
+        
+        if (menu && !menu.classList.contains('hidden')) {
+            if (!menu.contains(event.target) && !button.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        }
+    });
+</script>
+
+<dialog id="menu-modal"
+    class="medisys-modal backdrop:bg-slate-950/70 backdrop:backdrop-blur-md bg-white border border-slate-200/80 rounded-2xl p-0 max-w-4xl w-full shadow-[0_30px_80px_-20px_rgba(15,23,42,0.4)] overflow-hidden select-none outline-none focus:outline-none relative">
+
+
+<!-- HALOS DYNAMIQUES -->
+<div class="absolute -top-20 -left-20 w-56 h-56 bg-[#714B67]/20 rounded-full blur-3xl pointer-events-none animate-float-slow"></div>
+<div class="absolute -bottom-20 -right-20 w-56 h-56 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none animate-float-reverse"></div>
+<div class="absolute top-1/2 left-1/2 w-40 h-40 bg-purple-400/10 rounded-full blur-3xl pointer-events-none animate-pulse-soft"></div>
+
+<!-- EN-TÊTE -->
+<div class="bg-[#714B67] px-6 py-3.5 border-b border-[#5a3b52] flex items-center justify-between text-white relative z-10 overflow-hidden">
+
+    <!-- ligne lumineuse -->
+    <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent animate-scan"></div>
+
+    <div class="flex items-center gap-3 relative">
+
+        <div class="relative">
+            <div class="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center font-bold text-xs shadow-inner transition-transform duration-500 hover:rotate-6 hover:scale-110">
+                ME
+            </div>
+
+            <span class="absolute -right-1 -top-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#714B67] animate-ping-soft"></span>
+        </div>
+
+        <div>
+            <div class="flex items-center gap-2 text-[10px] font-medium text-purple-200 tracking-wider uppercase font-mono">
+                <span>CIRCB</span>
+                <span class="opacity-50">•</span>
+
+                <span class="text-white font-bold flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    MEDISYS EID
+                </span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <h3 class="text-xs font-bold text-white tracking-wide">
+                    Applications & Modules
+                </h3>
+
+                <span class="px-1.5 py-0.5 rounded-full bg-white/10 border border-white/10 text-[8px] text-purple-100 font-mono">
+                    2026
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- FERMER -->
+    <button onclick="fermerMenuModal()"
+            aria-label="Fermer le menu"
+            class="menu-close p-1.5 text-purple-200 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 hover:rotate-90 cursor-pointer active:scale-90 focus:ring-2 focus:ring-white/50 outline-none">
+
+        <svg class="w-4 h-4 stroke-current stroke-2 fill-none"
+             viewBox="0 0 24 24"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+
+        </svg>
+    </button>
+</div>
+
+
+<!-- CORPS -->
+<div class="medisys-body p-5 bg-dotted-pattern bg-gradient-to-b from-slate-100/90 via-slate-50/70 to-slate-100/90 space-y-6 relative z-10 max-h-[75vh] overflow-y-auto">
+
+    <!-- BARRE DE STATUT AVEC EFFET GLASSMORPHISME AVANCÉ -->
+    <div class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/80 border border-slate-200/90 shadow-sm backdrop-blur-md transition-all hover:border-[#714B67]/30">
+
+        <div class="flex items-center gap-2.5">
+            <div class="relative flex h-2.5 w-2.5">
+                <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
+                <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+            </div>
+            <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider font-mono">
+                Système Opérationnel 
+            </span>
+        </div>
+
+        <div class="flex items-center gap-2 text-[10px] font-mono text-slate-500 bg-slate-100/80 px-2 py-0.5 rounded-md border border-slate-200/60">
+            <span class="font-semibold text-[#714B67]">MEDISYS</span>
+            <span>•</span>
+            <span id="live-clock">--:--:--</span>
+        </div>
+
+    </div>
+
+
+    <!-- SECTION PILOTAGE -->
+    <div class="space-y-3">
+
+        <div class="flex items-center gap-3 px-1">
+            <div class="h-px bg-slate-200/80 flex-1"></div>
+            <div class="section-title flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#714B67] animate-pulse"></span>
+                <h4 class="text-[11px] font-extrabold text-slate-700 uppercase tracking-widest font-mono">
+                    Pilotage & Laboratoire
+                </h4>
+            </div>
+            <div class="h-px bg-slate-200/80 flex-1"></div>
+        </div>
+
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+
+            <!-- DASHBOARD -->
+            <a href="/dashboard/" class="module-card group">
+                <div class="module-icon">
+                    <svg class="module-svg" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <span class="module-title">Tableau de Bord</span>
+                    <span class="module-subtitle">Pilotage</span>
+                </div>
+                <span class="module-arrow">→</span>
+            </a>
+
+            {% if perms.circb_app.peut_voir_fiches_expedition %}
+            <a href="/fiches-echantillons/" class="module-card group">
+                <div class="module-icon">
+                    <svg class="module-svg" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <span class="module-title">Fiches d'expédition</span>
+                    <span class="module-subtitle">Form Form 4</span>
+                </div>
+                <span class="module-arrow">→</span>
+            </a>
+            {% endif %}
+
+            {% if perms.circb_app.peut_voir_consulter_echantillons %}
+            <a href="/echantillonages/" class="module-card group">
+                <div class="module-icon">
+                    <svg class="module-svg" viewBox="0 0 24 24">
+                        <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <span class="module-title">Échantillons</span>
+                    <span class="module-subtitle">Registre EID</span>
+                </div>
+                <span class="module-arrow">→</span>
+            </a>
+            {% endif %}
+
+            {% if perms.circb_app.Consulter_resultat_patient %}
+            <a href="{% url 'plages' %}" class="module-card group">
+                <div class="module-icon">
+                    <svg class="module-svg" viewBox="0 0 24 24">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <span class="module-title">Résultats</span>
+                    <span class="module-subtitle">Validation</span>
+                </div>
+                <span class="module-arrow">→</span>
+            </a>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+    <!-- SECTION PATIENTS & ADMINISTRATION -->
+    <div class="space-y-3">
+
+        <div class="flex items-center gap-3 px-1">
+            <div class="h-px bg-slate-200/80 flex-1"></div>
+            <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                <h4 class="text-[11px] font-extrabold text-slate-700 uppercase tracking-widest font-mono">
+                    Patients & Administration
+                </h4>
+            </div>
+            <div class="h-px bg-slate-200/80 flex-1"></div>
+        </div>
+
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+
+            {% if perms.circb_app.Consulter_dossier_patient %}
+            <a href="/dossiers/patients/" class="module-card group">
+                <div class="module-icon">
+                    <svg class="module-svg" viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <span class="module-title">Patients</span>
+                    <span class="module-subtitle">Dossiers</span>
+                </div>
+                <span class="module-arrow">→</span>
+            </a>
+            {% endif %}
+
+            {% if perms.circb_app.manage_rh %}
+            <a href="{% url 'personnel' %}" class="module-card group">
+                <div class="module-icon">
+                    <svg class="module-svg" viewBox="0 0 24 24">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <span class="module-title">Personnel</span>
+                    <span class="module-subtitle">RH</span>
+                </div>
+                <span class="module-arrow">→</span>
+            </a>
+            {% endif %}
+
+            {% if perms.circb_app.manage_system_settings %}
+            <a href="{% url 'configurations' %}" class="module-card group">
+                <div class="module-icon">
+                    <svg class="module-svg" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82V9a1.65 1.65 0 0 0 1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1.51-1V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <span class="module-title">Configurations</span>
+                    <span class="module-subtitle">Droits & Rôles</span>
+                </div>
+                <span class="module-arrow">→</span>
+            </a>
+
+            <a href="{% url 'structures' %}" class="module-card group">
+                <div class="module-icon">
+                    <svg class="module-svg" viewBox="0 0 24 24">
+                        <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                        <path d="M9 22v-4h6v4"></path>
+                        <circle cx="8" cy="6" r=".6"></circle>
+                        <circle cx="12" cy="6" r=".6"></circle>
+                        <circle cx="16" cy="6" r=".6"></circle>
+                        <circle cx="8" cy="10" r=".6"></circle>
+                        <circle cx="12" cy="10" r=".6"></circle>
+                        <circle cx="16" cy="10" r=".6"></circle>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <span class="module-title">Structures Org.</span>
+                    <span class="module-subtitle">Région · District · FOSA</span>
+                </div>
+                <span class="module-arrow">→</span>
+            </a>
+            {% endif %}
+
+
+            <!-- HISTORIQUE DES TRANSFERTS FOSA (MISE EN VALEUR "TOUCH ODOO PRO") -->
+            <a href="{% url 'historique' %}" class="module-card group relative overflow-hidden ring-1 ring-[#714B67]/20 hover:ring-[#714B67]">
+                
+                <!-- Petit ruban d'attention discret -->
+                <span class="absolute top-0 right-0 w-2 h-2 rounded-bl bg-[#714B67] group-hover:scale-125 transition-transform"></span>
+
+                <div class="module-icon text-[#714B67]">
+                    <svg class="module-svg" viewBox="0 0 24 24">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                        <polyline points="3 3 3 8 8 8"></polyline>
+                        <polyline points="12 7 12 12 15 15"></polyline>
+                    </svg>
+                </div>
+
+                <div class="min-w-0">
+                    <span class="module-title font-bold text-[#714B67]">Historique Transferts</span>
+                    <span class="module-subtitle">FOSA · Traçabilité</span>
+                </div>
+
+                <span class="module-arrow text-[#714B67]">→</span>
+
+            </a>
+
+
+            <a href="{% url 'guide-utilisation' %}" target="_blank" class="module-card group">
+                <div class="module-icon">
+                    <svg class="module-svg" viewBox="0 0 24 24">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5Z"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5"></path>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <span class="module-title">Guide Utilisateur</span>
+                    <span class="module-subtitle">Aide & Documentation</span>
+                </div>
+                <span class="module-arrow">→</span>
+            </a>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="bg-white px-6 py-2.5 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-500 font-medium relative z-10">
+
+    <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>MEDISYS EID • Système de Gestion Intégré</span>
+    </div>
+
+    <span class="font-mono text-slate-400">
+        v2026
+    </span>
+
+</div>
+
+
+</dialog>
+
+<style>
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+.bg-dotted-pattern {
+
+    background-image:
+        radial-gradient(
+            rgba(113, 75, 103, 0.15) 1.2px,
+            transparent 1.2px
+        ),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+
+    background-size:
+        16px 16px,
+        auto;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.medisys-modal {
+
+    transform-origin: center;
+
+    animation:
+        modal-enter
+        0.38s
+        cubic-bezier(.16,1,.3,1)
+        forwards;
+}
+
+
+@keyframes modal-enter {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(20px)
+            scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* =========================================================
+   MODULE CARDS
+========================================================= */
+
+.module-card {
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+
+    padding: .7rem;
+
+    background:
+        rgba(255,255,255,.88);
+
+    border:
+        1px solid
+        rgba(226,232,240,.9);
+
+    border-radius:
+        .85rem;
+
+    box-shadow:
+        0 1px 2px rgba(15,23,42,.03);
+
+    backdrop-filter:
+        blur(8px);
+
+    transition:
+        transform .28s cubic-bezier(.16,1,.3,1),
+        box-shadow .28s ease,
+        border-color .28s ease,
+        background .28s ease;
+
+    overflow: hidden;
+
+    animation:
+        module-enter
+        .45s
+        cubic-bezier(.16,1,.3,1)
+        both;
+}
+
+
+.module-card:nth-child(1) {
+    animation-delay: .05s;
+}
+
+.module-card:nth-child(2) {
+    animation-delay: .09s;
+}
+
+.module-card:nth-child(3) {
+    animation-delay: .13s;
+}
+
+.module-card:nth-child(4) {
+    animation-delay: .17s;
+}
+
+.module-card:nth-child(5) {
+    animation-delay: .21s;
+}
+
+.module-card:nth-child(6) {
+    animation-delay: .25s;
+}
+
+
+@keyframes module-enter {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(-12px)
+            scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* Halo au survol */
+
+.module-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 80px;
+    height: 80px;
+
+    left: -35px;
+    top: -35px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(113,75,103,.22),
+            transparent 70%
+        );
+
+    opacity: 0;
+
+    transition:
+        opacity .3s ease,
+        transform .5s ease;
+}
+
+
+.module-card:hover::before {
+
+    opacity: 1;
+
+    transform:
+        scale(2);
+}
+
+
+.module-card:hover {
+
+    transform:
+        translateY(-4px);
+
+    background:
+        linear-gradient(
+            135deg,
+            #714B67,
+            #825878
+        );
+
+    border-color:
+        rgba(113,75,103,.9);
+
+    box-shadow:
+        0 12px 25px
+        rgba(113,75,103,.20);
+}
+
+
+/* =========================================================
+   ICONES
+========================================================= */
+
+.module-icon {
+
+    width: 2.25rem;
+    height: 2.25rem;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius:
+        .65rem;
+
+    background:
+        #faf5f9;
+
+    color:
+        #714B67;
+
+    transition:
+        transform .3s cubic-bezier(.16,1,.3,1),
+        background .3s ease,
+        color .3s ease;
+}
+
+
+.module-svg {
+
+    width: 1rem;
+    height: 1rem;
+
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+
+    transition:
+        transform .35s ease;
+}
+
+
+.module-card:hover .module-icon {
+
+    background:
+        rgba(255,255,255,.95);
+
+    color:
+        #714B67;
+
+    transform:
+        rotate(-4deg)
+        scale(1.08);
+}
+
+
+.module-card:hover .module-svg {
+
+    transform:
+        scale(1.15);
+}
+
+
+/* =========================================================
+   TEXTES
+========================================================= */
+
+.module-title {
+
+    display: block;
+
+    font-size:
+        .75rem;
+
+    font-weight:
+        700;
+
+    color:
+        #1e293b;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    transition:
+        color .25s ease;
+}
+
+
+.module-subtitle {
+
+    display: block;
+
+    margin-top:
+        1px;
+
+    font-size:
+        .625rem;
+
+    color:
+        #94a3b8;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    transition:
+        color .25s ease;
+}
+
+
+.module-card:hover .module-title {
+
+    color:
+        white;
+}
+
+
+.module-card:hover .module-subtitle {
+
+    color:
+        rgba(233,213,255,.9);
+}
+
+
+/* =========================================================
+   FLECHE
+========================================================= */
+
+.module-arrow {
+
+    margin-left:
+        auto;
+
+    opacity:
+        0;
+
+    transform:
+        translateX(-6px);
+
+    color:
+        white;
+
+    transition:
+        opacity .25s ease,
+        transform .25s ease;
+}
+
+
+.module-card:hover .module-arrow {
+
+    opacity:
+        1;
+
+    transform:
+        translateX(0);
+}
+
+
+/* =========================================================
+   HALOS
+========================================================= */
+
+.animate-float-slow {
+
+    animation:
+        float-slow
+        8s
+        ease-in-out
+        infinite;
+}
+
+
+.animate-float-reverse {
+
+    animation:
+        float-reverse
+        10s
+        ease-in-out
+        infinite;
+}
+
+
+.animate-pulse-soft {
+
+    animation:
+        pulse-soft
+        5s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes float-slow {
+
+    0%,100% {
+        transform:
+            translate(0,0);
+    }
+
+    50% {
+        transform:
+            translate(20px,15px);
+    }
+}
+
+
+@keyframes float-reverse {
+
+    0%,100% {
+        transform:
+            translate(0,0);
+    }
+
+    50% {
+        transform:
+            translate(-20px,-15px);
+    }
+}
+
+
+@keyframes pulse-soft {
+
+    0%,100% {
+        opacity:
+            .4;
+    }
+
+    50% {
+        opacity:
+            .9;
+    }
+}
+
+
+/* =========================================================
+   PING STATUS
+========================================================= */
+
+.animate-ping-soft {
+
+    animation:
+        ping-soft
+        2s
+        cubic-bezier(0,0,.2,1)
+        infinite;
+}
+
+
+@keyframes ping-soft {
+
+    0% {
+        box-shadow:
+            0 0 0 0
+            rgba(52,211,153,.6);
+    }
+
+    70% {
+        box-shadow:
+            0 0 0 6px
+            rgba(52,211,153,0);
+    }
+
+    100% {
+        box-shadow:
+            0 0 0 0
+            rgba(52,211,153,0);
+    }
+}
+
+
+/* =========================================================
+   LIGNE LUMINEUSE HEADER
+========================================================= */
+
+.animate-scan {
+
+    animation:
+        scan
+        3s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes scan {
+
+    0%,100% {
+        opacity:
+            .1;
+
+        transform:
+            translateX(-30%);
+    }
+
+    50% {
+        opacity:
+            .8;
+
+        transform:
+            translateX(30%);
+    }
+}
+
+
+/* =========================================================
+   REDUCTION MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration:
+            .01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            .01ms !important;
+
+    }
+
+}
+
+</style>
+
+<script>
+
+function ouvrirMenuModal() {
+
+    const modal =
+        document.getElementById('menu-modal');
+
+    if (!modal) return;
+
+    modal.showModal();
+
+    document.body.style.overflow =
+        'hidden';
+
+}
+
+
+function fermerMenuModal() {
+
+    const modal =
+        document.getElementById('menu-modal');
+
+    if (!modal) return;
+
+    modal.close();
+
+    document.body.style.overflow =
+        '';
+
+}
+
+
+const modal =
+    document.getElementById('menu-modal');
+
+
+if (modal) {
+
+    modal.addEventListener(
+        'cancel',
+        () => {
+
+            document.body.style.overflow =
+                '';
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   HORLOGE LIVE
+========================================================= */
+
+function updateLiveClock() {
+
+    const clock =
+        document.getElementById('live-clock');
+
+    if (!clock) return;
+
+    const now =
+        new Date();
+
+    clock.textContent =
+        now.toLocaleTimeString(
+            'fr-FR',
+            {
+                hour12: false
+            }
+        );
+
+}
+
+
+updateLiveClock();
+
+setInterval(
+    updateLiveClock,
+    1000
+);
+
+</script>
+
+<style>
+    #search-results-overlay.active { display: block; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .animate-spin { animation: spin 0.8s linear infinite; }
+</style>
+
+<script>
+    // 1. MENU PROFIL
+    function toggleProfileMenu(e) {
+        e.stopPropagation();
+        const menu = document.getElementById('profile-menu');
+        menu.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', (e) => {
+        const profileMenu = document.getElementById('profile-menu');
+        const profileBtn = document.getElementById('profile-menu-button');
+        if (profileMenu && !profileMenu.contains(e.target) && !profileBtn.contains(e.target)) {
+            profileMenu.classList.add('hidden');
+        }
+    });
+
+    // 2. RECHERCHE PATIENT DYNAMIQUE OPTIMISÉE
+const searchInput = document.getElementById('search');
+const filterSelect = document.getElementById('patient-filter');
+const overlay = document.getElementById('search-results-overlay');
+const resultsContent = document.getElementById('results-content');
+const icon = document.getElementById('search-icon');
+const loader = document.getElementById('search-loader');
+
+let debounceTimer = null;
+let currentAbortController = null;
+
+// Fonction de segmentation locale du code patient (ex: LITNYLCMLPT0222 -> LIT-NYL-CML-PT-0222)
+function formatCodePatient(str) {
+    const clean = str.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    if (clean.length >= 15) {
+        return `${clean.slice(0,3)}-${clean.slice(3,6)}-${clean.slice(6,9)}-${clean.slice(9,11)}-${clean.slice(11)}`;
+    }
+    return str.trim();
+}
+
+async function executeSearch() {
+    if (!searchInput) return;
+    
+    let query = searchInput.value.trim();
+    const filter = filterSelect ? filterSelect.value : 'all';
+    
+    // Si l'utilisateur saisit un code sans tirets, on le segmente automatiquement
+    query = formatCodePatient(query);
+
+    if (query.length < 2) {
+        if (overlay) overlay.classList.remove('active');
+        return;
+    }
+
+    if (overlay) overlay.classList.add('active');
+    if (icon) icon.classList.add('hidden');
+    if (loader) loader.classList.remove('hidden');
+
+    // Annuler la requête précédente si elle est encore en cours
+    if (currentAbortController) {
+        currentAbortController.abort();
+    }
+    currentAbortController = new AbortController();
+
+    try {
+        const url = `/recherche-patient/?q=${encodeURIComponent(query)}&filter=${encodeURIComponent(filter)}`;
+        const response = await fetch(url, { signal: currentAbortController.signal });
+        
+        if (!response.ok) throw new Error('Erreur réseau');
+
+        const html = await response.text();
+        if (resultsContent) {
+            resultsContent.innerHTML = html;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+    } catch (err) {
+        // Ignorer l'erreur si la requête a été volontairement annulée par AbortController
+        if (err.name === 'AbortError') return;
+
+        if (resultsContent) {
+            resultsContent.innerHTML = '<p class="p-3 text-xs text-rose-600 font-bold">Erreur de connexion au serveur.</p>';
+        }
+    } finally {
+        if (icon) icon.classList.remove('hidden');
+        if (loader) loader.classList.add('hidden');
+    }
+}
+
+// Fonction Debounce pour temporiser l'exécution (300ms)
+function debouncedSearch() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(executeSearch, 300);
+}
+
+if (searchInput) {
+    searchInput.addEventListener('input', debouncedSearch);
+
+    if (filterSelect) {
+        filterSelect.addEventListener('change', executeSearch); // Exécution immédiate lors du changement de filtre
+    }
+
+    document.addEventListener('click', (e) => {
+        const wrapper = document.getElementById('search-wrapper');
+        if (wrapper && !wrapper.contains(e.target) && overlay) {
+            overlay.classList.remove('active');
+        }
+    });
+
+    // Optionnel : Ré-ouvrir l'overlay lors du focus si la requête est déjà suffisante
+    searchInput.addEventListener('focus', () => {
+        if (searchInput.value.trim().length >= 2 && overlay) {
+            overlay.classList.add('active');
+        }
+    });
+}
+    // 3. SWITCHER ONGLET DHIS2
+    function switchTab(evt, segmentId) {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+        document.getElementById(segmentId).classList.remove('hidden');
+        
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.className = "tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-[#1478c1] transition-all cursor-pointer";
+            const dot = btn.querySelector('span');
+            if (dot) dot.className = "w-2 h-2 rounded-full bg-slate-400";
+        });
+        
+        const clickedBtn = evt.currentTarget;
+        clickedBtn.className = "tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-xs font-bold bg-[#1478c1] text-white shadow-xs transition-all cursor-pointer";
+        const activeDot = clickedBtn.querySelector('span');
+        if (activeDot) activeDot.className = "w-2 h-2 rounded-full bg-white animate-pulse";
+    }
+
+    // Initialisation des icônes Lucide si disponibles
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    });
+</script>
+<!-- ======================================================== -->
+<!-- STYLE ERP PREMIUM PRO : BREADCRUMB NAVIGATION           -->
+<!-- ======================================================== -->
+<!-- ================================================================= -->
+    <!-- FOND GLOBAL (Hérité par toutes les pages)                         -->
+    <!-- ================================================================= -->
+
+  {% block main %}
+<main class="h-screen flex flex-col w-full max-w-full bg-[#f8fafc] text-slate-800 relative m-0 p-0 font-sans antialiased selection:bg-[#714B67] selection:text-white overflow-hidden">
+
+    <!-- ARRIÈRE-PLAN PROFESSIONNEL DISCRET -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f060_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f060_1px,transparent_1px)] bg-[size:2.5rem_2.5rem]"></div>
+        <div class="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] bg-[#714B67]/5 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-slate-200/50 rounded-full blur-[120px]"></div>
+    </div>
+
+    <!-- CONTENEUR PRINCIPAL -->
+    <div id="app-wrapper" class="w-full relative z-10 flex-1 flex flex-col m-0 p-3 sm:p-4 gap-3 max-w-full overflow-hidden transition-all duration-300">
+        
+        <!-- EN-TÊTE STYLE "ODOO APP BAR / FORM HEADER" HAUT DE GAMME -->
+        <header class="w-full px-4 py-3 bg-white border border-slate-200/90 rounded-xl flex flex-col lg:flex-row lg:items-center justify-between gap-3 shrink-0 shadow-xs">
+            
+            <!-- SECTION GAUCHE : IDENTIFICATION & FIL D'ARIANE -->
+            <div class="flex items-center gap-3.5">
+                <div class="p-2.5 bg-[#714B67] rounded-lg text-white shrink-0 shadow-sm shadow-[#714B67]/20 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                    </svg>
+                </div>
+                <div>
+                    <!-- Fil d'Ariane minimaliste -->
+                    <div class="flex items-center gap-1.5 text-[11px] font-mono text-slate-400 mb-0.5">
+                        <span>CIRCB</span>
+                        <span>/</span>
+                        <span class="text-slate-600 font-semibold">Analytique</span>
+                        <span>/</span>
+                        <span id="breadcrumb-current" class="text-[#714B67] font-bold">Laboratoire</span>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <h1 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight">Tableau de Bord Décisionnel</h1>
+                        <!-- Badge Rôle -->
+                        <span class="hidden md:inline-flex items-center gap-1.5 text-[10px] font-mono font-semibold bg-[#714B67]/10 text-[#714B67] px-2.5 py-0.5 rounded-md border border-[#714B67]/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#714B67] animate-pulse"></span>
+                            {{ user_role_label }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION CENTRE : ONGLETS DE BASCULE -->
+            {% if has_multiple_dashboards %}
+            <div class="flex bg-slate-100 p-1 rounded-lg border border-slate-200 shadow-inner self-start lg:self-center">
+                <button id="btn-samples" onclick="switchDashboard('{{ metabase_token }}', 'btn-samples', 'Laboratoire')" 
+                        class="dash-tab-btn flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold rounded-md transition-all duration-200 bg-[#714B67] text-white shadow-xs cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v15.792a2.25 2.25 0 01-3.104 2.072 2.25 2.25 0 01-1.396-2.072V3.104M14.25 3.104v15.792a2.25 2.25 0 003.104 2.072 2.25 2.25 0 001.396-2.072V3.104M3.104 9.75h17.792" />
+                    </svg>
+                    <span>LABORATOIRE</span>
+                </button>
+
+                <button id="btn-general" onclick="switchDashboard('{{ metabase_token_secondary }}', 'btn-general', 'Unité Technique')" 
+                        class="dash-tab-btn flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-white/60 cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                    </svg>
+                    <span>UNITÉ TECHNIQUE</span>
+                </button>
+            </div>
+            {% endif %}
+
+            <!-- SECTION DROITE : ACTIONS & STATUT SYSTÈME -->
+            <div class="flex items-center gap-2 self-end lg:self-center">
+                
+                <!-- Indicateur Live Connexion -->
+                <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-emerald-50 border border-emerald-200/80 rounded-lg text-[10px] font-mono font-bold text-emerald-700">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>EN DIRECT</span>
+                </div>
+
+                <!-- Bouton Actualiser -->
+                <button onclick="refreshDashboard()" 
+                        title="Actualiser les données" 
+                        class="p-2 text-slate-600 hover:text-[#714B67] bg-white hover:bg-slate-50 border border-slate-200 rounded-lg transition-all duration-200 flex items-center justify-center group cursor-pointer shadow-xs">
+                    <svg id="refresh-icon" class="w-4 h-4 transition-transform duration-500 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                </button>
+
+                <!-- Bouton Plein Écran -->
+                <button onclick="toggleFullScreen()" 
+                        title="Basculer en plein écran" 
+                        class="p-2 text-slate-600 hover:text-[#714B67] bg-white hover:bg-slate-50 border border-slate-200 rounded-lg transition-all duration-200 flex items-center justify-center cursor-pointer shadow-xs">
+                    <svg id="fullscreen-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                    </svg>
+                </button>
+
+            </div>
+        </header>
+
+        <!-- ZONE D'INTÉGRATION METABASE -->
+        <div class="w-full flex-1 relative min-h-0 bg-white rounded-xl border border-slate-200/90 overflow-hidden shadow-xs">
+            <div id="dashboard-container" class="w-full h-full relative overflow-hidden flex flex-col">
+                
+                <!-- Skeleton Loader -->
+                <div id="dashboard-skeleton" class="absolute inset-0 z-40 flex flex-col items-center justify-center bg-white/95 backdrop-blur-xs transition-opacity duration-500">
+                    <div class="relative w-12 h-12 mb-3">
+                        <div class="absolute inset-0 rounded-full border-2 border-slate-100"></div>
+                        <div class="absolute inset-0 rounded-full border-2 border-transparent border-t-[#714B67] border-r-slate-400 animate-spin"></div>
+                    </div>
+                    <div class="flex items-center gap-2 text-slate-500 font-mono text-xs tracking-wider uppercase">
+                        <svg class="w-3.5 h-3.5 animate-bounce text-[#714B67]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                        </svg>
+                        <span>Chargement des données analytiques...</span>
+                    </div>
+                </div>
+
+                <!-- Composant Metabase Web Component -->
+                <metabase-dashboard 
+                    id="metabase-view"
+                    token="{{ metabase_token }}" 
+                    with-title="false" 
+                    with-downloads="true"
+                    class="w-full h-full block border-none m-0 p-0">
+                </metabase-dashboard>
+
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<style>
+    metabase-dashboard {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<script defer src="{{ metabase_site_url }}/app/embed.js"></script>
+<script>
+    window.metabaseConfig = {
+        "theme": { "preset": "light" },
+        "isGuest": true,
+        "instanceUrl": "{{ metabase_site_url }}"
+    };
+
+    function showSkeleton() {
+        const skeleton = document.getElementById('dashboard-skeleton');
+        if (skeleton) {
+            skeleton.classList.remove('opacity-0', 'pointer-events-none');
+        }
+    }
+
+    function hideSkeleton() {
+        const skeleton = document.getElementById('dashboard-skeleton');
+        if (skeleton) {
+            skeleton.classList.add('opacity-0', 'pointer-events-none');
+        }
+    }
+
+    function switchDashboard(newToken, activeBtnId, labelName) {
+        showSkeleton();
+        
+        // Mettre à jour le fil d'Ariane
+        const breadcrumbEl = document.getElementById('breadcrumb-current');
+        if (breadcrumbEl) {
+            breadcrumbEl.textContent = labelName;
+        }
+
+        const metabaseEl = document.getElementById('metabase-view');
+        if (metabaseEl) {
+            metabaseEl.setAttribute('token', newToken);
+        }
+
+        // Bascule visuelle des onglets
+        document.querySelectorAll('.dash-tab-btn').forEach(btn => {
+            btn.classList.remove('bg-[#714B67]', 'text-white', 'shadow-xs', 'font-bold');
+            btn.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-white/60', 'font-semibold');
+            
+            const svg = btn.querySelector('svg');
+            if (svg) {
+                svg.classList.remove('text-white');
+                svg.classList.add('text-slate-400');
+            }
+        });
+
+        const activeBtn = document.getElementById(activeBtnId);
+        if (activeBtn) {
+            activeBtn.classList.add('bg-[#714B67]', 'text-white', 'shadow-xs', 'font-bold');
+            activeBtn.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-white/60', 'font-semibold');
+            
+            const svg = activeBtn.querySelector('svg');
+            if (svg) {
+                svg.classList.remove('text-slate-400');
+                svg.classList.add('text-white');
+            }
+        }
+
+        setTimeout(hideSkeleton, 700);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(hideSkeleton, 1000);
+    });
+
+    function refreshDashboard() {
+        const icon = document.getElementById('refresh-icon');
+        if (icon) icon.classList.add('animate-spin');
+        window.location.reload();
+    }
+
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.error("Erreur lors du passage en plein écran :", err.message);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
+</script>
+{% endblock %}
+<!-- Pilule Flottante Centrée - Style DHIS2 (Floating Dock) -->
+
+        </div>
+    </div>
+    <!-- BARRE DE NAVIGATION FLOTTANTE (DHIS2) -->
+<!-- BARRE DE NAVIGATION FLOTTANTE (DHIS2) -->
+<!-- CONTENEUR PRINCIPAL DE LA NAVIGATION (Positionné en bas à droite) -->
+<div id="nav-container" class="fixed bottom-4 right-4 z-50 transition-all duration-300">
+    
+    <!-- 1. BOUTON FLOTTANT RÉDUIT (Visible par défaut) -->
+    <button id="nav-trigger" 
+            onclick="toggleNavbar()" 
+            title="Ouvrir le menu"
+            class="group flex items-center justify-center w-10 h-10 bg-[#0e1e2d] border border-sky-400/40 rounded-full shadow-lg hover:border-sky-400 transition-all duration-300 cursor-pointer active:scale-95 ml-auto">
+        <svg class="w-5 h-5 text-sky-400 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+        </svg>
+    </button>
+
+    <!-- 2. BARRE DE NAVIGATION ULTRA-COMPACTE (Cachée par défaut avec 'hidden') -->
+    <nav id="navbar-menu" 
+         class="hidden flex items-center gap-1 bg-[#0e1e2d]/90 backdrop-blur-md border border-[#1d334a] p-1.5 rounded-2xl shadow-xl font-sans transition-all duration-300 ease-out origin-bottom-right">
+        
+        <!-- 1. Accueil / Dashboard -->
+        <a href="/dashboard/" 
+           title="Tableau de bord" 
+           class="nav-link relative flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-medium transition-all duration-200 shrink-0 text-white bg-[#004C99] border border-sky-400/30 group">
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+            </svg>
+            <span class="hidden group-hover:inline transition-all whitespace-nowrap">Accueil</span>
+        </a>
+
+        {% if perms.circb_app.peut_voir_consulter_echantillons %}
+        <!-- 2. Échantillons -->
+        <a href="/echantillonages/" 
+           title="Gestion des Échantillons" 
+           class="nav-link relative flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#192b3c] border border-transparent hover:border-[#2b4562] transition-all duration-200 group shrink-0">
+            <svg class="w-4 h-4 shrink-0 text-sky-400 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5a3.75 3.75 0 0 1-3.75 3.75H8.75A3.75 3.75 0 0 1 5 14.5m14 0v1.5a3.75 3.75 0 0 1-3.75 3.75H8.75A3.75 3.75 0 0 1 5 16V14.5"/>
+            </svg>
+            <span class="hidden group-hover:inline transition-all whitespace-nowrap">Échantillons</span>
+        </a>
+        {% endif %}
+
+        <!-- 3. Résultats -->
+        {% if perms.circb_app.Consulter_resultat_patient %}
+        <a href="/resultats/" 
+           title="Saisie & Validation des Résultats" 
+           class="nav-link relative flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#192b3c] border border-transparent hover:border-[#2b4562] transition-all duration-200 group shrink-0">
+            <div class="relative flex items-center">
+                <svg class="w-4 h-4 shrink-0 text-emerald-400 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+            </div>
+            <span class="hidden group-hover:inline transition-all whitespace-nowrap">Résultats</span>
+        </a>
+        {% endif %}
+
+        <!-- 4. Fiches d'Expedition -->
+        {% if perms.circb_app.peut_voir_fiches_expedition %}
+        <a href="/fiches-echantillons/" 
+           title="Expéditions & Logistique" 
+           class="nav-link relative flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-[#192b3c] border border-transparent hover:border-[#2b4562] transition-all duration-200 group shrink-0">
+            <svg class="w-4 h-4 shrink-0 text-amber-400 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12 0A1.106 1.106 0 0 1 13.144 15H3.356a1.106 1.106 0 0 1-1.106-1.106v-.394"/>
+            </svg>
+            <span class="hidden group-hover:inline transition-all whitespace-nowrap">Expéditions</span>
+        </a>
+        {% endif %}
+
+        <!-- Séparateur -->
+        <div class="h-4 w-px bg-[#1d334a] mx-0.5 shrink-0"></div>
+
+        <!-- 5. MENU APPLICATIONS -->
+        <button title="Applications CIRCB" 
+                onclick="document.getElementById('menu-modal')?.showModal()"
+                class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#192b3c] border border-transparent hover:border-[#2b4562] transition-all duration-200 cursor-pointer shrink-0">
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"/>
+            </svg>
+        </button>
+
+        <!-- 6. PROFIL UTILISATEUR -->
+        <div class="relative shrink-0">
+            <button id="user-menu-button" 
+                    onclick="toggleUserMenu(event)"
+                    title="Compte Utilisateur" 
+                    class="p-0.5 rounded-xl text-slate-300 hover:text-white hover:bg-[#192b3c] border border-transparent hover:border-[#2b4562] transition-all duration-200 cursor-pointer flex items-center justify-center focus:outline-none">
+                <div class="w-6 h-6 rounded-lg bg-[#004C99] text-white flex items-center justify-center font-bold text-[10px] border border-sky-300/40 shadow-xs">
+                    {{request.user.first_name|slice:":1"|upper}}{{request.user.last_name|slice:":1"|upper}}
+                </div>
+            </button>
+
+            <!-- Menu Déroulant Profil -->
+            <div id="user-dropdown-menu" 
+                 class="hidden absolute right-0 bottom-full mb-3 w-48 bg-[#0e1e2d] border border-[#1d334a] rounded-xl shadow-xl overflow-hidden z-50 backdrop-blur-xl transition-all duration-200">
+                <div class="px-3 py-2 border-b border-[#1d334a]">
+                    <p class="text-xs font-semibold text-white truncate">Utilisateur LAB</p>
+                    <p class="text-[9px] text-slate-400 font-mono truncate">lims-admin@dhis2.org</p>
+                </div>
+                <div class="p-1">
+                    <a href="/profile/" 
+                       onclick="closeUserMenu()"
+                       class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-[#192b3c] transition-colors">
+                        <svg class="w-3.5 h-3.5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
+                        </svg>
+                        <span>Profil</span>
+                    </a>
+                    <form method="POST" action="{% url 'logout' %}" class="w-full m-0 p-0">
+                        {% csrf_token %}
+                        <button type="submit" 
+                                onclick="closeUserMenu()"
+                                class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors w-full">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"/>
+                            </svg>
+                            <span>Déconnexion</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. BOUTON DE FERMETURE (Masquer la barre) -->
+        <button onclick="toggleNavbar()" 
+                title="Masquer le menu"
+                class="ml-0.5 p-1.5 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all duration-200 cursor-pointer shrink-0">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+
+    </nav>
+</div>
+
+<script>
+    // Fonction JavaScript associée pour basculer l'affichage
+    function toggleNavbar() {
+        const trigger = document.getElementById('nav-trigger');
+        const menu = document.getElementById('navbar-menu');
+        
+        if (menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+            trigger.classList.add('hidden');
+        } else {
+            menu.classList.add('hidden');
+            trigger.classList.remove('hidden');
+        }
+    }
+</script>
+<div id="app-root"></div>
+
+    <!-- Script d'injection du contenu encodé -->
+    <script>
+        // Le contenu HTML de la page est encodé en Base64 ou chiffré
+        const _0x4a12 = "PGRpdiBjbGFzcz0icC00Ij48aDE+Q29udGVudSBzZWNyZXQ8L2gxPjwvZGl2Pg==";
+        
+        // Décodage et injection dynamique dans le DOM
+        document.getElementById('app-root').innerHTML = atob(_0x4a12);
+    </script>
+    <script>
+    (function() {
+        // Détecteur d'ouverture des DevTools via le délai d'exécution
+        const checkDevTools = function() {
+            const start = performance.now();
+            debugger; // Bloque l'exécution si la console est ouverte
+            const end = performance.now();
+
+            // Si le temps d'arrêt dépasse 100ms, les DevTools sont ouverts
+            if (end - start > 100) {
+                // Autodestruction : efface tout le contenu HTML de la page
+                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%;'>ACCÈS NON AUTORISÉ</h1>";
+                window.location.reload();
+            }
+        };
+
+        // Exécution en boucle continue
+        setInterval(checkDevTools, 500);
+
+        // Bloquer le clic droit et les raccourcis
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) || (e.ctrlKey && e.key.toUpperCase() === 'U')) {
+                e.preventDefault();
+            }
+        });
+    })();
+</script>
+<script>
+    function toggleNavbar() {
+        const trigger = document.getElementById('nav-trigger');
+        const menu = document.getElementById('navbar-menu');
+
+        const isHidden = menu.classList.contains('hidden');
+
+        if (isHidden) {
+            trigger.classList.add('hidden');
+            menu.classList.remove('hidden');
+            setTimeout(() => {
+                menu.classList.remove('opacity-0', 'scale-95');
+                menu.classList.add('opacity-100', 'scale-100');
+            }, 10);
+        } else {
+            menu.classList.remove('opacity-100', 'scale-100');
+            menu.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                menu.classList.add('hidden');
+                trigger.classList.remove('hidden');
+            }, 200);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        const activeClasses = ['text-white', 'bg-[#004C99]', 'border-sky-400/30', 'shadow-xs', 'font-semibold'];
+        const inactiveClasses = ['text-slate-300', 'hover:text-white', 'hover:bg-[#192b3c]', 'border-transparent', 'hover:border-[#2b4562]', 'font-medium'];
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (currentPath === href || (href !== '/' && currentPath.startsWith(href))) {
+                link.classList.remove(...inactiveClasses);
+                link.classList.add(...activeClasses);
+            } else {
+                link.classList.remove(...activeClasses);
+                link.classList.add(...inactiveClasses);
+            }
+        });
+    });
+
+    function toggleUserMenu(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('user-dropdown-menu');
+        if (dropdown) dropdown.classList.toggle('hidden');
+    }
+
+    function closeUserMenu() {
+        const dropdown = document.getElementById('user-dropdown-menu');
+        if (dropdown && !dropdown.classList.contains('hidden')) {
+            dropdown.classList.add('hidden');
+        }
+    }
+
+    document.addEventListener('click', (event) => {
+        const dropdown = document.getElementById('user-dropdown-menu');
+        if (dropdown && !dropdown.contains(event.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+</script>
+<!-- SCRIPT JS DE GESTION DES CLICS -->
+<script>
+    function toggleUserMenu(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('user-dropdown-menu');
+        if (dropdown) {
+            dropdown.classList.toggle('hidden');
+        }
+    }
+
+    function closeUserMenu() {
+        const dropdown = document.getElementById('user-dropdown-menu');
+        if (dropdown && !dropdown.classList.contains('hidden')) {
+            dropdown.classList.add('hidden');
+        }
+    }
+
+    document.addEventListener('click', (event) => {
+        const dropdown = document.getElementById('user-dropdown-menu');
+        const button = document.getElementById('user-menu-button');
+        if (dropdown && !dropdown.contains(event.target) && !button.contains(event.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+</script>
+    {%block scripts%}
+    
+    <script>
+        lucide.createIcons();
+
+        function toggleProfileMenu() { document.getElementById('profile-menu').classList.toggle('hidden'); }
+        function toggleCollapse(id) { document.getElementById(id).classList.toggle('hidden'); }
+        function logout() { if (confirm('Voulez-vous vous déconnecter de la session MEDISYS ?')) window.location.href = '#'; }
+
+        // Incrementations numériques
+        document.querySelectorAll('.count-up').forEach(el => {
+            const target = +el.getAttribute('data-target') || 0;
+            let current = 0;
+            const increment = Math.max(1, Math.round(target / 30));
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                el.textContent = current;
+            }, 25);
+        });
+
+      
+        
+    </script>
+   <!-- Inclusion de SweetAlert2 -->
+<!-- Inclusion de SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Configuration du Mixin Toast Moderne (Glassmorphism & Auto-close)
+    const ModernToast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4500,
+        timerProgressBar: true,
+        padding: '0px',
+        margin: '0.75rem',
+        didOpen: (toast) => {
+            // Effet d'interaction : Met en pause la fermeture auto si survolé
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+        showClass: {
+            popup: 'animate__animated animate__fadeInRight animate__faster'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutRight animate__faster'
+        }
+    });
+
+    // 2. Extraire la liste des messages Django
+    const messages = [
+        {% if messages %}
+            {% for message in messages %}
+            {
+                text: "{{ message|escapejs }}",
+                type: "{{ message.tags|default:'info' }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        {% endif %}
+    ];
+
+    // 3. Boucle d'affichage avec délai imperceptible pour effet d'empilage
+    messages.forEach((msg, index) => {
+        setTimeout(() => {
+            const isError = msg.type.includes('error') || msg.type.includes('danger');
+            const isWarning = msg.type.includes('warning');
+            const isInfo = msg.type.includes('info');
+
+            // Thèmes ultra-épurés & gradients néons légers
+            let config = {
+                title: 'Succès',
+                glowColor: 'shadow-emerald-500/10',
+                accentBg: 'bg-emerald-500',
+                badgeBg: 'bg-emerald-50 text-emerald-700 border-emerald-200/60',
+                iconSvg: `<svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`
+            };
+
+            if (isError) {
+                config = {
+                    title: 'Erreur',
+                    glowColor: 'shadow-rose-500/10',
+                    accentBg: 'bg-rose-500',
+                    badgeBg: 'bg-rose-50 text-rose-700 border-rose-200/60',
+                    iconSvg: `<svg class="w-4 h-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`
+                };
+            } else if (isWarning) {
+                config = {
+                    title: 'Attention',
+                    glowColor: 'shadow-amber-500/10',
+                    accentBg: 'bg-amber-500',
+                    badgeBg: 'bg-amber-50 text-amber-700 border-amber-200/60',
+                    iconSvg: `<svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`
+                };
+            } else if (isInfo) {
+                config = {
+                    title: 'Information',
+                    glowColor: 'shadow-sky-500/10',
+                    accentBg: 'bg-[#1471a8]',
+                    badgeBg: 'bg-sky-50 text-[#1471a8] border-sky-200/60',
+                    iconSvg: `<svg class="w-4 h-4 text-[#1471a8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`
+                };
+            }
+
+            ModernToast.fire({
+                html: `
+                    <div class="relative w-full p-3.5 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 shadow-xl ${config.glowColor} overflow-hidden font-sans text-left transition-all duration-300 hover:border-slate-300">
+                        
+                        <!-- Ligne d'accentuation néon à gauche -->
+                        <div class="absolute left-0 top-0 bottom-0 w-1 ${config.accentBg}"></div>
+
+                        <div class="flex items-start justify-between gap-3 pl-1.5">
+                            
+                            <!-- Contenu principal -->
+                            <div class="flex items-start gap-2.5 flex-1 min-w-0">
+                                <div class="p-1 rounded-lg bg-slate-50 border border-slate-100 shrink-0 mt-0.5">
+                                    ${config.iconSvg}
+                                </div>
+
+                                <div class="space-y-0.5 flex-1">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-800">
+                                            ${config.title}
+                                        </span>
+                                        <span class="text-[9px] font-bold text-slate-400 font-mono">CIRCB EID</span>
+                                    </div>
+                                    <p class="text-xs font-medium text-slate-600 leading-relaxed break-words">
+                                        ${msg.text}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Bouton Fermer discret -->
+                            <button onclick="Swal.close()" class="text-slate-300 hover:text-slate-500 transition-colors p-0.5 rounded-md hover:bg-slate-100">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                `,
+                customClass: {
+                    popup: '!bg-transparent !p-0 !shadow-none !max-w-sm'
+                }
+            });
+        }, index * 200); // 200ms de décalage si plusieurs messages arrivent en même temps
+    });
+});
+// ==========================================
+// GESTIONNAIRE PWA AVANCÉ (Style DHIS2)
+// ==========================================
+
+let deferredPrompt;
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/serviceworker.js')
+            .then(function(reg) { 
+                console.log('%c[DHIS2 PWA]%c Service Worker actif & enregistré.', 'color: #1478c1; font-weight: bold;', 'color: inherit;'); 
+                
+                // Détecter si une mise à jour du Service Worker est disponible
+                reg.addEventListener('updatefound', () => {
+                    const newWorker = reg.installing;
+                    newWorker.addEventListener('change', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            showUpdateNotification(); // Notification pour rafraîchir l'app
+                        }
+                    });
+                });
+            })
+            .catch(function(err) { 
+                console.error('[DHIS2 PWA] Échec enregistrement Service Worker :', err); 
+            });
+    });
+}
+
+// 1. Gestion dynamique de l'état Réseau (En ligne / Hors-ligne)
+window.addEventListener('online', updateNetworkStatus);
+window.addEventListener('offline', updateNetworkStatus);
+
+function updateNetworkStatus() {
+    const isOnline = navigator.onLine;
+    // Vous pouvez cibler un élément UI dédié pour afficher un badge "Hors-ligne"
+    console.log(isOnline ? '%c[PWA] Connexion rétablie' : '%c[PWA] Mode Hors-ligne activé', 'color: ' + (isOnline ? 'green' : 'orange'));
+}
+
+// 2. Interception de l'événement d'installation de la PWA
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // Rendre visible un bouton d'installation personnalisé dans votre interface si besoin
+    const installBtn = document.getElementById('pwa-install-btn');
+    if (installBtn) {
+        installBtn.classList.remove('hidden');
+        installBtn.addEventListener('click', () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('[PWA] Utilisateur a accepté l\'installation');
+                }
+                deferredPrompt = null;
+            });
+        });
+    }
+});
+  const canvas = document.getElementById('bio-canvas');
+    const ctx = canvas.getContext('2d');
+    let elements = [];
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Classe représentant des éléments biologiques (Cellules / Molécules)
+    class BioElement {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.radius = Math.random() * 6 + 2; // Taille des cellules
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
+            this.alpha = Math.random() * 0.4 + 0.1;
+            this.color = Math.random() > 0.4 ? '#0284c7' : '#14b8a6'; // Cyan & Teal médical
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.x > canvas.width + 10) this.x = -10;
+            if (this.x < -10) this.x = canvas.width + 10;
+            if (this.y > canvas.height + 10) this.y = -10;
+            if (this.y < -10) this.y = canvas.height + 10;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.alpha;
+            ctx.fill();
+
+            // Deuxième cercle concentrique style membrane cellulaire
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius * 1.8, 0, Math.PI * 2);
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 0.5;
+            ctx.globalAlpha = this.alpha * 0.5;
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    function initBioCanvas() {
+        elements = [];
+        const count = Math.floor((canvas.width * canvas.height) / 20000);
+        for (let i = 0; i < count; i++) {
+            elements.push(new BioElement());
+        }
+    }
+    initBioCanvas();
+
+    function animateBioCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Liaisons Moléculaires / Connexions d'analyses
+        for (let a = 0; a < elements.length; a++) {
+            for (let b = a; b < elements.length; b++) {
+                let dx = elements[a].x - elements[b].x;
+                let dy = elements[a].y - elements[b].y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 110) {
+                    ctx.strokeStyle = '#0284c7';
+                    ctx.globalAlpha = (1 - distance / 110) * 0.15;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(elements[a].x, elements[a].y);
+                    ctx.lineTo(elements[b].x, elements[b].y);
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+                }
+            }
+        }
+
+        elements.forEach(el => {
+            el.update();
+            el.draw();
+        });
+
+        requestAnimationFrame(animateBioCanvas);
+    }
+    animateBioCanvas();
+</script>
+    {%endblock%}
+    
+</body>
+</html>

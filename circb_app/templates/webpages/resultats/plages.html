@@ -1,0 +1,957 @@
+{% extends "../dashbord_hosp.html" %}
+
+{% block main %}
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-3 sm:p-4 bg-slate-50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 antialiased">
+    
+    <!-- ========================================== -->
+    <!-- 1. OVERLAY DE CHARGEMENT GLOBAL (STYLE DHIS2) -->
+    <!-- ========================================== -->
+    <div id="global-loader" class="print:hidden fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/50 backdrop-blur-2xs transition-all duration-200">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-xl flex items-center gap-3">
+            <div class="relative flex items-center justify-center shrink-0">
+                <div class="w-6 h-6 rounded-full border-2 border-slate-200 dark:border-slate-700"></div>
+                <div class="absolute w-6 h-6 rounded-full border-2 border-blue-600 border-t-transparent animate-spin"></div>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">Traitement en cours</h3>
+                <p class="text-[10px] text-slate-500 font-mono mt-0.5">Synchronisation EID...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-[1700px] w-full mx-auto space-y-3 flex flex-col h-full">
+
+        <!-- ========================================== -->
+        <!-- 2. BARRE D'ACTION SUPERIEURE / TOOLBAR     -->
+        <!-- ========================================== -->
+      <!-- ========================================== -->
+<!-- MODALE DE CHARGEMENT PRO (DHIS2 STYLE)     -->
+<!-- ========================================== -->
+<!-- MODAL DE CHARGEMENT & VALIDATION STYLE PASSERELLE INTERNATIONALE -->
+<div id="pdf-loader-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/30 backdrop-blur-md transition-all duration-300">
+    <div class="bg-white/85 backdrop-blur-xl border border-white/70 rounded-3xl p-6 shadow-[0_20px_60px_-15px_rgba(20,120,193,0.3)] max-w-sm w-full mx-4 text-center space-y-5 relative overflow-hidden">
+        
+        <!-- Effets néon Tech Clean -->
+        <div class="absolute -top-12 -left-12 w-28 h-28 bg-cyan-400/20 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -bottom-12 -right-12 w-28 h-28 bg-[#1478c1]/20 rounded-full blur-2xl pointer-events-none"></div>
+
+        <!-- BLOC ANIME : SPINNER + CHECKMARK STYLE PAIEMENT -->
+        <div class="relative inline-flex items-center justify-center w-20 h-20 mx-auto">
+            
+            <!-- Anneau de chargement en rotation (Masqué au Succès) -->
+            <div id="loader-ring" class="absolute inset-0 rounded-full border-2 border-slate-200 border-t-[#1478c1] border-r-cyan-400 animate-spin"></div>
+            
+            <!-- Cercle de Fond avec transition de couleur -->
+            <div id="icon-bg" class="w-14 h-14 rounded-2xl bg-sky-50 border border-sky-100 text-[#1478c1] flex items-center justify-center transition-all duration-500 shadow-inner">
+                
+                <!-- 1. Icône Imprimante (Active pendant la génération) -->
+                <svg id="printer-icon" class="w-7 h-7 animate-pulse transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                </svg>
+
+                <!-- 2. Icône Check (Cachée au début, apparaît au Succès) -->
+                <svg id="success-icon" class="w-7 h-7 text-emerald-500 hidden transform scale-50 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Textes dynamiques -->
+        <div class="space-y-1">
+            <h4 id="loader-title" class="text-xs font-black text-[#00529b] tracking-wider uppercase font-mono transition-colors duration-300">
+                Génération en cours...
+            </h4>
+            <p id="loader-subtitle" class="text-[11px] font-medium text-slate-500 transition-colors duration-300">
+                Traitement des données biomédicales par le serveur...
+            </p>
+        </div>
+
+        <!-- Barre de progression -->
+        <div class="space-y-1.5">
+            <div class="flex justify-between items-center text-[10px] font-mono font-bold">
+                <span id="loader-status-label" class="text-slate-400 uppercase tracking-wider">Traitement</span>
+                <span id="loader-percentage" class="text-[#1478c1] font-black">0%</span>
+            </div>
+            <div class="w-full bg-slate-100 border border-slate-200/80 rounded-full h-2 overflow-hidden p-0.5 shadow-inner">
+                <div id="loader-bar" class="bg-gradient-to-r from-[#00529b] via-[#1478c1] to-cyan-400 h-full rounded-full transition-all duration-150 ease-out" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <p class="text-[9px] text-slate-400 font-mono tracking-widest uppercase">MEDISYS EID • PDF PRE-RENDER ENGINE</p>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- COMPOSANT HEADER MODULE PCR                -->
+<!-- ========================================== -->
+<div class="print:hidden bg-white border-b border-slate-200 px-6 py-3.5 shadow-xs shrink-0 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+    
+    <!-- SECTION GAUCHE: FIL D'ARIANE & TITRE STYLE ODOO -->
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#714B67] to-[#513349] text-white flex items-center justify-center font-bold text-xs shadow-sm shadow-purple-900/15 shrink-0">
+            PCR
+        </div>
+        
+        <div class="space-y-0.5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                <span class="hover:text-slate-600 transition-colors">MEDISYS EID</span>
+                <span class="text-slate-300">•</span>
+                <span class="text-slate-700 font-bold tracking-wide">Module PCR</span>
+            </div>
+            <h1 class="text-base font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                <span>Saisie & Attribution</span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium bg-purple-50 text-[#714B67] rounded-md border border-purple-200/60">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#714B67] animate-pulse"></span>
+                    Actif
+                </span>
+            </h1>
+        </div>
+    </div>
+
+    <!-- SECTION DROITE: BARRE D'ACTIONS STYLE ODOO (BORDEREAU & EXPORTS) -->
+    <div class="flex flex-wrap items-center gap-2 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+        
+        <!-- 1. Fiches Individuelles -->
+        <button type="button" 
+                onclick="genererPdfEnArrierePlan('Individuel', '{% url 'resultats-individuel-pdf' %}')" 
+                title="Imprimer les fiches individuelles par patient"
+                class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200/80 border border-slate-200 rounded-lg transition-all active:scale-95 cursor-pointer shadow-2xs group">
+            <svg class="w-4 h-4 text-slate-500 group-hover:text-sky-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+            <span>Individuelles</span>
+        </button>
+
+        <!-- 2. Fiches Synthétiques -->
+        <button type="button" 
+                onclick="genererPdfEnArrierePlan('Synthétique', '{% url 'imprimer_resultat_pdf' %}')" 
+                title="Imprimer le résumé synthétique des résultats"
+                class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100/70 border border-amber-200/80 rounded-lg transition-all active:scale-95 cursor-pointer shadow-2xs group">
+            <svg class="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span>fiche Synthese</span>
+        </button>
+
+        <!-- 3. Fiches Patients Détectés -->
+        <button type="button" 
+                onclick="genererPdfEnArrierePlan('FicheDetecte', '{% url 'fiche_detecte' %}')" 
+                title="Imprimer uniquement la liste des cas positifs détectés"
+                class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100/70 border border-rose-200/80 rounded-lg transition-all active:scale-95 cursor-pointer shadow-2xs group">
+            <svg class="w-4 h-4 text-rose-500 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <span>Détectés</span>
+        </button>
+
+        <!-- 4. Fiches Récapitulatives (Bouton Principal style Odoo - Violet #714B67) -->
+        <button type="button" 
+                onclick="genererPdfEnArrierePlan('Récapitulatif', '{% url 'resultats-collectifs' %}')" 
+                title="Imprimer le listing récapitulatif complet"
+                class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-[#714B67] hover:bg-[#5f3f57] border border-transparent rounded-lg transition-all active:scale-95 cursor-pointer shadow-sm shadow-purple-900/10">
+            <svg class="w-4 h-4 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span>Récapitulatif</span>
+        </button>
+
+    </div>
+
+</div>
+
+<!-- ========================================== -->
+<!-- SCRIPT AJAX FETCH & BLOB PRE-RENDERING     -->
+<!-- ========================================== -->
+<script>
+async function genererPdfEnArrierePlan(nomDocument, urlTarget) {
+    const modal = document.getElementById('pdf-loader-modal');
+    const progressBar = document.getElementById('loader-bar');
+    const percentageText = document.getElementById('loader-percentage');
+    const titleText = document.getElementById('loader-title');
+    const subtitleText = document.getElementById('loader-subtitle');
+
+    // 1. Initialiser la modale
+    titleText.innerText = "Génération " + nomDocument + "...";
+    subtitleText.innerText = "Calcul des données et rendu du document PDF...";
+    progressBar.style.width = '5%';
+    percentageText.innerText = '5%';
+    if (modal) modal.classList.remove('hidden');
+
+    let currentProgress = 5;
+    const progressTimer = setInterval(() => {
+        if (currentProgress < 85) {
+            currentProgress += Math.floor(Math.random() * 5) + 2;
+            progressBar.style.width = currentProgress + '%';
+            percentageText.innerText = currentProgress + '%';
+        }
+    }, 100);
+
+    try {
+        // 2. Extraire les données du formulaire
+        const formElement = document.getElementById('save-form');
+        const formData = formElement ? new FormData(formElement) : new FormData();
+
+        // 3. Exécuter la requête réseau
+        const response = await fetch(urlTarget, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        // NOUVEAU : Si le serveur renvoie une erreur (HTTP 500, 404, etc.)
+        if (!response.ok) {
+            const errorText = await response.text();
+            
+            // Si Django est en mode DEBUG=True, on ouvre l'erreur HTML dans un nouvel onglet pour voir le traceback
+            const errorWindow = window.open("", "_blank");
+            if (errorWindow) {
+                errorWindow.document.write(errorText);
+                errorWindow.document.close();
+            }
+            
+            throw new Error(`Le serveur a répondu avec le code HTTP ${response.status}`);
+        }
+
+        // 4. Récupérer le fichier PDF généré sous forme de Blob binaire
+        const pdfBlob = await response.blob();
+
+        // Finalisation
+        clearInterval(progressTimer);
+        progressBar.style.width = '100%';
+        percentageText.innerText = '100%';
+        subtitleText.innerText = "PDF prêt ! Ouverture en cours...";
+
+        const blobUrl = URL.createObjectURL(pdfBlob);
+
+        setTimeout(() => {
+            window.open(blobUrl, '_blank');
+            setTimeout(() => {
+                if (modal) modal.classList.add('hidden');
+            }, 300);
+        }, 200);
+
+    } catch (error) {
+        clearInterval(progressTimer);
+        console.error("Erreur génération PDF:", error);
+        alert("Erreur lors de la génération du PDF :\n" + error.message);
+        if (modal) modal.classList.add('hidden');
+    }
+}
+</script>
+
+        <!-- EN-TÊTE SPÉCIFIQUE À L'IMPRESSION (Masqué à l'écran) -->
+        <div class="hidden print:block mb-4 border-b-2 border-slate-900 pb-2">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-xl font-bold uppercase tracking-wide text-slate-900">Rapport Récapitulatif PCR</h1>
+                    <p class="text-xs text-slate-600">Laboratoire d'Analyses Médicales - LIMS</p>
+                </div>
+                <div class="text-right text-xs">
+                    <p><strong>Date d'impression :</strong> {% now "d/m/Y H:i" %}</p>
+                    <p><strong>Total échantillons :</strong> {{ echantillons|length|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 3. DISPOSITION EN 2 PANNEAUX               -->
+        <!-- ========================================== -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start flex-1 min-h-0">
+
+            <!-- PANNEAU GAUCHE : FILTRES ET PARAMÈTRES (Masqué à l'impression) -->
+            <div class="print:hidden lg:col-span-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xs p-3.5 space-y-3.5">
+                <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <h2 class="text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5 font-mono">
+                        <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                        Filtres & Plage
+                    </h2>
+                    <span class="text-[9px] font-mono text-slate-400">CRITÈRES</span>
+                </div>
+
+                <form id="filter-form" method="POST" action="{% url 'search_plage' %}" class="space-y-3">
+                    {% csrf_token %}
+
+                    <!-- Intervalle -->
+                    <div class="space-y-1.5 bg-slate-50 dark:bg-slate-800/40 p-2.5 rounded border border-slate-200/80 dark:border-slate-800">
+                        <span class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 block font-mono">Intervalle de codes</span>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Début</label>
+                                <input type="number" name="debut_ancien_code" value="{{ debut }}" placeholder="Ex: 100" class="w-full px-2 py-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-xs font-mono font-bold text-slate-900 dark:text-white focus:ring-1 focus:ring-blue-600 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Fin</label>
+                                <input type="number" name="fin_code_echantillon" value="{{ fin }}" placeholder="Ex: 200" class="w-full px-2 py-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-xs font-mono font-bold text-slate-900 dark:text-white focus:ring-1 focus:ring-blue-600 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inclusions / Exclusions -->
+                    <div class="space-y-2">
+                        <div>
+                            <label class="block text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 mb-1">+ Codes spécifiques</label>
+                            <textarea name="liste_inclure" rows="2" placeholder="Ex: 105, 112" class="w-full p-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-xs font-mono text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-emerald-600 outline-none resize-none">{{ inclusion }}</textarea>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-rose-700 dark:text-rose-400 mb-1">- Exclure codes</label>
+                            <textarea name="liste_exclure" rows="2" placeholder="Ex: 108, 115" class="w-full p-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-xs font-mono text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-rose-600 outline-none resize-none">{{ exclure }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 flex items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-800">
+                        <a href="{% url 'search_plage' %}" class="text-[11px] font-medium text-slate-500 hover:text-slate-800">Effacer</a>
+                        <button type="submit" id="btn-search" class="px-3 py-1.5 text-xs font-bold text-white bg-blue-700 hover:bg-blue-800 rounded shadow-xs active:scale-95 transition-all flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                            <span>Appliquer</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- PANNEAU DROIT : DATA GRID -->
+            <div class="lg:col-span-9 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xs overflow-hidden flex flex-col max-h-[calc(100vh-140px)] print:max-h-none print:border-none print:shadow-none">
+                <form id="save-form" method="POST" action="{% url 'search_plage' %}" class="flex flex-col h-full min-h-0">
+                    {% csrf_token %}
+                    
+                    <input type="hidden" name="debut_ancien_code" value="{{ debut }}">
+                    <input type="hidden" name="fin_code_echantillon" value="{{ fin }}">
+                    <input type="hidden" name="liste_exclure" value="{{ exclure }}">
+                    <input type="hidden" name="liste_inclure" value="{{ inclusion }}">
+
+                    <!-- Paramétrage Temporel (Masqué à l'impression si besoin) -->
+                   
+
+                    <!-- EN-TÊTE TABLEAU -->
+                    <div class="print:hidden px-3 py-2 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 flex items-center justify-between shrink-0 mt-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold uppercase font-mono text-slate-700 dark:text-slate-300">
+                                Ligne de Registre
+                            </span>
+                            <span class="px-2 py-0.5 text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded border border-blue-200 dark:border-blue-800">
+                             {{ echantillons.count|add:"-1" }} entrées
+                            </span>
+                        </div>
+
+                        {% if echantillons %}
+                            <button type="submit" name="save_results" class="px-3 py-1 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded shadow-xs active:scale-95 transition-all flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <span>Enregistrer tout</span>
+                            </button>
+                        {% endif %}
+                    </div>
+
+                    {% if echantillons %}
+                        <!-- DATA GRID SCROLLABLE -->
+                        <div class="overflow-y-auto overflow-x-auto custom-scrollbar flex-1 print:overflow-visible">
+  <table id="pcr-table" class="w-full text-left text-[11px] border-collapse bg-white dark:bg-slate-900 shadow-2xs rounded-md overflow-hidden border border-slate-200 dark:border-slate-800">
+    <!-- En-tête professionnel standardisé -->
+    <thead class="bg-slate-100/80 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold uppercase tracking-wider text-[9px]">
+        <tr>
+        
+            <th class="px-3 py-2.5 w-24 border-r border-slate-200 dark:border-slate-700">Code</th>
+            <th class="px-3 py-2.5 min-w-[140px] border-r border-slate-200 dark:border-slate-700">Patient</th>
+            <th class="px-3 py-2.5 w-24 whitespace-nowrap border-r border-slate-200 dark:border-slate-700">Prélèv.</th>
+            <th class="px-3 py-2.5 w-32 whitespace-nowrap border-r border-slate-200 dark:border-slate-700">Date Résultat</th>
+            <th class="px-3 py-2.5 min-w-[180px]">Résultat PCR</th>
+        </tr>
+    </thead>
+
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-[11px]">
+    {% for ech in echantillons %}
+    {% with res_nom=ech.resultat_pcr.nom|lower|default:"" %}
+    
+    {% if "detecte" in res_nom and "non" not in res_nom or "positif" in res_nom %}
+
+        <!-- LIGNE DÉTECTÉE (Alerte clinique professionnelle) -->
+        <tr id="row-{{ ech.id }}" 
+            class="row-sample transition-colors duration-150 bg-red-50/70 dark:bg-red-950/20 hover:bg-red-100/60 dark:hover:bg-red-900/30 text-slate-900 dark:text-slate-100">
+            
+            <input type="hidden" name="echantillon_ids" value="{{ ech.id }}">
+
+           
+
+            <td class="px-3 py-2.5 font-mono font-bold border-r border-slate-200/60 dark:border-slate-800 cell-border">
+                <div class="code-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 shadow-2xs">
+                    <span class="tracking-wide text-[10px] font-mono uppercase font-bold">{{ ech.code }}</span>
+                </div>
+            </td>
+
+            <td class="px-3 py-2.5 border-r border-slate-200/60 dark:border-slate-800 cell-border font-semibold">
+                {% if ech.enfant %}
+                    <span class="patient-name block max-w-[250px] truncate text-red-900 dark:text-red-200" title="{{ ech.enfant.nom }} {{ ech.enfant.prenom }}">
+                        {{ ech.enfant.nom }}
+                    </span>
+                {% endif %}
+            </td>
+
+            <td class="px-3 py-2.5 font-mono text-[10px] border-r border-slate-200/60 dark:border-slate-800 cell-border text-slate-600 dark:text-slate-400">
+                {{ ech.date_prelevement|date:"d/m/Y"|default:"-" }}
+            </td>
+
+            <td class="px-3 py-2.5 border-r border-slate-200/60 dark:border-slate-800 cell-border">
+                <input type="text" 
+                       name="date_resultat_{{ ech.id }}" 
+                       value="{{ ech.date_resultat|date:'d-m-Y'|default:'' }}" 
+                       placeholder="JJ-MM-AAAA"
+                       maxlength="10"
+                       oninput="autoFormatDate(this)"
+                       class="date-input px-2 py-1 text-[10px] font-mono rounded border font-medium shadow-2xs focus:outline-none transition-all w-full border-red-300 dark:border-red-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500">
+            </td>
+
+            <td class="px-3 py-2.5">
+                <div class="print:block hidden font-bold uppercase text-xs">
+                    {{ ech.resultat_pcr.nom|default:"Non défini" }}
+                </div>
+
+                <div class="print:hidden flex items-center gap-1.5 flex-wrap">
+                    {% for r in resultats_pcr %}
+                        {% with r_nom=r.nom|lower|default:"" %}
+                        {% if "detecte" in r_nom and "non" not in r_nom or "positif" in r_nom %}
+                            <label class="radio-label relative inline-flex items-center gap-1.5 cursor-pointer font-bold px-2 py-1 rounded transition-all {% if ech.resultat_pcr_id == r.id %}bg-red-600 text-white shadow-2xs border border-red-700{% else %}bg-white dark:bg-slate-800 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/50{% endif %}">
+                                <input type="radio" 
+                                       name="resultat_{{ ech.id }}" 
+                                       value="{{ r.id }}" 
+                                       data-is-detected="true"
+                                       data-sample-id="{{ ech.id }}"
+                                       data-sample-code="{{ ech.code }}"
+                                       data-patient-name="{{ ech.enfant.nom|default:'' }}"
+                                       onclick="confirmRadioChange(this)"
+                                       {% if ech.resultat_pcr_id == r.id %}checked{% endif %} 
+                                       class="w-3 h-3 accent-red-600 cursor-pointer">
+                                <span class="text-[10px] uppercase tracking-wide">{{ r.nom|default:r.code }}</span>
+                            </label>
+                        {% else %}
+                            <label class="radio-label inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-all px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded">
+                                <input type="radio" 
+                                       name="resultat_{{ ech.id }}" 
+                                       value="{{ r.id }}" 
+                                       data-is-detected="false"
+                                       data-sample-id="{{ ech.id }}"
+                                       data-sample-code="{{ ech.code }}"
+                                       data-patient-name="{{ ech.enfant.nom|default:'' }}"
+                                       onclick="confirmRadioChange(this)"
+                                       {% if ech.resultat_pcr_id == r.id %}checked{% endif %} 
+                                       class="w-3 h-3 text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer">
+                                <span class="text-[10px]">{{ r.nom|default:r.code }}</span>
+                            </label>
+                        {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            </td>
+        </tr>
+
+    {% else %}
+
+        <!-- LIGNE NORMALE -->
+        <tr id="row-{{ ech.id }}" 
+            class="row-sample transition-colors duration-150 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
+            
+            <input type="hidden" name="echantillon_ids" value="{{ ech.id }}">
+
+           
+
+            <td class="px-3 py-2.5 font-mono font-medium border-r border-slate-100 dark:border-slate-800 cell-border">
+                <div class="code-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-slate-700 dark:text-slate-300 bg-slate-100/70 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700">
+                    <span class="tracking-wide text-[10px] font-mono uppercase font-medium">{{ ech.code }}</span>
+                </div>
+            </td>
+
+            <td class="px-3 py-2.5 border-r border-slate-100 dark:border-slate-800 cell-border font-medium">
+                {% if ech.enfant %}
+                    <span class="patient-name block max-w-[250px] truncate" title="{{ ech.enfant.nom }} {{ ech.enfant.prenom }}">
+                        {{ ech.enfant.nom }}
+                    </span>
+                {% endif %}
+            </td>
+
+            <td class="px-3 py-2.5 font-mono text-[10px] border-r border-slate-100 dark:border-slate-800 cell-border text-slate-500">
+                {{ ech.date_prelevement|date:"d/m/Y"|default:"-" }}
+            </td>
+
+            <td class="px-3 py-2.5 border-r border-slate-100 dark:border-slate-800 cell-border">
+                <input type="text" 
+                       name="date_resultat_{{ ech.id }}" 
+                       value="{{ ech.date_resultat|date:'d-m-Y'|default:'' }}" 
+                       placeholder="JJ-MM-AAAA"
+                       maxlength="10"
+                       oninput="autoFormatDate(this)"
+                       class="date-input px-2 py-1 text-[10px] font-mono rounded border font-medium shadow-2xs focus:outline-none transition-all w-full border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+            </td>
+
+            <td class="px-3 py-2.5">
+                <div class="print:block hidden font-bold uppercase text-xs">
+                    {{ ech.resultat_pcr.nom|default:"Non défini" }}
+                </div>
+
+                <div class="print:hidden flex items-center gap-1.5 flex-wrap">
+                    {% for r in resultats_pcr %}
+                        {% with r_nom=r.nom|lower|default:"" %}
+                        {% if "detecte" in r_nom and "non" not in r_nom or "positif" in r_nom %}
+                            <label class="radio-label relative inline-flex items-center gap-1.5 cursor-pointer font-bold px-2 py-1 rounded transition-all bg-white dark:bg-slate-800 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/50">
+                                <input type="radio" 
+                                       name="resultat_{{ ech.id }}" 
+                                       value="{{ r.id }}" 
+                                       data-is-detected="true"
+                                       data-sample-id="{{ ech.id }}"
+                                       data-sample-code="{{ ech.code }}"
+                                       data-patient-name="{{ ech.enfant.nom|default:'' }}"
+                                       onclick="confirmRadioChange(this)"
+                                       {% if ech.resultat_pcr_id == r.id %}checked{% endif %} 
+                                       class="w-3 h-3 accent-red-600 cursor-pointer">
+                                <span class="text-[10px] uppercase tracking-wide">{{ r.nom|default:r.code }}</span>
+                            </label>
+                        {% else %}
+                            <label class="radio-label relative inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-all px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded">
+                                <input type="radio" 
+                                       name="resultat_{{ ech.id }}" 
+                                       value="{{ r.id }}" 
+                                       data-is-detected="false"
+                                       data-sample-id="{{ ech.id }}"
+                                       data-sample-code="{{ ech.code }}"
+                                       data-patient-name="{{ ech.enfant.nom|default:'' }}"
+                                       onclick="confirmRadioChange(this)"
+                                       {% if ech.resultat_pcr_id == r.id %}checked{% endif %} 
+                                       class="w-3 h-3 text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer">
+                                <span class="text-[10px]">{{ r.nom|default:r.code }}</span>
+                            </label>
+                        {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            </td>
+        </tr>
+
+    {% endif %}
+    {% endwith %}
+    {% endfor %}
+</tbody>
+
+<!-- MODAL DE CONFIRMATION PROFESSIONNELLE -->
+<div id="confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-3xs hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="bg-white dark:bg-slate-900 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-700 p-6 max-w-sm w-full mx-4 transform transition-all">
+        <div class="flex items-start gap-3.5 mb-4">
+            <div class="p-2.5 bg-red-100 dark:bg-red-950/50 text-red-600 rounded-md shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <h3 id="modal-title" class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Validation Critique</h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Attribution d'un statut positif</p>
+            </div>
+        </div>
+        <p class="text-xs text-slate-600 dark:text-slate-300 mb-6 leading-relaxed" id="modal-message">
+            Voulez-vous valider le statut DETECTE pour ce patient ?
+        </p>
+        <div class="flex justify-end gap-2.5">
+            <button type="button" id="modal-cancel-btn" class="px-3.5 py-1.5 text-xs font-medium rounded border border-slate-200 dark:border-slate-700 bg-white hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
+                Annuler
+            </button>
+            <button type="button" id="modal-confirm-btn" class="px-3.5 py-1.5 text-xs font-semibold rounded bg-red-600 hover:bg-red-700 text-white shadow-2xs transition">
+                Confirmer le positif
+            </button>
+        </div>
+    </div>
+</div>
+<!-- SCRIPTS DE CONTRÔLE ROBUSTE -->
+<script>
+let pendingRadio = null;
+let previousCheckedRadio = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.dataset.wasChecked = radio.checked ? "true" : "false";
+    });
+});
+
+function autoFormatDate(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 2 && value.length <= 4) {
+        value = value.slice(0, 2) + '-' + value.slice(2);
+    } else if (value.length > 4) {
+        value = value.slice(0, 2) + '-' + value.slice(2, 4) + '-' + value.slice(4, 8);
+    }
+    input.value = value;
+}
+
+function confirmRadioChange(radio) {
+    const isDetected = radio.getAttribute('data-is-detected') === 'true';
+    const sampleId = radio.getAttribute('data-sample-id');
+    const groupRadios = document.querySelectorAll(`input[name="resultat_${sampleId}"]`);
+    
+    groupRadios.forEach(r => {
+        if (r.dataset.wasChecked === "true") {
+            previousCheckedRadio = r;
+        }
+    });
+
+    if (isDetected && previousCheckedRadio !== radio) {
+        radio.checked = false;
+        if (previousCheckedRadio) previousCheckedRadio.checked = true;
+        
+        pendingRadio = radio;
+        
+        const patientName = radio.getAttribute('data-patient-name') || 'Patient inconnu';
+        const sampleCode = radio.getAttribute('data-sample-code') || '';
+        document.getElementById('modal-message').textContent = `Voulez-vous confirmer le passage de l'échantillon ${sampleCode} (${patientName}) au statut DETECTE ?`;
+        
+        document.getElementById('confirm-modal').classList.remove('hidden');
+    } else {
+        updateRowState(radio);
+    }
+}
+
+document.getElementById('modal-cancel-btn').addEventListener('click', () => {
+    document.getElementById('confirm-modal').classList.add('hidden');
+    pendingRadio = null;
+});
+
+document.getElementById('modal-confirm-btn').addEventListener('click', () => {
+    if (pendingRadio) {
+        const sampleId = pendingRadio.getAttribute('data-sample-id');
+        document.querySelectorAll(`input[name="resultat_${sampleId}"]`).forEach(r => {
+            r.dataset.wasChecked = "false";
+        });
+        
+        pendingRadio.checked = true;
+        pendingRadio.dataset.wasChecked = "true";
+        
+        updateRowState(pendingRadio);
+    }
+    document.getElementById('confirm-modal').classList.add('hidden');
+    pendingRadio = null;
+});
+
+function updateRowState(radioInput) {
+    const sampleId = radioInput.getAttribute('data-sample-id');
+    const isDetected = radioInput.getAttribute('data-is-detected') === 'true';
+    const row = document.getElementById(`row-${sampleId}`);
+
+    if (!row) return;
+
+    document.querySelectorAll(`input[name="resultat_${sampleId}"]`).forEach(r => {
+        r.dataset.wasChecked = r.checked ? "true" : "false";
+    });
+
+    const counterSpan = row.querySelector('.col-counter span'); // Optionnel
+    const codeBadge = row.querySelector('.code-badge');
+    const dateInput = row.querySelector('.date-input');
+
+    row.querySelectorAll('input[type="radio"]').forEach(radio => {
+        const label = radio.closest('.radio-label');
+        const optionIsDetected = radio.getAttribute('data-is-detected') === 'true';
+
+        if (radio.checked && optionIsDetected) {
+            label.className = "radio-label relative inline-flex items-center gap-1.5 cursor-pointer font-bold px-2 py-1 rounded transition-all bg-red-600 text-white shadow-2xs border border-red-700";
+        } else if (optionIsDetected) {
+            label.className = "radio-label relative inline-flex items-center gap-1.5 cursor-pointer font-bold px-2 py-1 rounded transition-all bg-white dark:bg-slate-800 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/50";
+        } else {
+            label.className = "radio-label relative inline-flex items-center gap-1.5 cursor-pointer font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-all px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded";
+        }
+    });
+
+    if (isDetected) {
+        row.className = "row-sample transition-colors duration-150 bg-red-50/70 dark:bg-red-950/20 hover:bg-red-100/60 dark:hover:bg-red-900/30 text-slate-900 dark:text-slate-100";
+        if (counterSpan) counterSpan.className = "inline-block px-1.5 py-0.5 bg-red-100 dark:bg-red-900/40 rounded text-red-800 dark:text-red-300 font-bold";
+        if (codeBadge) codeBadge.className = "code-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 shadow-2xs";
+        if (dateInput) dateInput.className = "date-input px-2 py-1 text-[10px] font-mono rounded border font-medium shadow-2xs focus:outline-none transition-all w-full border-red-300 dark:border-red-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500";
+    } else {
+        row.className = "row-sample transition-colors duration-150 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200";
+        if (counterSpan) counterSpan.className = "inline-block px-1.5 py-0.5 rounded text-slate-400";
+        if (codeBadge) codeBadge.className = "code-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-slate-700 dark:text-slate-300 bg-slate-100/70 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700";
+        if (dateInput) dateInput.className = "date-input px-2 py-1 text-[10px] font-mono rounded border font-medium shadow-2xs focus:outline-none transition-all w-full border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500";
+    }
+}
+</script>
+</table>
+                        </div>
+
+                        <!-- PIED DE TABLEAU -->
+                        <div class="print:hidden px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0">
+                            <div class="text-[10px] text-slate-500 font-mono">
+                                Total lignes : <strong class="text-slate-800 dark:text-slate-200">{{ echantillons.count|add:"-1" }}</strong>
+                            </div>
+                         
+                        </div>
+                    {% else %}
+                        <div class="p-12 text-center flex flex-col items-center justify-center gap-1 text-slate-400 my-auto">
+                            <p class="text-xs font-semibold text-slate-700 dark:text-slate-300">Aucun lot chargé.</p>
+                            <p class="text-[10px] text-slate-400">Renseignez un intervalle dans le panneau de gauche.</p>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- MODAL DE CONFIRMATION DJANGO -->
+{% if messages %}
+  {% for message in messages %}
+    {% if message.level_tag == 'success' or 'success' in message.tags or message.level_tag == 'info' or 'info' in message.tags %}
+    <div id="save-modal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl p-5 max-w-sm w-full mx-4 transform transition-all relative z-[10000]">
+            
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 relative">
+                    <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Synchronisation en cours</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                        {{ message }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800 text-center">
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">Actualisation automatique dans :</p>
+                <div class="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+                    <span id="sync-timer">5</span> seconde(s)
+                </div>
+            </div>
+
+            <div class="mt-4 flex justify-end">
+                <button type="button" onclick="closeSuccessModal()" class="px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('save-modal');
+        const timerElement = document.getElementById('sync-timer');
+        
+        if (modal && timerElement) {
+            let secondsLeft = 5;
+
+            const interval = setInterval(function() {
+                secondsLeft--;
+                timerElement.textContent = secondsLeft;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(interval);
+                    modal.style.display = 'none';
+                    
+                    // Recharge la page proprement sans renvoyer de formulaire POST
+                    window.location.href = window.location.pathname + window.location.search;
+                }
+            }, 1000);
+        }
+    });
+
+    function closeSuccessModal() {
+        const modal = document.getElementById('save-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+</main>
+
+<!-- ========================================== -->
+<!-- 5. SCRIPTS POUR DÉCLENCHER LES IMPRESSIONS -->
+<!-- ========================================== -->
+<script>
+async function genererPdfEnArrierePlan(nomDocument, urlTarget) {
+    const modal = document.getElementById('pdf-loader-modal');
+    const progressBar = document.getElementById('loader-bar');
+    const percentageText = document.getElementById('loader-percentage');
+    const titleText = document.getElementById('loader-title');
+    const subtitleText = document.getElementById('loader-subtitle');
+
+    // 1. Initialisation de la modale
+    if (titleText) titleText.innerText = "Génération " + nomDocument + "...";
+    if (subtitleText) subtitleText.innerText = "Traitement des données en cours...";
+    if (progressBar) progressBar.style.width = '5%';
+    if (percentageText) percentageText.innerText = '5%';
+    if (modal) modal.classList.remove('hidden');
+
+    // Animation fluide
+    let currentProgress = 5;
+    const progressTimer = setInterval(() => {
+        if (currentProgress < 85) {
+            currentProgress += Math.floor(Math.random() * 5) + 2;
+            if (progressBar) progressBar.style.width = currentProgress + '%';
+            if (percentageText) percentageText.innerText = currentProgress + '%';
+        }
+    }, 100);
+
+    try {
+        // 2. Préparation des données du formulaire
+        const formElement = document.getElementById('save-form');
+        const formData = formElement ? new FormData(formElement) : new FormData();
+
+        // Récupération sécurisée du Token CSRF (Balise ou Cookie)
+        let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        if (!csrfToken) {
+            const match = document.cookie.match(/csrftoken=([^;]+)/);
+            if (match) csrfToken = match[1];
+        }
+
+        // 3. Exécution de la requête Fetch
+        const response = await fetch(urlTarget, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrfToken || ''
+            }
+        });
+
+        // Si le serveur retourne une erreur (403, 404, 500)
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Détails de l'erreur serveur :", errorText);
+            throw new Error(`Le serveur a répondu avec le code HTTP ${response.status}`);
+        }
+
+        // 4. Récupération du fichier binaire PDF
+        const pdfBlob = await response.blob();
+
+        clearInterval(progressTimer);
+        if (progressBar) progressBar.style.width = '100%';
+        if (percentageText) percentageText.innerText = '100%';
+        if (subtitleText) subtitleText.innerText = "PDF prêt ! Ouverture...";
+
+        // 5. Création du lien blob et ouverture sans écran blanc
+        const blobUrl = URL.createObjectURL(pdfBlob);
+
+        setTimeout(() => {
+            window.open(blobUrl, '_blank');
+            setTimeout(() => {
+                if (modal) modal.classList.add('hidden');
+            }, 300);
+        }, 200);
+
+    } catch (error) {
+        clearInterval(progressTimer);
+        console.error("Erreur lors de la génération :", error);
+        alert(`Impossible de générer le document PDF.\nDétails : ${error.message}`);
+        if (modal) modal.classList.add('hidden');
+    }
+}
+
+// Impresion Fiche Paillasse
+function imprimerPaillasse() {
+    window.print();
+}
+
+/**
+ * Déclenche le loader de PDF avec la séquence d'achèvement de paiement
+ * @param {Function} onComplete - Callback optionnel exécuté après le succès
+ */
+function triggerPdfLoader(onComplete) {
+    const modal = document.getElementById('pdf-loader-modal');
+    const ring = document.getElementById('loader-ring');
+    const iconBg = document.getElementById('icon-bg');
+    const printerIcon = document.getElementById('printer-icon');
+    const successIcon = document.getElementById('success-icon');
+    
+    const title = document.getElementById('loader-title');
+    const subtitle = document.getElementById('loader-subtitle');
+    const percentText = document.getElementById('loader-percentage');
+    const statusLabel = document.getElementById('loader-status-label');
+    const progressBar = document.getElementById('loader-bar');
+
+    // 1. RÉINITIALISATION DE L'ÉTAT INITIAL
+    modal.classList.remove('hidden');
+    ring.classList.remove('hidden');
+    
+    iconBg.className = "w-14 h-14 rounded-2xl bg-sky-50 border border-sky-100 text-[#1478c1] flex items-center justify-center transition-all duration-500 shadow-inner";
+    printerIcon.classList.remove('hidden');
+    successIcon.classList.add('hidden', 'scale-50');
+    
+    title.innerText = "Génération en cours...";
+    title.className = "text-xs font-black text-[#00529b] tracking-wider uppercase font-mono transition-colors duration-300";
+    subtitle.innerText = "Traitement des données biomédicales par le serveur...";
+    statusLabel.innerText = "Traitement";
+    percentText.className = "text-[#1478c1] font-black";
+    progressBar.className = "bg-gradient-to-r from-[#00529b] via-[#1478c1] to-cyan-400 h-full rounded-full transition-all duration-150 ease-out";
+    
+    let progress = 0;
+
+    // 2. SIMULATION DE LA PROGRESSION DE CHARGEMENT
+    const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 12) + 5; // Progression dynamique
+
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+
+            // 3. PASSAGE À L'ÉTAT "SUCCESS" (Style Paiement Réussi)
+            setTimeout(() => {
+                // Masquer l'anneau tournant
+                ring.classList.add('hidden');
+                
+                // Transformer l'icône centrale
+                iconBg.className = "w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-500 flex items-center justify-center transition-all duration-500 shadow-md scale-110";
+                printerIcon.classList.add('hidden');
+                
+                successIcon.classList.remove('hidden');
+                setTimeout(() => {
+                    successIcon.classList.remove('scale-50');
+                    successIcon.classList.add('scale-100');
+                }, 50);
+
+                // Mettre à jour les textes et couleurs
+                title.innerText = "Document Prêt !";
+                title.className = "text-xs font-black text-emerald-600 tracking-wider uppercase font-mono transition-colors duration-300";
+                subtitle.innerText = "Le fichier PDF a été généré avec succès.";
+                statusLabel.innerText = "Terminé";
+                percentText.className = "text-emerald-600 font-black";
+                progressBar.className = "bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-300";
+
+                // Fermeture automatique du modal après validation
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    if (typeof onComplete === 'function') onComplete();
+                }, 1600);
+
+            }, 300);
+        }
+
+        // Mise à jour de l'affichage du pourcentage et de la barre
+        percentText.innerText = `${progress}%`;
+        progressBar.style.width = `${progress}%`;
+
+    }, 180);
+}
+</script>
+
+<!-- STYLES CSS POUR NETTOYER L'IMPRESSION SUR PAPIER -->
+<style>
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    .print\:hidden {
+        display: none !important;
+    }
+    .print\:block {
+        display: block !important;
+    }
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+    th, td {
+        border: 1px solid #cbd5e1 !important;
+        padding: 4px 8px !important;
+        color: black !important;
+    }
+}
+</style>
+{% endblock %}

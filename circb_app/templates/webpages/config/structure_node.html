@@ -1,0 +1,197 @@
+<!-- structure_node.html -->
+
+<tr data-id="{{ node.id }}" 
+    data-parent-id="{{ node.parent.id|default:'' }}" 
+    data-rang="{{ node.hierachy.rang|default:1 }}"
+    data-padding="{{ padding }}"
+    class="node-row transition border-b border-slate-200/70 hover:bg-slate-100/60 bg-white group">
+    
+    <td class="px-5 py-2.5 border-l-4 border-[#1471a8]" style="padding-left: {{ padding }}px;">
+        <div class="flex items-center gap-2.5">
+            
+            {% if node.children.exists %}
+                <button type="button" 
+                        onclick="toggleDhis2Node('{{ node.id }}')" 
+                        id="btn-{{ node.id }}" 
+                        class="w-5 h-5 flex items-center justify-center rounded text-slate-500 hover:bg-slate-200 transition-colors">
+                    <i class="fa fa-chevron-right text-[10px] icon-chevron transition-transform"></i>
+                </button>
+            {% else %}
+                <span class="w-5 h-5"></span>
+            {% endif %}
+
+            <i class="fa fa-folder text-[#1471a8] text-xs opacity-80 folder-icon"></i>
+            
+            <a class="font-bold text-slate-800 text-xs hover:text-[#1471a8] transition-colors" href="/upload-sub-structure/{{node.id}}/">
+                {{ node.nom }}
+            </a>
+        </div>
+    </td>
+
+    <td class="px-5 py-2.5">
+        <span class="text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-blue-100 text-[#1471a8] border border-blue-200">
+            {{ node.hierachy.nom }}
+        </span>
+    </td>
+
+    <td class="px-5 py-2.5 text-xs font-mono text-slate-400">
+        {{ node.designation|default:"---" }}
+    </td>
+
+    <td class="px-5 py-2.5 text-right">
+        <div class="flex justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button onclick="openAddModal('{{ node.id }}', '{{ node.nom|escapejs }}', {{ node.hierachy.rang|add:1 }})" 
+                    class="bg-white text-[10px] font-bold text-emerald-600 border border-emerald-300 px-2 py-1 rounded hover:bg-emerald-600 hover:text-white transition shadow-2xs">
+                <i class="fa fa-plus"></i>
+            </button>
+            <a href="/modifier-structure/{{node.id}}/" class="bg-white text-[10px] font-bold text-blue-600 border border-blue-300 px-2 py-1 rounded hover:bg-blue-600 hover:text-white transition shadow-2xs">
+                <i class="fa fa-edit"></i>
+            </a>
+            <button type="button" 
+                    onclick="openDeleteModal('/line_delete_structure/{{node.id}}/')"  
+                    class="bg-white text-[10px] font-bold text-red-600 border border-red-300 px-2 py-1 rounded hover:bg-red-600 hover:text-white transition shadow-2xs">            
+                <i class="fa fa-trash"></i>            
+            </button>
+        </div>
+    </td>
+</tr>
+
+
+ <script>
+
+    // Dictionnaire des styles DHIS2 par Rang Hiérarchique
+const DHIS2_RANG_STYLES = {
+    1: { border: 'border-l-4 border-[#1471a8]', bgTag: 'bg-blue-100 text-[#1471a8] border-blue-200', font: 'font-bold text-slate-800' },
+    2: { border: 'border-l-4 border-emerald-500', bgTag: 'bg-emerald-100 text-emerald-800 border-emerald-200', font: 'font-semibold text-slate-700' },
+    3: { border: 'border-l-4 border-amber-500', bgTag: 'bg-amber-100 text-amber-800 border-amber-200', font: 'font-medium text-slate-700' },
+    4: { border: 'border-l-4 border-indigo-500', bgTag: 'bg-indigo-100 text-indigo-800 border-indigo-200', font: 'font-normal text-slate-600' },
+    default: { border: 'border-l border-slate-300', bgTag: 'bg-slate-100 text-slate-600 border-slate-200', font: 'font-normal text-slate-600' }
+};
+
+async function toggleDhis2Node(nodeId) {
+    const parentRow = document.querySelector(`tr[data-id="${nodeId}"]`);
+    const btn = document.getElementById(`btn-${nodeId}`);
+    const chevron = btn ? btn.querySelector('.icon-chevron') : null;
+    const folderIcon = parentRow.querySelector('.folder-icon');
+
+    const existingChildren = document.querySelectorAll(`tr[data-parent-id="${nodeId}"]`);
+
+    // 1. Si les enfants existent déjà dans le DOM -> Masquer / Afficher
+    if (existingChildren.length > 0) {
+        const isHidden = existingChildren[0].classList.contains('hidden');
+        
+        if (isHidden) {
+            // Déplier
+            existingChildren.forEach(child => child.classList.remove('hidden'));
+            if (chevron) chevron.className = 'fa fa-chevron-down text-[10px] icon-chevron';
+            if (folderIcon) folderIcon.className = 'fa fa-folder-open text-[#1471a8] text-xs opacity-80 folder-icon';
+        } else {
+            // Replier récursivement
+            hideChildrenRecursively(nodeId);
+            if (chevron) chevron.className = 'fa fa-chevron-right text-[10px] icon-chevron';
+            if (folderIcon) folderIcon.className = 'fa fa-folder text-[#1471a8] text-xs opacity-80 folder-icon';
+        }
+        return;
+    }
+
+    // 2. Sinon, Chargement Asynchrone (DHIS2 Lazy Load)
+    if (chevron) chevron.className = 'fa fa-[#1471a8] fa-spin fa-spinner text-[10px] icon-chevron';
+
+    try {
+        const response = await fetch(`/api/structures/${nodeId}/children/`);
+        const data = await response.json();
+
+        const parentPadding = parseInt(parentRow.getAttribute('data-padding') || '20');
+        const childPadding = parentPadding + 24;
+
+        let htmlRows = '';
+
+        data.children.forEach(child => {
+            const style = DHIS2_RANG_STYLES[child.hierachy_rang] || DHIS2_RANG_STYLES.default;
+
+            htmlRows += `
+                <tr data-id="${child.id}" 
+                    data-parent-id="${nodeId}" 
+                    data-rang="${child.hierachy_rang}"
+                    data-padding="${childPadding}"
+                    class="node-row transition border-b border-slate-200/70 hover:bg-slate-100/60 bg-slate-50/40 group">
+                    
+                    <td class="px-5 py-2.5 ${style.border}" style="padding-left: ${childPadding}px;">
+                        <div class="flex items-center gap-2.5">
+                            ${child.has_children ? `
+                                <button type="button" 
+                                        onclick="toggleDhis2Node('${child.id}')" 
+                                        id="btn-${child.id}" 
+                                        class="w-5 h-5 flex items-center justify-center rounded text-slate-500 hover:bg-slate-200 transition-colors">
+                                    <i class="fa fa-chevron-right text-[10px] icon-chevron"></i>
+                                </button>
+                            ` : '<span class="w-5 h-5"></span>'}
+
+                            <i class="fa fa-folder text-slate-400 text-xs opacity-80 folder-icon"></i>
+
+                            <a class="${style.font} text-xs hover:text-[#1471a8] transition-colors" href="/upload-sub-structure/${child.id}/">
+                                ${child.nom}
+                            </a>
+                        </div>
+                    </td>
+
+                    <td class="px-5 py-2.5">
+                        <span class="text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider ${style.bgTag}">
+                            ${child.hierachy_nom}
+                        </span>
+                    </td>
+
+                    <td class="px-5 py-2.5 text-xs font-mono text-slate-400">
+                        ${child.designation}
+                    </td>
+
+                    <td class="px-5 py-2.5 text-right">
+                        <div class="flex justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="openAddModal('${child.id}', '${child.nom.replace(/'/g, "\\'")}', ${child.hierachy_rang + 1})" 
+                                    class="bg-white text-[10px] font-bold text-emerald-600 border border-emerald-300 px-2 py-1 rounded hover:bg-emerald-600 hover:text-white transition shadow-2xs">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                            <a href="/modifier-structure/${child.id}/" class="bg-white text-[10px] font-bold text-blue-600 border border-blue-300 px-2 py-1 rounded hover:bg-blue-600 hover:text-white transition shadow-2xs">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <button type="button" 
+                                    onclick="openDeleteModal('/line_delete_structure/${child.id}/')"  
+                                    class="bg-white text-[10px] font-bold text-red-600 border border-red-300 px-2 py-1 rounded hover:bg-red-600 hover:text-white transition shadow-2xs">            
+                                <i class="fa fa-trash"></i>            
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        // Insertion fluide sous le parent
+        parentRow.insertAdjacentHTML('afterend', htmlRows);
+
+        // Mettre à jour l'icône parent
+        if (chevron) chevron.className = 'fa fa-chevron-down text-[10px] icon-chevron';
+        if (folderIcon) folderIcon.className = 'fa fa-folder-open text-[#1471a8] text-xs opacity-80 folder-icon';
+
+    } catch (error) {
+        console.error("Erreur CIRCB Lazy Load:", error);
+        if (chevron) chevron.className = 'fa fa-exclamation-triangle text-red-500 text-[10px]';
+    }
+}
+
+// Fonction pour masquer tous les descendants
+function hideChildrenRecursively(parentId) {
+    const children = document.querySelectorAll(`tr[data-parent-id="${parentId}"]`);
+    children.forEach(child => {
+        child.classList.add('hidden');
+        const childId = child.getAttribute('data-id');
+        
+        const btn = document.getElementById(`btn-${childId}`);
+        if (btn) {
+            const chev = btn.querySelector('.icon-chevron');
+            if (chev) chev.className = 'fa fa-chevron-right text-[10px] icon-chevron';
+        }
+        
+        hideChildrenRecursively(childId);
+    });
+}
+</script>

@@ -1,0 +1,118 @@
+{% extends './dashbord_hosp.html' %}
+
+{% block main %}
+
+<main class="flex-1 h-full min-h-0 overflow-y-auto bg-slate-100 text-slate-900 w-full font-sans antialiased text-xs">
+<div class="min-h-screen bg-[#f8f9fa] p-4 sm:p-6">
+    
+    <!-- ODOO CONTROL PANEL (En-tête & Barre d'actions) -->
+    <div class="bg-white border border-gray-200 rounded-t-lg px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm">
+        <!-- Fil d'Ariane et Titre -->
+        <div>
+            <nav class="text-xs text-gray-500 mb-1">
+                <span>Paramètres</span> <span class="mx-1">/</span> <span class="text-[#714B67] font-semibold">Historique FOSA</span>
+            </nav>
+            <h1 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#714B67]"></span>
+                Historique des transferts FOSA
+            </h1>
+        </div>
+
+        <!-- Boutons d'action / Recherche (Style Odoo) -->
+        <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+            <!-- Compteur de lignes type Odoo -->
+            <span class="text-xs text-gray-500 font-medium">
+                {{ transferts.start_index|default:0 }}-{{ transferts.end_index|default:0 }} sur {{ transferts.paginator.count }}
+            </span>
+            
+            <!-- Pagination rapide style Odoo -->
+            {% if transferts.has_other_pages %}
+            <div class="inline-flex rounded-md shadow-sm">
+                {% if transferts.has_previous %}
+                    <a href="?page={{ transferts.previous_page_number }}" class="px-3 py-1.5 border border-gray-300 bg-white text-xs font-medium text-gray-700 rounded-l-md hover:bg-gray-50">‹</a>
+                {% else %}
+                    <span class="px-3 py-1.5 border border-gray-300 bg-gray-100 text-xs font-medium text-gray-400 rounded-l-md cursor-not-allowed">‹</span>
+                {% endif %}
+                
+                {% if transferts.has_next %}
+                    <a href="?page={{ transferts.next_page_number }}" class="px-3 py-1.5 border border-gray-300 border-l-0 bg-white text-xs font-medium text-gray-700 rounded-r-md hover:bg-gray-50">›</a>
+                {% else %}
+                    <span class="px-3 py-1.5 border border-gray-300 border-l-0 bg-gray-100 text-xs font-medium text-gray-400 rounded-r-md cursor-not-allowed">›</span>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ODOO LIST VIEW (Tableau type Vue Liste) -->
+    <div class="bg-white border-x border-b border-gray-200 rounded-b-lg shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <!-- En-têtes de colonnes style Odoo -->
+                <thead class="bg-[#f8f9fa] text-gray-600 font-semibold uppercase text-[11px] tracking-wider">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left">Date & Auteur</th>
+                        <th scope="col" class="px-6 py-3 text-left">Structure FOSA</th>
+                        <th scope="col" class="px-6 py-3 text-left">Mouvement de District</th>
+                        <th scope="col" class="px-6 py-3 text-left">Codes (Ancien → Nouveau)</th>
+                        <th scope="col" class="px-6 py-3 text-center">Volumes Traités</th>
+                    </tr>
+                </thead>
+                
+                <!-- Corps du tableau -->
+                <tbody class="divide-y divide-gray-200 bg-white text-gray-700">
+                    {% for log in transferts %}
+                    <tr class="hover:bg-[#f1f1f1] transition-colors cursor-pointer group">
+                        <!-- Date et Auteur -->
+                        <td class="px-6 py-3.5 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">{{ log.date_transfert|date:"d/m/Y H:i" }}</div>
+                            <div class="text-[11px] text-gray-500">Par : {{ log.effectue_par.username|default:"Système" }}</div>
+                        </td>
+
+                        <!-- FOSA -->
+                        <td class="px-6 py-3.5 whitespace-nowrap font-semibold text-[#714B67]">
+                            {{ log.fosa_nom }}
+                        </td>
+
+                        <!-- Districts (Badges discrets style Odoo) -->
+                        <td class="px-6 py-3.5 whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded text-xs bg-red-50 text-red-700 border border-red-200 font-medium">{{ log.ancien_district }}</span>
+                                <span class="text-gray-400 font-bold">→</span>
+                                <span class="px-2 py-0.5 rounded text-xs bg-green-50 text-green-700 border border-green-200 font-medium">{{ log.nouveau_district }}</span>
+                            </div>
+                        </td>
+
+                        <!-- Codes -->
+                        <td class="px-6 py-3.5 whitespace-nowrap font-mono text-xs text-gray-600">
+                            {% if log.old_code or log.new_code %}
+                                {{ log.old_code|default:"-" }} <span class="text-gray-400">→</span> {{ log.new_code|default:"-" }}
+                            {% else %}
+                                <span class="text-gray-400 italic">Aucun</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Volumes traités -->
+                        <td class="px-6 py-3.5 whitespace-nowrap text-center">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 text-gray-800 mr-1">
+                                Fiches : {{ log.fiches_mises_a_jour }}
+                            </span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#714B67]/10 text-[#714B67]">
+                                Patients : {{ log.patients_mis_a_jour }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-sm text-gray-500 bg-white">
+                            Aucun historique de transfert trouvé.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</main>
+{% endblock %}

@@ -1,0 +1,289 @@
+{% extends '../dashbord_hosp.html' %}
+{% block main %}
+
+<main class="flex-1 h-full min-h-0 overflow-y-auto p-6 flex flex-col gap-6 bg-slate-100 w-full max-w-[100vw] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full">
+    
+    <!-- EN-TÊTE DU MODULE TECHNIQUE -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-2 border-slate-900 border-b-[4px] rounded-xl p-6 shadow-sm">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-rose-600 rounded-full animate-pulse border border-rose-950"></span>
+                <h1 class="text-xl font-black text-slate-900 tracking-tight uppercase font-mono">Enregistrement de Résultat Biologique</h1>
+            </div>
+            <p class="text-xs font-bold text-slate-500 mt-0.5 uppercase tracking-wider">Unité d'Analyse Moléculaire & Virologie · CIRCB LIMS v3</p>
+        </div>
+        <div>
+            <a href="#" class="px-4 py-2 rounded-lg border-2 border-slate-800 bg-white text-slate-800 text-xs font-black hover:bg-slate-50 border-b-[3px] active:border-b-2 active:translate-y-[1px] inline-flex items-center gap-2 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="15 10 20 15 15 20"></polyline><path d="M4 4v7a4 4 0 0 0 4 4h12"></path></svg>
+                <span>Retour au registre</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- FORMULAIRE PRINCIPAL (CONCORDANCE AVEC LES MODÈLES DJANGO) -->
+    <form method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start" id='formResultat'>
+        {% csrf_token %}
+        
+        <!-- COLONNE GAUCHE & CENTRALE : PARAMÈTRES ET ANALYSE (2/3) -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- BLOC 1 : LIEN ÉCHANTILLON ET TEST (CONSOLE MATRICE) -->
+            <div class="bg-white border-2 border-slate-800 border-b-[5px] border-r-[3px] p-6 rounded-xl">
+                <div class="border-b-2 border-slate-200 pb-3 mb-5">
+                    <h3 class="text-xs font-black tracking-wider text-slate-900 uppercase font-mono">1. Identification du Run & Liaison Dossier</h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Sélection de l'échantillon patient et du protocole appliqué</p>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <!-- Champ Échantillon -->
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[11px] font-black text-slate-700 uppercase tracking-wide font-mono flex items-center gap-1">
+                            <span>Code Échantillon</span>
+                            <span class="text-rose-600 font-black">*</span>
+                        </label>
+                        <div class="relative">
+                            <select name="echantillon" required class="w-full bg-slate-50 border-2 border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-slate-800 focus:bg-white focus:outline-none transition-all shadow-inner appearance-none pr-8">
+                                <option value="" disabled selected>-- Sélectionner le tube DBS/Plasma --</option>
+                                <!-- Exemple d'itération Django : -->
+                                {% for ech in echantillons %}
+                                    <option value="{{ ech.id }}">{{ ech.slug }} - {{ ech.enfant.nom }}</option>
+                                {% endfor %}
+                              
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-slate-500">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Champ Configuration de Test -->
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[11px] font-black text-slate-700 uppercase tracking-wide font-mono flex items-center gap-1">
+                            <span>Configuration de Test (Kit)</span>
+                            <span class="text-rose-600 font-black">*</span>
+                        </label>
+                        <div class="relative">
+                            <select name="test" required class="w-full bg-slate-50 border-2 border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-slate-800 focus:bg-white focus:outline-none transition-all shadow-inner appearance-none pr-8">
+                                <option value="" disabled selected>-- Sélectionner le protocole --</option>
+                                {% for t in tests %}
+                                    <option value="{{ t.id }}">{{ t.nom }} [{{ t.pcr.nom }}]</option>
+                                {% endfor %}
+                                
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-slate-500">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOC 2 : VERDICT BIOLOGIQUE (CRITIQUEMENT CONSTRASTE) -->
+            <div class="bg-white border-2 border-slate-800 border-b-[5px] border-r-[3px] p-6 rounded-xl">
+                <div class="border-b-2 border-slate-200 pb-3 mb-5">
+                    <h3 class="text-xs font-black tracking-wider text-slate-900 uppercase font-mono">2. Verdict et Résultat PCR</h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Affectation de la nomenclature stricte approuvée par l'OMS</p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-5">
+                    <!-- Sélection du verdict (ResultatPcr) -->
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[11px] font-black text-slate-700 uppercase tracking-wide font-mono flex items-center gap-1">
+                            <span>Verdict Biologique Final (Table ResultatPcr)</span>
+                            <span class="text-rose-600 font-black">*</span>
+                        </label>
+                        
+                        <!-- Grille de radio boutons typée console ERP industrielle -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                            {%for resultat_pcrs in resultat_pcr%}
+                            <!-- Option Négatif -->
+                            <label class="relative flex items-center gap-3 p-3 rounded-lg bg-slate-50 border-2 border-slate-800 cursor-pointer hover:bg-slate-100 transition-all select-none group has-[:checked]:bg-emerald-50 has-[:checked]:border-emerald-600 has-[:checked]:text-emerald-950">
+                                <input type="radio" name="resultat_pcr" value="1" required class="w-4 h-4 text-emerald-600 border-slate-800 focus:ring-0 focus:ring-offset-0 bg-white" value='>{{resultat_pcrs.id}}'>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-black uppercase font-mono tracking-tight text-slate-900 group-has-[:checked]:text-emerald-900">{{resultat_pcrs.nom}}</span>
+                                    <span class="text-[10px] font-bold text-slate-400 group-has-[:checked]:text-emerald-600 uppercase">{{resultat_pcrs.code}}</span>
+                                </div>
+                            </label>
+                            {%endfor%}
+                            <!-- Option Positif -->
+                           
+
+                          
+                        </div>
+                    </div>
+
+                    <!-- Commentaire technique / Observations -->
+                    <div class="flex flex-col gap-1.5 mt-2">
+                        <label class="text-[11px] font-black text-slate-700 uppercase tracking-wide font-mono">Commentaires & Notes de Paillasse</label>
+                        <textarea name="commentaire" rows="4" placeholder="Saisir les anomalies de fluorescence, état du DBS, ou toute observation clinique particulière..." class="w-full bg-slate-50 border-2 border-slate-800 rounded-lg px-3 py-2 text-xs font-bold text-slate-800 focus:bg-white focus:outline-none transition-all shadow-inner font-mono placeholder:text-slate-400"></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- COLONNE DROITE : METADONNÉES TRACABILITÉ ET ACTIONS (1/3) -->
+        <div class="space-y-6">
+            
+            <!-- BLOC 3 : INFOS TEMPORELLES ET SIGNATURE BIOLOGIQUE -->
+            <div class="bg-white border-2 border-slate-800 border-b-[5px] border-r-[3px] p-5 rounded-xl">
+                <div class="border-b-2 border-slate-200 pb-2.5 mb-4">
+                    <h3 class="text-xs font-black tracking-wider text-slate-800 uppercase font-mono">3. Traçabilité & Validation</h3>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Date de prélèvement -->
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[11px] font-black text-slate-700 uppercase tracking-wide font-mono flex items-center gap-1">
+                            <span>Date de Prélèvement</span>
+                            <span class="text-rose-600 font-black">*</span>
+                        </label>
+                        <input type="date" name="date_prelevement" required class="w-full bg-slate-50 border-2 border-slate-800 rounded-lg px-3 py-2 text-xs font-black text-slate-800 focus:bg-white focus:outline-none font-mono shadow-inner">
+                    </div>
+
+                    <!-- Responsable de Validation (Automatique ou sélecteur selon droits) -->
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[11px] font-black text-slate-700 uppercase tracking-wide font-mono">Signataire Scientifique</label>
+                        <div class="p-3 bg-slate-100 border-2 border-slate-300 rounded-lg flex items-center gap-2.5 shadow-inner">
+                            <div class="p-1 bg-slate-800 text-white rounded">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            </div>
+                            <div>
+                                <span class="text-xs font-black text-slate-800 block uppercase font-mono">{{ request.user.username|default:"Lab_Tech_01" }}</span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Utilisateur Enregistreur Connecté</span>
+                            </div>
+                        </div>
+                        <!-- Champ masqué envoyé au serveur si tu passes l'ID utilisateur directement -->
+                        <input type="hidden" name="responsable" value="{{ request.user.id|default:"1" }}">
+                    </div>
+                </div>
+
+                <!-- NOTE D'ASSURANCE QUALITÉ DU LABORATOIRE -->
+                <div class="mt-5 p-3 bg-indigo-50 border-2 border-indigo-900/40 rounded-lg flex gap-2 items-start shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-700 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <p class="text-[10px] font-semibold text-indigo-950 leading-relaxed uppercase">
+                        La validation de ce formulaire verrouille instantanément le dossier biologique et génère les alertes pour la file active PTME nationale.
+                    </p>
+                </div>
+            </div>
+
+            <!-- BOUTONS D'ACTION TECHNIQUE EN COMPACT POUSSOIR -->
+            <div class="flex flex-col gap-3">
+                <button type="submit" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-black uppercase tracking-wider font-mono border-b-[4px] border-slate-950 active:border-b-0 active:translate-y-[4px] shadow transition-all inline-flex items-center justify-center gap-2" id='btnEnregistrer'>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    <span>Enregistrer & Signer Biologiquement</span>
+                </button>
+
+                <button type="reset" class="w-full py-2.5 rounded-xl border-2 border-slate-800 bg-white text-slate-700 hover:bg-slate-50 text-xs font-black uppercase tracking-tight font-mono border-b-[3px] active:border-b-0 active:translate-y-[3px] transition-all">
+                    Effacer la saisie
+                </button>
+            </div>
+
+        </div>
+    </form>
+<!-- ========================================== -->
+<!-- COMPOSANT : MODAL DE SUCCÈS (Masqué par défaut) -->
+<!-- ========================================== -->
+<div id="successModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="bg-white rounded-xl border-2 border-slate-950 p-6 max-w-md w-full mx-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-in fade-in zoom-in-95 duration-150">
+        
+        <!-- En-tête -->
+        <div class="flex items-center gap-3 border-b-2 border-slate-100 pb-3 mb-4">
+            <div class="bg-green-100 text-green-800 p-2 rounded-full border border-green-300">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-black text-slate-900">Enregistrement Réussi !</h3>
+                <p class="text-xs text-slate-500 font-mono">ID Dossier : <span id="modalResultatId">-</span></p>
+            </div>
+        </div>
+
+        <!-- Corps : Liste des informations enregistrées -->
+        <div class="space-y-3 font-mono text-xs border-b-2 border-slate-100 pb-4 mb-4">
+            <div class="flex justify-between bg-slate-50 p-2 rounded border border-slate-200">
+                <span class="text-slate-500">Échantillon:</span>
+                <span id="modalEchantillon" class="font-bold text-slate-900">-</span>
+            </div>
+            <div class="flex justify-between bg-slate-50 p-2 rounded border border-slate-200">
+                <span class="text-slate-500">Kit / Test utilisé:</span>
+                <span id="modalTest" class="font-bold text-slate-900">-</span>
+            </div>
+            <div class="flex justify-between bg-emerald-50 p-2 rounded border border-emerald-200">
+                <span class="text-emerald-700 font-bold">Verdict PCR:</span>
+                <span id="modalVerdict" class="font-black text-emerald-950">-</span>
+            </div>
+            <div class="flex justify-between bg-slate-50 p-2 rounded border border-slate-200">
+                <span class="text-slate-500">Date Prélèvement:</span>
+                <span id="modalDate" class="font-bold text-slate-900">-</span>
+            </div>
+            <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                <span class="text-slate-500 block mb-1">Commentaire ou Note :</span>
+                <p id="modalCommentaire" class="text-slate-700 italic whitespace-pre-line font-sans text-sm">-</p>
+            </div>
+            <div class="flex justify-between text-[11px] pt-1">
+                <span class="text-slate-400">Responsable Labo:</span>
+                <span id="modalResponsable" class="text-slate-600 font-bold">Vous ({{ request.user.username }})</span>
+            </div>
+        </div>
+
+        <!-- Bouton de fermeture -->
+        <button type="button" id="btnFermerModal" class="w-full bg-slate-900 text-white p-3 rounded-lg font-bold border-2 border-slate-950 hover:bg-slate-800 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+            Continuer la saisie
+        </button>
+    </div>
+</div>
+</main>
+<script>
+    document.getElementById('formResultat').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const form = this;
+    const formData = new FormData(form);
+    const btnSubmit = document.getElementById('btnEnregistrer');
+    const modal = document.getElementById('successModal');
+
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = "Enregistrement en cours...";
+
+    fetch('/enregistrer_resultat_ajax/', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => response.json())
+    .then(res => {
+        if (res.success) {
+            // 1. Injection de toutes les données du serveur dans les nœuds du modal
+            document.getElementById('modalResultatId').innerText = res.data.id;
+            document.getElementById('modalEchantillon').innerText = res.data.echantillon;
+            document.getElementById('modalTest').innerText = res.data.test;
+            document.getElementById('modalVerdict').innerText = res.data.resultat_pcr;
+            document.getElementById('modalDate').innerText = res.data.date_prelevement;
+            document.getElementById('modalCommentaire').innerText = res.data.commentaire;
+
+            // 2. Déclenchement du modal (on retire le style de masquage)
+            modal.classList.remove('hidden');
+            
+            // 3. Réinitialisation du formulaire pour le dossier suivant
+            form.reset();
+        } else {
+            alert("Erreur lors de la validation : " + res.error);
+        }
+    })
+    .catch(error => {
+        alert("Erreur système de communication avec l'API.");
+        console.error('Error:', error);
+    })
+    .finally(() => {
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "Enregistrer le résultat";
+    });
+});
+
+// Événement pour fermer le modal au clic sur le bouton de fermeture
+document.getElementById('btnFermerModal').addEventListener('click', function() {
+    document.getElementById('successModal').classList.add('hidden');
+});
+</script>
+
+{% endblock %}

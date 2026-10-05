@@ -1,0 +1,1373 @@
+{% extends '../dashbord_hosp.html' %}
+{%load static%}
+{% block main %}
+
+<main class="flex-1 h-full min-h-0 overflow-y-auto text-slate-100 w-full selection:bg-[#714B67] selection:text-white font-sans antialiased relative overflow-hidden">
+ 
+<div class="max-w-5xl mx-auto my-1 p-1">
+<div class="bg-white border border-[#e0e0e0] rounded-[3px] p-3.5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+    
+    <!-- Section Titre et Icône style DHIS2 -->
+    <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-[2px] bg-[#f8f9fa] border border-slate-200 flex items-center justify-center text-[#2c6693] shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M3.104 9.75h17.792M3.104 14.25h17.792M6.417 6.417l11.166 11.166M6.417 17.583L17.583 6.417" />
+            </svg>
+        </div>
+        <div>
+            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                Nouvel Échantillon de Laboratoire
+            </h2>
+            <p class="text-[11px] text-slate-500 font-normal mt-0.5">
+                Enregistrement des spécifications cliniques, du suivi PCR et des données patient de l'enfant.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Section Métrique, Code en Rouge & Action Scan -->
+    <div class="flex items-center gap-3 bg-[#f8f9fa] border border-slate-200 p-2.5 rounded-[2px]">
+        <div>
+            <span class="block text-[9px] font-bold uppercase tracking-wider text-slate-500">Fiche Référence</span>
+            <span class="text-xs font-bold text-red-600 tracking-tight block font-mono">
+                {{ fiches_echantillon.code }}
+            </span>
+           
+        </div>
+
+        <!-- Bouton / Fonction de Scan Code-barres -->
+        <div class="border-l border-slate-300 pl-3">
+            <button type="button" class="px-3 py-1.5 bg-[#2c6693] hover:bg-[#235275] text-white font-semibold rounded-[2px] text-[11px] flex items-center gap-1.5 transition shadow-2xs uppercase tracking-wider">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                </svg>
+                
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Bouton pour ouvrir / réouvrir le drawer (Masqué par défaut) -->
+<div id="container-btn-historique" class="hidden mt-4">
+    <button id="btn-toggle-historique" type="button" class="px-4 py-2 bg-sky-50 border border-sky-200 text-[#2C6693] hover:bg-sky-100 rounded-xl font-bold text-xs flex items-center gap-2 shadow-xs transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Consulter l'historique des prélèvements</span>
+    </button>
+</div>
+
+<!-- Le Drawer (Panneau latéral coulissant) -->
+<div id="historique-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <!-- Fond semi-transparent (Overlay) -->
+    <div id="drawer-overlay" class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity opacity-0 duration-300"></div>
+
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+        <!-- Panneau coulissant -->
+        <div id="drawer-panel" class="w-screen max-w-md transform transition-transform duration-300 ease-in-out translate-x-full bg-white shadow-2xl flex flex-col">
+            
+            <!-- En-tête du Drawer -->
+            <div class="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 flex items-center gap-2">
+                    <span class="p-1.5 bg-sky-50 rounded-lg text-[#2C6693]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </span>
+                    <span>Historique des prélèvements</span>
+                </h3>
+                <button id="btn-close-drawer" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition-colors">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Corps du Drawer (La liste des antécédents injectée par Django) -->
+            <div id="liste-historique" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50">
+                <!-- Les éléments HTML injectés s'afficheront ici -->
+            </div>
+
+            <!-- Pied du Drawer -->
+            <div class="p-3 bg-white border-t border-slate-200 text-right">
+                <button id="btn-close-drawer-footer" type="button" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
+                    Fermer
+                </button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+    <form method="POST" class="space-y-6" id="form_echantillon" action="{% url 'ajouter_echantillon' %}">
+        {% csrf_token %}
+        <input type="hidden" name="fiche_echantillon" value="{{ fiches_echantillon.id }}" >
+        <input type="hidden" name="enfant_id" id="main_enfant_id">
+        <input type="hidden" name="enfant_mere_id" id="main_enfant_mere_id">
+<section class="bg-slate-950/90 border border-rose-500/30 rounded-xl p-3 shadow-2xl relative overflow-hidden text-white space-y-2 backdrop-blur-md">
+    
+    <!-- Ligne décorative style "Scanline / Sécurité" supérieure -->
+    <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-rose-500 to-transparent opacity-75 animate-pulse"></div>
+
+    <!-- Filigrane d'arrière-plan discret -->
+    <div class="absolute right-2 -bottom-2 opacity-5 pointer-events-none text-rose-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+    </div>
+
+    <!-- En-tête Ultra-Compact avec le Titre Exact -->
+  <div class="flex items-center justify-between p-3.5 rounded-lg bg-white/95 backdrop-blur-md border border-white/40 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3),_0_8px_10px_-6px_rgba(0,0,0,0.2),_inset_0_1px_0_rgba(255,255,255,1)] relative z-10">
+    <div class="flex items-center gap-2">
+        <!-- Témoin lumineux Sécurité -->
+        <span class="relative flex h-2.5 w-2.5">
+            <span id="pulse-dot" class="absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75 animate-ping"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-600"></span>
+        </span>
+        
+        <!-- Titre explicitant le Code de l'échantillon -->
+        <h3 class="text-[11px] font-black uppercase font-mono text-slate-800 tracking-wider flex items-center gap-1">
+            CODE DE L'ÉCHANTILLON <span class="text-rose-600">*</span>
+        </h3>
+        <span id="status-label-text" class="text-[9px] font-mono text-slate-500 font-semibold">(EN ATTENTE)</span>
+    </div>
+
+    <!-- BADGE PENDULE / PROCHAIN NUMÉRO -->
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-amber-300/80 bg-amber-50 text-amber-900 text-[10px] font-mono font-bold shadow-xs">
+        <svg class="w-3 h-3 text-amber-600 animate-spin" style="animation-duration: 6s;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="text-[9px] text-amber-700/80 tracking-tight">ATTENDU :</span>
+        <span class="font-extrabold tracking-wider text-amber-950">{{ prochain_numero }}</span>
+    </div>
+</div>
+    <!-- Zone de Saisie Sécurisée (Fine et Rectangulaire) -->
+    <div class="relative z-10">
+        <div class="flex items-center gap-2 bg-black/60 px-2.5 py-1.5 rounded-md border border-rose-500/50 focus-within:border-rose-400 focus-within:shadow-[0_0_12px_rgba(244,63,94,0.4)] transition-all">
+            
+            <!-- Icône Code-Barres / Scanner ultra-fine -->
+            <div class="shrink-0 text-rose-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                    <path d="M7 9h10"/><path d="M7 12h10"/><path d="M7 15h10"/>
+                </svg>
+            </div>
+
+            <!-- Champ Input compact -->
+            <input type="text" id="code_echantillon" name="code_echantillon"  
+                   placeholder="CODE : {{ prochain_numero }}"
+                   autofocus
+                   required
+                   oninput="
+                       const statusText = document.getElementById('status-label-text');
+                       const badgeText = document.getElementById('scan-badge-text');
+                       const checkIcon = document.getElementById('scan-check-icon');
+                       const pulseDot = document.getElementById('pulse-dot');
+                       if(this.value.trim().length > 0) {
+                           statusText.textContent = '(SAISIE DÉTECTÉE)';
+                           statusText.classList.add('text-emerald-400');
+                           badgeText.textContent = 'VERIFIÉ';
+                           checkIcon.classList.remove('hidden');
+                           pulseDot.classList.add('bg-emerald-400');
+                       } else {
+                           statusText.textContent = '(EN ATTENTE)';
+                           statusText.classList.remove('text-emerald-400');
+                           badgeText.textContent = 'SCAN EN COURS';
+                           checkIcon.classList.add('hidden');
+                           pulseDot.classList.remove('bg-emerald-400');
+                       }
+                   "
+                   class="font-mono text-sm sm:text-base font-extrabold text-rose-100 placeholder-rose-500/40 bg-transparent border-none p-0 tracking-widest focus:outline-none focus:ring-0 w-full uppercase">
+
+            <!-- Bouton rapide d'auto-remplissage -->
+            <button type="button" 
+                    title="Insérer automatiquement le code attendu"
+                    onclick="document.getElementById('code_echantillon').value = '{{ prochain_numero }}'; document.getElementById('code_echantillon').dispatchEvent(new Event('input'));"
+                    class="shrink-0 px-1.5 py-0.5 rounded bg-rose-950/80 hover:bg-rose-900 border border-rose-700/50 text-[9px] font-mono text-rose-300 transition-colors uppercase tracking-tight">
+                AUTO
+            </button>
+
+            <!-- Badge d'état droit -->
+            <div class="shrink-0 hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-950/50 border border-rose-800/60 text-[8px] font-mono font-bold text-rose-300">
+                <svg id="scan-check-icon" class="w-2.5 h-2.5 text-emerald-400 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span id="scan-badge-text">SCAN EN COURS</span>
+            </div>
+        </div>
+    </div>
+</section>
+      <!-- SECTION 1 : INFORMATIONS DE LA FORMATION SANITAIRE -->
+<!-- SECTION 1 : FORMATION SANITAIRE (FOSA) -->
+<!-- Bloc Section 1 - Style ERP Professionnel / Health Facility Information -->
+<div class="bg-white border border-slate-200 rounded-xl shadow-sm font-sans overflow-hidden transition-all">
+    
+    <!-- En-tête de section (Style ERP Premium Dark avec Dégradé) -->
+   <!-- ======================================================== -->
+<!-- STYLE DHIS2 PRO : SECTION 1 - FORMATION SANITAIRE        -->
+<!-- ======================================================== -->
+<div class="bg-white border border-slate-300 rounded-md shadow-2xs overflow-hidden font-sans">
+    
+    <!-- En-tête DHIS2 Classic Blue -->
+    <div class="bg-[#2C6693] text-white px-4 py-2.5 flex items-center justify-between border-b border-blue-900">
+        <div class="flex items-center gap-2">
+            <span class="bg-white/20 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+               1.0
+            </span>
+            <h3 class="text-xs font-bold uppercase tracking-wide">
+                Renseignements sur la formation sanitaire / Health facility information
+            </h3>
+        </div>
+        <div class="hidden sm:flex items-center gap-1.5 text-blue-100 text-[11px] font-mono">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <span>FOSA METADATA</span>
+        </div>
+    </div>
+
+    <!-- Corps du formulaire (Style grille compacte DHIS2) -->
+    <div class="p-4 bg-slate-50/50">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-xs">
+            
+            <!-- Région -->
+            <div class="space-y-1 lg:col-span-3">
+                <label for="input_region" class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Région <span class="text-slate-400 font-normal lowercase">/ region</span> <span class="text-red-600">*</span>
+                </label>
+                <input type="text" id="input_region" name="region" readonly value="{{ fiches_echantillon.region.nom }}"
+                       class="w-full px-2.5 py-1.5 bg-slate-200/70 border border-slate-300 rounded text-slate-700 font-medium text-xs cursor-not-allowed focus:outline-none truncate"
+                       title="{{ fiches_echantillon.region.nom }}">
+            </div>
+
+            <!-- District de Santé -->
+            <div class="space-y-1 lg:col-span-3">
+                <label for="input_district" class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    District de Santé <span class="text-slate-400 font-normal lowercase">/ district</span> <span class="text-red-600">*</span>
+                </label>
+                <input type="text" id="input_district" name="district" readonly value="{{ fiches_echantillon.district.nom }}"
+                       class="w-full px-2.5 py-1.5 bg-slate-200/70 border border-slate-300 rounded text-slate-700 font-medium text-xs cursor-not-allowed focus:outline-none truncate"
+                       title="{{ fiches_echantillon.district.nom }}">
+            </div>
+
+            <!-- Structure (FOSA) -->
+            <div class="space-y-1 lg:col-span-3">
+                <label for="input_fosa" class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Structure (FOSA) <span class="text-slate-400 font-normal lowercase">/ facility</span> <span class="text-red-600">*</span>
+                </label>
+                <input type="text" id="input_fosa" name="fosa" readonly value="{{ fiches_echantillon.fosa.nom }}"
+                       class="w-full px-2.5 py-1.5 bg-slate-200/70 border border-slate-300 rounded text-slate-700 font-medium text-xs cursor-not-allowed focus:outline-none truncate"
+                       title="{{ fiches_echantillon.fosa.nom }}">
+            </div>
+
+            <!-- Porte d'Entrée (Modifiable) -->
+            <div class="space-y-1 lg:col-span-3">
+                <label for="select-porte-entree" class="font-bold text-slate-800 block uppercase text-[10px] tracking-wider">
+                    Porte d'Entrée <span class="text-slate-400 font-normal lowercase">/ point of entry</span> <span class="text-red-600">*</span>
+                </label>
+                <div class="relative">
+                    <select id="select-porte-entree" name="porte_entree" required 
+                            class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer transition-all appearance-none pr-6">
+                        <option value="">Sélectionner...</option>
+                        {% for pe in portes_entree %}
+                            <option value="{{ pe.id }}">{{ pe.nom }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-500">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- ======================================================== -->
+<!-- STYLE DHIS2 PRO : SECTION 3 - CODE D'IDENTIFICATION      -->
+<!-- ======================================================== -->
+<div class="space-y-2 mt-4 font-sans">
+   <div class="border-b border-[#714B67]/30 pb-2 flex items-center justify-between">
+    <h4 class="text-xs font-bold text-[#714B67] uppercase tracking-wider flex items-center gap-1.5 font-mono">
+        <span class="w-2 h-2 rounded-full bg-[#714B67]"></span>
+        3. Code d'identification 
+        <span class="text-slate-400 font-normal lowercase tracking-normal">/ Identification Code</span> 
+        <span class="text-rose-500">*</span>
+    </h4>
+</div>
+    <!-- Bloc de saisie typique d'un formulaire DHIS2 DataEntry -->
+    <div class="flex flex-col sm:flex-row items-stretch gap-2 bg-white p-2.5 border border-slate-300 rounded shadow-2xs w-full">
+        
+        <div class="flex items-center gap-1 bg-slate-50 px-2 py-1.5 border border-slate-200 rounded w-full justify-between sm:justify-start overflow-x-auto font-mono">
+            
+            <!-- Région -->
+            <div class="flex flex-col items-center gap-0.5 min-w-[50px]">
+                <span class="text-[9px] text-slate-500 font-sans uppercase font-bold">REGION</span>
+                <input type="text" id="code_region" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.region.designation}}"
+                       class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] bg-white font-bold text-xs text-slate-800 uppercase">
+            </div>
+            
+            <span class="text-slate-400 font-bold self-end mb-1 select-none">-</span>
+            
+            <!-- District -->
+            <div class="flex flex-col items-center gap-0.5 min-w-[50px]">
+                <span class="text-[9px] text-slate-500 font-sans uppercase font-bold">DISTRICT</span>
+                <input type="text" id="code_district" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.district.designation}}"
+                       class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] bg-white font-bold text-xs text-slate-800 uppercase">
+            </div>
+            
+            <span class="text-slate-400 font-bold self-end mb-1 select-none">-</span>
+            
+            <!-- FOSA -->
+            <div class="flex flex-col items-center gap-0.5 min-w-[58px]">
+                <span class="text-[9px] text-slate-500 font-sans uppercase font-bold">FOSA</span>
+                <input type="text" id="code_fosa" maxlength="3" placeholder="---" autocomplete="off" required value="{{fiches_echantillon.fosa.designation}}"
+                       class="w-full text-center py-1 border border-slate-300 rounded focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] bg-white font-bold text-xs text-slate-800 uppercase">
+            </div>
+            
+            <span class="text-slate-400 font-bold self-end mb-1 select-none">-</span>
+            
+            <!-- Porte d'Entrée (PT) -->
+            <div class="flex flex-col items-center gap-0.5 min-w-[45px]">
+                <span class="text-[9px] text-blue-700 font-sans uppercase font-bold">PT</span>
+                <input type="text" id="code_pt" maxlength="2" placeholder="--" autocomplete="off" required
+                       class="w-full text-center py-1 border border-blue-300 bg-blue-50/40 rounded focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] font-bold text-xs text-blue-900 uppercase">
+            </div>
+            
+            <span class="text-slate-400 font-bold self-end mb-1 select-none">-</span>
+            
+            <!-- Numéro de Série -->
+            <div class="flex flex-col items-center gap-0.5 min-w-[60px]">
+                <span class="text-[9px] text-rose-700 font-sans uppercase font-bold">NUM</span>
+                <input type="text" id="numero_serie" maxlength="4" placeholder="----" autocomplete="off" required
+                       class="w-full text-center py-1 border border-rose-300 bg-rose-50/40 rounded focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600 font-bold text-xs text-rose-950 uppercase">
+            </div>
+
+            <!-- Suffixe (Optionnel) -->
+            <div class="hidden flex-col items-center gap-0.5 min-w-[40px]" id="wrapper_suffixe">
+                <span class="text-[9px] text-emerald-700 font-sans uppercase font-bold">SUFF</span>
+                <input type="text" id="code_suffixe" maxlength="2" placeholder="01" autocomplete="off"
+                       class="w-full text-center py-1 border border-emerald-300 bg-emerald-50 rounded focus:outline-none focus:border-emerald-600 font-bold text-xs text-emerald-950 uppercase">
+            </div>
+        </div>
+
+        <!-- Bouton d'action standard DHIS2 -->
+        <div class="flex items-stretch shrink-0 w-full sm:w-auto">
+            <button type="button" id="btn-rechercher-code" title="Interroger le registre LIMS"
+                    class="w-full sm:w-11 bg-[#2C6693] hover:bg-[#235275] text-white rounded border border-[#235275] flex items-center justify-center transition-colors shadow-2xs cursor-pointer py-2 sm:py-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- CONTENEUR GLOBAL DU FORMULAIRE VERROUILLÉ (Sections 3, 4, 5, etc.) -->
+
+        <!-- SECTION 2 : INFORMATIONS SUR LE PATIENT / ENFANT -->
+<div class="locked-section-wrapper relative transition-all duration-300 mb-6">
+    <div class="lock-overlay absolute inset-0 z-30 bg-slate-100/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-slate-300 transition-all duration-300">
+        <div class="w-12 h-12 rounded-full bg-slate-900 text-amber-400 flex items-center justify-center shadow-lg mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+        </div>
+        <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest font-mono">Patient Verrouillé</h4>
+        <p class="text-[11px] text-slate-600 mt-0.5 max-w-xs font-medium">Veuillez valider le code patient ci-dessus.</p>
+    </div>
+    <fieldset class="form-fieldset space-y-6 opacity-40 pointer-events-none transition-all duration-300" disabled>
+        {% include "../components/echantillons/section_patient.html" %}
+    </fieldset>
+</div>
+
+<!-- SECTION 3 : INFORMATIONS SUR LA MÈRE -->
+<div class="locked-section-wrapper relative transition-all duration-300 mb-6">
+    <div class="lock-overlay absolute inset-0 z-30 bg-slate-100/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-slate-300 transition-all duration-300">
+        <div class="w-12 h-12 rounded-full bg-slate-900 text-amber-400 flex items-center justify-center shadow-lg mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+        </div>
+        <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest font-mono">Mère Verrouillée</h4>
+        <p class="text-[11px] text-slate-600 mt-0.5 max-w-xs font-medium">Validation du code patient requise.</p>
+    </div>
+    <fieldset class="form-fieldset space-y-6 opacity-40 pointer-events-none transition-all duration-300" disabled>
+        {% include "../components/echantillons/section_mother.html" %}
+    </fieldset>
+</div>
+
+<!-- SECTION 4 : SUIVI VIROLOGIQUE, MÉDICAL & DIAGNOSTICS -->
+<div class="locked-section-wrapper relative transition-all duration-300 mb-6">
+    <div class="lock-overlay absolute inset-0 z-30 bg-slate-100/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-slate-300 transition-all duration-300">
+        <div class="w-12 h-12 rounded-full bg-slate-900 text-amber-400 flex items-center justify-center shadow-lg mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+        </div>
+        <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest font-mono">Suivi Clinique Verrouillé</h4>
+        <p class="text-[11px] text-slate-600 mt-0.5 max-w-xs font-medium">Validation du code patient requise.</p>
+    </div>
+    <fieldset class="form-fieldset space-y-6 opacity-40 pointer-events-none transition-all duration-300" disabled>
+        {% include "../components/echantillons/section_clinics.html" %}
+    </fieldset>
+</div>
+
+<!-- SECTION 5 : INFORMATIONS SUR L'ÉCHANTILLON -->
+<div class="locked-section-wrapper relative transition-all duration-300 mb-6">
+    <div class="lock-overlay absolute inset-0 z-30 bg-slate-100/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-slate-300 transition-all duration-300">
+        <div class="w-12 h-12 rounded-full bg-slate-900 text-amber-400 flex items-center justify-center shadow-lg mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+        </div>
+        <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest font-mono">Échantillon Verrouillé</h4>
+        <p class="text-[11px] text-slate-600 mt-0.5 max-w-xs font-medium">Validation du code patient requise.</p>
+    </div>
+    <fieldset class="form-fieldset space-y-6 opacity-40 pointer-events-none transition-all duration-300" disabled>
+        {% include "../components/echantillons/section_infos_echantillon.html" %}
+    </fieldset>
+</div>
+      
+    </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // =========================================================================
+        // 1. Zone Allaitement (Gestion du Select Global)
+        // =========================================================================
+        const selectAllaite = document.getElementById('enfant_allaite');
+        const zoneAllaitement = document.getElementById('zone_allaitement');
+
+        if (selectAllaite && zoneAllaitement) {
+            selectAllaite.addEventListener('change', function() {
+                if (this.value === 'oui') {
+                    zoneAllaitement.classList.remove('hidden');
+                } else {
+                    zoneAllaitement.classList.add('hidden');
+                }
+            });
+        }
+
+        // =========================================================================
+        // 2. Zone Sevrage (Nouvelle gestion via Boutons Radio)
+        // =========================================================================
+        const radioSevrageOui = document.getElementById('sevrage_oui');
+        const radioSevrageNon = document.getElementById('sevrage_non');
+        const dateSevrageWrapper = document.getElementById('wrapper_date_sevrage');
+        const dateSevrageInput = document.getElementById('date_sevrage');
+
+        if (radioSevrageOui && radioSevrageNon && dateSevrageWrapper && dateSevrageInput) {
+            function toggleDateSevrage() {
+                if (radioSevrageOui.checked) {
+                    dateSevrageWrapper.classList.remove('hidden');
+                    dateSevrageInput.required = true;
+                } else {
+                    dateSevrageWrapper.classList.add('hidden');
+                    dateSevrageInput.required = false;
+                    dateSevrageInput.value = ''; // Reset si l'utilisateur repasse à non
+                }
+            }
+
+            radioSevrageOui.addEventListener('change', toggleDateSevrage);
+            radioSevrageNon.addEventListener('change', toggleDateSevrage);
+        }
+
+        // =========================================================================
+        // 3. Traitements Médicaux (Cotrim & TARV - Fonction Générique)
+        // =========================================================================
+        def_toggleDynamicDate('sous_cotrim', 'date_cotrim');
+        def_toggleDynamicDate('sous_tarv', 'date_tarv');
+
+        function def_toggleDynamicDate(selectId, dateId) {
+            const selectEl = document.getElementById(selectId);
+            const dateEl = document.getElementById(dateId);
+
+            if (!selectEl || !dateEl) return;
+
+            selectEl.addEventListener('change', function() {
+                if (this.value === 'oui') {
+                    dateEl.removeAttribute('disabled');
+                    dateEl.classList.remove('bg-slate-100', 'text-slate-400', 'border-slate-300', 'cursor-not-allowed');
+                    dateEl.classList.add('bg-white', 'text-slate-800', 'border-slate-900');
+                    dateEl.setAttribute('required', 'true');
+                } else {
+                    dateEl.setAttribute('disabled', 'true');
+                    dateEl.value = '';
+                    dateEl.classList.add('bg-slate-100', 'text-slate-400', 'border-slate-300', 'cursor-not-allowed');
+                    dateEl.classList.remove('bg-white', 'text-slate-800', 'border-slate-900');
+                    dateEl.removeAttribute('required');
+                }
+            });
+        }
+
+    });
+</script>
+<!-- SECTION 4 : PERSONNEL PRÉLEVEUR & LABO -->
+
+
+<!-- LIAISON FACULTATIVE ENTRE COCHAGE "À RE-PRÉLEVER" ET CHAMP DATE -->
+<script>
+    // Si la case "again_prelevement" de la section précédente existe, 
+    // on peut optionnellement forcer visuellement ou exiger la date de re-prélèvement
+    const checkboxAgain = document.getElementById('again_prelevement');
+    const inputReprelevement = document.getElementById('date_reprelevement');
+
+    if (checkboxAgain && inputReprelevement) {
+        checkboxAgain.addEventListener('change', function() {
+            if (this.checked) {
+                inputReprelevement.setAttribute('required', 'true');
+                inputReprelevement.classList.add('border-rose-900', 'bg-rose-50/10');
+            } else {
+                inputReprelevement.removeAttribute('required');
+                inputReprelevement.classList.remove('border-rose-900', 'bg-rose-50/10');
+            }
+        });
+    }
+</script>
+
+       
+    </form>
+    
+</div>
+
+</main>
+<!-- Bloc Historique des Antécédents (Masqué par défaut) -->
+
+<!-- MODAL SUCCÈS -->
+<dialog id="modal-succes" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-xs bg-white border border-slate-200 rounded-xl p-0 max-w-sm w-full shadow-2xl overflow-hidden font-sans text-xs">
+    <div class="p-6 text-center space-y-4">
+        
+        <!-- Badge Icône Succès (Soft & Pro) -->
+        <div class="w-12 h-12 mx-auto bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+        
+        <!-- Titres -->
+        <div class="space-y-1">
+            <h3 class="text-sm font-bold uppercase tracking-wide text-slate-900">Enregistrement Réussi</h3>
+            <p class="text-[11px] text-slate-500 font-normal">L'échantillon a bien été synchronisé avec la base de données.</p>
+        </div>
+
+        <!-- Bloc Récapitulatif Propre -->
+        <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-left space-y-1.5 font-mono text-[11px] text-slate-700">
+            <div class="flex justify-between border-b border-slate-200/60 pb-1.5">
+                <span class="font-medium text-slate-500">Date prélèvement :</span>
+                <span id="recap-date" class="font-bold text-slate-900">-</span>
+            </div>
+            <div class="flex justify-between pt-0.5">
+                <span class="font-medium text-slate-500">Préleveur :</span>
+                <span id="recap-preleveur" class="font-bold text-slate-900">-</span>
+            </div>
+        </div>
+
+        <!-- Bouton d'action principal aux couleurs de l'app -->
+        <button onclick="document.getElementById('modal-succes').close(); window.location.reload();" 
+                class="w-full py-2.5 bg-[#2C6693] hover:bg-[#235275] text-white font-bold rounded-lg text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-xs">
+            Fermer et continuer
+        </button>
+    </div>
+</dialog>
+
+<!-- MODAL ERREUR -->
+<dialog id="modal-erreur" class="backdrop:bg-slate-900/40 backdrop:backdrop-blur-xs bg-white border border-slate-200 rounded-xl p-0 max-w-sm w-full shadow-2xl overflow-hidden font-sans text-xs">
+    <div class="p-6 text-center space-y-4">
+        
+        <!-- Badge Icône Erreur (Soft & Pro) -->
+        <div class="w-12 h-12 mx-auto bg-rose-50 text-rose-600 rounded-full flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+        </div>
+        
+        <!-- Titres -->
+        <div class="space-y-1">
+            <h3 class="text-sm font-bold uppercase tracking-wide text-slate-900">Échec de l'Opération</h3>
+            <p class="text-[11px] text-slate-500 font-normal">Le serveur a refusé de traiter la demande d'échantillon.</p>
+        </div>
+
+        <!-- Bloc Détail de l'erreur Propre -->
+        <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-left font-mono text-[11px] text-rose-800" id="recap-erreur-msg">
+            Détail de l'erreur inconnu.
+        </div>
+
+        <!-- Bouton d'action secondaire -->
+        <button onclick="document.getElementById('modal-erreur').close()" 
+                class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-bold rounded-lg text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-xs">
+            Corriger les données
+        </button>
+    </div>
+</dialog>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const dobInput = document.getElementById('enfant_dob');
+    const ageDisplay = document.getElementById('enfant_age_display');
+
+    function calculerAge() {
+        const dobValue = dobInput.value;
+        
+        if (!dobValue) {
+            ageDisplay.value = "Calcul automatique...";
+            return;
+        }
+
+        const dob = new Date(dobValue);
+        const aujourdhui = new Date();
+
+        // Sécurité si la date est invalide
+        if (isNaN(dob.getTime())) {
+            ageDisplay.value = "Date invalide";
+            return;
+        }
+
+        let ans = aujourdhui.getFullYear() - dob.getFullYear();
+        let mois = aujourdhui.getMonth() - dob.getMonth();
+        let jours = aujourdhui.getDate() - dob.getDate();
+
+        // Ajustement si l'anniversaire n'est pas encore passé cette année
+        if (mois < 0 || (mois === 0 && jours < 0)) {
+            ans--;
+            mois += 12;
+        }
+        
+        if (jours < 0) {
+            // Prendre le dernier jour du mois précédent
+            const dernierJourMoisPrecedent = new Date(aujourdhui.getFullYear(), aujourdhui.getMonth(), 0).getDate();
+            jours += dernierJourMoisPrecedent;
+            mois--;
+            if (mois < 0) {
+                mois += 12;
+                ans--;
+            }
+        }
+
+        // Formatage de l'affichage selon l'âge du patient (très utile en pédiatrie)
+        if (ans > 0) {
+            ageDisplay.value = `${ans} an(s) et ${mois} mois`;
+        } else if (mois > 0) {
+            ageDisplay.value = `${mois} mois et ${jours} jour(s)`;
+        } else {
+            ageDisplay.value = `${jours} jour(s)`;
+        }
+    }
+
+    // Écouter les changements sur le champ Date
+    dobInput.addEventListener('change', calculerAge);
+
+    // Lancer une première fois le calcul au cas où le champ est pré-rempli au chargement
+    if (dobInput.value) {
+        calculerAge();
+    }
+});
+</script>
+<script>
+    // Gestion dynamique des sélections Région -> District -> FOSA
+    const selectRegion = document.getElementById('select-region');
+    const selectDistrict = document.getElementById('select-district');
+    const selectFosa = document.getElementById('select-fosa');
+
+    const inputCodeRegion = document.getElementById('code_region');
+    const inputCodeDistrict = document.getElementById('code_district');
+    const inputCodeFosa = document.getElementById('code_fosa');
+    const inputSuffixe = document.getElementById('code_suffixe');
+    const hiddenFosaCode = document.getElementById('fosa-code-hidden');
+
+    const otp1 = document.getElementById('fosa-otp-1');
+    const otp2 = document.getElementById('fosa-otp-2');
+    const otp3 = document.getElementById('fosa-otp-3');
+
+    // Fonction utilitaire pour vider proprement les cases OTP FOSA
+    function resetFosaOtp() {
+        if (otp1) otp1.value = '';
+        if (otp2) otp2.value = '';
+        if (otp3) otp3.value = '';
+        if (hiddenFosaCode) hiddenFosaCode.value = '';
+        if (inputCodeFosa) inputCodeFosa.value = '';
+    }
+
+    // 1. Événement lors du changement de Région
+    selectRegion.addEventListener('change', function() {
+        const regionId = this.value;
+        
+        const selectedOption = this.options[this.selectedIndex];
+        const regionCode = selectedOption ? selectedOption.getAttribute('data-code') : '';
+        
+        if (inputCodeRegion) {
+            inputCodeRegion.value = regionCode || '';
+        }
+        
+        // Réinitialisation complète des descendants
+        selectDistrict.innerHTML = '<option value="">Choisir un district...</option>';
+        selectDistrict.disabled = true;
+        selectFosa.innerHTML = '<option value="">Choisir la FOSA...</option>';
+        selectFosa.disabled = true;
+        
+        if (inputCodeDistrict) inputCodeDistrict.value = '';
+        resetFosaOtp();
+
+        if (regionId) {
+            fetch(`/search_districts/${regionId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Erreur réseau lors de la récupération des districts');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && Array.isArray(data.districts) && data.districts.length > 0) {
+                        data.districts.forEach(district => {
+                            const option = document.createElement('option');
+                            option.value = district.id;
+                            option.textContent = district.nom;
+                            option.setAttribute('data-code', district.designation || '');
+                            selectDistrict.appendChild(option);
+                        });
+                    } else {
+                        selectDistrict.innerHTML = '<option value="">Aucun district trouvé pour cette région</option>';
+                    }
+                    selectDistrict.disabled = false;
+                })
+                .catch(error => {
+                    console.error(error);
+                    selectDistrict.innerHTML = '<option value="">Erreur de chargement des données</option>';
+                    selectDistrict.disabled = false;
+                });
+        }
+    });
+
+    // 2. Événement lors du changement de District
+    selectDistrict.addEventListener('change', function() {
+        const districtId = this.value;
+        
+        const selectedOption = this.options[this.selectedIndex];
+        const districtCode = selectedOption ? selectedOption.getAttribute('data-code') : '';
+
+        if (inputCodeDistrict) {
+            inputCodeDistrict.value = districtCode || '';
+        }
+        
+        // Réinitialisation de la FOSA et des blocs OTP
+        selectFosa.innerHTML = '<option value="">Choisir la FOSA...</option>';
+        selectFosa.disabled = true;
+        resetFosaOtp();
+
+        if (districtId) {
+            fetch(`/search_fosas/${districtId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Erreur réseau lors de la récupération des FOSAs');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && Array.isArray(data.fosas) && data.fosas.length > 0) {
+                        data.fosas.forEach(fosa => {
+                            const option = document.createElement('option');
+                            option.value = fosa.id;
+                            option.textContent = fosa.nom;
+                            option.setAttribute('data-code', fosa.designation || '');
+                            selectFosa.appendChild(option);
+                        });
+                    } else {
+                        selectFosa.innerHTML = '<option value="">Aucune FOSA trouvée pour ce district</option>';
+                    }
+                    selectFosa.disabled = false;
+                })
+                .catch(error => {
+                    console.error(error);
+                    selectFosa.innerHTML = '<option value="">Erreur de chargement des données</option>';
+                    selectFosa.disabled = false;
+                });
+        }
+    });
+
+    // 3. Événement unique lors du changement de FOSA (Logique fusionnée)
+    selectFosa.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const fosaCode = selectedOption ? selectedOption.getAttribute('data-code') : '';
+        
+        // 1. Mise à jour de l'input classique #code_fosa
+        if (inputCodeFosa) {
+            inputCodeFosa.value = fosaCode || '';
+        }
+
+        // 2. Mise à jour du champ hidden pour l'envoi Django
+        if (hiddenFosaCode) {
+            hiddenFosaCode.value = fosaCode || '';
+        }
+
+        // 3. Distribution des 3 caractères dans les blocs OTP
+        if (fosaCode && fosaCode.length >= 3) {
+            if (otp1) otp1.value = fosaCode.charAt(0).toUpperCase();
+            if (otp2) otp2.value = fosaCode.charAt(1).toUpperCase();
+            if (otp3) otp3.value = fosaCode.charAt(2).toUpperCase();
+        } else {
+            if (otp1) otp1.value = '';
+            if (otp2) otp2.value = '';
+            if (otp3) otp3.value = '';
+        }
+    });
+</script>
+<script>
+   // 4. Événement lors du changement de la Porte d'Entrée
+    const selectPorteEntree = document.getElementById('select-porte-entree');
+    const inputCodePt = document.getElementById('code_pt');
+
+    selectPorteEntree.addEventListener('change', function() {
+        const porteEntreeId = this.value;
+        
+        if (inputCodePt) inputCodePt.value = '';
+
+        if (porteEntreeId) {
+            fetch(`/search_porte_entree/${porteEntreeId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    // AJOUT POUR LE DÉBANNAGE : Affiche ce que renvoie le serveur dans la console F12
+                    console.log("Données reçues de l'API :", data);
+
+                    if (data && inputCodePt) {
+                        // On teste si la clé directe 'code' existe, sinon on cherche 'designation'
+                        const codeTrouve = data.code || data.designation || '';
+                        inputCodePt.value = codeTrouve.toUpperCase();
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur lors du fetch de la porte d'entrée :", error);
+                    if (inputCodePt) inputCodePt.value = '';
+                });
+        }
+    });
+</script>
+
+
+<script>
+let isSearching = false;
+
+// --- FONCTIONS DE GESTION DU CADENAS ---
+function unlockForm() {
+    const overlays = document.querySelectorAll('.lock-overlay');
+    const fieldsets = document.querySelectorAll('.form-fieldset');
+
+    overlays.forEach(overlay => {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => overlay.classList.add('hidden'), 300);
+    });
+
+    fieldsets.forEach(fieldset => {
+        fieldset.removeAttribute('disabled');
+        fieldset.classList.remove('opacity-40', 'pointer-events-none');
+    });
+}
+
+function lockForm() {
+    const overlays = document.querySelectorAll('.lock-overlay');
+    const fieldsets = document.querySelectorAll('.form-fieldset');
+
+    overlays.forEach(overlay => {
+        overlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+    });
+
+    fieldsets.forEach(fieldset => {
+        fieldset.setAttribute('disabled', 'true');
+        fieldset.classList.add('opacity-40', 'pointer-events-none');
+    });
+}
+// --- FONCTION TOAST ---
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    const bgColors = {
+        success: 'bg-emerald-600 text-white',
+        info: 'bg-blue-600 text-white',
+        warning: 'bg-amber-500 text-white',
+        error: 'bg-rose-600 text-white'
+    };
+
+    toast.className = `fixed bottom-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg font-sans text-xs font-semibold tracking-wide transition-all duration-300 transform translate-y-5 opacity-0 ${bgColors[type] || bgColors.info}`;
+    
+    const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+    toast.innerHTML = `<span class="font-bold text-sm">${icon}</span> <span>${message}</span>`;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.remove('translate-y-5', 'opacity-0'), 10);
+    setTimeout(() => {
+        toast.classList.add('translate-y-5', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
+// --- FONCTIONS DE GESTION DU DRAWER ---
+const drawer = document.getElementById('historique-drawer');
+const drawerOverlay = document.getElementById('drawer-overlay');
+const drawerPanel = document.getElementById('drawer-panel');
+
+function ouvrirDrawer() {
+    if (!drawer) return;
+    drawer.classList.remove('hidden');
+    // Déclenchement de l'animation en douceur
+    setTimeout(() => {
+        drawerOverlay.classList.remove('opacity-0');
+        drawerPanel.classList.remove('translate-x-full');
+    }, 10);
+}
+
+function fermerDrawer() {
+    if (!drawer) return;
+    drawerOverlay.classList.add('opacity-0');
+    drawerPanel.classList.add('translate-x-full');
+    // Masquage complet après la fin de l'animation CSS (300ms)
+    setTimeout(() => {
+        drawer.classList.add('hidden');
+    }, 300);
+}
+
+// Écouteurs d'événements pour la fermeture du drawer
+document.getElementById('btn-close-drawer').addEventListener('click', fermerDrawer);
+document.getElementById('btn-close-drawer-footer').addEventListener('click', fermerDrawer);
+document.getElementById('drawer-overlay').addEventListener('click', fermerDrawer);
+
+// Écouteur pour réouvrir le drawer via le bouton permanent
+document.getElementById('btn-toggle-historique').addEventListener('click', ouvrirDrawer);
+// --- ÉVÉNEMENT RECHERCHE CODE ---
+document.getElementById('btn-rechercher-code').addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (isSearching) return;
+
+    const reg = (inputCodeRegion.value || '').trim().toUpperCase();
+    const dist = (inputCodeDistrict.value || '').trim().toUpperCase();
+    const fosa = (inputCodeFosa.value || '').trim().toUpperCase();
+    const pt = (inputCodePt.value || '').trim().toUpperCase();
+    const inputSerie = document.getElementById('numero_serie');
+    const inputSuffixe = document.getElementById('code_suffixe');
+
+    const serie = (inputSerie ? inputSerie.value : '').trim().toUpperCase();
+    const suffixe = (inputSuffixe ? inputSuffixe.value : '').trim().toUpperCase();
+
+    if (!reg || !dist || !fosa || !pt || !serie) {
+        showToast("Veuillez renseigner complètement les éléments du code.", "warning");
+        return;
+    }
+
+    isSearching = true;
+    this.disabled = true;
+
+    let codeComplexe = `${reg}${dist}${fosa}${pt}${serie}`;
+    if (suffixe.length > 0) {
+        codeComplexe += `-${suffixe}`;
+    }
+
+    const targetFinal = document.getElementById('enfant_code_final');
+    if (targetFinal) {
+        targetFinal.value = codeComplexe;
+    }
+
+    fetch(`/verifier_patient/?code=${encodeURIComponent(codeComplexe)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.existe) {
+                // 🟢 CAS 1 : PATIENT EXISTE -> DÉVERROUILLER LE FORMULAIRE ET CHARGER L'HISTORIQUE
+                showToast("Patient trouvé ! Formulaire déverrouillé.", "success");
+                alimenterChampsPrincipaux(data.patient);
+                
+                // Injection de l'ID du patient existant pour le backend
+                let hiddenPatientIdInput = document.getElementById('enfant_id_hidden');
+                if (!hiddenPatientIdInput) {
+                    hiddenPatientIdInput = document.createElement('input');
+                    hiddenPatientIdInput.type = 'hidden';
+                    hiddenPatientIdInput.id = 'enfant_id_hidden';
+                    hiddenPatientIdInput.name = 'enfant_id';
+                    document.querySelector('form').appendChild(hiddenPatientIdInput);
+                }
+                hiddenPatientIdInput.value = data.patient.id;
+
+                // --- GESTION DE L'AFFICHAGE DE L'HISTORIQUE (HTML DU SERVEUR) ---
+              const containerBtnHist = document.getElementById('container-btn-historique');
+const listeHist = document.getElementById('liste-historique');
+   
+              
+             if (data.patient.historique_html && data.patient.historique_html.trim() !== '') {
+                    if (data.patient.historique_html && data.patient.historique_html.trim() !== '') {
+                      
+                        listeHist.innerHTML = data.patient.historique_html;
+                        containerBtnHist.classList.remove('hidden');
+    
+                        // 3. Optionnel : Ouverture automatique du drawer dès la recherche du patient
+                        ouvrirDrawer();
+                    } else {
+                       containerBtnHist.classList.add('hidden');
+                        listeHist.innerHTML = '';
+                    }
+                } else {
+                    console.error("❌ ERREUR : L'un des conteneurs HTML (#section-historique ou #liste-historique) est introuvable dans la page !");
+                }
+
+                // Déverrouillage des sections
+                unlockForm();
+
+            } else {
+                // 🟠 CAS 2 : PATIENT N'EXISTE PAS -> GARDER VERROUILLÉ ET OUVRIR LA MODALE
+                showToast("Code non attribué. Enregistrement requis.", "info");
+                
+                // Masquer la section historique en cas de non-existence
+               
+               
+
+                lockForm();
+
+                const patientModal = document.getElementById('patient-modal');
+                const modalForm = document.getElementById('dmp-patient-form');
+                
+                if (patientModal && modalForm) {
+                    if (modalForm.querySelector('input[name="code"]')) {
+                        modalForm.querySelector('input[name="code"]').value = codeComplexe;
+                    }
+
+                    const modalSelectFosa = modalForm.querySelector('select[name="fosa"]');
+                    if (modalSelectFosa) {
+                        modalSelectFosa.innerHTML = ''; 
+                        const activeFosaOpt = selectFosa.options[selectFosa.selectedIndex];
+                        
+                        if (activeFosaOpt && activeFosaOpt.value !== "") {
+                            const cloneOpt = document.createElement('option');
+                            cloneOpt.value = activeFosaOpt.value;
+                            cloneOpt.textContent = activeFosaOpt.textContent;
+                            cloneOpt.selected = true;
+                            modalSelectFosa.appendChild(cloneOpt);
+                        } else {
+                            modalSelectFosa.innerHTML = '<option value="">Aucune FOSA sélectionnée...</option>';
+                        }
+                    }
+
+                    const modalSelectPE = modalForm.querySelector('select[name="porte_entree"]');
+                    if (modalSelectPE) {
+                        modalSelectPE.value = selectPorteEntree.value;
+                    }
+
+                    patientModal.showModal();
+                }
+            }
+        })
+        .catch(err => {
+            showToast("Erreur lors de la vérification du code.", "error");
+            console.error("Erreur :", err);
+        })
+        .finally(() => {
+            isSearching = false;
+            this.disabled = false;
+        });
+});
+// 💡 Astuce : Appelez `unlockForm()` dans le callback de votre modale de création de patient 
+// lorsqu'un nouveau patient est enregistré avec succès !
+</script>
+
+<script>
+    // Interception de l'envoi du formulaire de création du modal
+document.getElementById('dmp-patient-form').addEventListener('submit', function(e) {
+    e.preventDefault(); // Empêche le rechargement brutal de la page
+
+    const formData = new FormData(this);
+
+    fetch(this.action || '#', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest' // Indique à Django que c'est de l'AJAX
+        }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Erreur lors de la création");
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // 1. On injecte les données fraîchement créées dans la page de traitement principale
+            alimenterChampsPrincipaux(data.patient);
+
+            // 2. On ferme le modal proprement
+            document.getElementById('patient-modal').close();
+            
+            // 3. Optionnel : On réinitialise le formulaire du modal pour la prochaine fois
+            document.getElementById('dmp-patient-form').reset();
+        } else {
+            alert("Erreur : " + (data.error || "Impossible de créer le dossier."));
+        }
+    })
+    .catch(error => {
+        console.error("Erreur:", error);
+        alert("Une erreur est survenue lors de l'enregistrement.");
+    });
+});
+</script>
+<script>
+// Helper pour convertir une date en format JJ-MM-AAAA
+function formatDateToFR(dateStr) {
+    if (!dateStr) return '';
+    
+    // Si la date contient une heure (ISO), on extrait juste la partie YYYY-MM-DD
+    const cleanDate = dateStr.split('T')[0];
+    const parts = cleanDate.split('-');
+
+    // Si la date est au format AAAA-MM-JJ, on la convertit en JJ-MM-AAAA
+    if (parts.length === 3 && parts[0].length === 4) {
+        const year = parts[0];
+        const month = parts[1];
+        const day = parts[2];
+        return `${day}-${month}-${year}`;
+    }
+
+    return dateStr; // Retourne la valeur d'origine si déjà au bon format
+}
+
+// Fonction globale pour remplir les champs de la page principale
+function alimenterChampsPrincipaux(patientData) {
+    if (!patientData) return;
+
+    // 1. Identifiants techniques (Hidden inputs ou Readonly)
+    if (document.getElementById('main_enfant_id')) {
+        document.getElementById('main_enfant_id').value = patientData.id || '';
+    }
+    if (document.getElementById('main_enfant_mere_id')) {
+        document.getElementById('main_enfant_mere_id').value = (patientData.mere && patientData.mere.id) ? patientData.mere.id : '';
+    }
+   
+    // 2. État civil de l'enfant
+    if (document.getElementById('main_enfant_nom')) document.getElementById('main_enfant_nom').value = patientData.nom || '';
+    if (document.getElementById('main_enfant_prenom')) document.getElementById('main_enfant_prenom').value = patientData.prenom || '';
+    if (document.getElementById('main_sexe')) document.getElementById('main_sexe').value = patientData.sexe || '';
+    
+    // Date de naissance de l'enfant convertie en JJ-MM-AAAA
+    if (document.getElementById('enfant_dob')) {
+        document.getElementById('enfant_dob').value = formatDateToFR(patientData.date_naissance);
+    }
+    
+    if (document.getElementById('main_poids')) document.getElementById('main_poids').value = patientData.poids || '';
+    if (document.getElementById('main_porte_entree')) document.getElementById('main_porte_entree').value = patientData.porte_entree || '';
+
+    // 3. Remplissage des données de la MÈRE sur l'écran principal
+    if (patientData.mere) {
+        if (document.getElementById('main_mere_nom')) {
+            document.getElementById('main_mere_nom').value = patientData.mere.nom || '';
+        }
+        if (document.getElementById('main_mere_prenom')) {
+            document.getElementById('main_mere_prenom').value = patientData.mere.prenom || '';
+        }
+        // Âge de la mère
+        if (document.getElementById('main_mere_age')) {
+            document.getElementById('main_mere_age').value = patientData.mere.age !== null ? patientData.mere.age : '';
+        }
+        // Date de naissance de la mère convertie en JJ-MM-AAAA
+        if (document.getElementById('main_mere_date_naissance')) {
+            document.getElementById('main_mere_date_naissance').value = formatDateToFR(patientData.mere.date_naissance);
+        }
+        // Contact / personnel réseau associé à la mère
+        if (document.getElementById('main_contact_familial')) {
+            document.getElementById('main_contact_familial').value = patientData.mere.contact || '';
+        }
+    } else {
+        // Vider les champs de la mère si aucun profil mère n'est lié
+        if (document.getElementById('main_mere_nom')) document.getElementById('main_mere_nom').value = '';
+        if (document.getElementById('main_mere_prenom')) document.getElementById('main_mere_prenom').value = '';
+        if (document.getElementById('main_mere_age')) document.getElementById('main_mere_age').value = '';
+        if (document.getElementById('main_mere_date_naissance')) document.getElementById('main_mere_date_naissance').value = '';
+    }
+
+    // Déclencher manuellement l'événement d'input/change pour recalculer l'âge si des écouteurs sont en place
+    if (document.getElementById('enfant_dob') && patientData.date_naissance) {
+        document.getElementById('enfant_dob').dispatchEvent(new Event('input'));
+    }
+    if (document.getElementById('main_mere_date_naissance') && patientData.mere && patientData.mere.date_naissance) {
+        document.getElementById('main_mere_date_naissance').dispatchEvent(new Event('input'));
+    }
+}
+</script>
+<script>
+ document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('form_echantillon'); 
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+
+            const formData = new FormData(form);
+
+            fetch(form.action || window.location.href, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 1. On peuple le récapitulatif du succès avec les données du formulaire
+                    document.getElementById('recap-date').innerText = formData.get('date_prelevement') || '-';
+                    
+                    const nomP = formData.get('nom_preleveur') || '';
+                    const prenomP = formData.get('prenom_preleveur') || '';
+                    document.getElementById('recap-preleveur').innerText = `${nomP} ${prenomP}`.trim() || '-';
+
+                    // 2. On ouvre le modal de succès
+                    document.getElementById('modal-succes').showModal();
+                    
+                    // 3. On remet à zéro le formulaire
+                    form.reset();
+                } else {
+                    // On injecte le message d'erreur renvoyé par Django et on l'affiche
+                    document.getElementById('recap-erreur-msg').innerText = data.error || "Erreur indéterminée.";
+                    document.getElementById('modal-erreur').showModal();
+                }
+            })
+            .catch(error => {
+                console.error("Erreur critique AJAX :", error);
+                document.getElementById('recap-erreur-msg').innerText = "Impossible de joindre le serveur ou problème réseau.";
+                document.getElementById('modal-erreur').showModal();
+            });
+        });
+    }
+});
+</script>
+
+
+
+
+<script>
+    const ageInput = document.getElementById('main_mere_age');
+    const dobInput = document.getElementById('main_mere_date_naissance');
+
+    // 1. ÂGE -> DATE DE NAISSANCE
+    ageInput.addEventListener('input', function() {
+        const age = parseInt(this.value);
+
+        if (!isNaN(age) && age >= 0) {
+            const today = new Date();
+            const birthDate = new Date(today.getFullYear() - age, today.getMonth(), today.getDate());
+            
+            const year = birthDate.getFullYear();
+            const month = String(birthDate.getMonth() + 1).padStart(2, '0');
+            const day = String(birthDate.getDate()).padStart(2, '0');
+            
+            dobInput.value = `${year}-${month}-${day}`;
+        } else {
+            dobInput.value = '';
+        }
+    });
+
+    // 2. DATE DE NAISSANCE -> ÂGE
+    dobInput.addEventListener('change', function() {
+        if (this.value) {
+            const birthDate = new Date(this.value);
+            const today = new Date();
+
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            const dayDiff = today.getDate() - birthDate.getDate();
+
+            // Si l'anniversaire n'est pas encore passé cette année, on retire 1 an
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                age--;
+            }
+
+            if (age >= 0) {
+                ageInput.value = age;
+            } else {
+                ageInput.value = ''; // Réinitialise si la date est dans le futur
+            }
+        } else {
+            ageInput.value = '';
+        }
+    });
+     const canvas = document.getElementById('bio-canvas');
+    const ctx = canvas.getContext('2d');
+    let elements = [];
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Classe représentant des éléments biologiques (Cellules / Molécules)
+    class BioElement {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.radius = Math.random() * 6 + 2; // Taille des cellules
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
+            this.alpha = Math.random() * 0.4 + 0.1;
+            this.color = Math.random() > 0.4 ? '#0284c7' : '#14b8a6'; // Cyan & Teal médical
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.x > canvas.width + 10) this.x = -10;
+            if (this.x < -10) this.x = canvas.width + 10;
+            if (this.y > canvas.height + 10) this.y = -10;
+            if (this.y < -10) this.y = canvas.height + 10;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.alpha;
+            ctx.fill();
+
+            // Deuxième cercle concentrique style membrane cellulaire
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius * 1.8, 0, Math.PI * 2);
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 0.5;
+            ctx.globalAlpha = this.alpha * 0.5;
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    function initBioCanvas() {
+        elements = [];
+        const count = Math.floor((canvas.width * canvas.height) / 20000);
+        for (let i = 0; i < count; i++) {
+            elements.push(new BioElement());
+        }
+    }
+    initBioCanvas();
+
+    function animateBioCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Liaisons Moléculaires / Connexions d'analyses
+        for (let a = 0; a < elements.length; a++) {
+            for (let b = a; b < elements.length; b++) {
+                let dx = elements[a].x - elements[b].x;
+                let dy = elements[a].y - elements[b].y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 110) {
+                    ctx.strokeStyle = '#0284c7';
+                    ctx.globalAlpha = (1 - distance / 110) * 0.15;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(elements[a].x, elements[a].y);
+                    ctx.lineTo(elements[b].x, elements[b].y);
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+                }
+            }
+        }
+
+        elements.forEach(el => {
+            el.update();
+            el.draw();
+        });
+
+        requestAnimationFrame(animateBioCanvas);
+    }
+    animateBioCanvas();
+</script>
+{% endblock %}

@@ -1,0 +1,330 @@
+<!-- ======================================================== -->
+<!-- STYLE DHIS2 PRO : SECTION 3 - INFORMATIONS SUR LA MÈRE -->
+<!-- ======================================================== -->
+<div class="bg-[#2C6693] text-white px-4 py-2.5 flex items-center justify-between border-b border-blue-900 rounded-t font-sans" id="section_3">
+    <div class="flex items-center gap-2">
+        <span class="bg-white/20 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+           3.
+        </span>
+        <h3 class="text-xs font-bold uppercase tracking-wide">
+            Informations sur la Mère / Mother's Information
+        </h3>
+    </div>
+    <div class="hidden sm:flex items-center gap-1.5 text-blue-100 text-[11px] font-mono">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>MOTHER METADATA</span>
+    </div>
+</div>
+
+<!-- Corps du formulaire - Style DHIS2 Pro -->
+<div class="bg-white border border-slate-300 rounded-b shadow-2xs font-sans space-y-4 p-4 text-xs">
+
+    <!-- 8. IDENTITÉ / IDENTITY -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                8. 
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <!-- Nom -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nom <span class="text-slate-400 font-normal lowercase">/ Surname</span> <span class="text-red-600">*</span>
+                </label>
+                <input type="text" id="main_mere_nom" name="mere_nom" required placeholder="Nom de la mère" 
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+            <!-- Prénom -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Prénom <span class="text-slate-400 font-normal lowercase">/ First name</span>
+                </label>
+                <input type="text" id="main_mere_prenom" name="mere_prenom" placeholder="Prénom de la mère" 
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. SUIVI CHRONOLOGIQUE / CHRONOLOGICAL FOLLOW-UP -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                9. 
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs items-end">
+            <!-- Date de naissance -->
+           <!-- Date de naissance -->
+<div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider" for="main_mere_date_naissance">
+        Date de naissance <span class="text-slate-400 font-normal lowercase">/ DOB</span>
+    </label>
+    <input type="text" 
+           name="mere_date_naissance" 
+           id="main_mere_date_naissance"
+           placeholder="JJ-MM-AAAA" 
+           maxlength="10"
+           pattern="\d{2}-\d{2}-\d{4}"
+           title="Veuillez respecter le format JJ-MM-AAAA (ex: 15-08-2000)"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+
+<!-- Âge -->
+<div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider" for="main_mere_age">
+        Âge (ans) <span class="text-slate-400 font-normal lowercase">/ Age</span> <span class="text-red-600">*</span>
+    </label>
+    <input type="number" 
+           name="mere_age" 
+           id="main_mere_age" 
+           required 
+           placeholder="Ex: 28" 
+           min="10" 
+           max="85"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dateInput = document.getElementById('main_mere_date_naissance');
+    const ageInput = document.getElementById('main_mere_age');
+
+    let isUpdating = false;
+
+    // 1. Saisie de la DATE DE NAISSANCE (Format JJ-MM-AAAA) -> Calcul de l'Âge
+    dateInput.addEventListener('input', function (e) {
+        if (isUpdating) return;
+
+        // Formate automatiquement avec les tirets (JJ-MM-AAAA)
+        let value = e.target.value.replace(/\D/g, ''); // Garde uniquement les chiffres
+        if (value.length > 8) value = value.slice(0, 8);
+
+        if (value.length >= 5) {
+            e.target.value = value.slice(0, 2) + '-' + value.slice(2, 4) + '-' + value.slice(4);
+        } else if (value.length >= 3) {
+            e.target.value = value.slice(0, 2) + '-' + value.slice(2);
+        } else {
+            e.target.value = value;
+        }
+
+        // Calcul de l'âge si la date est complète (10 caractères: JJ-MM-AAAA)
+        if (e.target.value.length === 10) {
+            const parts = e.target.value.split('-');
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const year = parseInt(parts[2], 10);
+
+            const birthDate = new Date(year, month, day);
+            const today = new Date();
+
+            if (!isNaN(birthDate.getTime()) && birthDate <= today && year > 1900) {
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                if (age >= 10 && age <= 85) {
+                    isUpdating = true;
+                    ageInput.value = age;
+                    isUpdating = false;
+                }
+            }
+        }
+    });
+
+    // 2. Saisie de l'ÂGE -> Génère au format JJ-MM-AAAA
+    ageInput.addEventListener('input', function (e) {
+        if (isUpdating) return;
+
+        const age = parseInt(e.target.value, 10);
+
+        if (!isNaN(age) && age >= 10 && age <= 85) {
+            const today = new Date();
+            const birthYear = today.getFullYear() - age;
+            
+            // Formatage du jour et du mois sur 2 chiffres
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+
+            // Format final : JJ-MM-AAAA
+            const generatedDateFormatted = `${day}-${month}-${birthYear}`;
+
+            isUpdating = true;
+            dateInput.value = generatedDateFormatted;
+            isUpdating = false;
+        } else if (e.target.value === '') {
+            isUpdating = true;
+            dateInput.value = '';
+            isUpdating = false;
+        }
+    });
+});
+</script>
+            <!-- Date du prochain rdv -->
+         <div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Date Prochain RDV <span class="text-slate-400 font-normal lowercase">/ Date of Next Appointment</span> <span class="text-red-600"></span>
+    </label>
+    <input type="text" 
+           name="date_prochain_rdv" 
+           placeholder="JJ-MM-AAAA"
+           pattern="\d{2}-\d{2}-\d{4}"
+           maxlength="10"
+           oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^(\d{2})(\d)/, '$1-$2').replace(/^(\d{2}-\d{2})(\d)/, '$1-$2');"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+            <!-- Date du diagnostic LAV -->
+            
+        </div>
+    </div>
+
+    <!-- 10. MATERNITÉ / MATERNITY -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                10. 
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+         
+              
+             <div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Mode d'accouchement <span class="text-slate-400 font-normal lowercase">/ Delivery mode</span>
+    </label>
+    <select name="mode_accouchement" class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+        <option value="">Sélectionner...</option>
+        <option value="1" {% if echantillon.mode_accouchement == 1 or echantillon.mode_accouchement_id == 1 or echantillon.mode_accouchement == '1' %}selected{% endif %}>Voie Basse / Normal</option>
+        <option value="2" {% if echantillon.mode_accouchement == 2 or echantillon.mode_accouchement_id == 2 or echantillon.mode_accouchement == '2' %}selected{% endif %}>Césarienne / Cesarean</option>
+        <option value="0" {% if echantillon.mode_accouchement == 0 or echantillon.mode_accouchement_id == 0 or echantillon.mode_accouchement == '0' %}selected{% endif %}>Inconnu</option>
+    </select>
+</div>
+           
+            <!-- Numéro de grossesse -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nº de Grossesse <span class="text-slate-400 font-normal lowercase">/ Gravidity</span>
+                </label>
+                <input type="number" min="0" name="numero_grossesse" placeholder="0" 
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 font-medium text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+    </div>
+     <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                11. 
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+         
+<div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Date Diagnostic VIH <span class="text-slate-400 font-normal lowercase">/ Diagnostic VIH Date</span> <span class="text-red-600"></span>
+    </label>
+    <input type="text" 
+           name="date_diagnostic_vih"  
+           placeholder="JJ-MM-AAAA"
+           pattern="\d{2}-\d{2}-\d{4}"
+           maxlength="10"
+           oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^(\d{2})(\d)/, '$1-$2').replace(/^(\d{2}-\d{2})(\d)/, '$1-$2');"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+        </div>
+         <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                12. 
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+         
+<div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nombre d'enfant expos&eacute;s <span class="text-slate-400 font-normal lowercase">/ Number of exposed children</span> <span class="text-red-600"></span>
+                </label>
+                <input type="number" name="nbre_enfant_expose"  
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Nombre d'enfant Infect&eacute;s<span class="text-slate-400 font-normal lowercase">/ Number of infected children</span> <span class="text-red-600"></span>
+                </label>
+                <input type="number" name="nbre_enfant_infecte"  
+                       class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+            </div>
+        </div>
+    <!-- 13. PRISE EN CHARGE PTME / PMTCT CARE -->
+    <div class="space-y-2 pt-1">
+        <div class="border-b border-slate-300 pb-1">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                13. Prise en charge PTME <span class="text-slate-400 font-normal lowercase">/ PMTCT Protocol</span>
+            </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <!-- Protocole PTME suivi -->
+            <div class="space-y-1">
+                <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+                    Protocole PTME <span class="text-slate-400 font-normal lowercase">/ ARV Protocol</span> <span class="text-red-600"></span>
+                </label>
+              <div class="space-y-2">
+    <select name="protocole_ptme" 
+            id="protocole_ptme"
+            onchange="toggleProtocoleAutre(this)"
+             
+            class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693] cursor-pointer">
+        
+        <option value="" selected disabled>Sélectionner le protocole...</option>
+        <option value="rien">Rien / Nothing</option>
+        <option value="TELE (TDF+3TC+EFV)">TELE (TDF+3TC+EFV)</option>
+        <option value="Autre / Other">Autre / Other</option>
+    </select>
+
+    <!-- Champ caché par défaut, s'affiche uniquement si "Autre" est cliqué -->
+    <div id="champ_protocole_autre" class="hidden">
+        <input type="text" 
+               name="protocole_ptme_autre" 
+               id="protocole_ptme_autre"
+               placeholder="Préciser le protocole (ex: TLD)..."
+               class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-slate-50 text-slate-900 text-xs focus:bg-white focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+    </div>
+</div>
+
+<script>
+    function toggleProtocoleAutre(select) {
+        const container = document.getElementById('champ_protocole_autre');
+        const input = document.getElementById('protocole_ptme_autre');
+        
+        if (select.value === 'Autre / Other') {
+            container.classList.remove('hidden');
+            input.setAttribute('required', 'required');
+            input.focus();
+        } else {
+            container.classList.add('hidden');
+            input.removeAttribute('required');
+            input.value = '';
+        }
+    }
+</script>
+            </div>
+            <!-- Date d'initiation PTME -->
+           <div class="space-y-1">
+    <label class="font-bold text-slate-700 block uppercase text-[10px] tracking-wider">
+        Date d'initiation <span class="text-slate-400 font-normal lowercase">/ Initiation Date</span>
+    </label>
+    <input type="text" 
+           name="date_initiation_ptme" 
+           placeholder="JJ-MM-AAAA"
+           pattern="\d{2}-\d{2}-\d{4}"
+           maxlength="10"
+           oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^(\d{2})(\d)/, '$1-$2').replace(/^(\d{2}-\d{2})(\d)/, '$1-$2');"
+           class="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900 text-xs focus:outline-none focus:border-[#2C6693] focus:ring-1 focus:ring-[#2C6693]">
+</div>
+        </div>
+    </div>
+</div>

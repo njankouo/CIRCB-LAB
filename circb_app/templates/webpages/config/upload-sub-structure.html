@@ -1,0 +1,226 @@
+{% extends '../dashbord_hosp.html' %}
+{% load static %}
+
+
+
+{% block main %}
+<!-- Inclusion de SweetAlert2 pour un design de notifications professionnel -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="max-w-4xl mx-auto space-y-8">
+    
+    <!-- 1. Carte Guide des Formats Requis -->
+    <div class="bg-white rounded-2xl p-6 shadow-xl border border-slate-100">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 text-slate-800">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-blue-50 text-blue-600 rounded-lg shrink-0">
+                    <i class="fas fa-info-circle text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm uppercase tracking-wide">Format de fichier attendu</h3>
+                    <p class="text-xs text-slate-500">Structurez votre fichier selon le canevas officiel ou téléchargez le modèle ci-contre :</p>
+                </div>
+            </div>
+            <a href="{% static 'Fichier_reference_structure.xlsx' %}" download class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 shrink-0 border border-slate-200/60">
+                <i class="fas fa-file-download text-blue-600"></i> TÉLÉCHARGER LE MODÈLE (.XLSX)
+            </a>
+        </div>
+        
+        <!-- Table de correspondance du dictionnaire de données -->
+        <div class="overflow-x-auto rounded-xl border border-slate-100">
+            <table class="w-full text-left text-xs text-slate-600">
+                <thead class="bg-slate-50 text-slate-700 font-bold uppercase text-[10px] border-b border-slate-100">
+                    <tr>
+                        <th class="p-3">Colonne (En-tête)</th>
+                        <th class="p-3">Type</th>
+                        <th class="p-3">Description</th>
+                        <th class="p-3">Exemple</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <tr>
+                        <td class="p-3 font-mono font-bold text-blue-600">nom</td>
+                        <td class="p-3"><span class="px-2 py-0.5 bg-red-50 text-red-600 rounded font-medium text-[10px]">Requis</span></td>
+                        <td class="p-3">Nom complet de l'unité organisationnelle</td>
+                        <td class="p-3 text-slate-400">Centre de Santé de Boundiali</td>
+                    </tr>
+                    <tr>
+                        <td class="p-3 font-mono font-bold text-blue-600">designation</td>
+                        <td class="p-3"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded font-medium text-[10px]">Optionnel</span></td>
+                        <td class="p-3">Code technique unique externe</td>
+                        <td class="p-3 text-slate-400">CS-BOUND-02</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 2. Formulaire de Drag & Drop -->
+    <div class="bg-white rounded-2xl p-8 shadow-xl border border-slate-100">
+        <form method="POST" enctype="multipart/form-data" action="" id="uploadForm" class="space-y-6">
+            {% csrf_token %}
+            <input type="hidden" name="parent_id" value="{{structure.id}}" class="parent_id">
+            
+            <!-- Zone d'interaction Fichier -->
+            <div id="dropZone" class="border-2 border-dashed border-slate-200 hover:border-blue-500 rounded-2xl p-8 text-center bg-slate-50/50 hover:bg-blue-50/10 transition-all cursor-pointer group relative">
+                <input type="file" name="file_structure" id="fileInput" accept=".csv, .json, .xlsx, .xls" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required>
+                
+                <div class="space-y-3 pointer-events-none">
+                    <div class="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center mx-auto text-slate-400 group-hover:text-blue-500 transition-colors">
+                        <i class="fas fa-cloud-upload-alt text-xl"></i>
+                    </div>
+                    <div class="text-slate-600 font-medium text-sm">
+                        Glissez-déposez votre fichier ici, ou <span class="text-blue-600 font-bold">parcourez vos fichiers</span>
+                    </div>
+                    <p class="text-slate-400 text-xs">Formats acceptés : .csv, .json, .xlsx (Max. 5 Mo)</p>
+                </div>
+
+                <!-- Badge de fichier sélectionné dynamiquement -->
+                <div id="fileBadge" class="hidden mt-4 inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-medium mx-auto">
+                    <i class="fas fa-file-alt"></i>
+                    <span id="fileName">Nom_du_fichier.csv</span>
+                    <button type="button" id="removeFile" class="text-blue-400 hover:text-red-500 ml-1 pointer-events-auto">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Boutons de Soumission -->
+            <div class="flex justify-end gap-3 pt-2">
+                <a href="{{ request.META.get.HTTP_REFERER|default:'/' }}" class="px-5 py-2.5 text-xs font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition-all uppercase tracking-wider">
+                    Annuler
+                </a>
+                <button type="submit" id="submitBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 text-xs font-bold rounded-xl shadow-lg shadow-blue-600/20 flex items-center gap-2 transition-all active:scale-95">
+                    <i class="fas fa-file-import"></i> LANCER L'IMPORTATION
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 3. Spinner / Écran d'attente lors du traitement -->
+    <div id="loadingOverlay" class="fixed inset-0 z-[110] hidden bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center text-white p-4">
+        <div class="bg-white rounded-2xl p-8 max-w-sm text-center shadow-2xl text-slate-800 space-y-4 transform transition-all scale-100">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-blue-600"></div>
+            <h4 class="font-bold text-base">Traitement du fichier en cours...</h4>
+            <p class="text-xs text-slate-500">Nous analysons l'arborescence et injectons les données dans la structure organisationnelle de {{ structure.nom }}. Ne fermez pas cette page.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const fileBadge = document.getElementById('fileBadge');
+    const fileName = document.getElementById('fileName');
+    const removeFile = document.getElementById('removeFile');
+    const uploadForm = document.getElementById('uploadForm');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    
+    const loaderTitle = loadingOverlay.querySelector('h4');
+    const loaderDesc = loadingOverlay.querySelector('p');
+
+    // --- Gestion de l'affichage du fichier ---
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files.length > 0) {
+            fileName.textContent = this.files[0].name;
+            fileBadge.classList.remove('hidden');
+            fileBadge.classList.add('flex');
+            dropZone.classList.add('border-blue-500', 'bg-blue-50/5');
+        }
+    });
+
+    removeFile.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        fileInput.value = '';
+        fileBadge.classList.add('hidden');
+        fileBadge.classList.remove('flex');
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50/5');
+    });
+
+    // --- Gestion du Drag & Drop ---
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => dropZone.classList.add('border-blue-500', 'bg-blue-50/20'), false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+            if(!fileInput.files.length) dropZone.classList.remove('border-blue-500', 'bg-blue-50/20');
+        }, false);
+    });
+
+    // --- Logique AJAX avec FETCH ---
+    uploadForm.addEventListener('submit', async function(e) {
+        e.preventDefault(); 
+
+        if (fileInput.files.length === 0) return;
+
+        // Activation de l'overlay de chargement
+        loadingOverlay.classList.remove('hidden');
+        loaderTitle.textContent = "Envoi et traitement du fichier...";
+        loaderDesc.textContent = "Analyse de la hiérarchie et intégration des structures en cours. Veuillez patienter...";
+
+        // Préparation des données du formulaire
+        const formData = new FormData();
+        formData.append('file_structure', fileInput.files[0]);
+        
+        const parentInput = document.querySelector('[name=parent_id]') || document.querySelector('#parent_id');
+        if (parentInput) {
+            formData.append('parent_id', parentInput.value);
+        }
+        
+        // Récupération sécurisée du token CSRF requis par Django
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        try {
+            // Exécution de la requête Fetch
+            const response = await fetch('/import_structure_view/', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest', 
+                    'X-CSRFToken': csrfToken 
+                },
+                body: formData 
+            });
+
+            const result = await response.json();
+            loadingOverlay.classList.add('hidden');
+
+            if (response.ok && result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Succès !',
+                    text: result.message,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didClose: () => {
+                        window.location.reload();
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur d\'importation',
+                    text: result.error || 'Une erreur inconnue est survenue.',
+                    confirmButtonColor: '#EF4444',
+                    confirmButtonText: 'Compris'
+                });
+            }
+        } catch (error) {
+            loadingOverlay.classList.add('hidden');
+            console.error('Fetch Error:', error);
+            
+            // Harmonisation esthétique de l'erreur réseau avec SweetAlert2
+            Swal.fire({
+                icon: 'warning',
+                title: 'Connexion interrompue',
+                text: 'Impossible de joindre le serveur. Vérifiez votre connexion réseau.',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Réessayer'
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

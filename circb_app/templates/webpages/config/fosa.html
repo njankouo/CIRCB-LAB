@@ -1,0 +1,409 @@
+{% extends '../dashbord_hosp.html' %}
+
+{% block main %}
+<!-- Style additionnel pour un scrollbar ultra-fin et les effets de survol spécifiques aux FOSA -->
+<style>
+  /* Scrollbar fin et élégant */
+  main::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  main::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  main::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+  }
+  main::-webkit-scrollbar-thumb:hover {
+    background: #714B67;
+  }
+
+  /* Effet de lueur et lévitation spécifique FOSA */
+  .fosa-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .fosa-card:hover {
+    border-color: rgba(16, 185, 129, 0.6); /* Teinte émeraude caractéristique des FOSA */
+    box-shadow: 0 0 25px -4px rgba(16, 185, 129, 0.18), 0 8px 12px -4px rgba(0, 0, 0, 0.05);
+    transform: translateY(-3px);
+  }
+</style>
+
+<main class="flex-1 h-full min-h-0 overflow-y-auto bg-slate-100 text-slate-800 w-full font-sans antialiased selection:bg-emerald-600 selection:text-white text-xs">
+<div class="max-w-[96%] mx-auto px-4 sm:px-6 lg:px-8 py-6 font-sans">
+
+  <!-- 1. En-tête / Fil d'Ariane contextuel (Pyramide Sanitaire Complète) -->
+  <div class="bg-white border border-slate-200/90 rounded-lg shadow-2xs mb-6 px-6 py-4 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+    
+    <div class="flex items-center gap-4">
+      <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-100 flex items-center justify-center shadow-xs">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+      </div>
+      <div>
+        <!-- Fil d'ariane à 3 niveaux -->
+        <div class="flex items-center gap-2 text-[11px] text-slate-400 mb-0.5">
+          <a href="{% url 'structures' %}" class="hover:text-[#714B67] transition-colors">Régions</a>
+          <span>/</span>
+          {% if region %}
+          <span class="text-slate-600 font-medium">{{ region.nom }}</span>
+          <span>/</span>
+          {% endif %}
+          <span class="text-blue-600 font-semibold">{{ district.nom }}</span>
+          <span>/</span>
+          <span class="text-slate-600 font-medium">FOSA</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-base font-bold text-slate-900 tracking-tight">Formations Sanitaires (FOSA)</h1>
+          <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-semibold rounded-full text-[11px] border border-emerald-100">{{ lines|length|default:"0" }} structures</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barre d'actions globale & Filtres ERP -->
+    <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto justify-end">
+      
+      <!-- Recherche rapide spécifique FOSA -->
+      <div class="relative flex-1 sm:w-60">
+        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </span>
+        <input type="text" id="filterFosa" placeholder="Rechercher une FOSA..." class="w-full pl-9 pr-3 py-1.5 bg-white border border-slate-300 rounded-md text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition">
+      </div>
+
+      <!-- Bouton Retour au district -->
+      <a href="javascript:history.back()" class="inline-flex items-center justify-center px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-md shadow-2xs transition gap-1.5 shrink-0">
+        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Retour
+      </a>
+
+      <!-- Bouton d'action principal déclenchant la modale d'ajout -->
+      <button onclick="openModal('createFosaModal')" class="inline-flex items-center justify-center px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-md shadow-xs transition gap-1.5 shrink-0">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        Nouvelle FOSA
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. Grille de Cartes FOSA -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="fosaGridContainer">
+    {% for line in lines %}
+    <div class="fosa-card bg-white rounded-lg border border-slate-200/90 shadow-2xs flex flex-col justify-between group overflow-hidden relative">
+      
+      <!-- Liseré supérieur émeraude -->
+      <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-300 via-emerald-600 to-teal-600 opacity-30 group-hover:opacity-100 transition-opacity"></div>
+
+      <!-- En-tête de la Carte -->
+      <div class="p-4 pb-3 flex items-start justify-between gap-3 border-b border-slate-100 bg-gradient-to-b from-slate-50/50 to-white">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-xs flex items-center justify-center border border-emerald-200/60 shrink-0 shadow-2xs group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-colors duration-200">
+            {{ line.nom|slice:":2"|upper }}
+          </div>
+          <div>
+            <h2 class="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors text-sm">
+              {{ line.nom }}
+            </h2>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="font-mono text-[11px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/60">
+                {{ line.designation|default:"FOSA-00" }}
+              </span>
+              <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/50">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Opérationnel
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions rapides de la FOSA (Transférer / Modifier / Supprimer) -->
+        <div class="flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+          <!-- Bouton de Transfert -->
+            <button onclick="openTransferModal('{{ line.id }}', '{{ line.nom|escapejs }}', '{{ district.id }}', '{% if region %}{{ region.designation|default:region.nom|escapejs }}{% endif %}', '{{ district.designation|default:district.nom|escapejs }}', '{{ line.designation|default:""|escapejs }}')" title="Transférer vers un autre district" class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+    </button>
+          <!-- Bouton Modifier -->
+          <button onclick="openEditFosaModal('{{ line.id }}', '{{ line.nom|escapejs }}', '{{ line.designation|default:""|escapejs }}')" title="Modifier" class="p-1.5 text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 rounded transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+          </button>
+          <!-- Bouton Supprimer -->
+          <a href="{% url 'fosa_delete' line.id %}" onclick="return confirm('Voulez-vous vraiment supprimer cette FOSA ?');" title="Supprimer" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Corps de la carte -->
+      <div class="p-4 bg-slate-50/40 space-y-2">
+        <div class="bg-white p-2.5 rounded border border-slate-200/70 flex items-center justify-between shadow-2xs">
+          <span class="text-[11px] text-slate-400 font-medium">District de tutelle</span>
+          <span class="text-xs font-semibold text-slate-700">{{ district.nom }}</span>
+        </div>
+        <div class="bg-white p-2.5 rounded border border-slate-200/70 flex items-center justify-between shadow-2xs">
+          <span class="text-[11px] text-slate-400 font-medium">Date d'enregistrement</span>
+          <span class="text-xs font-mono text-slate-600">{{ line.date_creation|date:"d/m/Y"|default:"---" }}</span>
+        </div>
+      </div>
+
+      <!-- Pied de carte -->
+      <div class="px-4 py-2.5 bg-white border-t border-slate-100 flex items-center justify-between">
+        <span class="text-[11px] text-emerald-700 font-medium flex items-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          Structure rattachée
+        </span>
+        <div class="text-[10px] text-slate-400 font-mono">ID: #{{ line.id|default:"---" }}</div>
+      </div>
+
+    </div>
+    {% empty %}
+    <!-- État vide professionnel -->
+    <div class="col-span-full py-16 text-center bg-white rounded-lg border border-slate-200 shadow-2xs">
+      <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 border border-emerald-100">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+      </div>
+      <p class="text-xs font-semibold text-slate-900">Aucune FOSA enregistrée</p>
+      <p class="text-[11px] text-slate-500 mt-0.5">Aucune formation sanitaire n'est actuellement rattachée au district de {{ district.nom }}.</p>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+</main>
+
+
+<!-- ================================================= -->
+<!-- MODALES POUR LA GESTION DES FOSA                  -->
+<!-- ================================================= -->
+
+<!-- MODALE DE TRANSFERT DE FOSA -->
+<!-- MODALE DE TRANSFERT DE FOSA -->
+<div id="transferFosaModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs hidden">
+  <div class="bg-white rounded-xl border border-slate-200 shadow-xl w-full max-w-lg mx-4 overflow-hidden">
+    <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="p-1.5 bg-blue-50 text-blue-600 rounded-md">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+        </div>
+        <h3 class="font-bold text-slate-900 text-sm">Transférer la FOSA</h3>
+      </div>
+      <button onclick="closeModal('transferFosaModal')" class="text-slate-400 hover:text-slate-600 p-1 rounded-md hover:bg-slate-100 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    
+    <!-- Le formulaire pointe dynamiquement vers la prévisualisation dans le JS -->
+    <form id="transferFosaForm" method="POST" action="" class="p-6 space-y-4">
+      {% csrf_token %}
+      <div>
+        <p class="text-xs text-slate-600 mb-3">Transférer la structure <strong id="transferFosaName" class="text-slate-900"></strong> vers un autre district :</p>
+        
+       <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">Nouveau District de destination</label>
+        <select name="district_id" id="districtSelect" required onchange="updateNewCode()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition mb-3">
+          <option value="" disabled selected>-- Choisir un district de destination --</option>
+         {% for d in tous_districts %}
+  <option value="{{ d.id }}" 
+          data-designation="{{ d.designation|default:d.nom|escapejs }}" 
+          data-region="{% if d.parent %}{{ d.parent.designation|default:d.parent.nom|escapejs }}{% endif %}">
+    {{ d.nom }} {% if d.parent %} (Région : {{ d.parent.nom }}){% endif %}
+  </option>
+  {% endfor %}
+        </select>
+
+        <!-- Grille des codes (Ancien vs Nouveau) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ancien Code</label>
+            <input type="text" id="oldCodeInput" name="old_code" readonly class="w-full px-2.5 py-1.5 bg-slate-200/60 border border-slate-300 rounded text-xs font-mono text-slate-600 cursor-not-allowed">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Nouveau Code généré</label>
+            <input type="text" id="newCodeInput" name="new_code" readonly class="w-full px-2.5 py-1.5 bg-emerald-50 border border-emerald-300 rounded text-xs font-mono font-semibold text-emerald-800">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-100">
+        <button type="button" onclick="closeModal('transferFosaModal')" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg transition">Annuler</button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-xs transition">Vérifier et transférer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- MODALE DE CRÉATION DE FOSA -->
+<div id="createFosaModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs hidden">
+  <div class="bg-white rounded-xl border border-slate-200 shadow-xl w-full max-w-md mx-4 overflow-hidden">
+    <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="p-1.5 bg-emerald-50 text-emerald-600 rounded-md">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        </div>
+        <h3 class="font-bold text-slate-900 text-sm">Ajouter une Nouvelle FOSA</h3>
+      </div>
+      <button onclick="closeModal('createFosaModal')" class="text-slate-400 hover:text-slate-600 p-1 rounded-md hover:bg-slate-100 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    
+    <form method="POST" action="{% url 'fosa_create' district.id %}" class="p-6 space-y-4">
+      {% csrf_token %}
+      <div>
+        <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">Nom de la FOSA</label>
+        <input type="text" name="nom" required placeholder="Ex: Hôpital de District de..." class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+      </div>
+      <div>
+        <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">Code / Désignation</label>
+        <input type="text" name="designation" placeholder="Ex: FOSA-01" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-100">
+        <button type="button" onclick="closeModal('createFosaModal')" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg transition">Annuler</button>
+        <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg shadow-xs transition">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- MODALE DE MODIFICATION DE FOSA -->
+<div id="editFosaModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs hidden">
+  <div class="bg-white rounded-xl border border-slate-200 shadow-xl w-full max-w-md mx-4 overflow-hidden">
+    <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="p-1.5 bg-emerald-50 text-emerald-600 rounded-md">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+        </div>
+        <h3 class="font-bold text-slate-900 text-sm">Modifier la FOSA</h3>
+      </div>
+      <button onclick="closeModal('editFosaModal')" class="text-slate-400 hover:text-slate-600 p-1 rounded-md hover:bg-slate-100 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    
+    <form id="editFosaForm" method="POST" action="" class="p-6 space-y-4">
+      {% csrf_token %}
+      <div>
+        <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">Nom de la FOSA</label>
+        <input type="text" id="editFosaNom" name="nom" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+      </div>
+      <div>
+        <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">Code / Désignation</label>
+        <input type="text" id="editFosaDesignation" name="designation" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-100">
+        <button type="button" onclick="closeModal('editFosaModal')" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg transition">Annuler</button>
+        <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg shadow-xs transition">Mettre à jour</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- ================================================= -->
+<!-- SCRIPTS DE GESTION (Filtre + Modales)             -->
+<!-- ================================================= -->
+<script>
+  // Filtrage instantané
+  document.getElementById('filterFosa').addEventListener('input', function(e) {
+    const searchVal = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll('#fosaGridContainer > div.fosa-card');
+    
+    cards.forEach(card => {
+      const textContent = card.textContent.toLowerCase();
+      if (textContent.includes(searchVal)) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+
+  // Gestion des modales
+  function openModal(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  }
+
+
+
+
+// Variable globale pour retenir la désignation de la FOSA en cours de transfert
+let currentFosaDesignation = '';
+
+function openTransferModal(fosaId, fosaNom, currentDistrictId, regionDesignation, districtDesignation, fosaDesignation) {
+  document.getElementById('transferFosaName').textContent = fosaNom;
+  
+  // On stocke la désignation de la FOSA pour s'en servir lors du choix du nouveau district
+  currentFosaDesignation = fosaDesignation;
+  
+  // Construction de l'Ancien Code (Région - District - FOSA)
+  let oldParts = [];
+  if (regionDesignation) oldParts.push(regionDesignation);
+  if (districtDesignation) oldParts.push(districtDesignation);
+  if (fosaDesignation) oldParts.push(fosaDesignation);
+  
+  document.getElementById('oldCodeInput').value = oldParts.join('-');
+  
+  // Réinitialisation du champ nouveau code et du sélecteur
+  document.getElementById('newCodeInput').value = "";
+  const select = document.getElementById('districtSelect');
+  select.value = "";
+
+  // Définition de l'action du formulaire vers la vue de prévisualisation
+  const form = document.getElementById('transferFosaForm');
+  form.action = `/fosa/${fosaId}/transfer/preview/`;
+
+  // Désactiver le district actuel pour éviter de le sélectionner
+  for (let option of select.options) {
+    if (option.value === currentDistrictId) {
+      option.disabled = true;
+      option.style.color = '#cbd5e1';
+    } else {
+      option.disabled = false;
+      option.style.color = '';
+    }
+  }
+
+  openModal('transferFosaModal');
+}
+
+// Fonction déclenchée automatiquement à chaque changement de sélection du district
+function updateNewCode() {
+  const select = document.getElementById('districtSelect');
+  const selectedOption = select.options[select.selectedIndex];
+
+  if (!selectedOption || !selectedOption.value) {
+    document.getElementById('newCodeInput').value = "";
+    return;
+  }
+
+  // Récupération des attributs data-*
+  const newRegion = selectedOption.getAttribute('data-region') || '';
+  const newDistrict = selectedOption.getAttribute('data-designation') || '';
+
+  // --- DEBUG : Vérifiez dans la console (F12) ce qui est récupéré ---
+  console.log("Région lue :", newRegion);
+  console.log("District lu :", newDistrict);
+  console.log("FOSA lue :", currentFosaDesignation);
+
+  // Construction du nouveau code : [designation_region]-[designation_district]-[designation_fosa]
+  let newParts = [];
+  if (newRegion && newRegion.trim() !== "") {
+    newParts.push(newRegion.trim());
+  }
+  if (newDistrict && newDistrict.trim() !== "") {
+    newParts.push(newDistrict.trim());
+  }
+  if (currentFosaDesignation && currentFosaDesignation.trim() !== "") {
+    newParts.push(currentFosaDesignation.trim());
+  }
+
+  // Injection du résultat dans l'input
+  document.getElementById('newCodeInput').value = newParts.join('-');
+}
+</script>
+{% endblock %}

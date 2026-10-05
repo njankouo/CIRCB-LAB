@@ -1,0 +1,146 @@
+{% extends './dashbord_hosp.html' %}
+
+{% block main %}
+<!-- Chargement de SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<main class="flex-1 h-full min-h-0 overflow-y-auto bg-slate-100 text-slate-900 w-full font-sans antialiased flex items-center justify-center p-6">
+  <div class="max-w-md w-full mx-auto">
+    
+    <!-- Fenêtre / Wizard Style Odoo Enterprise -->
+    <div class="bg-white rounded-md border border-slate-300 shadow-sm overflow-hidden">
+      
+      <!-- En-tête du Wizard -->
+      <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded flex items-center justify-center bg-purple-900 text-white font-bold text-xs shadow-inner">
+            <svg id="loadingIcon" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-semibold text-slate-900 text-xs tracking-wide">Assistant de Transfert FOSA</h1>
+            <p class="text-[11px] text-slate-500">Exécution des modifications en arrière-plan</p>
+          </div>
+        </div>
+        <span class="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider bg-purple-50 text-purple-900 border border-purple-200 rounded">
+          En cours
+        </span>
+      </div>
+
+      <!-- Corps du Wizard -->
+      <div class="p-6 space-y-5">
+        
+        <!-- Bloc d'état détaillé -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-medium text-slate-700">Statut de l'opération :</span>
+            <span id="percentText" class="font-bold text-purple-900">0%</span>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded p-3">
+            <p id="stepDescription" class="text-xs text-slate-600 font-mono">Initialisation du traitement...</p>
+          </div>
+        </div>
+
+        <!-- Barre de progression institutionnelle -->
+        <div class="space-y-2">
+          <div class="w-full bg-slate-200 rounded-sm h-2.5 overflow-hidden border border-slate-300">
+            <div id="progressBar" class="bg-purple-900 h-full transition-all duration-300 ease-out" style="width: 0%"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-slate-400">
+            <span>Connexion Redis active</span>
+            <span>Traitement asynchrone</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pied de page du Wizard -->
+      <div class="bg-slate-50 px-6 py-3 border-t border-slate-200 flex justify-end">
+        <button type="button" disabled class="px-3 py-1.5 bg-slate-200 text-slate-500 text-xs font-semibold rounded cursor-not-allowed">
+          Traitement en cours...
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<script>
+  const taskId = "{{ task_id }}";
+  const fosaPk = "{{ fosa.pk }}";
+  const statusUrl = `/fosa/${fosaPk}/transfer/status/${taskId}/`;
+
+  let isCompleted = false;
+
+  function checkProgress() {
+    if (isCompleted) return;
+
+    fetch(statusUrl)
+      .then(response => response.json())
+      .then(data => {
+        const percent = data.percent || 0;
+        
+        document.getElementById('progressBar').style.width = percent + '%';
+        document.getElementById('percentText').textContent = percent + '%';
+        
+        if (data.step_name) {
+          document.getElementById('stepDescription').textContent = data.step_name;
+        }
+
+        if (data.state === 'SUCCESS') {
+          isCompleted = true;
+          document.getElementById('progressBar').style.width = '100%';
+          document.getElementById('percentText').textContent = '100%';
+          document.getElementById('stepDescription').textContent = 'Opération terminée avec succès.';
+          document.getElementById('loadingIcon').classList.remove('animate-spin');
+
+          Swal.fire({
+            title: 'Transfert effectué',
+            text: 'La structure, les fiches échantillons et les codes patients ont été mis à jour avec succès.',
+            icon: 'success',
+            confirmButtonText: 'Fermer',
+            confirmButtonColor: '#581c87', // 714B67 / purple-900 style
+            allowOutsideClick: false,
+            customClass: {
+              popup: 'rounded-md shadow-lg font-sans text-xs border border-slate-200',
+              confirmButton: 'px-4 py-2 text-xs font-semibold rounded shadow-none'
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "{% url 'structures' %}";
+            }
+          });
+
+        } else if (data.state === 'FAILURE') {
+          isCompleted = true;
+          Swal.fire({
+            title: 'Erreur',
+            text: 'Une erreur est intervenue lors du traitement.',
+            icon: 'error',
+            confirmButtonText: 'Retour',
+            confirmButtonColor: '#b91c1c',
+            customClass: {
+              popup: 'rounded-md shadow-lg font-sans text-xs border border-slate-200',
+              confirmButton: 'px-4 py-2 text-xs font-semibold rounded shadow-none'
+            }
+          }).then(() => {
+            window.location.href = "{% url 'structures' %}";
+          });
+
+        } else {
+          setTimeout(checkProgress, 800);
+        }
+      })
+      .catch(error => {
+        console.error('Erreur réseau AJAX:', error);
+        setTimeout(checkProgress, 2000);
+      });
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(checkProgress, 500);
+  });
+</script>
+{% endblock %}
