@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fiches d'Échantillons</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 15mm;
+            @bottom-right {
+                content: "Page " counter(page) " / " counter(pages);
+                font-size: 9pt;
+                color: #666;
+            }
+        }
+        
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 10pt;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            border-bottom: 2px solid #2b374e;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .header h2 {
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+            font-size: 14pt;
+            color: #1e293b;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 9pt;
+            color: #64748b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 7px 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: bold;
+            font-size: 9pt;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .empty-row {
+            text-align: center;
+            color: #94a3b8;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>Liste des Fiches d'Échantillons</h2>
+        <p>Généré le : {{ date_impression|date:"d/m/Y H:i" }} | Total : <strong>{{ total_count }}</strong> fiche(s)</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Code / ID</th>
+                <th>Région</th>
+                <th>District</th>
+                <th>FOSA</th>
+                <th>Date d'Enregistrement</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fiche in fiches %}
+                <tr>
+                    <td><strong>{{ fiche.code|default:fiche.id }}</strong></td>
+                    <td>{{ fiche.region.nom|default:"-" }}</td>
+                    <td>{{ fiche.district.nom|default:"-" }}</td>
+                    <td>{{ fiche.fosa.nom|default:"-" }}</td>
+                    <td>{{ fiche.date_enregistrement|date:"d/m/Y" }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-row">Aucun élément trouvé pour ces filtres.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

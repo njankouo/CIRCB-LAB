@@ -438,12 +438,128 @@ def fiches_echantillons(request):
     return render(
         request, 'webpages/echantillonages/fiche_echantillons.html', context
     )
+def get_fiches_filtered_queryset(request):
+    """Extrait les critères GET et retourne l'intégralité du QuerySet filtré."""
+    search_code = request.GET.get('code', '').strip()
+    search_date = request.GET.get('date', '').strip()
+    search_mois = request.GET.get('mois', '').strip()
+    search_annee = request.GET.get('annee', '').strip()
+    search_fosa = request.GET.get('fosa', '').strip()
+    search_receptionniste = request.GET.get('receptionniste', '').strip()
+
+    fiches_queryset = (
+        FicheEchantillon.objects.select_related(
+            'region', 'district', 'fosa', 'moyen_transport'
+        )
+        .order_by(
+            F('date_enregistrement').desc(nulls_last=True),
+            F('id').desc()
+        )
+    )
+
+    if search_code:
+        fiches_queryset = fiches_queryset.filter(
+            Q(code__icontains=search_code) | 
+            Q(id__icontains=search_code) |
+            Q(expediteur__icontains=search_code)
+        )
+    
+    if search_date:
+        formatted_date = search_date.replace('/', '-')
+        for fmt in ('%d-%m-%Y', '%d-%m-%y'):
+            try:
+                date_parsed = datetime.strptime(formatted_date, fmt).date()
+                fiches_queryset = fiches_queryset.filter(date_enregistrement=date_parsed)
+                break
+            except ValueError:
+                continue
+
+    if search_mois:
+        fiches_queryset = fiches_queryset.filter(date_enregistrement__month=search_mois)
+
+    if search_annee:
+        fiches_queryset = fiches_queryset.filter(date_enregistrement__year=search_annee)
+
+    if search_fosa:
+        fiches_queryset = fiches_queryset.filter(fosa_id=search_fosa)
+
+    if search_receptionniste:
+        fiches_queryset = fiches_queryset.filter(
+            receptioniste__icontains=search_receptionniste
+        )
+
+    return fiches_queryset
+
+
+@login_required(login_url='/')
+def fiches_echantillons(request):
+    regions = Structure.objects.filter(parent__isnull=True).order_by('nom')
+    moyens_transport = MoyenTransport.objects.all().order_by('nom')
+    all_fosas = Fosa.objects.all().order_by('nom')
+    available_years = FicheEchantillon.objects.dates('date_enregistrement', 'year', order='DESC')
+
+    # Récupération du QuerySet complet filtré
+    fiches_queryset = get_fiches_filtered_queryset(request)
+
+    # Pagination à 30 éléments par page pour l'écran
+    paginator = Paginator(fiches_queryset, 30)
+    page_number = request.GET.get('page')
+    fiches_page = paginator.get_page(page_number)
+
+    fichescount = FicheEchantillon.objects.filter(status=False).count()
+
+    context = {
+        'regions': regions,
+        'moyens_transport': moyens_transport,
+        'all_fosas': all_fosas,
+        'available_years': available_years,
+        'fiches': fiches_page,
+        'fichescount': fichescount,
+        # Variables réinjectées dans le lien href d'impression :
+        'search_code': request.GET.get('code', '').strip(),
+        'search_date': request.GET.get('date', '').strip(),
+        'search_mois': request.GET.get('mois', '').strip(),
+        'search_annee': request.GET.get('annee', '').strip(),
+        'search_fosa': request.GET.get('fosa', '').strip(),
+        'search_receptionniste': request.GET.get('receptionniste', '').strip(),
+    }
+
+    return render(request, 'webpages/echantillonages/fiche_echantillons.html', context)
+
+@login_required(login_url='/')
+def imprimer_fiches_echantillons(request):
+    """
+    Génère un PDF avec WeasyPrint contenant tous les éléments filtrés
+    """
+    # Récupérer les données filtrées
+    fiches_queryset = get_fiches_filtered_queryset(request)
+
+    context = {
+        'fiches': fiches_queryset,
+        'total_count': fiches_queryset.count(),
+        'date_impression': datetime.now(),
+    }
+
+    # 1. Rendre le template HTML en chaîne de caractères
+    html_string = render_to_string('webpages/echantillonages/imprimer_fiches.html', context)
+
+    # 2. Convertir le HTML en PDF avec WeasyPrint
+    pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
+
+    # 3. Créer la réponse HTTP avec le PDF
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    
+    # 'inline' pour l'afficher directement dans le navigateur (ou 'attachment' pour forcer le téléchargement)
+    response['Content-Disposition'] = 'inline; filename="fiches_echantillons.pdf"'
+    
+    return response
 @login_required(login_url='/')
 def echantillons(request, id):
     dernier_numero= Echantillon.objects.order_by('-id').first()
     prochain_numero= (dernier_numero.id + 1) if dernier_numero else 1
     context={
         'fiches_echantillon':FicheEchantillon.objects.get(id=id),
+        'count_echantillon_fiche': Echantillon.objects.filter(fiche=id).count(),
         'tests':Test.objects.all().order_by('nom'),
         'raisons_prelevement':RaisonPrelevement.objects.all().order_by('nom'),
         'modes_allaitement':ModeAllaitement.objects.filter(is_artificiel=False).order_by('nom'),
@@ -3886,27 +4002,27 @@ def Update_password(request):
 
 
 def search_fiches(request):
-    # Récupérer le terme de recherche envoyé par le JS (?q=...)
     query = request.GET.get('q', '').strip()
     results = []
-    
+
     if query:
-        print(f'code :{query}')
-        # Filtrer par code de fiche ou par le nom de la structure/FOSA associée
         fiches = FicheEchantillon.objects.filter(
             Q(code__icontains=query) | Q(fosa__nom__icontains=query)
-        ).select_related('fosa')[:10]  # .select_related() optimise les requêtes SQL, [:10] limite à 10 résultats
-        
+        ).select_related('fosa')[:10]
+
         for f in fiches:
+            # Compter spécifiquement pour la fiche courante (correction de Echantillon.objects)
+            nb_saisi = Echantillon.objects.filter(fiche=f).count()
+
             results.append({
                 'id': f.id,
                 'code': f.code,
-                # Nom de la structure FOSA
-                'structure': f.fosa.nom if hasattr(f, 'fosa') and f.fosa else 'N/A',
-                # CORRECTION ICI : Remplacement de f.date_creation par f.date_enregistrement
-                'date': f.date_enregistrement.strftime('%Y-%m-%d') if hasattr(f, 'date_enregistrement') and f.date_enregistrement else ''
+                'nombre_echantillon': getattr(f, 'nombre_echantillon', 0),
+                'nombre_echantillon_saisie': nb_saisi,
+                'structure': f.fosa.nom if getattr(f, 'fosa', None) else 'N/A',
+                'date': f.date_enregistrement.strftime('%Y-%m-%d') if getattr(f, 'date_enregistrement', None) else ''
             })
-            
+
     return JsonResponse({'results': results})
 
 

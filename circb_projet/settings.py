@@ -33,7 +33,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 load_dotenv(BASE_DIR / '.env')
 # settings.py
-ALLOWED_HOSTS = ['medisys-eid', 'localhost', '127.0.0.1','10.93.171.139','192.168.2.42','7dd1-129-0-205-245.ngrok-free.app']
+ALLOWED_HOSTS = ['medisys-eid', 'localhost', '127.0.0.1','10.93.171.139','192.168.2.42']
 METABASE_SITE_URL = "https://medisys-eid/metabase"
 METABASE_SECRET_KEY =  os.getenv('METABASE_SECRET_KEY')
 
@@ -90,8 +90,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'circb_projet.wsgi.application'
 # settings.py
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://circb_redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://circb_redis:6379/0'
 
 # settings.py
 

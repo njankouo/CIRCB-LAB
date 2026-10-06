@@ -230,7 +230,9 @@ urlpatterns = [
     name='fosa_transfer_status',
     ),
 
-    path('historique/', views.liste_transferts_fosa, name='historique')
+    path('historique/', views.liste_transferts_fosa, name='historique'),
+
+    path('fiches-echantillons/imprimer/', views.imprimer_fiches_echantillons, name='imprimer_fiches_echantillons'),
 
     
     

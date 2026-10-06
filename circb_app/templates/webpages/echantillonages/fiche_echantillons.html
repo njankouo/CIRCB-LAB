@@ -29,6 +29,7 @@
     scrollbar-color: rgba(113, 75, 103, 0.3) transparent;
 }
 </style>
+
 <main class="flex-1 h-full min-h-0 overflow-y-auto custom-scrollbar text-slate-800 w-full font-sans antialiased relative bg-gradient-to-br from-slate-100 via-purple-100/60 to-slate-200">
     
     <!-- Formes géométriques décoratives plus dynamiques pour casser le fond -->
@@ -93,126 +94,168 @@
         <!-- ================================================================= -->
         <!-- 2. BARRE DE FILTRES - CADRE DE RECHERCHE MÉDICAL                   -->
         <!-- ================================================================= -->
-   <div class="bg-white border border-slate-200 rounded-lg p-3 shadow-2xs space-y-3 relative">
+ <div class="bg-white border border-slate-200/80 rounded-xl p-4 shadow-sm space-y-4 relative overflow-hidden transition-all">
     
-    <!-- LOADING OVERLAY (Masqué par défaut, s'active au submit) -->
-    <div id="filter-loading" class="absolute inset-0 bg-white/70 backdrop-blur-[1px] z-20 rounded-lg flex items-center justify-center transition-opacity duration-200 opacity-0 pointer-events-none">
-        <div class="inline-flex items-center gap-2 bg-[#714B67] text-white px-3 py-1.5 rounded text-xs font-mono font-bold shadow-sm">
-            <svg class="animate-spin -ml-1 mr-1 h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
+    <!-- LOADING OVERLAY -->
+    <div id="filter-loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 rounded-xl flex items-center justify-center transition-all duration-200 opacity-0 pointer-events-none">
+        <div class="inline-flex items-center gap-2.5 bg-[#714B67] text-white px-4 py-2 rounded-lg text-xs font-medium shadow-md animate-pulse">
+            <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            Recherche en cours...
+            <span>Recherche en cours...</span>
         </div>
     </div>
 
     <!-- HEADER STYLE ODOO SEARCH BAR -->
-    <div class="flex items-center justify-between pb-2 border-b border-slate-100 text-xs text-slate-700">
-        <div class="flex items-center gap-1.5 font-bold uppercase tracking-wider font-mono text-[#714B67]">
-            <svg class="w-4 h-4 text-[#714B67]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-            </svg>
-            <span>Filtres & Recherche (Laboratoire)</span>
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+            <div class="p-1.5 bg-[#714B67]/10 rounded-lg text-[#714B67]">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 21l3.39-.62C9.28 20.74 10.6 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-800 tracking-tight uppercase font-mono">Filtres & Recherche</h3>
+                <p class="text-[10px] text-slate-400">Laboratoire d'analyses & gestion des échantillons</p>
+            </div>
         </div>
+        
         {% if search_code or search_date or search_mois or search_annee or search_fosa or search_receptionniste %}
-            <a href="{% url 'fiches_echantillons' %}" class="text-[11px] font-medium text-rose-600 hover:text-rose-700 underline transition-colors">
-                Effacer les filtres
+            <a href="{% url 'fiches_echantillons' %}" class="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100/80 rounded-md border border-rose-200/60 transition-all">
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                <span>Effacer les filtres</span>
             </a>
         {% endif %}
     </div>
 
-    <form id="filter-form" action="{% url 'fiches_echantillons' %}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2 items-center">
+    <!-- FORMULAIRE DE RECHERCHE -->
+    <form id="filter-form" action="{% url 'fiches_echantillons' %}" method="GET" class="space-y-4">
         
-        <!-- 1. Recherche par Code / ID / Expéditeur -->
-        <div class="relative">
-            <input type="text" 
-                   name="code" 
-                   value="{{ search_code|default:'' }}" 
-                   placeholder="ID, Code, Expéditeur..." 
-                   class="w-full pl-8 pr-2.5 py-1.5 bg-slate-50/80 border border-slate-300 rounded text-xs font-medium focus:bg-white focus:outline-none focus:border-[#714B67] focus:ring-1 focus:ring-[#714B67] text-slate-800 placeholder-slate-400 transition-all">
-            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z"/>
-            </svg>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5">
+            
+            <!-- 1. Recherche par Code / ID / Expéditeur -->
+            <div class="relative group">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Code / Expéditeur</label>
+                <div class="relative">
+                    <input type="text" 
+                           name="code" 
+                           value="{{ search_code|default:'' }}" 
+                           placeholder="ID, Code, Nom..." 
+                           class="w-full pl-8 pr-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:bg-white focus:outline-none focus:border-[#714B67] focus:ring-2 focus:ring-[#714B67]/15 text-slate-800 placeholder-slate-400 transition-all">
+                    <svg class="w-3.5 h-3.5 text-slate-400 group-focus-within:text-[#714B67] absolute left-2.5 top-1/2 -translate-y-1/2 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 2. Filtre par Date exacte -->
+            <div class="relative">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Date Exacte</label>
+                <input type="text" 
+                       name="date" 
+                       value="{{ search_date|default:'' }}" 
+                       placeholder="JJ/MM/AAAA" 
+                       maxlength="10"
+                       oninput="
+                           let v = this.value.replace(/\D/g, '');
+                           if (v.length >= 5) {
+                               this.value = v.slice(0,2) + '/' + v.slice(2,4) + '/' + v.slice(4,8);
+                           } else if (v.length >= 3) {
+                               this.value = v.slice(0,2) + '/' + v.slice(2,4);
+                           } else {
+                               this.value = v;
+                           }
+                       "
+                       class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:bg-white focus:outline-none focus:border-[#714B67] focus:ring-2 focus:ring-[#714B67]/15 text-slate-800 placeholder-slate-400 font-mono transition-all">
+            </div>
+
+            <!-- 3. Filtre par Année -->
+            <div class="relative">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Année</label>
+                <select name="annee" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:bg-white focus:outline-none focus:border-[#714B67] focus:ring-2 focus:ring-[#714B67]/15 text-slate-800 cursor-pointer transition-all">
+                    <option value="">-- Année --</option>
+                    {% for y in available_years %}
+                        <option value="{{ y|date:'Y' }}" {% if search_annee == y|date:'Y' %}selected{% endif %}>{{ y|date:'Y' }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- 4. Filtre par Mois -->
+            <div class="relative">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Mois</label>
+                <select name="mois" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:bg-white focus:outline-none focus:border-[#714B67] focus:ring-2 focus:ring-[#714B67]/15 text-slate-800 cursor-pointer transition-all">
+                    <option value="">-- Mois --</option>
+                    <option value="1" {% if search_mois == '1' %}selected{% endif %}>Janvier</option>
+                    <option value="2" {% if search_mois == '2' %}selected{% endif %}>Février</option>
+                    <option value="3" {% if search_mois == '3' %}selected{% endif %}>Mars</option>
+                    <option value="4" {% if search_mois == '4' %}selected{% endif %}>Avril</option>
+                    <option value="5" {% if search_mois == '5' %}selected{% endif %}>Mai</option>
+                    <option value="6" {% if search_mois == '6' %}selected{% endif %}>Juin</option>
+                    <option value="7" {% if search_mois == '7' %}selected{% endif %}>Juillet</option>
+                    <option value="8" {% if search_mois == '8' %}selected{% endif %}>Août</option>
+                    <option value="9" {% if search_mois == '9' %}selected{% endif %}>Septembre</option>
+                    <option value="10" {% if search_mois == '10' %}selected{% endif %}>Octobre</option>
+                    <option value="11" {% if search_mois == '11' %}selected{% endif %}>Novembre</option>
+                    <option value="12" {% if search_mois == '12' %}selected{% endif %}>Décembre</option>
+                </select>
+            </div>
+
+            <!-- 5. Filtre par Formation Sanitaire (FOSA) -->
+            <div class="relative">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Structure (FOSA)</label>
+                <select name="fosa" id="select-fosa" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:bg-white focus:outline-none focus:border-[#714B67] focus:ring-2 focus:ring-[#714B67]/15 text-slate-800 transition-all">
+                    <option value="">-- Toutes les FOSA --</option>
+                    {% for f in all_fosas %}
+                        <option value="{{ f.id }}" {% if search_fosa == f.id|stringformat:"s" %}selected{% endif %}>{{ f.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- 6. Filtre par Réceptionniste -->
+            <div class="relative">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Réceptionniste</label>
+                <input type="text" 
+                       name="receptionniste" 
+                       value="{{ search_receptionniste|default:'' }}" 
+                       placeholder="Nom..." 
+                       class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:bg-white focus:outline-none focus:border-[#714B67] focus:ring-2 focus:ring-[#714B67]/15 text-slate-800 placeholder-slate-400 transition-all">
+            </div>
+
         </div>
 
-        <!-- 2. Filtre par Date exacte (JJ-MM-AAAA) -->
-       <div class="relative">
-    <input type="text" 
-           name="date" 
-           value="{{ search_date|default:'' }}" 
-           placeholder="JJ/MM/AAAA" 
-           maxlength="10"
-           oninput="
-               let v = this.value.replace(/\D/g, '');
-               if (v.length >= 5) {
-                   this.value = v.slice(0,2) + '/' + v.slice(2,4) + '/' + v.slice(4,8);
-               } else if (v.length >= 3) {
-                   this.value = v.slice(0,2) + '/' + v.slice(2,4);
-               } else {
-                   this.value = v;
-               }
-           "
-           class="w-full px-2.5 py-1.5 bg-slate-50/80 border border-slate-300 rounded text-xs font-medium focus:bg-white focus:outline-none focus:border-[#714B67] focus:ring-1 focus:ring-[#714B67] text-slate-800 placeholder-slate-400 transition-all">
-</div>
+        <!-- BARRE D'ACTIONS DU BAS -->
+        <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+            <span class="text-[11px] text-slate-400 hidden sm:inline-block italic">
+                Affinez votre recherche à l'aide des champs ci-dessus
+            </span>
+            
+            <div class="flex items-center gap-2 ml-auto">
+                <!-- Bouton Imprimer (Action Secondaire) -->
+               <a href="{% url 'imprimer_fiches_echantillons' %}?code={{ search_code }}&date={{ search_date }}&mois={{ search_mois }}&annee={{ search_annee }}&fosa={{ search_fosa }}&receptionniste={{ search_receptionniste }}"
+   target="_blank"
+   class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-2xs hover:shadow-xs transition-all active:scale-[0.98] cursor-pointer">
+    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231a1.125 1.125 0 01-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.085 48.085 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.656"/>
+    </svg>
+    <span>Imprimer</span>
+</a>
 
-        <!-- 3. Filtre par Année -->
-        <div class="relative">
-            <select name="annee" class="w-full px-2.5 py-1.5 bg-slate-50/80 border border-slate-300 rounded text-xs font-medium focus:bg-white focus:outline-none focus:border-[#714B67] focus:ring-1 focus:ring-[#714B67] text-slate-800 cursor-pointer transition-all">
-                <option value="">-- Année --</option>
-                {% for y in available_years %}
-                    <option value="{{ y|date:'Y' }}" {% if search_annee == y|date:'Y' %}selected{% endif %}>{{ y|date:'Y' }}</option>
-                {% endfor %}
-            </select>
+                <!-- Bouton Appliquer (Action Principale) -->
+                <button type="submit" 
+                        class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#714B67] hover:bg-[#5c3d54] text-white text-xs font-semibold rounded-lg shadow-xs hover:shadow transition-all active:scale-[0.98] cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 21l3.39-.62C9.28 20.74 10.6 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z"/>
+                    </svg>
+                    <span>Appliquer les filtres</span>
+                </button>
+            </div>
         </div>
 
-        <!-- 4. Filtre par Mois -->
-        <div class="relative">
-            <select name="mois" class="w-full px-2.5 py-1.5 bg-slate-50/80 border border-slate-300 rounded text-xs font-medium focus:bg-white focus:outline-none focus:border-[#714B67] focus:ring-1 focus:ring-[#714B67] text-slate-800 cursor-pointer transition-all">
-                <option value="">-- Mois --</option>
-                <option value="1" {% if search_mois == '1' %}selected{% endif %}>Janvier</option>
-                <option value="2" {% if search_mois == '2' %}selected{% endif %}>Février</option>
-                <option value="3" {% if search_mois == '3' %}selected{% endif %}>Mars</option>
-                <option value="4" {% if search_mois == '4' %}selected{% endif %}>Avril</option>
-                <option value="5" {% if search_mois == '5' %}selected{% endif %}>Mai</option>
-                <option value="6" {% if search_mois == '6' %}selected{% endif %}>Juin</option>
-                <option value="7" {% if search_mois == '7' %}selected{% endif %}>Juillet</option>
-                <option value="8" {% if search_mois == '8' %}selected{% endif %}>Août</option>
-                <option value="9" {% if search_mois == '9' %}selected{% endif %}>Septembre</option>
-                <option value="10" {% if search_mois == '10' %}selected{% endif %}>Octobre</option>
-                <option value="11" {% if search_mois == '11' %}selected{% endif %}>Novembre</option>
-                <option value="12" {% if search_mois == '12' %}selected{% endif %}>Décembre</option>
-            </select>
-        </div>
-
-        <!-- 5. Filtre par Formation Sanitaire (Select2) -->
-        <div class="relative">
-            <select name="fosa" id="select-fosa" class="w-full text-xs">
-                <option value="">-- Toutes les FOSA --</option>
-              
-                {% for f in all_fosas %}
-                    <option value="{{ f.id }}" {% if search_fosa == f.id|stringformat:"s" %}selected{% endif %}>{{ f.nom }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- 6. Filtre par Nom du Réceptionniste -->
-        <div class="relative">
-            <input type="text" 
-                   name="receptionniste" 
-                   value="{{ search_receptionniste|default:'' }}" 
-                   placeholder="Réceptionniste..." 
-                   class="w-full px-2.5 py-1.5 bg-slate-50/80 border border-slate-300 rounded text-xs font-medium focus:bg-white focus:outline-none focus:border-[#714B67] focus:ring-1 focus:ring-[#714B67] text-slate-800 placeholder-slate-400 transition-all">
-        </div>
-
-        <!-- Boutons d'action -->
-        <div class="sm:col-span-2 lg:col-span-6 flex items-center justify-end gap-2 pt-1">
-            <button type="submit" class="inline-flex justify-center items-center gap-1.5 px-3.5 py-1.5 bg-[#714B67] hover:bg-[#5f3f56] text-white text-xs font-bold rounded shadow-2xs transition-all cursor-pointer">
-                <svg class="w-3.5 h-3.5 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z"/>
-                </svg>
-                <span>Appliquer les filtres</span>
-            </button>
-        </div>
     </form>
 </div>
 
@@ -255,6 +298,7 @@
         });
     });
 </script>
+
         <!-- ================================================================= -->
         <!-- 3. TABLEAU DES ÉCHANTILLONS - CADRE PRINCIPAL HAUTE VISIBILITÉ    -->
         <!-- ================================================================= -->

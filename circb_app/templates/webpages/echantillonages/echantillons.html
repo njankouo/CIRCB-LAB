@@ -3,10 +3,83 @@
 {% block main %}
 
 <main class="flex-1 h-full min-h-0 overflow-y-auto text-slate-100 w-full selection:bg-[#714B67] selection:text-white font-sans antialiased relative overflow-hidden">
- 
-<div class="max-w-5xl mx-auto my-1 p-1">
+
+
+
+<div class="max-w-6xl mx-auto my-1 p-1">
 <div class="bg-white border border-[#e0e0e0] rounded-[3px] p-3.5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
-    
+  {% widthratio count_echantillon_fiche fiches_echantillon.nombre_echantillon 100 as pct %}
+  <!-- Calcul du reste à saisir -->
+  {% with reste=fiches_echantillon.nombre_echantillon|add:"-"|add:count_echantillon_fiche %}
+
+  <div class="inline-flex items-center gap-3">
+
+    <!-- Widget Donut Chart Principal -->
+    <div class="relative inline-flex items-center gap-3 p-2.5 px-4 bg-white border-2 {% if pct >= 100 %}border-emerald-500 shadow-emerald-100{% else %}border-[#00A09D] shadow-teal-100{% endif %} rounded-xl shadow-lg font-sans">
+      
+      <!-- Pastille lumineuse animée -->
+      <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full {% if pct >= 100 %}bg-emerald-400{% else %}bg-[#00A09D]{% endif %} opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3.5 w-3.5 {% if pct >= 100 %}bg-emerald-500{% else %}bg-[#00A09D]{% endif %}"></span>
+      </span>
+
+      <!-- SVG Donut Chart -->
+      <div class="relative w-11 h-11 flex items-center justify-center shrink-0">
+        <svg class="w-full h-full transform -rotate-90 drop-shadow-sm" viewBox="0 0 36 36">
+          <path
+            class="text-gray-100"
+            stroke-width="4"
+            stroke="currentColor"
+            fill="none"
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+          <path
+            class="{% if pct >= 100 %}text-emerald-500{% else %}text-[#00A09D]{% endif %} transition-all duration-700 ease-out"
+            stroke-dasharray="{% if pct > 100 %}100{% else %}{{ pct }}{% endif %}, 100"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke="currentColor"
+            fill="none"
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+        </svg>
+        <span class="absolute text-[10px] font-extrabold {% if pct >= 100 %}text-emerald-600{% else %}text-[#00A09D]{% endif %}">
+          {{ pct }}%
+        </span>
+      </div>
+
+      <!-- Légende & Chiffres -->
+      <div class="flex flex-col text-xs">
+        <span class="text-[10px] uppercase font-black tracking-wider text-gray-500">Saisie Échantillons</span>
+        <div class="flex items-baseline gap-1 font-extrabold text-gray-900 text-sm mt-0.5">
+          <span class="text-base text-gray-900">{{ count_echantillon_fiche }}</span>
+          <span class="text-gray-400 font-medium text-xs">/</span>
+          <span class="text-gray-500 font-bold text-xs">{{ fiches_echantillon.nombre_echantillon }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pancarte / Bulle d'information : affichée UNIQUEMENT si le quota n'est PAS encore atteint (< 100%) -->
+    {% if pct < 100 %}
+      <div class="relative animate-bounce-horizontal">
+        <div class="bg-amber-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg shadow-md flex items-center gap-1.5 whitespace-nowrap">
+          
+          <!-- Flèche pointant vers la gauche -->
+          <span class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-0 h-0 border-y-4 border-y-transparent border-r-amber-500 border-r-8"></span>
+
+          <svg class="w-4 h-4 text-white shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>Encore <strong class="font-black text-white underline decoration-2 underline-offset-2">{{ reste }}</strong> à saisir pour atteindre le quota</span>
+
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+
+  {% endwith %}
+
     <!-- Section Titre et Icône style DHIS2 -->
     <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-[2px] bg-[#f8f9fa] border border-slate-200 flex items-center justify-center text-[#2c6693] shrink-0">
@@ -31,7 +104,6 @@
             <span class="text-xs font-bold text-red-600 tracking-tight block font-mono">
                 {{ fiches_echantillon.code }}
             </span>
-           
         </div>
 
         <!-- Bouton / Fonction de Scan Code-barres -->
@@ -40,7 +112,6 @@
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                 </svg>
-                
             </button>
         </div>
     </div>
