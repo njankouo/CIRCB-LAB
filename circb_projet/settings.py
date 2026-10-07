@@ -90,9 +90,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'circb_projet.wsgi.application'
 # settings.py
-CELERY_BROKER_URL = 'redis://circb_redis:6379/0'
-CELERY_RESULT_BACKEND = 'redis://circb_redis:6379/0'
-
+#CELERY_BROKER_URL = 'redis://circb_redis:6379/0'
+#CELERY_RESULT_BACKEND = 'redis://circb_redis:6379/0'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 # settings.py
 
 CELERY_ACCEPT_CONTENT = ['json']

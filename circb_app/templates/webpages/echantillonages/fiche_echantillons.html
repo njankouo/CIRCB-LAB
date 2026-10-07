@@ -317,7 +317,7 @@
                 <th class="py-3 px-3">Localisation (Région / District)</th>
                 <th class="py-3 px-3">FOSA</th>
                 <th class="py-3 px-3">Enregistr&eacute; Le</th>
-                <!-- <th class="py-3 px-3">Réceptionniste</th> -->
+                <th class="py-3 px-3">Réceptionniste</th> 
                 <th class="py-3 px-4 text-right">Actions</th>
             </tr>
         </thead>
@@ -391,15 +391,15 @@
                 </td>
 
                 <!-- Réceptionniste -->
-               <!--  <td class="py-3 px-3 whitespace-nowrap">
+                <td class="py-3 px-3 whitespace-nowrap">
                     <div class="inline-flex items-center gap-1.5 text-slate-700 text-[11px] font-medium max-w-[130px] truncate" title="{{ fiche.receptioniste|default:'N/A' }}">
                         <span class="w-5 h-5 rounded-full bg-[#714B67]/10 text-[#714B67] font-bold text-[9px] flex items-center justify-center shrink-0">
-                            {{ fiche.transporteur|default:"N"|slice:":1"|upper }}
+                            {{ fiche.receptioniste|default:"N"|slice:":1"|upper }}
                         </span>
-                        <span class="truncate">{{ fiche.receptioniste|default:"N/A" }}</span>
+                        <span class="truncate">{{ fiche.receptioniste|default:"-" }}</span>
                     </div>
                 </td>
- -->
+
                 <!-- Actions (Style Odoo Buttons Toolbar) -->
                 <td class="py-3 px-4 text-right whitespace-nowrap">
                     <div class="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 p-1 rounded shadow-2xs group-hover:bg-white transition-colors">

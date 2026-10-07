@@ -152,69 +152,55 @@
                 </tr>
             </thead>
             <tbody>
-                {% if resultats %}
-                    {% for item in resultats %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ item.code|truncatechars:12|default:"-" }}</td>
-                        <td>
-                            {% if item.ordre %}
-                                {{ item.ordre }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td class="align-left">
-                            {% if item.enfant and item.enfant.code %}
-                                {{ item.enfant.code|truncatechars:20 }}
-                            {% else %}
-                                {{ item.code|truncatechars:20|default:"-" }}
-                            {% endif %}
-                        </td>
-                        <td class="align-left">
-                            {% if item.enfant %}
-                                {{ item.enfant.nom|default:"" }} {{ item.enfant.prenom|default:"" }}
-                            {% else %}
-                                Non renseigné
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if item.enfant and item.enfant.date_naissance %}
-                                {{ item.enfant.date_naissance|date:"d/m/Y" }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td class="align-left">
-                            {% if item.mere %}
-                                {{ item.mere.nom|default:"" }} {{ item.mere.prenom|default:"" }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>{{ item.mere.contact|default:"NON EXISTANT" }}</td>
-                        <td>{{ item.date_prelevement|date:"d/m/Y"|default:"-" }}</td>
-                        
-                        <!-- Date de rendu -->
-                        <td>
-                           
-                                {{ item.date_resultat|date:"d/m/Y"|default:"-" }}
-                            
-                        </td>
-                        
-                        <!-- Statut Virologique -->
-                        <td class="text-bold">
-                            {{ item.resultat_pcr.nom|default:"-" }}
-                        </td>
-                    </tr>
-                    {% endfor %}
+               {% if resultats %}
+    {% for item in resultats %}
+        <tr {% if item.resultat_pcr and 'DETECT' in item.resultat_pcr.nom|upper %}style="background-color: #991b1b !important; color: white !important;"{% endif %}>
+            <td style="color: inherit; background-color: inherit;">{{ forloop.counter }}</td>
+            <td style="color: inherit; background-color: inherit;">{{ item.code|truncatechars:12|default:"-" }}</td>
+            <td style="color: inherit; background-color: inherit;">{{ item.ordre|default:"-" }}</td>
+            
+            <td class="align-left" style="color: inherit; background-color: inherit;">
+                {% if item.enfant and item.enfant.code %}
+                    {{ item.enfant.code|truncatechars:20 }}
                 {% else %}
-                    <tr>
-                        <td colspan="11" style="text-align: center; padding: 12px; font-style: italic;">
-                            Aucun résultat collectif trouvé pour les critères sélectionnés.
-                        </td>
-                    </tr>
+                    {{ item.code|truncatechars:20|default:"-" }}
                 {% endif %}
+            </td>
+
+            <td class="align-left" style="color: inherit; background-color: inherit;">
+                {% if item.enfant %}
+                    {{ item.enfant.nom|default:"" }} {{ item.enfant.prenom|default:"" }}
+                {% else %}
+                    Non renseigné
+                {% endif %}
+            </td>
+
+            <td style="color: inherit; background-color: inherit;">{{ item.enfant.date_naissance|date:"d/m/Y"|default:"-" }}</td>
+
+            <td class="align-left" style="color: inherit; background-color: inherit;">
+                {% if item.mere %}
+                    {{ item.mere.nom|default:"" }} {{ item.mere.prenom|default:"" }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+
+            <td style="color: inherit; background-color: inherit;">{{ item.mere.contact|default:"NON EXISTANT" }}</td>
+            <td style="color: inherit; background-color: inherit;">{{ item.date_prelevement|date:"d/m/Y"|default:"-" }}</td>
+            <td style="color: inherit; background-color: inherit;">{{ item.date_resultat|date:"d/m/Y"|default:"-" }}</td>
+            
+            <td class="text-bold" style="color: inherit; background-color: inherit;">
+                {{ item.resultat_pcr.nom|default:"-" }}
+            </td>
+        </tr>
+    {% endfor %}
+{% else %}
+    <tr>
+        <td colspan="11" class="text-center p-3 italic">
+            Aucun résultat collectif trouvé pour les critères sélectionnés.
+        </td>
+    </tr>
+{% endif %}
             </tbody>
         </table>
 
