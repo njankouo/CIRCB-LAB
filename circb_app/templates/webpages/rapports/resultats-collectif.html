@@ -154,7 +154,7 @@
             <tbody>
                {% if resultats %}
     {% for item in resultats %}
-        <tr {% if item.resultat_pcr and 'DETECT' in item.resultat_pcr.nom|upper %}style="background-color: #991b1b !important; color: white !important;"{% endif %}>
+        <tr style="background-color: {% if item.resultat_pcr.nom|upper == 'DETECTE' %}#BF4932{% endif %}; color: {% if item.resultat_pcr.nom|upper == 'DETECTE' %}white{% endif %};">
             <td style="color: inherit; background-color: inherit;">{{ forloop.counter }}</td>
             <td style="color: inherit; background-color: inherit;">{{ item.code|truncatechars:12|default:"-" }}</td>
             <td style="color: inherit; background-color: inherit;">{{ item.ordre|default:"-" }}</td>
@@ -189,9 +189,9 @@
             <td style="color: inherit; background-color: inherit;">{{ item.date_prelevement|date:"d/m/Y"|default:"-" }}</td>
             <td style="color: inherit; background-color: inherit;">{{ item.date_resultat|date:"d/m/Y"|default:"-" }}</td>
             
-            <td class="text-bold" style="color: inherit; background-color: inherit;">
-                {{ item.resultat_pcr.nom|default:"-" }}
-            </td>
+        <td class="text-bold">
+    {{ item.resultat_pcr.nom|default:"-" }}
+</td>
         </tr>
     {% endfor %}
 {% else %}

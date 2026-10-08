@@ -1055,13 +1055,16 @@ document.getElementById('btn-rechercher-code').addEventListener('click', functio
 
                 // --- GESTION DE L'AFFICHAGE DE L'HISTORIQUE (HTML DU SERVEUR) ---
               const containerBtnHist = document.getElementById('container-btn-historique');
-const listeHist = document.getElementById('liste-historique');
+              const listeHist = document.getElementById('liste-historique');
+
+              const section_historique = document.getElementById('section_historique');
    
               
              if (data.patient.historique_html && data.patient.historique_html.trim() !== '') {
                     if (data.patient.historique_html && data.patient.historique_html.trim() !== '') {
                       
                         listeHist.innerHTML = data.patient.historique_html;
+                        section_historique.innerHTML = data.patient.historique_html;
                         containerBtnHist.classList.remove('hidden');
     
                         // 3. Optionnel : Ouverture automatique du drawer dès la recherche du patient

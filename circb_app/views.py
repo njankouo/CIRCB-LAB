@@ -3260,7 +3260,7 @@ def imprimer_resultat_pdf(request):
                     'date_prel': ech.date_prelevement,
                     'statut': statut_nom,
                     'code_statut': statut_code,
-                    'date_resultat': date_resultat
+                    'date_resultat': ech.date_resultat
                 }
 
                 if ech.ordre == 1:
@@ -3509,9 +3509,6 @@ def import_structure_view(request):
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
-
-def mode_utilisation(request):
-    return render(request, 'webpages/mode_utilisation.html')
 
 
 def modifier_patient(request, pk):

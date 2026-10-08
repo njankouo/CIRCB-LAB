@@ -138,7 +138,7 @@ urlpatterns = [
     
     path('import_structure_view/',views.import_structure_view, name='import_structure_view'),
     
-    path('guide-utilisation/', views.mode_utilisation, name='guide-utilisation'),
+   
     
     path('patient/<int:pk>/modifier/', views.modifier_patient, name='modifier_patient'),
     
