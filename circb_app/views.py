@@ -30,6 +30,7 @@ from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import logging
 import json
+import openpyxl
 from .tasks import task_transfert_fosa
 def connexion_view(request):
     # Django ira chercher ce fichier dans vos dossiers de templates configurés
@@ -587,7 +588,7 @@ def echantillonages(request):
             "fiche",
             "fiche__fosa",
         )
-        .order_by("-date_prelevement", "-id")
+        .order_by("-date_saisie", "-id")
     )
 
     # 2. Récupération des paramètres
@@ -1005,9 +1006,9 @@ def ajouter_echantillon(request):
                         enfant.date_naissance = date_naissance_enfant
                     if request.POST.get('sexe'):
                         enfant.sexe = request.POST.get('sexe', '').strip()
-
+                    print(f'rang naissance:{request.POST.get('rang_naissance')}')
                     if request.POST.get('rang_naissance'):
-                        enfant.rang_naissance = p_int(request.POST.get('rang_naissance'))
+                        enfant.rang_naissance = request.POST.get('rang_naissance')
                     enfant.status = True
                     enfant.save()
 
@@ -1084,7 +1085,7 @@ def ajouter_echantillon(request):
                         prenom_preleveur=request.POST.get('prenom_preleveur', '').strip(),
                         contact_preleveur=p_int(request.POST.get('contact_preleveur', None)),
                         observation=request.POST.get('observation', '').strip(),
-                        date_enregistrement=datetime.now().date()
+                        date_saisie=datetime.now().date()
                     )
                     
                     nombre_actuel = Echantillon.objects.filter(fiche=fiche).count()
@@ -1182,7 +1183,9 @@ def update_echantillon(request, id):
             echantillon.code = parse_int(request.POST.get('code_echantillon')) or echantillon.code
             
             # INFOS ENFANT & MÈRE
-            echantillon.rang_naissance = parse_int(request.POST.get('rang_naissance'))
+            echantillon.enfant.rang_naissance = request.POST.get('rang_naissance')
+
+            echantillon.mere.contact = request.POST.get('contact_familial')
             echantillon.poids = poids
             echantillon.profilaxie_arv = request.POST.get('profilaxie_arv')
             
@@ -1222,6 +1225,8 @@ def update_echantillon(request, id):
             echantillon.observation = request.POST.get('observation', '').strip()
             
             echantillon.save()
+            echantillon.mere.save()
+            echantillon.enfant.save()
 
             messages.success(request, "Échantillon mis à jour avec succès.")
             return redirect('/echantillonages/')
@@ -1352,10 +1357,9 @@ def segmenter_code_patient(raw_code):
 
     return code_clean
 
-
 def verifier_patient(request):
     """Vérifie l'existence d'un patient par son code unique complet et récupère ses antécédents d'échantillons."""
-    raw_code = request.GET.get("code", "")
+    raw_code = request.GET.get("code", "").strip()
 
     if not raw_code:
         return JsonResponse(
@@ -1370,9 +1374,7 @@ def verifier_patient(request):
         return JsonResponse(
             {
                 "existe": False,
-                "erreur": (
-                    "Format de code invalide. Attendu : XXX-XXX-XXX-XX-XXXX"
-                ),
+                "erreur": "Format de code invalide. Attendu : XXX-XXX-XXX-XX-XXXX",
             },
             status=400,
         )
@@ -1389,14 +1391,22 @@ def verifier_patient(request):
             return JsonResponse({"existe": False})
 
         # --- RÉCUPÉRATION ET RENDU DES ÉCHANTILLONS PRÉCÉDENTS ---
-        echantillons_precedents = Echantillon.objects.filter(
+        echantillons_qs = Echantillon.objects.filter(
             enfant=patient
         ).order_by("-ordre")
 
+        # HTML rendu pour affichage direct
         historique_html = render_to_string(
             "webpages/echantillonages/historique_items.html",
-            {"historique_echantillons": echantillons_precedents},
+            {"historique_echantillons": echantillons_qs},
             request=request,
+        )
+
+        # Liste JSON des échantillons (sérialisation des champs nécessaires)
+        historique_data = list(
+            echantillons_qs.values(
+                "id",  "ordre", "date_prelevement", "resultat_pcr__nom"
+            )
         )
 
         # --- DONNÉES DE LA MÈRE ---
@@ -1407,23 +1417,14 @@ def verifier_patient(request):
                 "id": mere.id,
                 "nom": getattr(mere, "nom", ""),
                 "prenom": getattr(mere, "prenom", ""),
-                "contact": (
-                    mere.contact_id if hasattr(mere, "contact_id") else None
-                ),
+                "contact": getattr(mere, "contact", None),
                 "age": getattr(mere, "age", None),
                 "date_naissance": formater_date(
                     getattr(mere, "date_naissance", None)
                 ),
             }
 
-        # --- DONNÉES DE LA PORTE D'ENTRÉE ---
-        porte_entree_id = (
-            patient.porte_entree_id
-            if hasattr(patient, "porte_entree_id")
-            else None
-        )
-
-        # --- RÉPONSE JSON ---
+        # --- RÉPONSE JSON UNIQUE ET COMPLÈTE ---
         return JsonResponse(
             {
                 "existe": True,
@@ -1433,12 +1434,14 @@ def verifier_patient(request):
                     "nom": getattr(patient, "nom", ""),
                     "prenom": getattr(patient, "prenom", ""),
                     "sexe": getattr(patient, "sexe", None),
-                    "porte_entree": porte_entree_id,
+                    "porte_entree": getattr(patient, "porte_entree_id", None),
+                    "rang_naissance": getattr(patient, "rang_naissance", None),
                     "date_naissance": formater_date(
                         getattr(patient, "date_naissance", None)
                     ),
                     "mere": mere_data,
                     "historique_html": historique_html,
+                    "historique_data": historique_data,  # <-- Inclus proprement ici
                 },
             }
         )
@@ -2167,28 +2170,33 @@ def save_personnel(request):
 
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)}, status=500)
+from django.db.models.functions import Concat
+from django.db.models import Q, Value
 def recherche_patient(request): 
     query = request.GET.get('q', '').strip()
     
-    # Requête de base pré-chargée avec ses clés étrangères
     base_queryset = Patient.objects.select_related(
         'fosa', 
         'mere', 
         'porte_entree', 
-     
     )
     
     if query:
-        patients = base_queryset.filter(
+        # Création de champs annotés combinant nom et prénom
+        patients = base_queryset.annotate(
+            nom_complet=Concat('nom', Value(' '), 'prenom'),
+            prenom_complet=Concat('prenom', Value(' '), 'nom')
+        ).filter(
             Q(nom__icontains=query) | 
             Q(prenom__icontains=query) | 
-            Q(code__icontains=query)
-        ).distinct()[:50]  # Limite de sécurité pour éviter de surcharger le DOM
+            Q(code__icontains=query) |
+            Q(nom_complet__icontains=query) |
+            Q(prenom_complet__icontains=query)
+        ).distinct()[:50]
     else:
         patients = base_queryset.order_by('-id')[:20]
         
     return render(request, 'webpages/partials/patient_list.html', {'patients': patients})
-
 def profile(request):
     return render(request, 'webpages/profile.html')
 
@@ -4421,3 +4429,39 @@ def liste_transferts_fosa(request):
   }
 
   return render(request, 'webpages/transfer_logs.html', context)
+
+
+def ImportGrossesse(request):
+    return render(request, 'webpages/grossese.html')
+
+
+from .tasks import importer_rang_naissance_task
+
+
+def importer_rang_naissance_patient(request):
+    if request.method == "POST" and request.FILES.get("excel_file"):
+        excel_file = request.FILES["excel_file"]
+
+        # Validation de l'extension du fichier
+        if not excel_file.name.endswith((".xlsx", ".xls")):
+            messages.error(
+                request,
+                "Format invalide. Veuillez importer un fichier Excel (.xlsx ou .xls).",
+            )
+            return redirect(request.META.get("HTTP_REFERER", "/"))
+
+        # Lecture du contenu du fichier en mémoire (bytes)
+        file_bytes = excel_file.read()
+
+        # Envoi de la tâche dans la file Redis
+        importer_rang_naissance_task.delay(file_bytes)
+
+        # Message d'information instantané pour l'utilisateur
+        messages.info(
+            request,
+            "L'importation du fichier a été lancée en arrière-plan via Redis. Les données seront traitées d'ici quelques instants.",
+        )
+
+        return redirect(request.META.get("HTTP_REFERER", "/"))
+
+    return render(request, "webpages/grossese.html")

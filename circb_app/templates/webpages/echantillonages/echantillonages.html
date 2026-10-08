@@ -164,7 +164,9 @@
                     <th class="py-2.5 px-3 border-r border-slate-200">Patient & Mère</th>
                     <th class="py-2.5 px-3 border-r border-slate-200">Formation Sanitaire (FOSA)</th>
                     <th class="py-2.5 px-3 border-r border-slate-200">Date Prélèvement</th>
+                     <th class="py-2.5 px-3 border-r border-slate-200"> Date Saisie</th>
                     <th class="py-2.5 px-3 border-r border-slate-200">Re-prelevement ?</th>
+
                     <th class="py-2.5 px-3 border-r border-slate-200">Statut Résultat</th>
                     <th class="py-2.5 px-3 text-center">Action</th>
                 </tr>
@@ -288,7 +290,10 @@
                             <span class="inline-block mt-0.5 text-[10px] font-semibold text-[#714B67]">PCR {{ echantillon.ordre }}</span>
                         {% endif %} -->
                     </td>
-
+                    <td class="py-2 px-3 border-r border-slate-100 font-mono text-slate-600 whitespace-nowrap">
+                        <div>{{ echantillon.date_enregistrement|date:"d/m/Y" }} {{ echantillon.date_saisie|date:"d/m/Y" }}</div>
+                    
+                    </td>
                     <!-- Tests Initiés -->
                                         <td class="py-2 px-3 border-r border-slate-100">
                       {% if echantillon.duplicate_prelevement %}

@@ -5,28 +5,40 @@
     <div class="max-w-7xl mx-auto space-y-6">
         
         <!-- EN-TÊTE HIGH-TECH CLINIQUE -->
-        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl border border-slate-800 relative overflow-hidden">
-            <!-- Cercles d'ambiance en arrière-plan -->
-            <div class="absolute -top-12 -right-12 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs relative overflow-hidden my-4">
+    <!-- Barre d'accentuation violette style Odoo -->
+    <div class="absolute top-0 left-0 right-0 h-1 bg-[#714B67]"></div>
 
-            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-                <div>
-                  
-                    <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-white mt-2"> Registre Patients</h1>
-                    
-                </div>
-
-                <!-- ACTIONS PRINCIPALES -->
-                {% comment %} <div class="flex items-center gap-3 shrink-0">
-                    <button type="button" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/15 text-white text-xs font-bold rounded-xl shadow-lg transition-all active:scale-95">
-                        <svg class="w-4 h-4 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        Exporter le Registre
-                    </button>
-                </div> {% endcomment %}
+    <div class="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        
+        <!-- Titre et Icône Odoo -->
+        <div class="flex items-center gap-3">
+            <div class="p-2.5 bg-[#714B67]/10 text-[#714B67] rounded-lg border border-[#714B67]/20">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold text-[#4c3245] uppercase tracking-wide">
+                    Registre Patients
+                </h1>
+                <p class="text-xs text-slate-500 font-normal">Gestion des dossiers et mises à jour des données</p>
             </div>
         </div>
 
+        <!-- Zone d'Actions (Bouton Import Odoo) -->
+        <div class="flex items-center gap-2">
+            <!-- Bouton Import Grossesse Gemellaire -->
+            <a href="{% url 'import-grossese-gemelaire' %}" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-white bg-[#714B67] rounded shadow-xs hover:bg-[#5a3b52] active:bg-[#4c3245] transition-colors duration-150">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12"></path>
+                </svg>
+                <span>Importer Grossesses Gemellaires</span>
+            </a>
+        </div>
+
+    </div>
+</div>
         <!-- RECHERCHE & FILTRES STYLE GLASSMORPHISM -->
         <form method="GET" action="" class="p-3.5 bg-white border border-slate-200/90 rounded-2xl shadow-sm space-y-3">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
@@ -67,7 +79,7 @@
                             <th scope="col" class="py-3.5 px-5">Identité & IPP Patient</th>
                             <th scope="col" class="py-3.5 px-4">Sexe</th>
                             <th scope="col" class="py-3.5 px-4">Date de Naissance</th>
-                            <th scope="col" class="py-3.5 px-4">N° Fiche</th>
+                            <th scope="col" class="py-3.5 px-4">N° Grossesse</th>
                             <th scope="col" class="py-3.5 px-4">Parent / Accompagnateur</th>
                             <th scope="col" class="py-3.5 px-4">Contact Urgence</th>
                             <th scope="col" class="py-3.5 px-5 text-right">Action Médicale</th>
@@ -128,7 +140,7 @@
                             <td class="py-3 px-4 whitespace-nowrap">
                                 <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-800 text-[10px] font-mono font-bold rounded-md border border-slate-200">
                                     <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                    F-{{ patient.fiche_id|default:"00" }}
+                                    {{ patient.rang_naissance|default:"-" }}
                                 </span>
                             </td>
 

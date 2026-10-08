@@ -10,7 +10,9 @@ from django.core.files.base import ContentFile
 from weasyprint import HTML
 from datetime import datetime
 from .models import Echantillon, Fosa, District, Region, Patient, FicheEchantillon, FosaTransferLog, User
-
+import io
+import openpyxl
+from django.db import transaction
 User = get_user_model()
 
 @shared_task
@@ -228,3 +230,75 @@ def task_transfert_fosa(
       'fiches_count': total_fiches,
       'patients_count': total_patients,
   }
+
+
+@shared_task
+def importer_rang_naissance_task(file_bytes):
+    """Tâche exécutée en arrière-plan via Redis / Celery."""
+    try:
+        # Conversion des octets reçus en flux mémoire pour openpyxl
+        file_stream = io.BytesIO(file_bytes)
+        wb = openpyxl.load_workbook(file_stream, data_only=True)
+        sheet = wb.active
+
+        rows = list(sheet.iter_rows(values_only=True))
+        if not rows:
+            return {"status": "error", "message": "Le fichier Excel est vide."}
+
+        # Détection automatique des colonnes 'id' et 'rang_naissance'
+        headers = [
+            str(cell).strip().lower() if cell is not None else ""
+            for cell in rows[0]
+        ]
+
+        if "id" not in headers or "rang_naissance" not in headers:
+            return {
+                "status": "error",
+                "message": "En-têtes manquants dans le fichier. Les colonnes 'id' et 'rang_naissance' sont requises.",
+            }
+
+        id_idx = headers.index("id")
+        rang_idx = headers.index("rang_naissance")
+
+        success_count = 0
+        not_found_count = 0
+        invalid_rows = 0
+
+        # Traitement sécurisé sous transaction SQL
+        with transaction.atomic():
+            for row in rows[1:]:
+                raw_id = row[id_idx] if len(row) > id_idx else None
+                raw_rang = row[rang_idx] if len(row) > rang_idx else None
+
+                if raw_id is None or raw_rang is None:
+                    continue
+
+                try:
+                    patient_id = int(raw_id)
+                    rang_naissance = int(raw_rang)
+                except (ValueError, TypeError):
+                    invalid_rows += 1
+                    continue
+
+                updated = Patient.objects.filter(id=patient_id).update(
+                    rang_naissance=rang_naissance
+                )
+
+                if updated:
+                    success_count += 1
+                else:
+                    not_found_count += 1
+
+        msg = f"{success_count} patient(s) mis à jour avec succès."
+        if not_found_count > 0:
+            msg += f" {not_found_count} ID non trouvé(s)."
+        if invalid_rows > 0:
+            msg += f" {invalid_rows} ligne(s) ignorée(s) (données invalides)."
+
+        return {"status": "success", "message": msg}
+
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Erreur lors de la lecture du fichier : {str(e)}",
+        }

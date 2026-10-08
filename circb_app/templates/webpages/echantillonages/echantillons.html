@@ -1053,18 +1053,91 @@ document.getElementById('btn-rechercher-code').addEventListener('click', functio
                 }
                 hiddenPatientIdInput.value = data.patient.id;
 
-                // --- GESTION DE L'AFFICHAGE DE L'HISTORIQUE (HTML DU SERVEUR) ---
+                // --- GESTION DE L'AFFICHAGE DE L'HISTORIQUE ---
+                       // --- GESTION DE L'AFFICHAGE DE L'HISTORIQUE  ---
+                       // --- GESTION DE L'AFFICHAGE DE L'HISTORIQUE  ---
               const containerBtnHist = document.getElementById('container-btn-historique');
               const listeHist = document.getElementById('liste-historique');
 
-              const section_historique = document.getElementById('section_historique');
-   
+             const sectionHist = document.getElementById('section_historique');
+                    const tbodyHist = document.getElementById('tableau_historique_body');
+                    const countBadge = document.getElementById('historique_count');
+
+                    const historiqueData = data.patient && data.patient.historique_data ? data.patient.historique_data : [];
+
+                    if (tbodyHist) {
+                        tbodyHist.innerHTML = '';
+
+                        if (historiqueData.length > 0) {
+                            if (countBadge) countBadge.textContent = `${historiqueData.length} échantillon(s)`;
+
+                            historiqueData.forEach((item, index) => {
+                                const row = document.createElement('tr');
+                                row.className = 'hover:bg-slate-50/80 transition-colors';
+
+                                // 1. Formatage de la date (JJ/MM/AAAA)
+                                let dateFormatted = 'N/A';
+                                if (item.date_prelevement) {
+                                    const parts = item.date_prelevement.split('T')[0].split('-');
+                                    if (parts.length === 3) {
+                                        dateFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
+                                    }
+                                }
+
+                                // 2. Style visuel du résultat PCR
+                                const valeurPcr = item.resultat_pcr__nom || item.resultat_pcr;
+                                let pcrBadge = '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/60"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>En attente</span>';
+
+                                if (valeurPcr) {
+                                const resUpper = String(valeurPcr).toUpperCase();
+                                if (resUpper.includes('POS')) {
+                                    pcrBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[11px] font-semibold bg-red-50 text-red-700 border border-red-200"><span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>POSITIF</span>';
+                                } else if (resUpper.includes('NEG')) {
+                                    pcrBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>NÉGATIF</span>';
+                                } else {
+                                    pcrBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-300">${valeurPcr}</span>`;
+                                }
+                            }
+
+                                // 3. Rendu de la ligne
+                                row.innerHTML = `
+                                <td class="py-2.5 px-3 text-center border-r border-slate-100">
+                                    <span class="inline-inline-flex items-center justify-center px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#714B67]/10 text-[#714B67] border border-[#714B67]/20 whitespace-nowrap">
+                                        PCR ${item.ordre ?? (index + 1)}
+                                    </span>
+                                </td>
+                                <td class="py-2.5 px-3 border-r border-slate-100 font-medium text-slate-800">
+                                    ${dateFormatted}
+                                </td>
+                                <td class="py-2.5 px-3 text-center">
+                                    ${pcrBadge}
+                                </td>
+                            `;
+
+                                tbodyHist.appendChild(row);
+                            });
+                        } else {
+                            if (countBadge) countBadge.textContent = '0';
+                            tbodyHist.innerHTML = `
+                                <tr>
+                                    <td colspan="3" class="py-6 text-center text-slate-400 text-xs italic">
+                                        Aucun échantillon enregistré pour ce patient.
+                                    </td>
+                                </tr>
+                            `;
+                        }
+
+                        if (sectionHist) sectionHist.classList.remove('hidden');
+                    }
               
+                // --- GESTION DE L'AFFICHAGE DE L'HISTORIQUE DANS LE DRAWER---
+                 // --- GESTION DE L'AFFICHAGE DE L'HISTORIQUE DANS LE DRAWER---
+                // --- GESTION DE L'AFFICHAGE DE L'HISTORIQUE DANS LE DRAWER---
              if (data.patient.historique_html && data.patient.historique_html.trim() !== '') {
                     if (data.patient.historique_html && data.patient.historique_html.trim() !== '') {
                       
                         listeHist.innerHTML = data.patient.historique_html;
-                        section_historique.innerHTML = data.patient.historique_html;
+                        
                         containerBtnHist.classList.remove('hidden');
     
                         // 3. Optionnel : Ouverture automatique du drawer dès la recherche du patient
@@ -1215,6 +1288,12 @@ function alimenterChampsPrincipaux(patientData) {
     if (document.getElementById('enfant_dob')) {
         document.getElementById('enfant_dob').value = formatDateToFR(patientData.date_naissance);
     }
+   if (document.getElementById('main_rang_naissance')) {
+    const rang = patientData.rang_naissance !== null && patientData.rang_naissance !== undefined 
+        ? String(patientData.rang_naissance) 
+        : '';
+    document.getElementById('main_rang_naissance').value = rang;
+}
     
     if (document.getElementById('main_poids')) document.getElementById('main_poids').value = patientData.poids || '';
     if (document.getElementById('main_porte_entree')) document.getElementById('main_porte_entree').value = patientData.porte_entree || '';
@@ -1239,6 +1318,7 @@ function alimenterChampsPrincipaux(patientData) {
         if (document.getElementById('main_contact_familial')) {
             document.getElementById('main_contact_familial').value = patientData.mere.contact || '';
         }
+
     } else {
         // Vider les champs de la mère si aucun profil mère n'est lié
         if (document.getElementById('main_mere_nom')) document.getElementById('main_mere_nom').value = '';

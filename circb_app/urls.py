@@ -96,6 +96,8 @@ urlpatterns = [
     # path('annomalies/', views.liste_anomalies_echantillons, name='annomalies'),
     
     path('signalement-echantillon/<int:id>/', views.signalement_echantillon, name='signalement_echantillon'),
+
+    path('import-grossese-gemelaire/', views.ImportGrossesse, name='import-grossese-gemelaire'),
     
   
     
@@ -233,6 +235,8 @@ urlpatterns = [
     path('historique/', views.liste_transferts_fosa, name='historique'),
 
     path('fiches-echantillons/imprimer/', views.imprimer_fiches_echantillons, name='imprimer_fiches_echantillons'),
+
+    path('importer_rang_naissance_patient/', views.importer_rang_naissance_patient, name='importer_rang_naissance_patient')
 
     
     
