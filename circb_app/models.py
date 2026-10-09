@@ -592,3 +592,10 @@ class FosaTransferLog(models.Model):
 
   def __str__(self):
     return f'Transfert {self.fosa_nom} : {self.ancien_district} -> {self.nouveau_district} ({self.date_transfert.strftime("%d/%m/%Y %H:%M")})'
+
+
+class TestSerologique(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=True)
+    resultat = models.CharField(null=True)
+    ordre = models.PositiveIntegerField(null=True)
+    date_resultat = models.DateField(null=True)
