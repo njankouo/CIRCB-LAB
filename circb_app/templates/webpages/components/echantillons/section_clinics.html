@@ -172,9 +172,9 @@
             </div>
         </div>
     </div>
-   <section id="section_historique" class="my-3 p-4 bg-white border border-slate-200 rounded-lg shadow-sm hidden">
+ <section id="section_historique" class="my-3 p-4 bg-white border border-slate-200 rounded-lg shadow-sm hidden">
     <!-- En-tête de section style Odoo -->
-    <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200">
+    <div class="flex items-center justify-between pb-2.5 mb-4 border-b border-slate-200">
         <div class="flex items-center gap-2">
             <div class="p-1.5 rounded bg-[#714B67]/10 text-[#714B67]">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -183,28 +183,57 @@
             </div>
             <div>
                 <h3 class="text-xs font-bold text-[#4c3245] uppercase tracking-wide">
-                    19. Historique des Prélèvements
+                    19. Historique des Prélèvements & Tests
                 </h3>
-                <p class="text-[11px] text-slate-500 font-normal">Antécédents et résultats PCR du patient</p>
+                <p class="text-[11px] text-slate-500 font-normal">Antécédents de virologie et sérologie du patient</p>
             </div>
         </div>
         <span id="historique_count" class="px-2 py-0.5 text-[11px] font-semibold bg-[#714B67] text-white rounded-md shadow-xs">0</span>
     </div>
 
-    <!-- Tableau style Odoo Studio / List View -->
-    <div class="overflow-hidden rounded border border-slate-200 bg-white">
-        <table class="w-full text-left border-collapse text-xs">
-            <thead>
-                <tr class="bg-[#f8f9fa] border-b border-slate-200 text-[11px] font-bold text-[#4c3245] uppercase tracking-wider">
-                    <th class="py-2.5 px-3 text-center border-r border-slate-100">N° Ordre</th>
-                    <th class="py-2.5 px-3 border-r border-slate-100">Date Prélèvement</th>
-                    <th class="py-2.5 px-3 text-center">Résultat PCR</th>
-                </tr>
-            </thead>
-            <tbody id="tableau_historique_body" class="divide-y divide-slate-100">
-                <!-- Les lignes dynamiques s'insèrent ici -->
-            </tbody>
-        </table>
+    <div class="space-y-4">
+        <!-- SOUS-SECTION 1 : TESTS SÉROLOGIQUES -->
+        <div>
+            <h4 class="text-[11px] font-bold text-purple-700 uppercase mb-2 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+                Tests Sérologiques (Antécédents)
+            </h4>
+            <div class="overflow-hidden rounded border border-slate-200 bg-white">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-[#f8f9fa] border-b border-slate-200 text-[11px] font-bold text-[#4c3245] uppercase tracking-wider">
+                            <th class="py-2.5 px-3 text-center border-r border-slate-100 w-1/3">N° Ordre</th>
+                            <th class="py-2.5 px-3 text-center w-2/3">Résultat Sérologique</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historique_test" class="divide-y divide-slate-100">
+                        <!-- Les lignes sérologiques s'insèrent ici par JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SOUS-SECTION 2 : PCR PRÉCÉDENTES -->
+        <div>
+            <h4 class="text-[11px] font-bold text-[#714B67] uppercase mb-2 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#714B67]"></span>
+                PCR Précédentes / Previous PCR Results
+            </h4>
+            <div class="overflow-hidden rounded border border-slate-200 bg-white">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-[#f8f9fa] border-b border-slate-200 text-[11px] font-bold text-[#4c3245] uppercase tracking-wider">
+                            <th class="py-2.5 px-3 text-center border-r border-slate-100">N° Ordre</th>
+                            <th class="py-2.5 px-3 border-r border-slate-100">Date Prélèvement</th>
+                            <th class="py-2.5 px-3 text-center">Résultat PCR</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableau_historique_body" class="divide-y divide-slate-100">
+                        <!-- Les lignes de PCR dynamiques ou le formulaire d'historique 1..3 s'insèrent ici par JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </section>
     <!-- 19. EXAMEN ET RAISONS DE PRÉLÈVEMENT -->

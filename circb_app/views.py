@@ -912,8 +912,7 @@ def ajouter_echantillon(request):
             code_pt = (request.POST.get('code_pt') or '').strip().upper()
             mere_id = request.POST.get('mere_id')
             enfant_id = request.POST.get('enfant_id')
-           
-           
+            
             code_patient = f"{code_region}{code_district}{code_fosa}{code_pt}"
 
             try:
@@ -921,6 +920,18 @@ def ajouter_echantillon(request):
                 fiche = FicheEchantillon.objects.filter(id=fiche_id).first() if fiche_id else None
                 if not fiche:
                     return JsonResponse({'success': False, 'error': "Fiche d'échantillon introuvable."}, status=400)
+
+                # --- VÉRIFICATION DU QUOTA DE LA FICHE (BLOQUANT) ---
+                nombre_actuel = Echantillon.objects.filter(fiche=fiche).count()
+                if fiche.nombre_echantillon and nombre_actuel >= fiche.nombre_echantillon:
+                    # Sécurité : désactivation de la fiche si ce n'était pas déjà fait
+                    if fiche.status:
+                        fiche.status = False
+                        fiche.save()
+                    return JsonResponse({
+                        'success': False, 
+                        'error': f"Quota atteint ! La fiche '{fiche.code if hasattr(fiche, 'code') else fiche_id}' a déjà atteint son nombre maximal d'échantillons ({fiche.nombre_echantillon}). Enregistrement impossible. Veuillez Vous rapprocher de unite technique"
+                    }, status=400)
 
                 # --- Helpers de nettoyage ---
                 def p_bool(val):
@@ -935,10 +946,6 @@ def ajouter_echantillon(request):
                     except ValueError: return None
 
                 def p_date(val):
-                    """
-                    Tente de parser les dates au format 'JJ-MM-AAAA' (formulaire personnalisé)
-                    ou au format 'AAAA-MM-JJ' (fallback HTML5).
-                    """
                     if not val or not str(val).strip(): return None
                     clean_val = str(val).strip()
                     for fmt in ('%d-%m-%Y', '%Y-%m-%d'):
@@ -949,7 +956,6 @@ def ajouter_echantillon(request):
                     return None
 
                 def p_str(val):
-                    """Nettoie une chaîne de caractères et renvoie None si vide."""
                     if not val: return None
                     v = str(val).strip()
                     return v if v else None
@@ -960,10 +966,12 @@ def ajouter_echantillon(request):
                 date_initiation_tarv = p_date(request.POST.get('date_initiation_tarv'))
                 date_sevrage = p_date(request.POST.get('date_sevrage'))
                 date_naissance_mere = p_date(request.POST.get('mere_date_naissance'))
+                code_echantillon_val = request.POST.get('code_echantillon', '').strip()
+                test_serologique_resultat = request.POST.get('test_serologique_resultat', '').strip()
 
                 # --- VALIDATIONS MÉTIER STRICTES ---
-                # if poids is not None and poids > 0:
-                #     return JsonResponse({'success': False, 'error': "Le poids de l'échantillon/enfant doit être supérieur  à 0 kg."}, status=400)
+                if poids is not None and poids <= 0:
+                    return JsonResponse({'success': False, 'error': "Le poids de l'échantillon/enfant doit être supérieur à 0 kg."}, status=400)
 
                 if date_initiation_tarv and date_naissance_enfant:
                     if date_initiation_tarv <= date_naissance_enfant:
@@ -972,8 +980,9 @@ def ajouter_echantillon(request):
                 if date_naissance_enfant and date_sevrage:
                     if date_naissance_enfant >= date_sevrage:
                         return JsonResponse({'success': False, 'error': "La date de naissance de l'enfant doit être inférieure à la date de sevrage."}, status=400)
-                if Echantillon.objects.filter(code=request.POST['code_echantillon']).exists():
-                    return JsonResponse({'success': False, 'error': f"Ce code: {request.POST['code_echantillon']} est déjà attribué à un autre échantillon. Veuillez en spécifier un nouveau."}, status=400)
+
+                if code_echantillon_val and Echantillon.objects.filter(code=code_echantillon_val).exists():
+                    return JsonResponse({'success': False, 'error': f"Ce code : {code_echantillon_val} est déjà attribué à un autre échantillon. Veuillez en spécifier un nouveau."}, status=400)
 
                 if date_naissance_mere:
                     age_mere_jours = (datetime.now().date() - date_naissance_mere).days
@@ -1006,9 +1015,9 @@ def ajouter_echantillon(request):
                         enfant.date_naissance = date_naissance_enfant
                     if request.POST.get('sexe'):
                         enfant.sexe = request.POST.get('sexe', '').strip()
-                    print(f'rang naissance:{request.POST.get('rang_naissance')}')
                     if request.POST.get('rang_naissance'):
                         enfant.rang_naissance = request.POST.get('rang_naissance')
+                    
                     enfant.status = True
                     enfant.save()
 
@@ -1043,17 +1052,45 @@ def ajouter_echantillon(request):
                         enfant.save()
 
                     # -------------------------------------------------------------
-                    # 4. ENREGISTREMENT DE L'ÉCHANTILLON
+                    # 4. HISTORIQUE DES ANCIENNES PCR (Si renseignées)
+                    # -------------------------------------------------------------
+                    for i in range(1, 4):
+                        pcr_type = request.POST.get(f'pcr_type_{i}')
+                        pcr_date = p_date(request.POST.get(f'pcr_date_{i}'))
+                        pcr_result = request.POST.get(f'pcr_result_{i}')
+
+                        if pcr_type and pcr_date and pcr_result:
+                            Echantillon.objects.create(
+                                enfant=enfant,
+                                mere=mere,
+                                fiche=fiche,
+                                ordre=pcr_type,
+                                date_prelevement=pcr_date,
+                                resultat_pcr_id=p_int(pcr_result)
+                            )
+
+                    # -------------------------------------------------------------
+                    # 5. ENREGISTREMENT DU TEST SÉROLOGIQUE (Si renseigné)
+                    # -------------------------------------------------------------
+                    if test_serologique_resultat:
+                        TestSerologique.objects.create(
+                            patient=enfant,
+                            resultat=test_serologique_resultat,
+                            date_resultat=datetime.now().date()
+                        )
+
+                    # -------------------------------------------------------------
+                    # 6. ENREGISTREMENT DE L'ÉCHANTILLON COURANT
                     # -------------------------------------------------------------
                     echantillon = Echantillon.objects.create(
-                        code=p_int(request.POST.get('code_echantillon')),
+                        code=p_int(code_echantillon_val),
                         fiche=fiche,
                         enfant=enfant,
                         mere=mere,
                         poids=poids,
                         profilaxie_arv=request.POST.get('profilaxie_arv'),
                         protocole_ptme=p_str(request.POST.get('protocole_ptme')),
-                        autre_profilaxie_arv = request.POST.get('autre_profilaxie_arv'),
+                        autre_profilaxie_arv=request.POST.get('autre_profilaxie_arv'),
                         date_rdv=p_date(request.POST.get('date_prochain_rdv')),
                         date_initiation_ptme=p_date(request.POST.get('date_initiation_ptme')),
                         date_diagnostic_vih=p_date(request.POST.get('date_diagnostic_vih')),
@@ -1075,7 +1112,7 @@ def ajouter_echantillon(request):
                         date_cotrimoxazole=p_date(request.POST.get('date_initiation_cotrim')),
                         present_tarv=p_bool(request.POST.get('sous_tarv')),
                         date_tarv=date_initiation_tarv,
-                        protocole_ptme_autre = request.POST.get('protocole_ptme_autre'),
+                        protocole_ptme_autre=request.POST.get('protocole_ptme_autre'),
                         
                         # PCR ET PRÉLÈVEMENT
                         raison_prelevement_id=p_int(request.POST.get('raisons_prelevement')),
@@ -1087,15 +1124,16 @@ def ajouter_echantillon(request):
                         observation=request.POST.get('observation', '').strip(),
                         date_saisie=datetime.now().date()
                     )
-                    
-                    nombre_actuel = Echantillon.objects.filter(fiche=fiche).count()
-                    if fiche.nombre_echantillon and nombre_actuel >= fiche.nombre_echantillon:
+
+                    # --- MIS À JOUR DU STATUT SI LE QUOTA EST ATTEINT APRÈS CET AJOUT ---
+                    nouveau_compte = Echantillon.objects.filter(fiche=fiche).count()
+                    if fiche.nombre_echantillon and nouveau_compte >= fiche.nombre_echantillon:
                         fiche.status = False
                         fiche.save()
-                
+
                 return JsonResponse({
                     'success': True, 
-                    'message': "Les données du patient et de la mère ont été enregistrées avec succès !"
+                    'message': "Les données du patient, de la mère et de l'échantillon ont été enregistrées avec succès !"
                 })
 
             except Exception as e:
@@ -1408,6 +1446,12 @@ def verifier_patient(request):
                 "id",  "ordre", "date_prelevement", "resultat_pcr__nom"
             )
         )
+        historique_test_serologique = list(
+            TestSerologique.objects.filter(patient=patient)
+            .order_by("-ordre")
+            .values("id", "ordre", "resultat")
+        )
+
 
         # --- DONNÉES DE LA MÈRE ---
         mere_data = None
@@ -1441,7 +1485,8 @@ def verifier_patient(request):
                     ),
                     "mere": mere_data,
                     "historique_html": historique_html,
-                    "historique_data": historique_data,  # <-- Inclus proprement ici
+                    "historique_data": historique_data,  
+                    "historique_test_serologique":historique_test_serologique,
                 },
             }
         )

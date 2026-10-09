@@ -37333,3 +37333,23 @@ Internal Server Error: /favicon.ico
 "GET /favicon.ico HTTP/1.1" 500 2701
 Internal Server Error: /favicon.ico
 "GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 501
+Internal Server Error: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 500 2701
+Internal Server Error: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 500 2701
+Internal Server Error: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 500 2701
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 98
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 98
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 98
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 98
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 98
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 87

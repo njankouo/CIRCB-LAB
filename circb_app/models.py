@@ -331,7 +331,7 @@ class Echantillon(models.Model):
     #enfant Informations
     slug = models.SlugField()
     code = models.IntegerField(null=True, blank=True)
-    fiche = models.ForeignKey(FicheEchantillon, on_delete=models.CASCADE, related_name='echantillons')
+    fiche = models.ForeignKey(FicheEchantillon, on_delete=models.CASCADE, related_name='echantillons', null=True)
     
     enfant =models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True, related_name='echantillons_enfant')
     poids = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # Poids en kg
@@ -595,7 +595,21 @@ class FosaTransferLog(models.Model):
 
 
 class TestSerologique(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=True)
-    resultat = models.CharField(null=True)
-    ordre = models.PositiveIntegerField(null=True)
-    date_resultat = models.DateField(null=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=True, related_name='tests_serologiques')
+    resultat = models.CharField(max_length=50, null=True, blank=True)
+    ordre = models.PositiveIntegerField(null=True, blank=True, editable=False)
+    date_resultat = models.DateField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Uniquement lors de la création d'un nouvel enregistrement
+            if self.patient:
+                # Compte le nombre de tests déjà enregistrés pour ce patient précis
+                dernier_ordre = TestSerologique.objects.filter(patient=self.patient).count()
+                self.ordre = dernier_ordre + 1
+            else:
+                self.ordre = 1
+                
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Test Sérologique N°{self.ordre} - Patient: {self.patient}"
