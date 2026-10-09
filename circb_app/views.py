@@ -532,8 +532,10 @@ def imprimer_fiches_echantillons(request):
     """
     Génère un PDF avec WeasyPrint contenant tous les éléments filtrés
     """
-    # Récupérer les données filtrées
-    fiches_queryset = get_fiches_filtered_queryset(request)
+    # Optimisation avec select_related pour charger les relations en 1 seule requête
+    fiches_queryset = get_fiches_filtered_queryset(request).select_related(
+        'region', 'district', 'fosa'
+    )
 
     context = {
         'fiches': fiches_queryset,
@@ -549,8 +551,6 @@ def imprimer_fiches_echantillons(request):
 
     # 3. Créer la réponse HTTP avec le PDF
     response = HttpResponse(pdf_file, content_type='application/pdf')
-    
-    # 'inline' pour l'afficher directement dans le navigateur (ou 'attachment' pour forcer le téléchargement)
     response['Content-Disposition'] = 'inline; filename="fiches_echantillons.pdf"'
     
     return response
@@ -4465,3 +4465,30 @@ def importer_rang_naissance_patient(request):
         return redirect(request.META.get("HTTP_REFERER", "/"))
 
     return render(request, "webpages/grossese.html")
+
+def DetailsEchantillon(request, id):
+    # Charge la fiche avec ses relations d'en-tête en 1 seule requête
+    fiche = get_object_or_404(
+        FicheEchantillon.objects.select_related('fosa', 'region', 'district'),
+        id=id
+    )
+    
+    # Récupération directe des échantillons rattachés à cette fiche FOSA
+    echantillons = (
+        Echantillon.objects
+        .filter(fiche=fiche)
+        .select_related(
+            'enfant', 
+            'mere', 
+            'porte_entree', 
+            'raison_prelevement', 
+            'resultat_pcr'
+        )
+    )
+
+    context = {
+        'fiche': fiche,
+        'echantillons': echantillons,
+        'total_echantillons': echantillons.count(),
+    }
+    return render(request, 'webpages/echantillonages/detail-echantillon.html', context)

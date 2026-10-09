@@ -2,6 +2,8 @@
 {% block title %}Fiche d'échantillons{% endblock %}
 
 {% block main %}
+{%load static%}
+<script src="{%static 'js/apexcharts.js'%}"></script>
 <style>
     /* Pour les navigateurs Webkit (Chrome, Edge, Safari) */
 .custom-scrollbar::-webkit-scrollbar {
@@ -55,41 +57,51 @@
         <!-- ================================================================= -->
         <!-- 1. EN-TÊTE INSTITUTIONNEL - CADRE MÉDICAL HAUTE VISIBILITÉ        -->
         <!-- ================================================================= -->
-        <div class="bg-white border-2 border-sky-400/80 rounded-xl shadow-[0_10px_25px_-5px_rgba(14,165,233,0.3)] overflow-hidden">
-            <!-- Liseré de brillance supérieure -->
-            <div class="h-1 bg-gradient-to-r from-sky-400 via-cyan-300 to-sky-500"></div>
+        <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden mb-5">
+    <!-- Barre de statut / Accentuations type Odoo Primary -->
+    <div class="h-1.5 bg-[#714B67]"></div>
 
-            <!-- Barre de titre DHIS2 -->
-           
+    <!-- Corps de l'en-tête (Odoo Header Control Panel style) -->
+    <div class="p-4 sm:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
+        <div class="flex items-start sm:items-center gap-3.5">
+            <!-- Icône Module Odoo -->
+            <div class="p-3 bg-[#714B67]/10 border border-[#714B67]/20 rounded-md text-[#714B67] shrink-0">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                </svg>
+            </div>
 
-            <!-- Corps de l'en-tête -->
-            <div class="p-4 sm:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-b from-sky-50/50 to-white">
-                <div class="flex items-center gap-3">
-                    <!-- Cadre d'icône Médicale -->
-                    <div class="p-2.5 bg-sky-100 border border-sky-300 rounded-lg text-[#1478c1] shrink-0">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2.5">
-                            Fiches de Suivi d'Échantillons
-                            <span class="text-xs font-mono font-bold bg-sky-100 text-[#1478c1] px-2.5 py-0.5 rounded-full border border-sky-300">
-                                {{ fiches|length }} fiches enregistrées
-                            </span>
-                        </h1>
-                        <p class="text-xs text-slate-500 mt-0.5">Gestion centralisée des expéditions, de la réception et de la validation sanitaire.</p>
-                    </div>
+            <div>
+                <!-- Titre avec typographie Ubuntu/Odoo -->
+                <div class="flex items-center gap-3 flex-wrap">
+                    <h1 class="text-xl font-bold text-slate-800 tracking-tight font-['Ubuntu',sans-serif]">
+                        Fiches de Suivi d'Échantillons
+                    </h1>
+                    
+                    <!-- Badge de compteur d'enregistrements Odoo Style -->
+                    <span class="inline-flex items-center gap-1.5 text-xs font-semibold bg-[#e6f4ea] text-[#137333] px-2.5 py-0.5 rounded-full border border-emerald-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        {{ fiches|length }} fiches enregistrées
+                    </span>
                 </div>
-
-                <a href="/fiches/" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#1478c1] hover:bg-[#1164a2] text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-all shadow-md hover:shadow-sky-500/20 cursor-pointer tracking-wide border border-sky-400">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    Créer une fiche d'expédition
-                </a>
+                
+                <p class="text-xs text-slate-500 mt-1 font-normal">
+                    Gestion centralisée des expéditions, de la réception et de la validation sanitaire.
+                </p>
             </div>
         </div>
+
+        <!-- Boutons d'Action Principale Odoo (btn-primary purple) -->
+        <div class="w-full sm:w-auto flex items-center gap-2">
+            <a href="/fiches/" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#714B67] hover:bg-[#5a3a52] text-white text-xs font-semibold px-4 py-2 rounded-md transition-colors shadow-sm cursor-pointer tracking-wide border border-[#5a3a52]">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Nouvelle fiche d'exp&eacute;dition
+            </a>
+        </div>
+    </div>
+</div>
 
         <!-- ================================================================= -->
         <!-- 2. BARRE DE FILTRES - CADRE DE RECHERCHE MÉDICAL                   -->
@@ -235,14 +247,15 @@
             
             <div class="flex items-center gap-2 ml-auto">
                 <!-- Bouton Imprimer (Action Secondaire) -->
-               <a href="{% url 'imprimer_fiches_echantillons' %}?code={{ search_code }}&date={{ search_date }}&mois={{ search_mois }}&annee={{ search_annee }}&fosa={{ search_fosa }}&receptionniste={{ search_receptionniste }}"
-   target="_blank"
-   class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-2xs hover:shadow-xs transition-all active:scale-[0.98] cursor-pointer">
-    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231a1.125 1.125 0 01-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.085 48.085 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.656"/>
-    </svg>
-    <span>Imprimer</span>
-</a>
+                <a href="{% url 'imprimer_fiches_echantillons' %}?code={{ search_code }}&date={{ search_date }}&mois={{ search_mois }}&annee={{ search_annee }}&fosa={{ search_fosa }}&receptionniste={{ search_receptionniste }}"
+               
+               onclick="demarrerChargementPagePrint(event, this.href)"
+               class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-2xs hover:shadow-xs transition-all active:scale-[0.98] cursor-pointer">
+                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231a1.125 1.125 0 01-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.085 48.085 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.656"/>
+                </svg>
+                <span>Imprimer</span>
+            </a>
 
                 <!-- Bouton Appliquer (Action Principale) -->
                 <button type="submit" 
@@ -303,147 +316,231 @@
         <!-- 3. TABLEAU DES ÉCHANTILLONS - CADRE PRINCIPAL HAUTE VISIBILITÉ    -->
         <!-- ================================================================= -->
         <div>
-            <!-- VUE MOBILE -->
-         
-            <!-- TABLEAU DESKTOP -->
+   <!-- OVERLAY DE CHARGEMENT PLEINE PAGE LIMS / ODOO -->
+<div id="print-loading-overlay" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center hidden transition-all duration-300">
+    <div class="bg-white p-6 rounded-2xl shadow-2xl border border-slate-200 max-w-sm w-full text-center space-y-4 animate-in fade-in zoom-in duration-200">
+        
+        <!-- Icone Imprimante Animée avec Halo Violet Odoo -->
+        <div class="relative w-16 h-16 mx-auto flex items-center justify-center bg-[#714B67]/10 rounded-2xl text-[#714B67]">
+            <svg class="w-8 h-8 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231a1.125 1.125 0 01-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.085 48.085 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.656"/>
+            </svg>
+            <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#00A09D] rounded-full border-2 border-white animate-ping"></span>
+        </div>
+
+        <!-- Titre & Message -->
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-slate-900 font-['Ubuntu',sans-serif]">Génération des fiches d'expeditions</h3>
+            <p class="text-xs text-slate-500">Veuillez patienter pendant la préparation du document PDF...</p>
+        </div>
+
+        <!-- Barre de Progression & Pourcentage -->
+        <div class="space-y-1.5">
+            <div class="flex justify-between text-[11px] font-mono font-bold">
+                <span class="text-slate-500">Traitement en cours</span>
+                <span id="print-progress-percent" class="text-[#714B67]">0%</span>
+            </div>
+            
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden border border-slate-200">
+                <div id="print-progress-bar-full" class="bg-gradient-to-r from-[#714B67] to-[#00A09D] h-full w-0 transition-all duration-200 ease-out rounded-full"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
      <div class="overflow-hidden bg-white rounded-lg border border-slate-200 shadow-xs">
-    <table class="w-full text-left border-collapse text-xs">
-        <!-- HEADER STYLE ODOO LIST VIEW -->
-        <thead>
-            <tr class="bg-slate-100/80 text-slate-700 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200 font-mono">
-                <th class="py-3 px-4">Code Fiche</th>
-                <th class="py-3 px-3 text-center">Échantillons</th>
-                <th class="py-3 px-3">Expédié / Reçu</th>
-                <th class="py-3 px-3">Localisation (Région / District)</th>
-                <th class="py-3 px-3">FOSA</th>
-                <th class="py-3 px-3">Enregistr&eacute; Le</th>
-                <th class="py-3 px-3">Réceptionniste</th> 
-                <th class="py-3 px-4 text-right">Actions</th>
-            </tr>
-        </thead>
-        
-        <tbody class="divide-y divide-slate-100 bg-white">
-            {% for fiche in fiches %}
-            <tr class="hover:bg-slate-50/80 transition-colors group">
-                
-                <!-- Code Fiche -->
-                <td class="py-3 px-4 whitespace-nowrap">
-    <span onclick="let codeSpan = this.querySelector('.code-val'); codeSpan.style.filter = codeSpan.style.filter ? '' : 'blur(5px)'; this.querySelector('.o-eye-icon').classList.toggle('fa-eye'); this.querySelector('.o-eye-icon').classList.toggle('fa-eye-slash');" 
-          class="inline-flex items-center gap-1.5 font-mono font-bold text-[#714B67] bg-[#714B67]/5 border border-[#714B67]/20 px-2.5 py-1 rounded text-xs shadow-2xs select-none" 
-          style="cursor: pointer;" title="Cliquer pour masquer/afficher">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#714B67]"></span>
-        
-        <!-- Le code est flouté par défaut -->
-        <span class="code-val" style="filter: blur(5px); transition: filter 0.2s ease;">{{ fiche.code|default:fiche.id }}</span>
-        
-        <i class="fa fa-eye ml-1 opacity-70 o-eye-icon" style="font-size: 10px;"></i>
-    </span>
-</td>
-                <!-- Échantillons -->
-                <td class="py-3 px-3 text-center whitespace-nowrap">
-                    <span class="inline-flex items-center gap-1 font-mono text-[11px] bg-slate-50 text-slate-700 px-2 py-0.5 rounded font-bold border border-slate-200">
-                        <svg class="w-3.5 h-3.5 text-[#714B67]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
-                        </svg>
-                        <span class="text-[#714B67]">{{ fiche.echantillons.count|default:"0" }}</span>
-                        <span class="text-slate-300">/</span>
-                        <span>{{ fiche.nombre_echantillon|default:"0" }}</span>
+   <table class="w-full text-left border-collapse text-xs">
+    <!-- HEADER STYLE ODOO LIST VIEW -->
+    <thead>
+        <tr class="bg-slate-100/80 text-slate-700 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200 font-mono">
+            <th class="py-3 px-4">Code Fiche</th>
+            <th class="py-3 px-3 text-center">Progression Échantillons</th>
+            <th class="py-3 px-3">Expédié / Reçu</th>
+            <th class="py-3 px-3">Localisation (Région / District)</th>
+            <th class="py-3 px-3">FOSA</th>
+            <th class="py-3 px-3">Enregistré Le</th>
+            <th class="py-3 px-3">Réceptionniste</th> 
+            <th class="py-3 px-4 text-right">Actions</th>
+        </tr>
+    </thead>
+    
+    <tbody class="divide-y divide-slate-100 bg-white">
+        {% for fiche in fiches %}
+        <tr class="hover:bg-slate-50/80 transition-colors group">
+            
+            <!-- Code Fiche -->
+            <td class="py-3 px-4 whitespace-nowrap">
+                <span onclick="let codeSpan = this.querySelector('.code-val'); codeSpan.style.filter = codeSpan.style.filter ? '' : 'blur(5px)'; this.querySelector('.o-eye-icon').classList.toggle('fa-eye'); this.querySelector('.o-eye-icon').classList.toggle('fa-eye-slash');" 
+                      class="inline-flex items-center gap-1.5 font-mono font-bold text-[#714B67] bg-[#714B67]/5 border border-[#714B67]/20 px-2.5 py-1 rounded text-xs shadow-2xs select-none" 
+                      style="cursor: pointer;" title="Cliquer pour masquer/afficher">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#714B67]"></span>
+                    <span class="code-val" style="filter: blur(5px); transition: filter 0.2s ease;">{{ fiche.code|default:fiche.id }}</span>
+                    <i class="fa fa-eye ml-1 opacity-70 o-eye-icon" style="font-size: 10px;"></i>
+                </span>
+            </td>
+
+            <!-- Échantillons avec Mini Jauge ApexCharts -->
+            <td class="py-2 px-3 text-center whitespace-nowrap">
+                <div class="inline-flex items-center gap-2 bg-slate-50/80 border border-slate-200/80 px-2.5 py-1 rounded-md">
+                    <!-- Conteneur de la Jauge ApexCharts -->
+                    <div id="gauge-{{ fiche.id }}" 
+                         class="apex-gauge-container w-11 h-11"
+                         data-realises="{{ fiche.echantillons.count|default:'0' }}"
+                         data-declares="{{ fiche.nombre_echantillon|default:'0' }}">
+                    </div>
+
+                    <!-- Ratio textuel à côté de la jauge -->
+                    <div class="flex flex-col text-left font-mono">
+                        <span class="text-[11px] font-bold text-slate-800">
+                            {{ fiche.echantillons.count|default:"0" }} <span class="text-slate-400 font-normal">/ {{ fiche.nombre_echantillon|default:"0" }}</span>
+                        </span>
+                        <span class="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">Réalisés</span>
+                    </div>
+                </div>
+            </td>
+
+            <!-- Dates Expédié / Reçu -->
+            <td class="py-3 px-3 whitespace-nowrap font-mono text-[11px]">
+                <div class="flex flex-col">
+                    <span class="text-slate-700 font-semibold flex items-center gap-1">
+                        <span class="text-[9px] text-slate-400 uppercase">Exp:</span> {{ fiche.date_expedition|date:"d/m/Y"|default:"--" }}
                     </span>
-                </td>
-
-                <!-- Dates (Expédition & Réception combinées proprement) -->
-                <td class="py-3 px-3 whitespace-nowrap font-mono text-[11px]">
-                    <div class="flex flex-col">
-                        <span class="text-slate-700 font-semibold flex items-center gap-1">
-                            <span class="text-[9px] text-slate-400 uppercase">Exp:</span> {{ fiche.date_expedition|date:"d/m/Y"|default:"--" }}
-                        </span>
-                        <span class="text-slate-900 font-bold flex items-center gap-1">
-                            <span class="text-[9px] text-[#714B67] uppercase">Réc:</span> {{ fiche.date_reception|date:"d/m/Y"|default:"En attente" }}
-                        </span>
-                    </div>
-                </td>
-
-                <!-- Région & District -->
-                <td class="py-3 px-3 whitespace-nowrap">
-                    <div class="flex flex-col">
-                        <span class="text-slate-800 font-bold max-w-[140px] truncate" title="{{ fiche.region.nom|default:'N/A' }}">
-                            {{ fiche.region.nom|default:"N/A" }}
-                        </span>
-                        <span class="text-[10px] text-slate-500 font-medium max-w-[140px] truncate" title="{{ fiche.district.nom|default:'N/A' }}">
-                            {{ fiche.district.nom|default:"N/A" }}
-                        </span>
-                    </div>
-                </td>
-
-                <!-- FOSA -->
-                <td class="py-3 px-3 whitespace-nowrap text-slate-700 font-medium max-w-[150px] truncate" title="{{ fiche.fosa.nom|default:'N/A' }}">
-                    {{ fiche.fosa.nom|default:"N/A" }}
-                </td>
-
-                <!-- Transporteur -->
-                <td class="py-3 px-3 whitespace-nowrap">
-                    <span class="inline-flex items-center gap-1 text-slate-600 bg-slate-100 px-2 py-0.5 rounded text-[11px] font-medium max-w-[130px] truncate" title="{{ fiche.transporteur|default:'N/A' }}">
-                        <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.243c0-.621-.504-1.125-1.125-1.125H6.75A1.125 1.125 0 005.625 7.5v6.75m10.875-6.75l2.619 4.19"/>
-                        </svg>
-                        <span class="truncate">{{ fiche.date_enregistrement|date:"d/m/Y"}}</span>
+                    <span class="text-slate-900 font-bold flex items-center gap-1">
+                        <span class="text-[9px] text-[#714B67] uppercase">Réc:</span> {{ fiche.date_reception|date:"d/m/Y"|default:"En attente" }}
                     </span>
-                </td>
+                </div>
+            </td>
 
-                <!-- Réceptionniste -->
-                <td class="py-3 px-3 whitespace-nowrap">
-                    <div class="inline-flex items-center gap-1.5 text-slate-700 text-[11px] font-medium max-w-[130px] truncate" title="{{ fiche.receptioniste|default:'N/A' }}">
-                        <span class="w-5 h-5 rounded-full bg-[#714B67]/10 text-[#714B67] font-bold text-[9px] flex items-center justify-center shrink-0">
-                            {{ fiche.receptioniste|default:"N"|slice:":1"|upper }}
-                        </span>
-                        <span class="truncate">{{ fiche.receptioniste|default:"-" }}</span>
-                    </div>
-                </td>
+            <!-- Région & District -->
+            <td class="py-3 px-3 whitespace-nowrap">
+                <div class="flex flex-col">
+                    <span class="text-slate-800 font-bold max-w-[140px] truncate" title="{{ fiche.region.nom|default:'N/A' }}">
+                        {{ fiche.region.nom|default:"N/A" }}
+                    </span>
+                    <span class="text-[10px] text-slate-500 font-medium max-w-[140px] truncate" title="{{ fiche.district.nom|default:'N/A' }}">
+                        {{ fiche.district.nom|default:"N/A" }}
+                    </span>
+                </div>
+            </td>
 
-                <!-- Actions (Style Odoo Buttons Toolbar) -->
-                <td class="py-3 px-4 text-right whitespace-nowrap">
-                    <div class="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 p-1 rounded shadow-2xs group-hover:bg-white transition-colors">
-                        
-                        <!-- Bouton Vérifier -->
-                        <a href="/check-code/{{ fiche.id }}/" 
-                           class="inline-flex items-center gap-1 bg-[#714B67] hover:bg-[#5f3f56] text-white text-[10px] font-bold py-1 px-2.5 rounded transition-all shadow-xs">
-                            <svg class="w-3 h-3 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Vérifier
-                        </a>
+            <!-- FOSA -->
+            <td class="py-3 px-3 whitespace-nowrap text-slate-700 font-medium max-w-[150px] truncate" title="{{ fiche.fosa.nom|default:'N/A' }}">
+                {{ fiche.fosa.nom|default:"N/A" }}
+            </td>
 
-                        <!-- Bouton Modifier -->
-                        <a href="/modifier-fiche/{{ fiche.id }}/" 
-                           class="p-1 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded transition-colors" 
-                           title="Modifier la fiche">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/>
-                            </svg>
-                        </a>
+            <!-- Enregistré le -->
+            <td class="py-3 px-3 whitespace-nowrap">
+                <span class="inline-flex items-center gap-1 text-slate-600 bg-slate-100 px-2 py-0.5 rounded text-[11px] font-medium max-w-[130px] truncate">
+                    <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+                    </svg>
+                    <span class="truncate">{{ fiche.date_enregistrement|date:"d/m/Y"|default:"-" }}</span>
+                </span>
+            </td>
 
-                        <!-- Bouton Supprimer -->
-                        <button type="button"
-                                onclick="openDeleteModal('{{ fiche.id }}', '{{ fiche.code|default:fiche.id }}')"
-                                class="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors cursor-pointer" 
-                                title="Supprimer la fiche">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
-                            </svg>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="8" class="py-12 text-center bg-slate-50/50">
-                    <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Aucune fiche d'échantillons répertoriée</p>
-                    <p class="text-slate-400 text-[11px] mt-1">Aucune donnée ne correspond aux critères actuels.</p>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            <!-- Réceptionniste -->
+            <td class="py-3 px-3 whitespace-nowrap">
+                <div class="inline-flex items-center gap-1.5 text-slate-700 text-[11px] font-medium max-w-[130px] truncate" title="{{ fiche.receptioniste|default:'N/A' }}">
+                    <span class="w-5 h-5 rounded-full bg-[#714B67]/10 text-[#714B67] font-bold text-[9px] flex items-center justify-center shrink-0">
+                        {{ fiche.receptioniste|default:"N"|slice:":1"|upper }}
+                    </span>
+                    <span class="truncate">{{ fiche.receptioniste|default:"-" }}</span>
+                </div>
+            </td>
+
+            <!-- Actions -->
+            <td class="py-3 px-4 text-right whitespace-nowrap">
+                <div class="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 p-1 rounded shadow-2xs group-hover:bg-white transition-colors">
+                    <a href="/check-code/{{ fiche.id }}/" class="inline-flex items-center gap-1 bg-[#714B67] hover:bg-[#5f3f56] text-white text-[10px] font-bold py-1 px-2.5 rounded transition-all shadow-xs">
+                        <svg class="w-3 h-3 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Vérifier
+                    </a>
+
+                    <a href="/modifier-fiche/{{ fiche.id }}/" class="p-1 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded transition-colors" title="Modifier la fiche">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/>
+                        </svg>
+                    </a>
+
+                    <button type="button" onclick="openDeleteModal('{{ fiche.id }}', '{{ fiche.code|default:fiche.id }}')" class="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors cursor-pointer" title="Supprimer la fiche">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
+                        </svg>
+                    </button>
+                </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" class="py-12 text-center bg-slate-50/50">
+                <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Aucune fiche d'échantillons répertoriée</p>
+                <p class="text-slate-400 text-[11px] mt-1">Aucune donnée ne correspond aux critères actuels.</p>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- 3. SCRIPT JAVASCRIPT POUR INITIALISER LES JAUGES APEXCHARTS -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".apex-gauge-container").forEach(function(el) {
+        let realises = parseInt(el.getAttribute("data-realises")) || 0;
+        let declares = parseInt(el.getAttribute("data-declares")) || 0;
+        
+        // Calcul du pourcentage (plafonné à 100%)
+        let percentage = declares > 0 ? Math.round((realises / declares) * 100) : 0;
+        if (percentage > 100) percentage = 100;
+
+        // Couleur dynamique selon le taux de complétion
+        let color = '#714B67'; // Aubergine Odoo (en cours)
+        if (percentage >= 100) {
+            color = '#10B981'; // Vert Émeraude (complet)
+        } else if (percentage < 40) {
+            color = '#F59E0B'; // Orange / Ambre (retard/faible)
+        }
+
+        let options = {
+            series: [percentage],
+            chart: {
+                type: 'radialBar',
+                width: 44,
+                height: 44,
+                sparkline: { enabled: true }
+            },
+            plotOptions: {
+                radialBar: {
+                    hollow: { size: '55%' },
+                    track: {
+                        background: '#E2E8F0',
+                        strokeWidth: '100%',
+                    },
+                    dataLabels: {
+                        name: { show: false },
+                        value: {
+                            offsetY: 3,
+                            color: color,
+                            fontSize: '9px',
+                            fontWeight: 'bold',
+                            fontFamily: 'monospace',
+                            formatter: function (val) {
+                                return val + "%";
+                            }
+                        }
+                    }
+                }
+            },
+            fill: { colors: [color] },
+            stroke: { lineCap: 'round' }
+        };
+
+        let chart = new ApexCharts(el, options);
+        chart.render();
+    });
+});
+</script>
 
     <!-- BARRE DE PAGINATION STYLE ODOO -->
     <!-- BARRE DE PAGINATION STYLE ODOO (Corrigée pour garder tous les filtres) -->
@@ -591,7 +688,7 @@
             </div>
             <div>
                 <h3 class="text-sm font-bold text-slate-900">Confirmer la suppression</h3>
-                <p class="text-[11px] font-medium text-slate-500">Alerte Registre DHIS2</p>
+                <p class="text-[11px] font-medium text-slate-500">Alerte suppression</p>
             </div>
         </div>
 
@@ -668,5 +765,78 @@ function toggleRegistryRow(id, element) {
     }
 }
 </script>
+<script>
+async function demarrerChargementPagePrint(event, targetUrl) {
+    event.preventDefault(); // Empêche l'ouverture immédiate par défaut
 
+    const overlay = document.getElementById('print-loading-overlay');
+    const progressBar = document.getElementById('print-progress-bar-full');
+    const progressPercent = document.getElementById('print-progress-percent');
+
+    // 1. Afficher l'overlay pleine page
+    overlay.classList.remove('hidden');
+
+    let progression = 5;
+    progressBar.style.width = '5%';
+    progressPercent.innerText = '5%';
+
+    // 2. Animation fluide de progression pendant le chargement serveur (jusqu'à 90%)
+    const timer = setInterval(() => {
+        if (progression < 90) {
+            progression += Math.floor(Math.random() * 4) + 2;
+            if (progression > 90) progression = 90;
+            
+            progressBar.style.width = progression + '%';
+            progressPercent.innerText = progression + '%';
+        }
+    }, 200);
+
+    try {
+        // 3. Attente RÉELLE de la réponse du serveur Django
+        const response = await fetch(targetUrl, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Erreur lors de la génération du document PDF');
+        }
+
+        // Convertir la réponse en Blob (Fichier PDF brut en mémoire)
+        const pdfBlob = await response.blob();
+
+        // 4. Le serveur a fini : Finalisation à 100%
+        clearInterval(timer);
+        progressBar.style.width = '100%';
+        progressPercent.innerText = '100%';
+
+        // Créer une URL temporaire locale pour le PDF téléchargé
+        const fileURL = URL.createObjectURL(pdfBlob);
+
+        setTimeout(() => {
+            // 5. Ouvrir le PDF généré dans un nouvel onglet
+            window.open(fileURL, '_blank');
+
+            // 6. Masquer l'overlay et nettoyer la mémoire
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                // Réinitialisation de la barre
+                progressBar.style.width = '0%';
+                progressPercent.innerText = '0%';
+            }, 500);
+        }, 300);
+
+    } catch (error) {
+        clearInterval(timer);
+        console.error("Erreur Impression:", error);
+        alert("Une erreur est survenue lors de la préparation du fichier PDF.");
+        
+        // Cacher l'overlay en cas d'erreur
+        overlay.classList.add('hidden');
+        progressBar.style.width = '0%';
+        progressPercent.innerText = '0%';
+    }
+}</script>
 {% endblock %}

@@ -1118,13 +1118,73 @@ document.getElementById('btn-rechercher-code').addEventListener('click', functio
                             });
                         } else {
                             if (countBadge) countBadge.textContent = '0';
-                            tbodyHist.innerHTML = `
-                                <tr>
-                                    <td colspan="3" class="py-6 text-center text-slate-400 text-xs italic">
-                                        Aucun échantillon enregistré pour ce patient.
-                                    </td>
-                                </tr>
-                            `;
+                          tbodyHist.innerHTML = `
+                            <!-- PCR I -->
+                            <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                                <td class="p-3 text-center">
+                                    <select name="pcr_type_1" class="w-full bg-white border border-slate-300 rounded-md px-2 py-1.5 text-xs text-slate-700 font-medium focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none" disabled>
+                                        <option value="1" selected>PCR I</option>
+                                        <option value="2">PCR II</option>
+                                        <option value="3">PCR III</option>
+                                    </select>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <input type="text" name="pcr_date_1" placeholder="JJ-MM-AAAA" pattern="\\d{2}-\\d{2}-\\d{4}" maxlength="10" class="w-full bg-white border border-slate-300 rounded-md px-2 py-1.5 text-xs text-slate-700 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none text-center">
+                                </td>
+                                <td class="p-3 text-center">
+                                    <select name="pcr_result_1" class="w-full bg-white border border-slate-300 rounded-md px-2 py-1.5 text-xs text-slate-700 font-medium focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none">
+                                        <option value="">-- Sélectionner --</option>
+                                        {%for resultats_pcrs in resultats_pcr%}
+                                        <option value="{{resultats_pcrs.id}}" class="text-emerald-600 font-semibold">{{resultats_pcrs.nom}}</option>
+                                        {%endfor%}
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <!-- PCR II -->
+                            <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                                <td class="p-3 text-center">
+                                    <select name="pcr_type_2" class="w-full bg-white border border-slate-300 rounded-md px-2 py-1.5 text-xs text-slate-700 font-medium focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none" disabled>
+                                        <option value="1">PCR I</option>
+                                        <option value="2" selected>PCR II</option>
+                                        <option value="3">PCR III</option>
+                                    </select>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <input type="text" name="pcr_date_2" placeholder="JJ-MM-AAAA" pattern="\\d{2}-\\d{2}-\\d{4}" maxlength="10" class="w-full bg-white border border-slate-300 rounded-md px-2 py-1.5 text-xs text-slate-700 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none text-center">
+                                </td>
+                                <td class="p-3 text-center">
+                                    <select name="pcr_result_2" class="w-full bg-white border border-slate-300 rounded-md px-2 py-1.5 text-xs text-slate-700 font-medium focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none">
+                                        <option value="">-- Sélectionner --</option>
+                                        {%for resultats_pcrs in resultats_pcr%}
+                                        <option value="{{resultats_pcrs.id}}" class="text-emerald-600 font-semibold">{{resultats_pcrs.nom}}</option>
+                                        {%endfor%}
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <!-- PCR III -->
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="p-3 text-center">
+                                    <select name="pcr_type_3" class="w-full bg-white border border-slate-300 rounded-md px-2 py-1.5 text-xs text-slate-700 font-medium focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none" disabled>
+                                        <option value="1">PCR I</option>
+                                        <option value="2">PCR II</option>
+                                        <option value="3" selected>PCR III</option>
+                                    </select>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <input type="text" name="pcr_date_3" placeholder="JJ-MM-AAAA" pattern="\\d{2}-\\d{2}-\\d{4}" maxlength="10" class="w-full bg-white border border-slate-300 rounded-md px-2 py-1.5 text-xs text-slate-700 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none text-center">
+                                </td>
+                                <td class="p-3 text-center">
+                                    <select name="pcr_result_3" class="w-full bg-white border border-slate-300 rounded-md px-2 py-1.5 text-xs text-slate-700 font-medium focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none">
+                                        <option value="">-- Sélectionner --</option>
+                                        {%for resultats_pcrs in resultats_pcr%}
+                                        <option value="{{resultats_pcrs.id}}" class="text-emerald-600 font-semibold">{{resultats_pcrs.nom}}</option>
+                                        {%endfor%}
+                                    </select>
+                                </td>
+                            </tr>
+                        `;
                         }
 
                         if (sectionHist) sectionHist.classList.remove('hidden');

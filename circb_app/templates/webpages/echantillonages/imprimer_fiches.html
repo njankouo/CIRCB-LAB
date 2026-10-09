@@ -2,105 +2,260 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Fiches d'Échantillons</title>
+    <title>Fiches d'Échantillons - CIRCB</title>
+    {% load static %}
     <style>
+        /* Importation typographique Odoo Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Ubuntu:wght@400;500;700&display=swap');
+
+        /* Configuration de la page imprimée WeasyPrint */
         @page {
-            size: A4 portrait;
-            margin: 15mm;
+            size: A4 landscape;
+            margin: 12mm 15mm 18mm 15mm;
+
+            @bottom-left {
+                content: "CIRCB • Centre de Recherche Chantal Biya";
+                font-family: 'Roboto', sans-serif;
+                font-size: 7.5pt;
+                color: #8f8f8f;
+                border-top: 1px solid #e0e0e0;
+                padding-top: 5px;
+            }
             @bottom-right {
-                content: "Page " counter(page) " / " counter(pages);
-                font-size: 9pt;
-                color: #666;
+                content: "Page " counter(page) " sur " counter(pages);
+                font-family: 'Roboto', sans-serif;
+                font-size: 7.5pt;
+                font-weight: 500;
+                color: #8f8f8f;
+                border-top: 1px solid #e0e0e0;
+                padding-top: 5px;
             }
         }
-        
+
         body {
-            font-family: Helvetica, Arial, sans-serif;
-            font-size: 10pt;
-            color: #333;
+            font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 8.5pt;
+            color: #2b2b2b;
             margin: 0;
             padding: 0;
+            line-height: 1.4;
+            background-color: #ffffff;
         }
 
-        .header {
-            border-bottom: 2px solid #2b374e;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+        /* En-tête de document type Odoo ERP */
+        .odoo-header {
+            display: table;
+            width: 100%;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #714B67; /* Magenta/Purple Odoo Primary */
+            padding-bottom: 12px;
         }
 
-        .header h2 {
-            margin: 0 0 5px 0;
-            text-transform: uppercase;
-            font-size: 14pt;
-            color: #1e293b;
+        .header-logo {
+            display: table-cell;
+            vertical-align: top;
+            width: 130px;
         }
 
-        .header p {
+        .header-logo img {
+            max-width: 120px;
+            max-height: 65px;
+            object-fit: contain;
+        }
+
+        .header-titles {
+            display: table-cell;
+            vertical-align: top;
+            padding-left: 15px;
+        }
+
+        .header-titles h1 {
             margin: 0;
-            font-size: 9pt;
-            color: #64748b;
+            font-family: 'Ubuntu', sans-serif;
+            font-size: 16pt;
+            font-weight: 700;
+            color: #714B67;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
+        .header-titles p {
+            margin: 4px 0 0 0;
+            font-size: 8pt;
+            color: #666666;
+            font-weight: 400;
+        }
+
+        .header-meta {
+            display: table-cell;
+            vertical-align: top;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        /* Stat Card KPI Odoo */
+        .meta-card {
+            display: inline-block;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-left: 3px solid #00A09D; /* Teal Odoo Secondary */
+            border-radius: 3px;
+            padding: 6px 10px;
+            text-align: right;
+        }
+
+        .meta-card .label {
+            font-size: 7pt;
+            text-transform: uppercase;
+            color: #6c757d;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            display: block;
+        }
+
+        .meta-card .value {
+            font-size: 11pt;
+            font-weight: 700;
+            color: #212529;
+            margin-top: 1px;
+        }
+
+        .meta-date {
+            margin-top: 6px;
+            font-size: 7.5pt;
+            color: #6c757d;
+        }
+
+        /* Tableau de données */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
 
-        th, td {
-            border: 1px solid #cbd5e1;
-            padding: 7px 10px;
-            text-align: left;
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
         }
 
         th {
-            background-color: #f1f5f9;
-            color: #334155;
-            font-weight: bold;
-            font-size: 9pt;
+            background-color: #f1f3f5;
+            color: #495057;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: 700;
+            font-size: 7.5pt;
             text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 8px 10px;
+            border-top: 1px solid #dee2e6;
+            border-bottom: 2px solid #dee2e6;
+            text-align: left;
         }
 
-        tr:nth-child(even) {
-            background-color: #f8fafc;
+        td {
+            padding: 7px 10px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 8.5pt;
+            color: #212529;
+            vertical-align: middle;
         }
+
+        tbody tr:nth-child(even) {
+            background-color: #fafbfc;
+        }
+
+        /* Badges et composants UI Odoo */
+        .code-badge {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 8pt;
+            font-weight: 700;
+            color: #714B67;
+            background-color: #f3edf2;
+            padding: 2px 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .badge-qty {
+            background-color: #e6f4ea;
+            color: #137333;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 8pt;
+            display: inline-block;
+        }
+
+        .text-center { text-align: center; }
+        .text-muted { color: #6c757d; }
 
         .empty-row {
             text-align: center;
-            color: #94a3b8;
-            padding: 15px;
+            color: #6c757d;
+            padding: 30px !important;
+            font-style: italic;
+            background-color: #ffffff !important;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h2>Liste des Fiches d'Échantillons</h2>
-        <p>Généré le : {{ date_impression|date:"d/m/Y H:i" }} | Total : <strong>{{ total_count }}</strong> fiche(s)</p>
+    <!-- EN-TÊTE ODOO -->
+    <div class="odoo-header">
+        <div class="header-logo">
+            <img src="{% static 'images/Logo-CIRCB.png' %}" alt="Logo CIRCB">
+        </div>
+        <div class="header-titles">
+            <h1>Fiches d'Exp&eacute;ditions</h1>
+            <p>Centre de Recherche Chantal Biya pour la Prévention et la Prise en Charge du VIH/SIDA</p>
+        </div>
+        <div class="header-meta">
+            <div class="meta-card">
+                <span class="label">Total Fiches</span>
+                <div class="value">{{ total_count }}</div>
+            </div>
+            <div class="meta-date">
+                Imprimé le <strong>{{ date_impression|date:"d/m/Y" }}</strong> à <strong>{{ date_impression|date:"H:i" }}</strong>
+            </div>
+        </div>
     </div>
 
+    <!-- TABLEAU DE DONNÉES -->
     <table>
         <thead>
             <tr>
-                <th>Code / ID</th>
-                <th>Région</th>
-                <th>District</th>
-                <th>FOSA</th>
-                <th>Date d'Enregistrement</th>
+                <th style="width: 14%;">Code / ID</th>
+                <th style="width: 13%;">Région</th>
+                <th style="width: 15%;">District</th>
+                <th style="width: 26%;">Formation Sanitaire</th>
+                <th class="text-center" style="width: 8%;">Échant.</th>
+                <th class="text-center" style="width: 12%;">Expédition</th>
+                <th class="text-center" style="width: 12%;">Réception</th>
             </tr>
         </thead>
         <tbody>
             {% for fiche in fiches %}
                 <tr>
-                    <td><strong>{{ fiche.code|default:fiche.id }}</strong></td>
+                    <td>
+                        <span class="code-badge">{{ fiche.code|default:fiche.id }}</span>
+                    </td>
                     <td>{{ fiche.region.nom|default:"-" }}</td>
                     <td>{{ fiche.district.nom|default:"-" }}</td>
-                    <td>{{ fiche.fosa.nom|default:"-" }}</td>
-                    <td>{{ fiche.date_enregistrement|date:"d/m/Y" }}</td>
+                    <td><strong>{{ fiche.fosa.nom|default:"-" }}</strong></td>
+                    <td class="text-center">
+                        <span class="badge-qty">{{ fiche.nombre_echantillon|default:"0" }}</span>
+                    </td>
+                    <td class="text-center text-muted">{{ fiche.date_expedition|date:"d/m/Y"|default:"-" }}</td>
+                    <td class="text-center text-muted">{{ fiche.date_reception|date:"d/m/Y"|default:"-" }}</td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="5" class="empty-row">Aucun élément trouvé pour ces filtres.</td>
+                    <td colspan="7" class="empty-row">
+                        Aucune fiche d'échantillon ne correspond aux critères sélectionnés.
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

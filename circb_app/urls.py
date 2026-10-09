@@ -236,7 +236,12 @@ urlpatterns = [
 
     path('fiches-echantillons/imprimer/', views.imprimer_fiches_echantillons, name='imprimer_fiches_echantillons'),
 
-    path('importer_rang_naissance_patient/', views.importer_rang_naissance_patient, name='importer_rang_naissance_patient')
+    path('importer_rang_naissance_patient/', views.importer_rang_naissance_patient, name='importer_rang_naissance_patient'),
+
+
+    path('voir-echantillon/<int:id>/', views.DetailsEchantillon, name='voir-echantillon'),
+
+    
 
     
     

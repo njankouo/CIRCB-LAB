@@ -35606,3 +35606,1730 @@ Traceback (most recent call last):
     )
 django.template.exceptions.TemplateSyntaxError: Template: /home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/templates/webpages/grossese.html, Invalid block tag on line 126: 'enblock', expected 'endblock'. Did you forget to register or load this tag?
 "GET /import-grossese-gemelaire/ HTTP/1.1" 500 185109
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /static/js/apexcharts.js
+"GET /static/js/apexcharts.js HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/js/apexcharts.js
+"GET /static/js/apexcharts.js HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/js/select2.min.js
+"GET /static/js/select2.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/js/jquery-3.6.0.min.js
+"GET /static/js/jquery-3.6.0.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+Internal Server Error: /static/js/jquery-3.6.0.min.js
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+"GET /static/js/jquery-3.6.0.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/js/select2.min.js
+"GET /static/js/select2.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/js/select2.min.js
+"GET /static/js/select2.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/js/jquery-3.6.0.min.js
+"GET /static/js/jquery-3.6.0.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/js/jquery-3.6.0.min.js
+"GET /static/js/jquery-3.6.0.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/js/select2.min.js
+"GET /static/js/select2.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/js/jquery-3.6.0.min.js
+"GET /static/js/jquery-3.6.0.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/js/select2.min.js
+"GET /static/js/select2.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/js/select2.min.js
+"GET /static/js/select2.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/js/jquery-3.6.0.min.js
+"GET /static/js/jquery-3.6.0.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/js/jquery-3.6.0.min.js
+"GET /static/js/jquery-3.6.0.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/js/select2.min.js
+"GET /static/js/select2.min.js HTTP/1.1" 500 2701
+Internal Server Error: /static/css/select2.min.css
+"GET /static/css/select2.min.css HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /static/images/circb.jpeg
+"GET /static/images/circb.jpeg HTTP/1.1" 500 2701
+Internal Server Error: /humans.txt
+"GET /humans.txt HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /fiches-echantillons/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 577, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 528, in fiches_echantillons
+    return render(request, 'webpages/echantillonages/fiche_echantillons.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 186, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 157, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 199, in compile_nodelist
+    nodelist = parser.parse()
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 307, in do_extends
+    nodelist = parser.parse()
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 235, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 579, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 634, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Template: /home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/templates/webpages/echantillonages/fiche_echantillons.html, Invalid block tag on line 5: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /fiches-echantillons/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /fiches-echantillons/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 577, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 528, in fiches_echantillons
+    return render(request, 'webpages/echantillonages/fiche_echantillons.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 186, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 157, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 199, in compile_nodelist
+    nodelist = parser.parse()
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 307, in do_extends
+    nodelist = parser.parse()
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 235, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 579, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 634, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Template: /home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/templates/webpages/echantillonages/fiche_echantillons.html, Invalid block tag on line 5: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /fiches-echantillons/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /fiches-echantillons/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 577, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 528, in fiches_echantillons
+    return render(request, 'webpages/echantillonages/fiche_echantillons.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 186, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 157, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 199, in compile_nodelist
+    nodelist = parser.parse()
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 307, in do_extends
+    nodelist = parser.parse()
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 235, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 579, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 634, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Template: /home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/templates/webpages/echantillonages/fiche_echantillons.html, Invalid block tag on line 5: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /fiches-echantillons/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4473, in DetailsEchantillon
+    echantillon = Echantillon.objects.filter(enfant=patient_for_fiche)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1593, in build_filter
+    self.check_related_objects(join_info.final_field, value, join_info.opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1397, in check_related_objects
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: Cannot use QuerySet for "FichePatient": Use a QuerySet for "Patient".
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4478, in DetailsEchantillon
+    echantillons = Echantillon.objects.filter(enfant__in=patients_for_fiche)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1593, in build_filter
+    self.check_related_objects(join_info.final_field, value, join_info.opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1397, in check_related_objects
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: Cannot use QuerySet for "FichePatient": Use a QuerySet for "Patient".
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4478, in DetailsEchantillon
+    echantillons = Echantillon.objects.filter(enfant__in=patients_for_fiche)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1593, in build_filter
+    self.check_related_objects(join_info.final_field, value, join_info.opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1397, in check_related_objects
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: Cannot use QuerySet for "FichePatient": Use a QuerySet for "Patient".
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4478, in DetailsEchantillon
+    echantillons = Echantillon.objects.filter(enfant__in=patients_for_fiche)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1593, in build_filter
+    self.check_related_objects(join_info.final_field, value, join_info.opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1397, in check_related_objects
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: Cannot use QuerySet for "FichePatient": Use a QuerySet for "Patient".
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4478, in DetailsEchantillon
+    echantillons = Echantillon.objects.filter(enfant__in=patients_for_fiche)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1593, in build_filter
+    self.check_related_objects(join_info.final_field, value, join_info.opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1397, in check_related_objects
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: Cannot use QuerySet for "FichePatient": Use a QuerySet for "Patient".
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4478, in DetailsEchantillon
+    echantillons = Echantillon.objects.filter(enfant__in=patients_for_fiche)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1593, in build_filter
+    self.check_related_objects(join_info.final_field, value, join_info.opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1397, in check_related_objects
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: Cannot use QuerySet for "FichePatient": Use a QuerySet for "Patient".
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4478, in DetailsEchantillon
+    echantillons = Echantillon.objects.filter(enfant__in=patients_for_fiche)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1593, in build_filter
+    self.check_related_objects(join_info.final_field, value, join_info.opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1397, in check_related_objects
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: Cannot use QuerySet for "FichePatient": Use a QuerySet for "Patient".
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4478, in DetailsEchantillon
+    echantillons = Echantillon.objects.filter(enfant__in=patients_for_fiche)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1593, in build_filter
+    self.check_related_objects(join_info.final_field, value, join_info.opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1397, in check_related_objects
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: Cannot use QuerySet for "FichePatient": Use a QuerySet for "Patient".
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4478, in DetailsEchantillon
+    echantillons = Echantillon.objects.filter(enfant__in=patients_for_fiche)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1593, in build_filter
+    self.check_related_objects(join_info.final_field, value, join_info.opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1397, in check_related_objects
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: Cannot use QuerySet for "FichePatient": Use a QuerySet for "Patient".
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4478, in DetailsEchantillon
+    echantillons = Echantillon.objects.filter(enfant__in=patients_for_fiche)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1593, in build_filter
+    self.check_related_objects(join_info.final_field, value, join_info.opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1397, in check_related_objects
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: Cannot use QuerySet for "FichePatient": Use a QuerySet for "Patient".
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4478, in DetailsEchantillon
+    echantillons = Echantillon.objects.filter(enfant__in=patients_for_fiche)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1676, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1708, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1593, in build_filter
+    self.check_related_objects(join_info.final_field, value, join_info.opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/sql/query.py", line 1397, in check_related_objects
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: Cannot use QuerySet for "FichePatient": Use a QuerySet for "Patient".
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Patient' object has no attribute 'code_patient'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'code_patient'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4488, in DetailsEchantillon
+    return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [code_patient] in <Patient: ADAMA TRAORE (CEN-BIY-CHU-PT-1400)>
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Patient' object has no attribute 'code_patient'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'code_patient'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4488, in DetailsEchantillon
+    return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [code_patient] in <Patient: ADAMA TRAORE (CEN-BIY-CHU-PT-1400)>
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /static/images/favicon.ico
+"GET /static/images/favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4484, in DetailsEchantillon
+    return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 186, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 157, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 199, in compile_nodelist
+    nodelist = parser.parse()
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 307, in do_extends
+    nodelist = parser.parse()
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 235, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 894, in do_for
+    nodelist_loop = parser.parse(
+        (
+    ...<2 lines>...
+        )
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 994, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 590, in parse
+    self.unclosed_block_tag(parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 657, in unclosed_block_tag
+    raise self.error(token, msg)
+django.template.exceptions.TemplateSyntaxError: Template: /home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/templates/webpages/echantillonages/detail-echantillon.html, Unclosed tag on line 235: 'if'. Looking for one of: elif, else, endif.
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4484, in DetailsEchantillon
+    return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 186, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 157, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 199, in compile_nodelist
+    nodelist = parser.parse()
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 307, in do_extends
+    nodelist = parser.parse()
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 235, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 894, in do_for
+    nodelist_loop = parser.parse(
+        (
+    ...<2 lines>...
+        )
+    )
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 585, in parse
+    raise self.error(token, e)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 583, in parse
+    compiled_result = compile_func(self, token)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 994, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 590, in parse
+    self.unclosed_block_tag(parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 657, in unclosed_block_tag
+    raise self.error(token, msg)
+django.template.exceptions.TemplateSyntaxError: Template: /home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/templates/webpages/echantillonages/detail-echantillon.html, Unclosed tag on line 235: 'if'. Looking for one of: elif, else, endif.
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Patient' object has no attribute 'code_patient'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'code_patient'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4487, in DetailsEchantillon
+    return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [code_patient] in <Patient: ADAMA TRAORE (CEN-BIY-CHU-PT-1400)>
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Mere' object has no attribute 'code_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'code_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4487, in DetailsEchantillon
+    return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [code_mere] in <Mere: ADAMA NINA>
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Mere' object has no attribute 'code_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'code_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4487, in DetailsEchantillon
+    return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [code_mere] in <Mere: ADAMA NINA>
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Mere' object has no attribute 'code_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'code_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4494, in DetailsEchantillon
+    return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [code_mere] in <Mere: ADAMA NINA>
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Mere' object has no attribute 'code_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'code_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4494, in DetailsEchantillon
+    return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [code_mere] in <Mere: ADAMA NINA>
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /voir-echantillon/1400005997/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Mere' object has no attribute 'code'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'code'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 4494, in DetailsEchantillon
+    return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [code] in <Mere: ADAMA NINA>
+"GET /voir-echantillon/1400005997/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
