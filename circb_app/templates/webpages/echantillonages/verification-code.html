@@ -73,139 +73,271 @@
 </div>
 
         <!-- 2. TABLEAU DE SAISIE ET DE VÉRIFICATION -->
-        <div class="bg-white border border-slate-300 rounded-md shadow-xs overflow-hidden">
-            <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-                <h3 class="text-xs font-bold text-[#1d5288] uppercase tracking-wide font-mono flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-[#1478c1]"></span>
+        <!-- STYLE INLINE DES ANIMATIONS SUR-MESURE (Placez dans votre <head> ou fichier CSS) -->
+<style>
+    @keyframes otpPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+    }
+    .otp-focus-animate:focus {
+        animation: otpPulse 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+</style>
+
+<!-- Carte principale mise en avant avec bordure Odoo et Ombre Portée -->
+<div class="bg-white border-2 border-[#714B67] rounded-2xl shadow-xl hover:shadow-2xl ring-4 ring-[#714B67]/10 transition-all duration-300 overflow-hidden font-sans relative z-10">
+    
+    <!-- En-tête de section style Odoo Enterprise avec Motion Glow -->
+    <div class="px-5 py-3.5 bg-gradient-to-r from-white via-[#714B67]/[0.02] to-white border-b border-[#714B67]/20 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="p-2 rounded-xl bg-[#714B67]/10 text-[#714B67] shadow-2xs hover:rotate-6 transition-transform duration-300">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
                     Grille de Saisie par Lots
                 </h3>
-                <span class="text-[10px] font-mono text-slate-500">Saisie de la porte d'entrée et des 4 chiffres du code patient</span>
+                <p class="text-[11px] text-slate-500 font-medium">Saisie de la porte d'entrée et des 4 chiffres du code patient</p>
+            </div>
+        </div>
+        
+        <!-- Badge dynamique -->
+        <div class="flex items-center gap-2 px-3 py-1 bg-[#714B67]/10 border border-[#714B67]/25 rounded-full shadow-2xs">
+            <span class="flex h-2 w-2 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#714B67] opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-[#714B67]"></span>
+            </span>
+            <span class="text-[10px] font-extrabold text-[#714B67] uppercase tracking-wide">Saisie Active</span>
+        </div>
+    </div>
+
+    <!-- En-tête du tableau -->
+    <div class="grid grid-cols-12 gap-0 border-b border-slate-200/90 bg-slate-50/90 text-[10px] font-extrabold text-slate-600 uppercase tracking-widest select-none">
+        <div class="col-span-1 py-3 text-center border-r border-slate-200/80">N°</div>
+        <!-- Titre avec taille d'écriture agrandie (text-[11px]) -->
+        <div class="col-span-3 py-3 px-2 text-center border-r border-slate-200/80 text-[11px] font-black text-slate-700">Code Structure (Région / District / FOSA)</div>
+        <div class="col-span-3 py-3 px-3 border-r border-slate-200/80">Porte d'entrée</div>
+        <div class="col-span-5 py-3 px-4 bg-[#714B67]/10 text-[#714B67] font-black">Saisie Code Patient & Statut</div>
+    </div>
+
+    <!-- Corps du tableau -->
+    <div class="divide-y divide-slate-100" id="table-body">
+        {% for i in sample_range %}
+        <div class="grid grid-cols-12 gap-0 items-center hover:bg-slate-50/90 transition-all duration-200 ease-out group hover:shadow-2xs active:bg-purple-50/20" data-otp-group>
+            
+            <!-- Index / Compteur -->
+            <div class="col-span-1 py-2.5 flex justify-center border-r border-slate-200/80 font-mono text-xs text-slate-400 font-bold bg-slate-50/40 group-hover:bg-[#714B67]/10 group-hover:text-[#714B67] transition-all duration-200">
+                <span class="group-hover:scale-110 transition-transform duration-200 inline-block">
+                    {{ forloop.counter|stringformat:"02d" }}
+                </span>
             </div>
 
-            <!-- En-tête du tableau -->
-            <div class="grid grid-cols-12 gap-0 border-b border-slate-200 bg-slate-100 text-[10px] font-bold text-slate-600 font-mono uppercase tracking-wider">
-                <div class="col-span-1 py-2.5 text-center border-r border-slate-200">N°</div>
-                <div class="col-span-5 py-2.5 px-4 border-r border-slate-200">Code Structure (Région / District / FOSA)</div>
-                <div class="col-span-2 py-2.5 px-4 border-r border-slate-200">Porte d'entrée</div>
-                <div class="col-span-4 py-2.5 px-4 bg-sky-50/80 text-[#1d5288]">Saisie Code Patient & Statut</div>
+            <!-- Code Structure Fixe : Écritures agrandies (text-xs + w-6 h-6) -->
+            <div class="col-span-3 py-2.5 px-2 flex items-center justify-center gap-1 text-slate-800 border-r border-slate-200/80 font-mono">
+                <div class="flex gap-0.5">
+                    {% for char in fiche.region.designation|slice:':3' %}
+                    <input type="text" readonly value="{{ char }}" class="w-6 h-6 text-center border border-slate-300 bg-slate-100/90 text-slate-800 rounded shadow-2xs font-extrabold text-xs p-0 select-none cursor-default group-hover:bg-white group-hover:border-[#714B67]/40 transition-colors" title="Région">
+                    {% endfor %}
+                </div>
+                <span class="text-slate-400 font-extrabold text-sm select-none px-0.5">/</span>
+                <div class="flex gap-0.5">
+                    {% for char in fiche.district.designation|slice:':3' %}
+                    <input type="text" readonly value="{{ char }}" class="w-6 h-6 text-center border border-slate-300 bg-slate-100/90 text-slate-800 rounded shadow-2xs font-extrabold text-xs p-0 select-none cursor-default group-hover:bg-white group-hover:border-[#714B67]/40 transition-colors" title="District">
+                    {% endfor %}
+                </div>
+                <span class="text-slate-400 font-extrabold text-sm select-none px-0.5">/</span>
+                <div class="flex gap-0.5">
+                    {% for char in fiche.fosa.designation|slice:':3' %}
+                    <input type="text" readonly value="{{ char }}" class="w-6 h-6 text-center border border-slate-300 bg-slate-100/90 text-slate-800 rounded shadow-2xs font-extrabold text-xs p-0 select-none cursor-default group-hover:bg-white group-hover:border-[#714B67]/40 transition-colors" title="FOSA">
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Sélection Porte d'entrée -->
+            <div class="col-span-3 py-2.5 px-3 border-r border-slate-200/80">
+                <div class="relative">
+                    <select name="porte_entree_{{ i }}" class="w-full text-xs font-mono font-bold border border-slate-200/90 rounded-lg px-2.5 py-1.5 bg-white text-slate-800 shadow-2xs focus:ring-2 focus:ring-[#714B67]/20 focus:border-[#714B67] focus:shadow-[0_0_12px_rgba(113,75,103,0.15)] outline-none pt_code cursor-pointer transition-all duration-200 hover:border-slate-300">
+                        <option value="" selected>----------</option>
+                        {% for pt in porte_entree %}
+                        <option value="{{ pt.code }}">{{ pt.code }} ({{ pt.nom }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
 
-            <!-- Corps du tableau -->
-            <div class="divide-y divide-slate-200" id="table-body">
-                {% for i in sample_range %}
-                <div class="grid grid-cols-12 gap-0 items-center hover:bg-slate-50/80 transition-colors" data-otp-group>
-                    <div class="col-span-1 py-3 flex justify-center border-r border-slate-200 font-mono text-xs text-slate-500 font-bold bg-slate-50/30">
-                        {{ forloop.counter|stringformat:"02d" }}
-                    </div>
-
-                    <!-- Code Structure Fixe -->
-                    <div class="col-span-5 py-3 px-4 flex items-center gap-1.5 text-slate-700 border-r border-slate-200 font-mono text-xs">
-                        <div class="flex gap-0.5">{% for char in fiche.region.designation|slice:':3' %}<input type="text" readonly value="{{ char }}" class="w-6 h-6 text-center border border-slate-300 bg-slate-100 text-slate-700 rounded-xs font-bold text-xs" title="Région">{% endfor %}</div>
-                        <span class="text-slate-400 font-bold">/</span>
-                        <div class="flex gap-0.5">{% for char in fiche.district.designation|slice:':3' %}<input type="text" readonly value="{{ char }}" class="w-6 h-6 text-center border border-slate-300 bg-slate-100 text-slate-700 rounded-xs font-bold text-xs" title="District">{% endfor %}</div>
-                        <span class="text-slate-400 font-bold">/</span>
-                        <div class="flex gap-0.5">{% for char in fiche.fosa.designation|slice:':3' %}<input type="text" readonly value="{{ char }}" class="w-6 h-6 text-center border border-slate-300 bg-slate-100 text-slate-700 rounded-xs font-bold text-xs" title="FOSA">{% endfor %}</div>
-                    </div>
-                    
-                    <!-- Sélection Porte d'entrée -->
-                    <div class="col-span-2 py-3 px-4 border-r border-slate-200">
-                        <select name="porte_entree_{{ i }}" class="w-full text-xs font-mono font-medium border border-slate-300 rounded px-2 py-1 bg-white text-slate-800 focus:border-[#1478c1] focus:outline-none pt_code">
-                            <option value="" selected>----------</option>
-                            {% for pt in porte_entree %}
-                            <option value="{{ pt.code }}">{{ pt.code }} ({{ pt.nom }})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!-- Champ OTP & Résultat de vérification -->
-                    <div class="col-span-4 py-3 px-4 bg-sky-50/30 flex gap-2 items-center">
-                        <div class="flex gap-1 font-mono">
-                            {% for j in "1234" %}
-                            <input type="text" maxlength="1" class="otp-input w-7 h-7 text-center border border-slate-300 bg-white rounded shadow-2xs font-bold text-[#1d5288] focus:border-[#1478c1] focus:ring-1 focus:ring-[#1478c1] outline-none uppercase text-xs">
-                            {% endfor %}
-                        </div>
-                        <input hidden type="text" name="code_patient_{{ i }}" class="hidden-code">
-                        <div class="status-icon ml-2 text-slate-400 font-mono">
-                            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2" /></svg>
-                        </div>
+            <!-- Champ OTP & Statut -->
+            <div class="col-span-5 py-2.5 px-4 bg-[#714B67]/[0.03] group-hover:bg-[#714B67]/[0.07] flex gap-3 items-center justify-between transition-colors duration-200">
+                <div class="flex gap-1.5 font-mono shrink-0">
+                    {% for j in "1234" %}
+                    <input type="text" 
+                           maxlength="1" 
+                           class="otp-input otp-focus-animate w-7 h-7 text-center border border-slate-300/90 bg-white rounded-md shadow-2xs font-black text-[#714B67] focus:border-[#714B67] focus:ring-2 focus:ring-[#714B67]/30 focus:shadow-[0_0_10px_rgba(113,75,103,0.25)] outline-none uppercase text-xs transition-all duration-150 placeholder:text-slate-200" 
+                           placeholder="•">
+                    {% endfor %}
+                </div>
+                <input hidden type="text" name="code_patient_{{ i }}" class="hidden-code">
+                
+                <!-- Statut de vérification -->
+                <div class="status-icon text-slate-400 font-mono text-xs shrink-0 flex items-center transition-all duration-200">
+                    <div class="p-1 rounded-full bg-slate-100/80 text-slate-300 group-hover:text-slate-400 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9" stroke-width="2" />
+                        </svg>
                     </div>
                 </div>
-                {% endfor %}
             </div>
+
         </div>
+        {% endfor %}
+    </div>
+
+</div>
 
         <!-- Bouton de soumission -->
-        <div class="flex justify-end pt-2">
-            <button type="submit" id="submitBtn" class="px-6 py-2.5 bg-[#1478c1] hover:bg-[#1166a5] text-white font-mono font-bold text-xs uppercase tracking-wider rounded border border-[#105d98] shadow-xs transition-colors cursor-pointer flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                Valider la liste des codes Patients
-            </button>
+      <div class="flex justify-end pt-4 pb-1">
+    <button type="submit" 
+            id="submitBtn" 
+            class="px-6 py-2.5 bg-[#714B67] hover:bg-[#5c3d54] active:bg-[#4c3245] active:scale-[0.98] text-white font-sans font-bold text-xs uppercase tracking-wider rounded-xl border border-[#5c3d54] shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#714B67]/40 transition-all duration-200 cursor-pointer flex items-center gap-2.5 group">
+        
+        <div class="p-1 rounded-md bg-white/10 group-hover:bg-white/20 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:scale-110 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
         </div>
+        
+        <span>Valider la liste des codes Patients</span>
+
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+    </button>
+</div>
     </form>
 
     <!-- MODAL 1 : RAPPORT DE BILAN DES ENREGISTREMENTS -->
-    <div id="resultModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-md max-w-md w-full border border-slate-300 shadow-lg overflow-hidden">
-            <div class="bg-[#1d5288] text-white px-4 py-3 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-sky-400"></span>
-                    <h3 class="text-xs font-bold font-mono uppercase tracking-wide">Rapport d'Enregistrement LIMS</h3>
+    <!-- MODAL DE RÉSULTAT ODOO ENTERPRISE -->
+<div id="resultModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 transition-all duration-300">
+    <div class="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border-2 border-[#714B67] overflow-hidden flex flex-col max-h-[90vh]">
+        
+        <!-- EN-TÊTE DU MODAL -->
+        <div class="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200 shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 rounded-xl bg-[#714B67]/10 text-[#714B67]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
                 </div>
-                <button type="button" onclick="closeResultModal()" class="text-sky-200 hover:text-white font-mono text-sm font-bold cursor-pointer">✕</button>
-            </div>
-
-            <div class="p-4 space-y-4 max-h-[60vh] overflow-y-auto font-mono text-xs">
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between pb-1 border-b border-slate-200">
-                        <span class="text-[10px] uppercase font-bold text-slate-500">Codes Initialisés avec succès</span>
-                        <span id="countInitialises" class="text-[10px] font-bold px-2 py-0.5 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded">0</span>
-                    </div>
-                    <div id="listInitialises" class="space-y-1.5"></div>
-                </div>
-
-                <div class="space-y-2 pt-2">
-                    <div class="flex items-center justify-between pb-1 border-b border-slate-200">
-                        <span class="text-[10px] uppercase font-bold text-slate-500">Codes Patients Déjà Existants </span>
-                        <span id="countRefuses" class="text-[10px] font-bold px-2 py-0.5 bg-rose-100 text-rose-800 border border-rose-300 rounded">0</span>
-                    </div>
-                    <div id="listRefuses" class="space-y-1.5"></div>
+                <div>
+                    <h3 class="text-xs font-black text-slate-900 uppercase tracking-wide">Rapport d'Enregistrement par Lot</h3>
+                    <p class="text-xs text-slate-500">Synthèse de la création et de la conservation des fiches patients</p>
                 </div>
             </div>
-
-            <div class="p-3 bg-slate-50 border-t border-slate-200 flex justify-end">
-                <a href="/check-code/{{fiche.id}}/" class="px-4 py-1.5 bg-slate-700 hover:bg-slate-800 text-white font-mono font-bold text-xs uppercase rounded border border-slate-800 transition-colors cursor-pointer">
-                    Fermer et consulter les codes
-                </a>
-            </div>
+            
+            <button type="button" onclick="closeResultModal()" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
         </div>
+
+        <!-- CONTENU EN 2 COLONNES -->
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-130px)] bg-slate-50/50 grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- BLOC VERT : NOUVEAUX PATIENTS -->
+            <div class="bg-emerald-50/30 p-4 rounded-xl border border-emerald-200/80 shadow-2xs flex flex-col">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-emerald-200/60">
+                    <span class="text-xs font-black text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span> 
+                        Nouveaux Patients
+                    </span>
+                    <span id="countNouveaux" class="px-2.5 py-0.5 text-[11px] font-black bg-emerald-600 text-white rounded-md shadow-2xs">0</span>
+                </div>
+                <div id="listNouveaux" class="space-y-2 overflow-y-auto max-h-60 pr-1"></div>
+            </div>
+
+            <!-- BLOC BLEU : INFORMATIONS CONSERVÉES -->
+            <div class="bg-sky-50/30 p-4 rounded-xl border border-sky-200/80 shadow-2xs flex flex-col">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-sky-200/60">
+                    <span class="text-xs font-black text-sky-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-sky-600"></span> 
+                        Informations conservées
+                    </span>
+                    <span id="countConserves" class="px-2.5 py-0.5 text-[11px] font-black bg-sky-600 text-white rounded-md shadow-2xs">0</span>
+                </div>
+                <div id="listConserves" class="space-y-2 overflow-y-auto max-h-60 pr-1"></div>
+            </div>
+
+        </div>
+
+        <!-- PIED DE PAGE -->
+        <div class="px-6 py-3.5 bg-white border-t border-slate-200 flex items-center justify-between shrink-0">
+            <span class="text-xs text-slate-500 font-medium">Toutes les informations soumises ont été correctement enregistrées.</span>
+            <button type="button" 
+                    onclick="closeResultModal('{{fiche.id}}')" 
+                    class="px-5 py-2 bg-[#714B67] hover:bg-[#5c3d54] text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-xs transition-colors cursor-pointer">
+                Fermer et Consulter La liste des codes
+            </button>
+        </div>
+
     </div>
+</div>
 
     <!-- MODAL 2 : AFFICHAGE DES PATIENTS TROUVÉS (MÊME CODE / AUTRES PORTE D'ENTRÉE) -->
-    <div id="patientsListModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-md max-w-lg w-full border border-slate-300 shadow-lg overflow-hidden">
-            <div class="bg-[#1d5288] text-white px-4 py-3 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-                    <h3 class="text-xs font-bold font-mono uppercase tracking-wide">Patients enregistrés sous ce code</h3>
+  <!-- MODAL HAUT DE GAMME ODOO ENTERPRISE -->
+<div id="patientsListModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 transition-all duration-300">
+    <div class="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+        
+        <!-- EN-TÊTE DU MODAL STYLE ODOO -->
+        <div class="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200 shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 rounded-xl bg-[#714B67]/10 text-[#714B67]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
                 </div>
-                <button type="button" onclick="closePatientsListModal()" class="text-sky-200 hover:text-white font-mono text-sm font-bold cursor-pointer">✕</button>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-black text-slate-900 uppercase tracking-wide">Patients Correspondants</h3>
+                        <span id="patientsModalCount" class="px-2 py-0.5 text-[10px] font-extrabold bg-[#714B67] text-white rounded-md shadow-xs">0</span>
+                    </div>
+                    <p class="text-xs text-slate-500">Sélectionnez le dossier patient à associer à cette saisie</p>
+                </div>
             </div>
+            
+            <!-- BOUTON FERMER -->
+            <button type="button" 
+                    onclick="closePatientsListModal()" 
+                    class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
 
-            <div class="p-4 space-y-3 font-sans text-xs">
-                <p class="text-slate-600 text-xs font-mono">Voici la liste des patients partageant le même code sous différentes portes d'entrée :</p>
-                
-                <div id="patientsListContainer" class="space-y-2 max-h-[60vh] overflow-y-auto pr-1"></div>
-            </div>
-
-            <div class="p-3 bg-slate-50 border-t border-slate-200 flex justify-end">
-                <button type="button" onclick="closePatientsListModal()" class="px-4 py-1.5 bg-slate-700 hover:bg-slate-800 text-white font-mono font-bold text-xs uppercase rounded border border-slate-800 transition-colors cursor-pointer">
-                    Fermer
-                </button>
+        <!-- CONTENEUR GRILLE (STRICTEMENT VERTICAL, ZERO SCROLL HORIZONTAL) -->
+        <div class="p-6 overflow-y-auto overflow-x-hidden max-h-[calc(90vh-130px)] bg-slate-50/50 w-full">
+            <div id="patientsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full pr-1">
+                <!-- Les cartes s'injectent ici par JS -->
             </div>
         </div>
+
+        <!-- PIED DE PAGE DU MODAL -->
+        <div class="px-6 py-3 bg-white border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 shrink-0">
+            <span class="flex items-center gap-1.5 font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                Cliquez sur un dossier pour le charger automatiquement.
+            </span>
+            <button type="button" 
+                    onclick="closePatientsListModal()" 
+                    class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg transition-colors cursor-pointer">
+                Fermer
+            </button>
+        </div>
+
     </div>
+</div>
 </main>
 
 <script>
@@ -215,31 +347,114 @@ function showPatientsListModal(patients) {
     const container = document.getElementById('patientsListContainer');
     if (!modal || !container) return;
 
+    const modalCount = document.getElementById('patientsModalCount');
+    if (modalCount) modalCount.textContent = `${patients.length} résultat(s)`;
+
     container.innerHTML = patients.map(p => {
-        // Préparation de l'affichage de la mère
-        let mereInfo = 'N/A';
+        // --- INFORMATIONS DU PATIENT ---
+        const nomEnfant = (p.nom || '').trim();
+        const prenomEnfant = (p.prenom || '').trim();
+        const nomCompletEnfant = `${nomEnfant} ${prenomEnfant}`.trim() || 'Patient Anonyme';
+        
+        const avatarEnfantUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nomCompletEnfant)}&background=714B67&color=ffffff&bold=true&size=80`;
+
+        // Sexe & Badge
+        const isMale = p.sexe === 'M';
+        const isFemale = p.sexe === 'F';
+        const sexeBadge = isMale 
+            ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Masculin</span>`
+            : isFemale 
+            ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-pink-50 text-pink-700 border border-pink-200"><span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span>Féminin</span>`
+            : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600">Non spécifié</span>`;
+
+        // --- INFORMATIONS DE LA MÈRE ---
+        let mereBlockHtml = `
+            <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span class="text-slate-400 text-xs italic">Aucune donnée sur la mère</span>
+            </div>`;
+
         if (p.mere) {
-            const nomMere = p.mere.nom || '';
-            const prenomMere = p.mere.prenom || '';
-            const datNaissMere = p.mere.date_naissance ? ` (Née le : ${p.mere.date_naissance})` : '';
-            mereInfo = `${nomMere} ${prenomMere}${datNaissMere}`.trim();
-            if (!mereInfo) mereInfo = 'Non renseignée';
+            const nomMere = (p.mere.nom || '').trim();
+            const prenomMere = (p.mere.prenom || '').trim();
+            const nomCompletMere = `${nomMere} ${prenomMere}`.trim() || 'Inconnue';
+            const datNaissMere = p.mere.date_naissance ? `Née le ${p.mere.date_naissance}` : 'Date de naissance non renseignée';
+            const avatarMereUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nomCompletMere)}&background=e2e8f0&color=475569&bold=true&size=40`;
+
+            mereBlockHtml = `
+                <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200 transition-colors">
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <img src="${avatarMereUrl}" alt="Mère" class="w-7 h-7 rounded-full ring-1 ring-slate-300 object-cover shrink-0">
+                        <div class="truncate">
+                            <div class="text-[11px] font-bold text-slate-800 leading-tight truncate">${nomCompletMere}</div>
+                            <div class="text-[10px] text-slate-500 font-medium truncate">${datNaissMere}</div>
+                        </div>
+                    </div>
+                    <span class="text-[9px] font-bold uppercase tracking-wider text-slate-500 bg-slate-200 px-1.5 py-0.5 rounded shrink-0 ml-2">Mère</span>
+                </div>`;
         }
 
-        return `
-            <div class="bg-slate-50 border border-slate-200 rounded p-3 font-mono space-y-1.5">
-                <div class="flex items-center justify-between border-b border-slate-200 pb-1">
-                    <span class="text-xs font-bold text-[#1d5288]">Code Patient: ${p.code}</span>
-                    <span class="text-[10px] px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 font-bold rounded">Porte D'entr&eacute;e: ${p.porte_entree || 'Non définie'}</span>
+       return `
+    <!-- CARD AVEC CONTOUR COULEUR ODOO (#714B67) ET LARGEUR GARANTIE -->
+    <div class="group w-full bg-white rounded-xl border-2 border-[#714B67]/30 hover:border-[#714B67] p-4 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden">
+        
+        <div>
+            <!-- TOP BAR DE CARTE -->
+            <div class="flex items-start justify-between gap-2 pb-3 mb-3 border-b border-slate-200 bg-[#714B67]/5 -mx-4 -mt-4 p-3 border-b-[#714B67]/20">
+                <div class="flex items-center gap-2.5 overflow-hidden">
+                    <div class="relative shrink-0">
+                        <img src="${avatarEnfantUrl}" alt="Avatar" class="w-10 h-10 rounded-xl object-cover ring-2 ring-[#714B67] shadow-xs" onerror="this.src='https://ui-avatars.com/api/?name=P&background=714B67&color=ffffff'">
+                    </div>
+                    <div class="overflow-hidden">
+                        <h4 class="text-xs font-black text-slate-900 tracking-tight truncate leading-tight group-hover:text-[#714B67] transition-colors">
+                            ${nomCompletEnfant}
+                        </h4>
+                        <div class="inline-flex items-center gap-1.5 mt-0.5">
+                            <span class="font-mono text-[10px] font-bold text-[#714B67] bg-white px-1.5 py-0.2 rounded border border-[#714B67]/30">
+                                ${p.code}
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="grid grid-cols-2 gap-2 text-[11px] pt-1">
-                    <div><span class="text-slate-500">Nom :</span> <strong class="text-slate-800">${p.nom} ${p.prenom || ''}</strong></div>
-                    <div><span class="text-slate-500">Sexe :</span> <strong class="text-slate-800">${p.sexe === 'M' ? 'Masculin' : (p.sexe === 'F' ? 'Féminin' : 'N/A')}</strong></div>
-                    <div><span class="text-slate-500">Né(e) le :</span> <strong class="text-slate-800">${p.date_naissance || 'N/A'}</strong></div>
-                    <div class="col-span-2"><span class="text-slate-500">Mère :</span> <strong class="text-slate-800">${mereInfo}</strong></div>
+
+                <!-- BADGE PORTE D'ENTRÉE -->
+                <span class="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black bg-[#714B67] text-white shadow-xs uppercase tracking-wider">
+                    PT : ${p.porte_entree || 'N/A'}
+                </span>
+            </div>
+
+            <!-- GRILLE DÉTAILS -->
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Genre</span>
+                    ${sexeBadge}
+                </div>
+                <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Date Naissance</span>
+                    <span class="text-[11px] font-bold text-slate-700 flex items-center gap-1 truncate">
+                        ${p.date_naissance || 'Non renseignée'}
+                    </span>
                 </div>
             </div>
-        `;
+
+            <!-- MÈRE -->
+            <div class="mb-4">
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Mère</span>
+                ${mereBlockHtml}
+            </div>
+        </div>
+
+        <!-- BOUTON ACCÉDER AU PATIENT -->
+        <div class="pt-3 border-t border-slate-100">
+            <a href="/edit-patient/${p.id}/" class="w-full py-2 px-3 bg-[#714B67] hover:bg-[#5a3b52] text-white font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-2 shadow-2xs group/btn">
+                <span>Modifier information Patient</span>
+                <svg class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                </svg>
+            </a>
+        </div>
+
+    </div>
+`;
     }).join('');
 
     modal.classList.remove('hidden');
@@ -248,44 +463,104 @@ function showPatientsListModal(patients) {
 
 function closePatientsListModal() {
     const modal = document.getElementById('patientsListModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+
+/**
+ * Ferme le modal de résultat et redirige vers la vue détaillée de la fiche
+ * @param {number|string} ficheId - L'ID de la fiche pour la redirection
+ */
+function closeResultModal(ficheId = null) {
+    const modal = document.getElementById('resultModal');
     if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     }
-}
 
+    // Redirection si l'ID de la fiche est transmis
+    if (ficheId) {
+        window.location.href = `/check-code/${ficheId}/`; 
+        // ⚠️ Ajustez l'URL ci-dessus selon votre pattern d'URL Django (ex: `/fiches/${ficheId}/` ou `/ptme/details/${ficheId}/`)
+    }
+}
 // --- Modale de Bilan de Soumission ---
-function showResultModal(initialises = [], refuses = []) {
+function showResultModal(nouveaux = [], conserves = []) {
     const modal = document.getElementById('resultModal');
     if (!modal) return;
 
-    const listInitData = Array.isArray(initialises) ? initialises : [];
-    const listRefData = Array.isArray(refuses) ? refuses : [];
+    const listNouveauxData = Array.isArray(nouveaux) ? nouveaux : [];
+    const listConservesData = Array.isArray(conserves) ? conserves : [];
 
-    document.getElementById('countInitialises').innerText = listInitData.length;
-    document.getElementById('countRefuses').innerText = listRefData.length;
+    // Mise à jour des compteurs
+    const countNouveauxEl = document.getElementById('countNouveaux');
+    const countConservesEl = document.getElementById('countConserves');
+    if (countNouveauxEl) countNouveauxEl.innerText = listNouveauxData.length;
+    if (countConservesEl) countConservesEl.innerText = listConservesData.length;
 
-    const listInit = document.getElementById('listInitialises');
-    const listRef = document.getElementById('listRefuses');
+    const listNouveaux = document.getElementById('listNouveaux');
+    const listConserves = document.getElementById('listConserves');
 
-    listInit.innerHTML = listInitData.length > 0 
-        ? listInitData.map(item => `<div class="flex items-center gap-2 p-2 bg-emerald-50 border border-emerald-200 rounded text-emerald-900 font-mono text-xs font-medium"><span class="text-emerald-700 font-bold">✓</span><span>${typeof item === 'object' ? item.code : item}</span></div>`).join('')
-        : `<div class="p-2 text-xs text-slate-400 italic text-center bg-slate-50 rounded border border-slate-200">Aucun code initialisé</div>`;
+    // --- COLONNE 1 : NOUVEAUX PATIENTS (VERT) ---
+    if (listNouveaux) {
+        listNouveaux.innerHTML = listNouveauxData.length > 0 
+            ? listNouveauxData.map(item => {
+                const code = typeof item === 'object' ? (item.code || item.code_patient || 'N/A') : item;
+                const nom = typeof item === 'object' && item.nom ? `${item.nom} ${item.prenom || ''}`.trim() : null;
+                const pt = typeof item === 'object' && item.porte_entree ? item.porte_entree : null;
+                const avatarUrl = nom ? `https://ui-avatars.com/api/?name=${encodeURIComponent(nom)}&background=059669&color=ffffff&bold=true&size=32` : null;
 
-    listRef.innerHTML = listRefData.length > 0
-        ? listRefData.map(item => `<div class="flex items-center justify-between p-2 bg-green-200 border border-rose-200 rounded text-slate-800 font-mono text-xs font-medium"><div class="flex items-center gap-2"><span class="text-rose-700 font-bold">✕</span><span>${typeof item === 'object' ? item.code : item}</span></div></div>`).join('')
-        : `<div class="p-2 text-xs text-slate-100 italic text-center bg-slate-50 rounded border border-slate-200">Aucun code refusé</div>`;
+                return `
+                    <div class="flex items-center justify-between p-2.5 bg-emerald-50 hover:bg-emerald-100/60 border border-emerald-200 rounded-xl transition-all shadow-2xs group">
+                        <div class="flex items-center gap-2.5 overflow-hidden">
+                            ${avatarUrl 
+                                ? `<img src="${avatarUrl}" class="w-6 h-6 rounded-full object-cover ring-1 ring-emerald-400 shrink-0">`
+                                : `<div class="w-6 h-6 rounded-full bg-emerald-200 text-emerald-800 font-black text-[11px] flex items-center justify-center shrink-0">✨</div>`
+                            }
+                            <div class="truncate">
+                                <span class="font-mono text-xs font-bold text-emerald-950 block leading-tight">${code}</span>
+                                ${nom ? `<span class="text-[10px] text-emerald-700 font-semibold truncate block">${nom}</span>` : ''}
+                            </div>
+                        </div>
+                        <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-emerald-200/80 text-emerald-900 border border-emerald-300 shrink-0 ml-2">Nouveau</span>
+                    </div>
+                `;
+            }).join('')
+            : `<div class="p-4 text-xs text-slate-400 italic text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">Aucun nouveau patient enregistré</div>`;
+    }
+
+    // --- COLONNE 2 : INFORMATIONS CONSERVÉES / EXISTANTES (BLEU ODOO) ---
+    if (listConserves) {
+        listConserves.innerHTML = listConservesData.length > 0
+            ? listConservesData.map(item => {
+                const code = typeof item === 'object' ? (item.code || item.code_patient || 'N/A') : item;
+                const nom = typeof item === 'object' && item.nom ? `${item.nom} ${item.prenom || ''}`.trim() : null;
+                const pt = typeof item === 'object' && item.porte_entree ? item.porte_entree : null;
+                const avatarUrl = nom ? `https://ui-avatars.com/api/?name=${encodeURIComponent(nom)}&background=1d5288&color=ffffff&bold=true&size=32` : null;
+
+                return `
+                    <div class="flex items-center justify-between p-2.5 bg-sky-50 hover:bg-sky-100/60 border border-sky-200 rounded-xl transition-all shadow-2xs group">
+                        <div class="flex items-center gap-2.5 overflow-hidden">
+                            ${avatarUrl 
+                                ? `<img src="${avatarUrl}" class="w-6 h-6 rounded-full object-cover ring-1 ring-sky-400 shrink-0">`
+                                : `<div class="w-6 h-6 rounded-full bg-sky-200 text-sky-800 font-black text-[11px] flex items-center justify-center shrink-0">📁</div>`
+                            }
+                            <div class="truncate">
+                                <span class="font-mono text-xs font-bold text-sky-950 block leading-tight">${code}</span>
+                                ${nom ? `<span class="text-[10px] text-sky-700 font-semibold truncate block">${nom}</span>` : '<span class="text-[10px] text-sky-600 italic block">Dossier existant conservé</span>'}
+                            </div>
+                        </div>
+                        ${pt ? `<span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-sky-200/80 text-sky-900 border border-sky-300 shrink-0 ml-2">PT : ${pt}</span>` : '<span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-sky-200/80 text-sky-900 border border-sky-300 shrink-0 ml-2">Conservé</span>'}
+                    </div>
+                `;
+            }).join('')
+            : `<div class="p-4 text-xs text-slate-400 italic text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">Aucune information conservée</div>`;
+    }
 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
-}
-
-function closeResultModal() {
-    const modal = document.getElementById('resultModal');
-    if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    }
 }
 
 // --- AJAX Recherche Patient ---
@@ -293,10 +568,14 @@ async function searchPatient(codeQuery, groupElement) {
     const iconContainer = groupElement.querySelector('.status-icon');
     if (!iconContainer) return;
 
+    // --- STATE 1: LOADER STYLE ODOO ---
     iconContainer.innerHTML = `
-        <div class="flex items-center text-[#1478c1] font-mono text-xs">
-            <svg class="w-4 h-4 animate-spin mr-1" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
-            <span>Vérification...</span>
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded text-slate-600 font-sans text-xs">
+            <svg class="w-3.5 h-3.5 animate-spin text-[#714B67]" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+            <span class="text-[11px] font-medium text-slate-600">Vérification...</span>
         </div>`;
 
     try {
@@ -304,39 +583,68 @@ async function searchPatient(codeQuery, groupElement) {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
         const data = await response.json();
-        iconContainer.className = "status-icon flex items-center gap-1.5 font-mono text-xs";
+        iconContainer.className = "status-icon inline-flex items-center gap-1.5 font-sans text-xs";
 
         if (data.exists) {
-            // CAS 1 : Patient existant sous la MÊME PT
+            // --- CAS 1 : PATIENT EXACT ---
             if (data.exact_match) {
-                const nomMatch = data.exact_match.nom ? `${data.exact_match.nom} ${data.exact_match.prenom || ''}`.trim() : "Patient";
+                const nom = data.exact_match.nom || '';
+                const prenom = data.exact_match.prenom || '';
+                
+                // CORRECTION ICI : Utilisation propre de .trim()
+                const nomComplet = `${nom} ${prenom}`.trim() || "Patient";
+                
+                // Génération de l'avatar en ligne avec le nom complet nettoyé
+                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nomComplet)}&background=714B67&color=ffffff&bold=true&size=64`;
+
                 iconContainer.innerHTML = `
-                    <button type="button" class="view-exact-btn flex items-center gap-1 px-2 py-0.5 bg-sky-100 text-[#1d5288] hover:bg-sky-200 border border-sky-300 rounded font-bold text-[10px] uppercase cursor-pointer" title="Consulter la fiche">
-                        <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        <span class="truncate max-w-[110px]">${nomMatch}</span>
-                    </button>
-                    <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 rounded cursor-pointer"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>`;
+                    <div class="inline-flex items-center gap-1 bg-white border border-slate-200 hover:border-[#714B67]/40 rounded shadow-xs p-0.5 transition-all">
+                        <button type="button" class="view-exact-btn flex items-center gap-2 px-2 py-1 text-slate-700 hover:bg-slate-50 rounded text-[11px] font-semibold cursor-pointer transition-colors" title="Consulter le dossier du patient">
+                            <img src="${avatarUrl}" alt="Avatar" class="w-4 h-4 rounded-full object-cover ring-1 ring-[#714B67]/20 shrink-0" onerror="this.src='https://ui-avatars.com/api/?name=P&background=e2e8f0&color=475569'">
+                            <span class="truncate max-w-[120px] text-slate-800 font-bold">${nomComplet}</span>
+                            <span class="text-[9px] font-bold text-[#714B67] bg-[#714B67]/10 px-1.5 py-0.2 rounded border border-[#714B67]/20 uppercase">
+                                ${data.exact_match.porte_entree || 'PT'}
+                            </span>
+                        </button>
+                        <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded cursor-pointer transition-colors" title="Supprimer">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>`;
 
                 const viewBtn = iconContainer.querySelector('.view-exact-btn');
                 if (viewBtn) viewBtn.addEventListener('click', () => showPatientsListModal([data.exact_match]));
             } 
-            // CAS 2 : Des patients existent sous ce code mais avec D'AUTRES PT (ou sans PT)
+            // --- CAS 2 : OCCURRENCES MULTIPLES / AUTRES PT ---
             else if (data.autres_pts_count > 0) {
                 iconContainer.innerHTML = `
-                    <button type="button" class="view-others-btn flex items-center gap-1 px-2 py-0.5 bg-amber-100 text-amber-900 hover:bg-amber-200 border border-amber-300 rounded font-bold text-[10px] uppercase cursor-pointer" title="Voir les patients enregistrés sous d'autres PT">
-                        <span class="text-amber-700 font-bold">⚠️</span>
-                        <span>${data.autres_pts_count} Occurences Trouv&eacute;es</span>
-                    </button>
-                    <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 rounded cursor-pointer"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>`;
+                    <div class="inline-flex items-center gap-1 bg-amber-50/80 border border-amber-300/80 rounded p-0.5 shadow-xs">
+                        <button type="button" class="view-others-btn flex items-center gap-1.5 px-2 py-1 text-amber-900 hover:bg-amber-100/60 rounded text-[11px] font-bold cursor-pointer transition-colors" title="Voir les correspondances sous d'autres PT">
+                            <span class="flex h-2 w-2 relative shrink-0">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                            </span>
+                            <span>${data.autres_pts_count} occurrence(s) trouvée(s)</span>
+                        </button>
+                        <button type="button" class="delete-btn p-1 text-amber-700/60 hover:text-rose-600 hover:bg-rose-50 rounded cursor-pointer transition-colors">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>`;
 
                 const viewOthersBtn = iconContainer.querySelector('.view-others-btn');
                 if (viewOthersBtn) viewOthersBtn.addEventListener('click', () => showPatientsListModal(data.autres_pts_patients));
             }
         } else {
-            // CAS 3 : Aucun patient enregistré sous ce numéro
+            // --- CAS 3 : NOUVEAU PATIENT (CODE LIBRE) ---
             iconContainer.innerHTML = `
-                <span class="flex items-center gap-1 text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300 text-[10px] font-bold uppercase">✓ Nouveau</span>
-                <button type="button" class="delete-btn p-1 text-slate-400 hover:text-rose-600 rounded cursor-pointer"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>`;
+                <div class="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 rounded p-0.5 shadow-xs">
+                    <span class="flex items-center gap-1 text-emerald-700 px-2 py-1 text-[11px] font-bold uppercase tracking-wide">
+                        <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                        Nouveau
+                    </span>
+                    <button type="button" class="delete-btn p-1 text-emerald-600/60 hover:text-rose-600 hover:bg-rose-50 rounded cursor-pointer transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>`;
         }
 
         const deleteBtn = iconContainer.querySelector('.delete-btn');
@@ -344,10 +652,13 @@ async function searchPatient(codeQuery, groupElement) {
 
     } catch (err) {
         console.error("Erreur searchPatient :", err);
-        iconContainer.innerHTML = `<span class="text-[10px] font-bold text-rose-700 bg-rose-100 border border-rose-300 px-2 py-0.5 rounded">⚠️ Erreur</span>`;
+        iconContainer.innerHTML = `
+            <div class="inline-flex items-center gap-1 px-2 py-1 bg-rose-50 border border-rose-200 text-rose-700 rounded text-[11px] font-bold">
+                <svg class="w-3.5 h-3.5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Erreur serveur</span>
+            </div>`;
     }
 }
-
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-otp-group]').forEach(group => {
         const inputs = group.querySelectorAll('.otp-input');

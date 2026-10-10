@@ -44,7 +44,7 @@ urlpatterns = [
     path('search_porte_entree/<int:porte_entree_id>/', views.search_porte_entree, name='search_porte_entree'),
     path('verifier_patient/', views.verifier_patient, name='verifier_patient'),
    
-    path('details-patient/<str:slug>/', views.details_patient, name='details-patient'),
+    path('details-patient/<int:id>/', views.details_patient, name='details-patient'),
     
     path('echantillonages/', views.echantillonages, name='echantillonages'),
     
@@ -134,7 +134,7 @@ urlpatterns = [
     
     path('modifier-echantillon/<int:id>/', views.modifier_echantillon, name='modifier-echantillon'),
     
-    path('edit-patient/<str:code>/', views.edit_patient, name='edit-patient'),
+    path('edit-patient/<int:id>/', views.edit_patient, name='edit-patient'),
     
     path('upload-sub-structure/<int:id>/', views.UploadSubStructure, name='upload-sub-structure'),
     
@@ -240,6 +240,8 @@ urlpatterns = [
 
 
     path('voir-echantillon/<int:id>/', views.DetailsEchantillon, name='voir-echantillon'),
+
+    path('verifier-code-patient/', views.verifier_code_patient, name='verifier_code_patient'),
 
     
 

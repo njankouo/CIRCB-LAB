@@ -309,12 +309,21 @@ def dossiers_patients(request):
     return render(request, 'webpages/patients/dossiers.html', context)
 @login_required(login_url='/')
 @permission_required('circb_app.Consulter_dossier_patient', raise_exception=True)
-def details_patient(request, slug):
-    patient = get_object_or_404(Patient, code=slug)
-    context ={
-        'patient':patient,
-        'echantillon':Echantillon.objects.filter(enfant=patient).order_by('-id')
+def details_patient(request, id):
+    # 1. Récupérer le patient avec sa mère préchargée (select_related)
+    patient = get_object_or_404(Patient.objects.select_related('mere'), id=id)
+    
+    # 2. Récupérer les échantillons associés
+    echantillons = Echantillon.objects.filter(enfant=patient).select_related(
+        'resultat_pcr', 'porte_entree'
+    ).order_by('-id')
+
+    context = {
+        'patient': patient,
+        'mere': patient.mere,  # Accès direct à l'instance de la Mère
+        'echantillon': echantillons,
     }
+
     return render(request, 'webpages/patients/details-patient.html', context)
 
 from django.contrib.auth.decorators import login_required
@@ -1063,7 +1072,7 @@ def ajouter_echantillon(request):
                             Echantillon.objects.create(
                                 enfant=enfant,
                                 mere=mere,
-                                fiche=fiche,
+                               
                                 ordre=pcr_type,
                                 date_prelevement=pcr_date,
                                 resultat_pcr_id=p_int(pcr_result)
@@ -2087,95 +2096,74 @@ def rechercher_patient(request):
     if not clean_code or len(clean_code) < 13:
         return JsonResponse({"exists": False, "patients": []})
 
-    # Extraction des segments du code
+    # Helper pour formater proprement les dictionnaires patients (évite les répétitions de code)
+    def formater_patient_data(p, pt_code=""):
+        parts = p.code.split("-") if p.code else []
+        pt_in_db = pt_code or (parts[3] if len(parts) >= 5 else "")
+        return {
+            "id": p.id,
+            "code": p.code,
+            "nom": getattr(p, 'nom', '') or '',
+            "prenom": getattr(p, 'prenom', '') or '',
+            "sexe": getattr(p, 'sexe', '') or '',
+            "date_naissance": str(getattr(p, 'date_naissance', '') or ''),
+            "porte_entree": pt_in_db,
+            "mere": {
+                "nom": getattr(p.mere, 'nom', '') or '',
+                "prenom": getattr(p.mere, 'prenom', '') or '',
+                "date_naissance": str(getattr(p.mere, 'date_naissance', '') or '')
+            } if getattr(p, 'mere', None) else None
+        }
+
+    # Extraction des segments de base du code
     region = clean_code[0:3]
     dept = clean_code[3:6]
     fosa = clean_code[6:9]
 
-    # --- IF : Code avec PT spécifiée (15 caractères minimum) ---
+    # --- CAS 1 : Code avec Porte d'Entrée (PT) spécifiée (15 caractères minimum) ---
     if len(clean_code) >= 15:
         pt_selectionnee = clean_code[9:11]
-        print(f'la porte entree selectionnee est: {pt_selectionnee}')
-
         numero = clean_code[11:]
-        print(f'la numero selectionnee est: {numero}')
 
         regex_pattern = f"{region}-{dept}-{fosa}-{pt_selectionnee}-{numero}"
-        print(f'code dans le meilleur des cas est: {regex_pattern}')
 
-        try:
-            # Recherche exacte avec la porte d'entrée
-            patient = Patient.objects.get(code=regex_pattern)
-            print(f'patient_trouvee_avec_porte_entree: {patient}')
-
-            patient_data = {
-                "id": patient.id,
-                "code": patient.code,
-                "nom": getattr(patient, 'nom', ''),
-                "prenom": getattr(patient, 'prenom', ''),
-                "sexe": getattr(patient, 'sexe', ''),
-                "date_naissance": str(getattr(patient, 'date_naissance', '') or ''),
-                "porte_entree": pt_selectionnee,
-                "mere": {
-                    "nom": getattr(patient.mere, 'nom', ''),
-                    "prenom": getattr(patient.mere, 'prenom', ''),
-                    "date_naissance": str(getattr(patient.mere, 'date_naissance', '') or '')
-                } if getattr(patient, 'mere', None) else None
-            }
-
-            # On retourne la structure attendue par le CAS 1 du JS (data.exact_match)
-            return JsonResponse({
-                "exists": True,
-                "exact_match": patient_data,
-                "autres_pts_count": 0,
-                "autres_pts_patients": [],
-                "all_patients": [patient_data]
-            })
-
-        except Patient.DoesNotExist:
-            print("Patient non trouvé avec cette porte d'entrée exacte.")
-            return JsonResponse({"exists": False, "patients": []})
-
-    # --- ELSE : Code sans PT spécifiée (13 caractères) ---
-    else:
-        pt_selectionnee = None
-        numero = clean_code[9:]
-
-        # Expression régulière pour matcher tous les patients sous ce numéro (quelle que soit la PT)
-        regex_pattern = f"^{region}-{dept}-{fosa}-..-{numero}$"
-        patients_qs = Patient.objects.filter(code__regex=regex_pattern)
-
-        print(f'code patient sans porte entree: {regex_pattern}')
-        print(f'occurence des patient ayant les memes codes sans porte entree: {patients_qs}')
+        # Utilisation de .filter() au lieu de .get() pour gérer les doublons de code
+        patients_qs = Patient.objects.select_related("mere").filter(code=regex_pattern)
 
         if not patients_qs.exists():
             return JsonResponse({"exists": False, "patients": []})
 
-        autres_pts_patients = []
-        for p in patients_qs:
-            parts = p.code.split("-")
-            pt_in_db = parts[3] if len(parts) == 5 else ""
+        all_patients_data = [formater_patient_data(p, pt_selectionnee) for p in patients_qs]
 
-            patient_data = {
-                "id": p.id,
-                "code": p.code,
-                "nom": getattr(p, 'nom', ''),
-                "prenom": getattr(p, 'prenom', ''),
-                "sexe": getattr(p, 'sexe', ''),
-                "date_naissance": str(getattr(p, 'date_naissance', '') or ''),
-                "porte_entree": pt_in_db,
-                "mere": {
-                    "nom": getattr(p.mere, 'nom', ''),
-                    "prenom": getattr(p.mere, 'prenom', ''),
-                    "date_naissance": str(getattr(p.mere, 'date_naissance', '') or '')
-                } if getattr(p, 'mere', None) else None
-            }
-            autres_pts_patients.append(patient_data)
+        # S'il y a un seul match parfait, on l'isole ; s'il y a des doublons exacts, on renvoie la liste complète
+        exact_match = all_patients_data[0] if len(all_patients_data) == 1 else None
 
-        # On retourne la structure attendue par le CAS 2 du JS (data.autres_pts_count)
+        return JsonResponse({
+            "exists": True,
+            "exact_match": exact_match,
+            "has_duplicates": len(all_patients_data) > 1,  # Indicateur de doublons exacts
+            "autres_pts_count": len(all_patients_data),
+            "autres_pts_patients": all_patients_data,
+            "all_patients": all_patients_data
+        })
+
+    # --- CAS 2 : Code sans PT spécifiée (13 à 14 caractères) ---
+    else:
+        numero = clean_code[9:]
+
+        # Expression régulière pour matcher tous les patients portant ce numéro (peu importe la PT)
+        regex_pattern = f"^{region}-{dept}-{fosa}-..-{numero}$"
+        patients_qs = Patient.objects.select_related("mere").filter(code__regex=regex_pattern)
+
+        if not patients_qs.exists():
+            return JsonResponse({"exists": False, "patients": []})
+
+        autres_pts_patients = [formater_patient_data(p) for p in patients_qs]
+
         return JsonResponse({
             "exists": True,
             "exact_match": None,
+            "has_duplicates": len(autres_pts_patients) > 1,
             "autres_pts_count": len(autres_pts_patients),
             "autres_pts_patients": autres_pts_patients,
             "all_patients": autres_pts_patients
@@ -3446,9 +3434,9 @@ def modifier_echantillon(request, id):
     return render(request, 'webpages/echantillonages/edit-echantillon.html', context)
 
 
-def edit_patient(request, code):
+def edit_patient(request, id):
     context={
-        'patient':Patient.objects.get(code=code)
+        'patient':Patient.objects.get(id=id)
     }
     return render(request,'webpages/patients/edit-patient.html', context)
 
@@ -3578,6 +3566,8 @@ def modifier_patient(request, pk):
             patient.date_naissance = date_naiss if date_naiss else None
             
             patient.sexe = request.POST.get('sexe')
+
+            patient.code = request.POST['code']
             
             
             # Gestion de la case à cocher (checkbox 'status')
@@ -3604,7 +3594,7 @@ def modifier_patient(request, pk):
             mere.save()
 
             messages.success(request, "Les modifications du dossier ont été enregistrées avec succès.")
-            return redirect('/dossiers/patients/', pk=patient.pk) # Remplacez par le nom de votre route de redirection
+            return redirect(request.META.get('HTTP_REFERER','/')) # Remplacez par le nom de votre route de redirection
 
         except Exception as e:
             messages.error(request, f"Erreur lors de la modification : {e}")
@@ -3825,22 +3815,39 @@ def update_level(request, id):
     # 4. Redirection vers la page d'où provenait la requête (ou l'index par défaut)
     return redirect('/structures/')
 def check_code(request, id):
-    # 1. Récupération de la fiche avec gestion propre du 404
     fiche = get_object_or_404(FicheEchantillon, id=id)
-    
-    # 2. Récupération des patients liés à la fiche (via FichePatient)
     patients = FichePatient.objects.filter(fiche=fiche).select_related('patient')
     
-    # 3. Récupération des échantillons de cette fiche, 
-    # en préchargeant leur 'resultat_pcr' pour éviter les requêtes N+1
+    # Charger tous les échantillons liés à cette fiche
     echantillons = Echantillon.objects.filter(fiche=fiche).select_related(
         'enfant', 'resultat_pcr', 'raison_prelevement', 'porte_entree'
     )
 
+    # Regrouper par ID d'enfant / patient
+    pcr_par_patient = defaultdict(list)
+    for ech in echantillons:
+        # On vérifie selon votre clé étrangère (ex: enfant_id)
+        enfant_id = ech.enfant_id if hasattr(ech, 'enfant_id') else (ech.enfant.id if ech.enfant else None)
+        
+        if enfant_id:
+            pcr_par_patient[enfant_id].append({
+                'id': ech.id,
+                'code_ech': getattr(ech, 'code_ech', None) or getattr(ech, 'code', 'N/A'),
+                'ordre': getattr(ech, 'ordre', None),
+                'date_prelevement': ech.date_prelevement,
+                'examen': getattr(ech, 'examen', 'PCR'),
+                'resultat': ech.resultat_pcr.nom if ech.resultat_pcr else 'En attente',
+                'est_positif': ech.resultat_pcr and 'POS' in str(ech.resultat_pcr.nom).upper(),
+                'est_negatif': ech.resultat_pcr and 'NEG' in str(ech.resultat_pcr.nom).upper(),
+            })
+
+    # Attribuer la liste à chaque patient
+    for fp in patients:
+        fp.liste_pcr = pcr_par_patient.get(fp.patient_id, [])
+
     context = {
         'fiche': fiche,
         'patients': patients,
-        'echantillon': echantillons, # Contient tous les échantillons de la fiche avec leurs PCR/résultats
     }
 
     return render(request, 'webpages/echantillonages/check-code.html', context)
@@ -4537,3 +4544,14 @@ def DetailsEchantillon(request, id):
         'total_echantillons': echantillons.count(),
     }
     return render(request, 'webpages/echantillonages/detail-echantillon.html', context)
+
+
+def verifier_code_patient(request):
+    code = request.GET.get('code', '').strip()
+    patient_id = request.GET.get('patient_id', None)
+
+    qs = Patient.objects.filter(code=code)
+    if patient_id:
+        qs = qs.exclude(pk=patient_id)
+
+    return JsonResponse({'exists': qs.exists()})

@@ -37353,3 +37353,515 @@ Internal Server Error: /ajouter_echantillon/
 "POST /ajouter_echantillon/ HTTP/1.1" 500 98
 Internal Server Error: /ajouter_echantillon/
 "POST /ajouter_echantillon/ HTTP/1.1" 500 87
+Internal Server Error: /details-patient/CEN-BIY-EBH-PT-0812/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 313, in details_patient
+    patient = get_object_or_404(Patient, code=slug)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 90, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 642, in get
+    raise self.model.MultipleObjectsReturned(
+    ...<5 lines>...
+    )
+circb_app.models.Patient.MultipleObjectsReturned: get() returned more than one Patient -- it returned 3!
+"GET /details-patient/CEN-BIY-EBH-PT-0812/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /rechercher-patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/views/decorators/http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 2108, in rechercher_patient
+    patient = Patient.objects.get(code=regex_pattern)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 642, in get
+    raise self.model.MultipleObjectsReturned(
+    ...<5 lines>...
+    )
+circb_app.models.Patient.MultipleObjectsReturned: get() returned more than one Patient -- it returned 3!
+"GET /rechercher-patient/?code=CENBIYEBHPT0812 HTTP/1.1" 500 2701
+Internal Server Error: /save-code-patient/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/views/decorators/http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 2338, in save_code_patient
+    Patient.objects.create(patient=patient_existant.id, fiche=fiche)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 667, in create
+    obj = self.model(**kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/base.py", line 590, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: Patient() got unexpected keyword arguments: 'patient', 'fiche'
+"POST /save-code-patient/ HTTP/1.1" 500 2701
+Internal Server Error: /details-patient/CEN-BIY-EBH-PT-0812/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 313, in details_patient
+    patient = get_object_or_404(Patient, code=slug)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 90, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 642, in get
+    raise self.model.MultipleObjectsReturned(
+    ...<5 lines>...
+    )
+circb_app.models.Patient.MultipleObjectsReturned: get() returned more than one Patient -- it returned 3!
+"GET /details-patient/CEN-BIY-EBH-PT-0812/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /details-patient/1000089880/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Patient' object has no attribute 'nom_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'nom_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 318, in details_patient
+    return render(request, 'webpages/patients/details-patient.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [nom_mere] in <Patient: TCHANA DIVINE (CEN-BIY-EBH-PT-0812)>
+"GET /details-patient/1000089880/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /details-patient/1000089880/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Patient' object has no attribute 'nom_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'nom_mere'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 318, in details_patient
+    return render(request, 'webpages/patients/details-patient.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [nom_mere] in <Patient: TCHANA DIVINE (CEN-BIY-EBH-PT-0812)>
+"GET /details-patient/1000089880/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /details-patient/1000089880/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Mere' object has no attribute 'regime_arv'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'regime_arv'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 318, in details_patient
+    return render(request, 'webpages/patients/details-patient.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [regime_arv] in <Mere: TONGA GHISHINE>
+"GET /details-patient/1000089880/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /details-patient/1000089880/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+TypeError: details_patient() got an unexpected keyword argument 'id'
+"GET /details-patient/1000089880/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /details-patient/1000089880/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+TypeError: details_patient() got an unexpected keyword argument 'id'
+"GET /details-patient/1000089880/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /dossiers/patients/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 309, in dossiers_patients
+    return render(request, 'webpages/patients/dossiers.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 511, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/urls/base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/urls/resolvers.py", line 842, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'details-patient' with arguments '('SUD-KRI-CMF-HO-4585',)' not found. 1 pattern(s) tried: ['details\\-patient/(?P<id>[0-9]+)/\\Z']
+"GET /dossiers/patients/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /edit-patient/CEN-BIY-EBH-PT-0812/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 3439, in edit_patient
+    'patient':Patient.objects.get(code=code)
+              ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/db/models/query.py", line 642, in get
+    raise self.model.MultipleObjectsReturned(
+    ...<5 lines>...
+    )
+circb_app.models.Patient.MultipleObjectsReturned: get() returned more than one Patient -- it returned 3!
+"GET /edit-patient/CEN-BIY-EBH-PT-0812/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /patients/1000089880/edit/
+"GET /patients/1000089880/edit/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /edit-patient/1000089880/edit/
+"GET /edit-patient/1000089880/edit/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EBH-PT-0&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EBH-PT-&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EBH-PT&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EBH-P&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EB&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EBH&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EBH-&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EBH-PT&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EBH-PT-&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EBH-PT-0&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EBH-PT-08&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier-code-patient/
+"GET /verifier-code-patient/?code=CEN-BIY-EBH-PT-0804&patient_id=1000089880 HTTP/1.1" 500 2701

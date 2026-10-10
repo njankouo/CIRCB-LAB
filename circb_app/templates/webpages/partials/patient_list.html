@@ -20,7 +20,7 @@
 
 <div class="space-y-2.5 pr-1.5 custom-scrollbar">
     {% for p in patients %}
-    <a href="{% url 'details-patient' p.code %}" 
+    <a href="{% url 'details-patient' p.id %}" 
        class="group relative block p-3.5 bg-white dark:bg-slate-900/90 hover:bg-slate-50/90 dark:hover:bg-slate-800/70 border border-slate-200/80 dark:border-slate-800/80 hover:border-indigo-400/50 dark:hover:border-indigo-500/50 rounded-2xl shadow-sm hover:shadow-md hover:shadow-indigo-500/5 transition-all duration-300 ease-out backdrop-blur-md">
         
         <!-- Indicateur Lumineux d'Accentuation au Survol (Gauche) -->
