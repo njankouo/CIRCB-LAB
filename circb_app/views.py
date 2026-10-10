@@ -581,7 +581,8 @@ def echantillons(request, id):
         'profilaxie_arv':ProfilaxieArv.objects.all(),
         'mode_accouchement': ModeAccouchement.objects.all(),
         'prochain_numero':prochain_numero,
-        'examen':Test.objects.all()
+        'examen':Test.objects.all(),
+        'patient':FichePatient.objects.filter(fiche=id)
     }
     return render(request, 'webpages/echantillonages/echantillons.html', context)
 @permission_required('circb_app.peut_voir_consulter_echantillons')
@@ -930,16 +931,16 @@ def ajouter_echantillon(request):
                 if not fiche:
                     return JsonResponse({'success': False, 'error': "Fiche d'échantillon introuvable."}, status=400)
 
-                # --- VÉRIFICATION DU QUOTA DE LA FICHE (BLOQUANT) ---
+                # --- VÉRIFICATION STRICTE DU QUOTA (BLOQUE TOUT ENREGISTREMENT) ---
                 nombre_actuel = Echantillon.objects.filter(fiche=fiche).count()
                 if fiche.nombre_echantillon and nombre_actuel >= fiche.nombre_echantillon:
-                    # Sécurité : désactivation de la fiche si ce n'était pas déjà fait
+                    # Désactivation de la fiche pour empêcher de nouvelles tentatives
                     if fiche.status:
                         fiche.status = False
                         fiche.save()
                     return JsonResponse({
                         'success': False, 
-                        'error': f"Quota atteint ! La fiche '{fiche.code if hasattr(fiche, 'code') else fiche_id}' a déjà atteint son nombre maximal d'échantillons ({fiche.nombre_echantillon}). Enregistrement impossible. Veuillez Vous rapprocher de unite technique"
+                        'error': f"Quota atteint ! Cette fiche a déjà atteint son nombre maximal d'échantillons ({fiche.nombre_echantillon}). Aucun nouvel échantillon ne peut être enregistré."
                     }, status=400)
 
                 # --- Helpers de nettoyage ---
@@ -1001,12 +1002,10 @@ def ajouter_echantillon(request):
                     if date_naissance_enfant and date_naissance_mere >= date_naissance_enfant:
                         return JsonResponse({'success': False, 'error': "Incohérence : L'enfant ne peut pas être plus âgé (ou né avant) que sa mère."}, status=400)
 
-                # --- Transaction Atomique ---
+                # --- Transaction Atomique (Exécutée UNIQUEMENT si le quota n'est PAS atteint) ---
                 with transaction.atomic():
 
-                    # -------------------------------------------------------------
                     # 2. PATIENT / ENFANT
-                    # -------------------------------------------------------------
                     enfant = None
                     if code_patient:
                         enfant = Patient.objects.filter(code=code_patient).first()
@@ -1030,9 +1029,7 @@ def ajouter_echantillon(request):
                     enfant.status = True
                     enfant.save()
 
-                    # -------------------------------------------------------------
                     # 3. MÈRE
-                    # -------------------------------------------------------------
                     mere = None
                     if mere_id:
                         mere = Mere.objects.filter(id=mere_id).first()
@@ -1060,9 +1057,7 @@ def ajouter_echantillon(request):
                         enfant.mere = mere
                         enfant.save()
 
-                    # -------------------------------------------------------------
-                    # 4. HISTORIQUE DES ANCIENNES PCR (Si renseignées)
-                    # -------------------------------------------------------------
+                    # 4. HISTORIQUE DES ANCIENNES PCR
                     for i in range(1, 4):
                         pcr_type = request.POST.get(f'pcr_type_{i}')
                         pcr_date = p_date(request.POST.get(f'pcr_date_{i}'))
@@ -1072,25 +1067,20 @@ def ajouter_echantillon(request):
                             Echantillon.objects.create(
                                 enfant=enfant,
                                 mere=mere,
-                               
                                 ordre=pcr_type,
                                 date_prelevement=pcr_date,
                                 resultat_pcr_id=p_int(pcr_result)
                             )
 
-                    # -------------------------------------------------------------
-                    # 5. ENREGISTREMENT DU TEST SÉROLOGIQUE (Si renseigné)
-                    # -------------------------------------------------------------
+                    # 5. ENREGISTREMENT DU TEST SÉROLOGIQUE
                     if test_serologique_resultat:
                         TestSerologique.objects.create(
                             patient=enfant,
                             resultat=test_serologique_resultat,
                             date_resultat=datetime.now().date()
                         )
-
-                    # -------------------------------------------------------------
+                    
                     # 6. ENREGISTREMENT DE L'ÉCHANTILLON COURANT
-                    # -------------------------------------------------------------
                     echantillon = Echantillon.objects.create(
                         code=p_int(code_echantillon_val),
                         fiche=fiche,
@@ -1134,7 +1124,13 @@ def ajouter_echantillon(request):
                         date_saisie=datetime.now().date()
                     )
 
-                    # --- MIS À JOUR DU STATUT SI LE QUOTA EST ATTEINT APRÈS CET AJOUT ---
+                    # --- MARQUAGE DU PATIENT COMME LU ---
+                    fichepatient = FichePatient.objects.filter(fiche=fiche, patient=enfant).first()
+                    if fichepatient:
+                        fichepatient.is_read = True
+                        fichepatient.save()
+
+                    # --- DÉSACTIVATION DE LA FICHE SI LE QUOTA VIENT D'ÊTRE ATTEINT AVEC CET AJOUT ---
                     nouveau_compte = Echantillon.objects.filter(fiche=fiche).count()
                     if fiche.nombre_echantillon and nouveau_compte >= fiche.nombre_echantillon:
                         fiche.status = False
@@ -1441,6 +1437,9 @@ def verifier_patient(request):
         echantillons_qs = Echantillon.objects.filter(
             enfant=patient
         ).order_by("-ordre")
+
+        
+
 
         # HTML rendu pour affichage direct
         historique_html = render_to_string(

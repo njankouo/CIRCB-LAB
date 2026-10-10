@@ -319,6 +319,7 @@ class FichePatient(models.Model):
    
     fiche = models.ForeignKey(FicheEchantillon, on_delete=models.CASCADE)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="patients")
+    is_read = models.BooleanField(default=False)
     
  
     

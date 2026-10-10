@@ -3,7 +3,141 @@
 {% block main %}
 
 <main class="flex-1 h-full min-h-0 overflow-y-auto text-slate-100 w-full selection:bg-[#714B67] selection:text-white font-sans antialiased relative overflow-hidden">
+<!-- Composant Alerte Odoo - Patients en attente de saisie -->
+<div id="odoo-patient-codes" class="fixed top-16 right-6 z-50 w-80 bg-white border border-gray-200/80 rounded-xl shadow-2xl text-xs font-sans overflow-hidden transition-all duration-200 backdrop-blur-sm">
 
+  <!-- En-tête Odoo Premium (#714B67) -->
+  <div class="flex items-center justify-between px-3.5 py-2.5 bg-[#714B67] text-white select-none shadow-sm">
+    <div class="flex items-center gap-2 min-w-0 pr-2">
+      <!-- Badge dynamique avec pulse -->
+      <div class="relative flex items-center justify-center">
+        <span class="px-2 py-0.5 bg-white/20 text-white rounded-full text-[10px] font-bold tracking-wide flex-shrink-0 border border-white/10">
+          {{ patient|length }}
+        </span>
+      </div>
+      
+      <span class="font-semibold text-xs tracking-tight truncate" title="Liste des patients en attente de saisie">
+        Patients en attente
+      </span>
+    </div>
+
+    <div class="flex items-center gap-0.5 text-white/80 flex-shrink-0">
+      <!-- Bouton Réduire / Déplier -->
+      <button 
+        onclick="const el = document.getElementById('patient-list-container'); el.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')" 
+        class="p-1.5 hover:text-white hover:bg-white/15 rounded-md transition-all duration-150 active:scale-95"
+        title="Réduire / Déplier">
+        <svg class="w-3.5 h-3.5 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      <!-- Bouton Fermer -->
+      <button 
+        onclick="document.getElementById('odoo-patient-codes').remove()" 
+        class="p-1.5 hover:text-white hover:bg-rose-500/80 rounded-md transition-all duration-150 active:scale-95"
+        title="Fermer">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Conteneur principal -->
+  <div id="patient-list-container" class="transition-all">
+
+    <!-- Liste défilante -->
+    <div class="max-h-72 overflow-y-auto divide-y divide-gray-100/80 custom-scrollbar">
+
+      {% for item in patient %}
+      {% with is_read=item.is_read|default:item.is_read %}
+      <div class="group flex items-center justify-between px-3.5 py-2.5 transition-colors duration-150 {% if is_read %}bg-emerald-50/30 opacity-75 hover:bg-emerald-50/60{% else %}hover:bg-purple-50/60{% endif %}">
+        <div class="flex items-center gap-2.5 min-w-0 pr-2">
+          
+          <!-- Avatar : Photo si disponible, sinon initiales -->
+          <div class="relative flex-shrink-0">
+            {% if item.patient.photo %}
+              <img 
+                src="{{ item.patient.photo.url }}" 
+                alt="{{ item.patient.nom|default:'' }} {{ item.patient.prenom|default:'' }}" 
+                class="w-7 h-7 rounded-full object-cover ring-2 {% if is_read %}ring-emerald-200{% else %}ring-gray-100{% endif %} shadow-sm"
+              />
+            {% else %}
+              <div class="w-7 h-7 rounded-full {% if is_read %}bg-emerald-600{% else %}bg-[#00A09D]{% endif %} text-white flex items-center justify-center text-[10px] font-bold uppercase shadow-sm tracking-wider transition-colors">
+                {% if item.patient.nom and item.patient.prenom %}
+                  {{ item.patient.nom|slice:":1" }}{{ item.patient.prenom|slice:":1" }}
+                {% elif item.patient.nom %}
+                  {{ item.patient.nom|slice:":2" }}
+                {% elif item.patient.prenom %}
+                  {{ item.patient.prenom|slice:":2" }}
+                {% else %}
+                  P
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <!-- Badge coche si saisi -->
+            {% if is_read %}
+            <span class="absolute -bottom-0.5 -right-0.5 bg-emerald-500 text-white rounded-full p-0.5 shadow-sm" title="Échantillon saisi">
+              <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+              </svg>
+            </span>
+            {% endif %}
+          </div>
+
+          <!-- Nom & Status -->
+          <div class="flex flex-col min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-medium truncate transition-colors {% if is_read %}text-gray-500 line-through decoration-gray-300{% else %}text-gray-800 group-hover:text-[#714B67]{% endif %}">
+                {% if item.patient.nom or item.patient.prenom %}
+                  {{ item.patient.nom|default:"" }} {{ item.patient.prenom|default:"" }}
+                {% else %}
+                  <span class="italic text-gray-400">Patient sans nom</span>
+                {% endif %}
+              </span>
+            </div>
+
+            {% if is_read %}
+            <span class="text-[9px] font-semibold text-emerald-600 flex items-center gap-0.5 leading-none mt-0.5">
+              Saisi
+            </span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Code Patient -->
+        <code class="px-2 py-0.5 font-mono font-semibold rounded-md text-[11px] flex-shrink-0 transition-all duration-150 shadow-2xs {% if is_read %}bg-emerald-100/70 text-emerald-800 border border-emerald-200/80{% else %}bg-purple-50 text-[#714B67] border border-purple-200/60 group-hover:bg-[#714B67] group-hover:text-white{% endif %}">
+          {{ item.patient.code|default:"—" }}
+        </code>
+      </div>
+      {% endwith %}
+      {% empty %}
+      <div class="px-4 py-8 text-center flex flex-col items-center justify-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+          </svg>
+        </div>
+        <p class="text-gray-400 italic text-xs">Aucun patient en attente.</p>
+      </div>
+      {% endfor %}
+
+    </div>
+
+    <!-- Pied de page -->
+    <div class="px-3.5 py-2 bg-gray-50/80 border-t border-gray-100 text-[10px] text-gray-400 flex justify-between items-center">
+      <span class="font-medium text-gray-500">{{ patient|length }} patient(s)</span>
+      <div class="flex items-center gap-1 font-semibold text-[#714B67]">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#00A09D]"></span>
+        <span>Medisys-EID </span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
 
 
 <div class="max-w-6xl mx-auto my-1 p-1">

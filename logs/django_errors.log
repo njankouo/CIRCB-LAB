@@ -37865,3 +37865,125 @@ Internal Server Error: /verifier-code-patient/
 "GET /verifier-code-patient/?code=CEN-BIY-EBH-PT-08&patient_id=1000089880 HTTP/1.1" 500 2701
 Internal Server Error: /verifier-code-patient/
 "GET /verifier-code-patient/?code=CEN-BIY-EBH-PT-0804&patient_id=1000089880 HTTP/1.1" 500 2701
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CENBIYEBHPT0810 HTTP/1.1" 500 55
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CENBIYEBHPT0810 HTTP/1.1" 500 55
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CENBIYEBHPT0810 HTTP/1.1" 500 55
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CENBIYEBHPT0810 HTTP/1.1" 500 55
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CENBIYEBHPT0810 HTTP/1.1" 500 55
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CENBIYEBHPT0810 HTTP/1.1" 500 55
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CENBIYEBHPT0810 HTTP/1.1" 500 55
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CENBIYEBHPT0812 HTTP/1.1" 500 55
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CENBIYEBHPT0810 HTTP/1.1" 500 55
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CENBIYEBHPT0810 HTTP/1.1" 500 55
+Internal Server Error: /verifier_patient/
+"GET /verifier_patient/?code=CENBIYEBHPT0810 HTTP/1.1" 500 55
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 110
+Internal Server Error: /ajouter_echantillon/
+"POST /ajouter_echantillon/ HTTP/1.1" 500 80
+Internal Server Error: /saisir-echantillon/1400006002/
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'Patient' object has no attribute 'is_read'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 982, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'is_read'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/blackprotocol/Documents/ssl-client-CIRCB/circb_projet/circb_app/views.py", line 587, in echantillons
+    return render(request, 'webpages/echantillonages/echantillons.html', context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/defaulttags.py", line 579, in render
+    values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+                   ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 809, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "/home/blackprotocol/.local/lib/python3.14/site-packages/django/template/base.py", line 989, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [is_read] in <Patient: TANKO Djamilatou (EXT-GAZ-CSI-PT-0845)>
+"GET /saisir-echantillon/1400006002/ HTTP/1.1" 500 2701
+Internal Server Error: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 500 2701
